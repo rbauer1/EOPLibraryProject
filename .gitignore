@@ -1,6 +1,22 @@
+#unnecessary
 *.class
+Troop209TreeSales.sql
+.reports/*
+
+.settings/*
+.project
+.classpath
+bin/*
+ErrorLog.txt
+
+# ItelliJ MetaData #
+*.csv
+.idea*
+out*
+*.iml
 
 # Package Files #
 *.jar
 *.war
 *.ear
+/bin
