@@ -23,17 +23,14 @@
 package database;
 
 // system imports
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.Vector;
-
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.DatabaseMetaData;
-
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Properties;
+import java.util.Vector;
 
 // project imports
 import event.Event;

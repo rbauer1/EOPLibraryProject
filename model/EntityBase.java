@@ -13,23 +13,26 @@
 package model;
 
 // system imports
+import impresario.IModel;
+import impresario.ISlideShow;
+import impresario.IView;
+import impresario.ModelRegistry;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Properties;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import userinterface.MainFrame;
+import userinterface.View;
+import userinterface.WindowPosition;
 // project imports
 import database.Persistable;
-import impresario.ModelRegistry;
-import impresario.IModel;
-import impresario.IView;
-import impresario.ISlideShow;
 import event.Event;
-import userinterface.MainFrame;
-import userinterface.WindowPosition;
 
 
 /** The superclass for all Scout Tree Sales app Model Entities that are also
@@ -44,7 +47,7 @@ public abstract class EntityBase extends Persistable
 	protected Properties persistentState;	// the field names and values from the database
 	private String myTableName;				// the name of our database table
 
-	protected Hashtable myViews;
+	protected Hashtable<String, View> myViews;
 	protected JFrame myFrame;
 
 	protected Properties mySchema;
@@ -59,7 +62,7 @@ public abstract class EntityBase extends Persistable
 	protected EntityBase(String tablename)
 	{
 		myFrame = MainFrame.getInstance();
-		myViews = new Hashtable();
+		myViews = new Hashtable<String, View>();
 
 		// save our table name for later
 		myTableName = tablename;

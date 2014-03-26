@@ -22,9 +22,9 @@
 package event;
 
 // system imports
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.io.File;
 import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
@@ -56,6 +56,8 @@ import common.StringList;
 public class EventLog
 {
     // data members
+	private static final boolean DEBUG = true;
+	
     /**
      * The single EventLog instance
      */
@@ -283,6 +285,10 @@ public class EventLog
 					e.printStackTrace();
 				}
 			}
+		}
+		
+		if(DEBUG){
+			System.err.println(event.toString());
 		}
 	}
 	

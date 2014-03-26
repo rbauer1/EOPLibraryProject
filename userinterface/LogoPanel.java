@@ -13,11 +13,15 @@
 package userinterface;
 
 // system imports
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Font;
 
-
-import java.awt.*;
-import java.net.URL;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 //============================================================
 public class LogoPanel extends JPanel

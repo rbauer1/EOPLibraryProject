@@ -1,5 +1,3 @@
-// tabs=4
-// 
 //************************************************************
 //	COPYRIGHT 2014 Sandeep Mitra and students 
 //    The College at Brockport, State University of New York. -
@@ -9,40 +7,16 @@
 // be reproduced, copied, or used in any shape or form without
 // the express written consent of The College at Brockport.
 //************************************************************
-// specify the package
 package userinterface;
 
 import impresario.IModel;
 
-
-//==============================================================================
 public class ViewFactory {
 
-	public static View createView( String viewName, IModel model )
-	{
-		//---------------------------------------------------
-		// Librarian
-		//---------------------------------------------------
-		if( viewName.equals( "LoginView" ) == true)
-		{
+	public static View createView(String viewName, IModel model) {
+		if (viewName.equals("LoginView") == true) {
 			return new LoginView(model);
 		}
-					
-		else return null; 
-			
+		return null;
 	}
-
-
-	/*
-	public static Vector createVectorView(String viewName, IModel model)
-	{
-		if(viewName.equals("SOME VIEW NAME") == true)
-		{
-			//return [A NEW VECTOR VIEW OF THAT NAME TYPE]
-		}
-		else
-			return null;
-	}
-	*/
-
 }

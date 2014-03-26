@@ -13,13 +13,14 @@
 package userinterface;
 
 // system imports
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Color;
-import java.awt.Dimension;
-import javax.swing.JPanel;
+
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 
 //==============================================================
