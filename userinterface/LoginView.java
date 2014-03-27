@@ -29,6 +29,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import utilities.Key;
+
 // project imports
 
 /** The class containing the Login View for the EOP Library application */
@@ -50,7 +52,7 @@ public class LoginView extends View {
 	// ----------------------------------------------------------
 	public LoginView(IModel lib) {
 
-		super(lib, "LoginView");
+		super(lib);
 
 		setBackground(blue);
 
@@ -66,13 +68,13 @@ public class LoginView extends View {
 		add(createStatusLog("                                     "));
 
 		// STEP 0: Be sure you tell your model what keys you are interested in
-		myModel.subscribe("LoginError", this);
+		myModel.subscribe(Key.LOGIN_ERROR, this);
 
 		// populateFields();
 
 	}
 
-	// Overide the paint method to ensure we can set the focus when made visible
+	// Override the paint method to ensure we can set the focus when made visible
 	// -------------------------------------------------------------
 	public void paint(Graphics g) {
 		super.paint(g);
@@ -109,10 +111,7 @@ public class LoginView extends View {
 	// Create the navigation buttons
 	// -------------------------------------------------------------
 	private JPanel createNavigationButtons() {
-		JPanel temp = new JPanel(new FlowLayout(FlowLayout.CENTER)); // default
-																		// FlowLayout
-																		// is
-																		// fine
+		JPanel temp = new JPanel(new FlowLayout(FlowLayout.CENTER)); // default FlowLayout is fine
 		temp.setBackground(blue);
 
 		// create the buttons, listen for events, add them to the panel
@@ -146,7 +145,7 @@ public class LoginView extends View {
 	// -------------------------------------------------------------
 	private boolean validate(String bannerId, String password) {
 		if ((bannerId == null) || (bannerId.length() == 0)) {
-			displayErrorMessage("Please enter a valid user name1!");
+			displayErrorMessage("Please enter a valid user name!");
 			return false;
 		}
 		if ((password == null) || (password.length() == 0)) {
@@ -171,7 +170,7 @@ public class LoginView extends View {
 		clearErrorMessage();
 		
 		if (evt.getSource() == exitButton) {
-			myModel.stateChangeRequest("ExitSystem", null);
+			myModel.stateChangeRequest(Key.EXIT_SYSTEM, null);
 		} else if (evt.getSource() == loginButton) {
 
 			System.out.println("event login btn");
@@ -200,7 +199,7 @@ public class LoginView extends View {
 	public void updateState(String key, Object value) {
 		System.out.println(key);
 		System.out.println(value.toString());
-		if (key.equals("LoginError") == true) {
+		if (key.equals(Key.LOGIN_ERROR)) {
 			displayErrorMessage(value.toString());
 		}
 

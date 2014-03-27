@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import userinterface.View;
 import userinterface.ViewFactory;
 import userinterface.WindowPosition;
+import utilities.Key;
 import event.Event;
 import exception.InvalidPrimaryKeyException;
 
@@ -53,7 +54,7 @@ public class Librarian implements IView, IModel, ISlideShow {
 		setDependencies();
 
 		// Show the initial view
-		showLoginView();
+		showView("LoginView");
 	}
 	
 	//---------------------------------------------------------------------
@@ -75,7 +76,7 @@ public class Librarian implements IView, IModel, ISlideShow {
 	 * @return value associated with the key
 	 */
 	public Object getState(String key) {
-		if (key.equals("LoginError") == true) {
+		if (key.equals(Key.LOGIN_ERROR)) {
 			return loginErrorMessage;
 		}
 		throw new IllegalArgumentException("Unknown key: " + key);
@@ -84,12 +85,16 @@ public class Librarian implements IView, IModel, ISlideShow {
 	//---------------------------------------------------------------------
 	
 	public void stateChangeRequest(String key, Object value) {
-		if (key.equals("Login")) {
+		if (key.equals(Key.LOGIN)) {
 			loginErrorMessage = "";
 			loginWorker((Properties) value);
-		} else if (key.equals("LoginError")) {
+		} else if (key.equals(Key.LOGIN_ERROR)) {
 			loginErrorMessage = value.toString();
-		} else if (key.equals("ExitSystem")) {
+		} else if (key.equals(Key.BACK_TO_MAIN_MENU)) {
+			showView("MainMenuView");
+		} else if (key.equals(Key.LOGOUT)) {
+			showView("LoginView");
+		} else if (key.equals(Key.EXIT_SYSTEM)) {
 			exitSystem();
 		}
 		registry.updateSubscribers(key, this);
@@ -111,13 +116,13 @@ public class Librarian implements IView, IModel, ISlideShow {
 		try {
 			Worker worker = new Worker(workerData.getProperty("BannerID"));
 			if(!worker.validPassword(workerData.getProperty("Password"))){
-				stateChangeRequest("LoginError", "Invalid Banner Id or Password.");
+				stateChangeRequest(Key.LOGIN_ERROR, "Invalid Banner Id or Password.");
 			}else{
 				System.out.println("login success");
-				//TODO continue to main menu!!
+				showView("MainMenuView");
 			}
 		} catch (InvalidPrimaryKeyException e) {
-			stateChangeRequest("LoginError", "Invalid Banner Id or Password.");
+			stateChangeRequest(Key.LOGIN_ERROR, "Invalid Banner Id or Password.");
 		}		
 	}
 	
@@ -150,16 +155,16 @@ public class Librarian implements IView, IModel, ISlideShow {
 		stateChangeRequest(key, value);
 	}
 
-	//---------------------------------------------------------------------
-	
-	private void showLoginView() {
-		View view = views.get("LoginView");
+	//TODO should be moved, possibly to MainFrame
+	private void showView(String s){
+		View view = views.get(s);
 		if(view == null){
-			view = ViewFactory.createView("LoginView", this);
+			view = ViewFactory.createView(s,this);
+			views.put(s, view);
 		}
 		swapToView(view);
 	}
-
+	
 	//---------------------------------------------------------------------
 	
 	public void swapToView(IView newView) {

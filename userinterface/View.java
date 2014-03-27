@@ -113,9 +113,14 @@ public abstract class View extends JPanel implements IView, IControl,
 	public View(IModel model, String classname)
 	{
 		myModel = model;
-		
-		
 		myRegistry = new ControlRegistry(classname);
+	}
+	
+	//New Constructor, uses reflection
+	public View(IModel model)
+	{
+		myModel = model;
+		myRegistry = new ControlRegistry(model.getClass().getSimpleName());
 	}
 
 	// process events generated from our GUI components
