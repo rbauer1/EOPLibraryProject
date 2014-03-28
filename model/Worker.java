@@ -9,8 +9,10 @@
  */
 package model;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.List;
@@ -25,9 +27,11 @@ public class Worker extends EntityBase {
 
 	public static final String TABLE_NAME = "worker";
 	public static final String PRIMARY_KEY = "BannerID";
-	public static final String PASSWORD_SALT = "68352016baee847f64eb6c2a35eeea67";
+	public static final String SALT = "68352016baee847f64eb6c2a35eeea67";
 	private static Properties schema;
 	private boolean persisted;
+	private static SecureRandom random;
+	private String resetToken;
 
 	public Worker(String id) throws InvalidPrimaryKeyException {
 		super(TABLE_NAME);
@@ -56,6 +60,9 @@ public class Worker extends EntityBase {
 	}
 
 	public void stateChangeRequest(String key, Object value) {
+		if(key.equals("Password")){
+			value = encrypt((String) value);
+		}
 		this.persistentState.setProperty(key, (String) value);
 	}
 
@@ -101,9 +108,16 @@ public class Worker extends EntityBase {
 	}
 	
 	public boolean validPassword(String password) {
-		return persistentState.get("Password").equals(encryptPassword(password));
+		return persistentState.get("Password").equals(encrypt(password));
+	}	
+	
+	public String getResetToken() {
+		  if(random == null){
+			  random = new SecureRandom();
+		  }
+		  resetToken = new BigInteger(130, random).toString(32);
+		  return resetToken;
 	}
-
 
 	@Override
 	protected void initializeSchema(String tableName) {
@@ -112,14 +126,14 @@ public class Worker extends EntityBase {
 		}
 	}
 
-	private static String encryptPassword(String password) {
+	private static String encrypt(String token) {
 		try{
 			// Create MessageDigest instance for MD5
 	        MessageDigest md = MessageDigest.getInstance("MD5");
 	        //Add salt to digest
-	        md.update(PASSWORD_SALT.getBytes());
+	        md.update(SALT.getBytes());
 	        //Add password to digest
-	        byte[] bytes = md.digest(password.getBytes());
+	        byte[] bytes = md.digest(token.getBytes());
 	        //This bytes[] has bytes in decimal format;
 	        //Convert it to hexadecimal format
 	        StringBuilder sb = new StringBuilder();
@@ -128,8 +142,7 @@ public class Worker extends EntityBase {
 	        }
 			return sb.toString().substring(0, 20);
 		} catch (NoSuchAlgorithmException e) {
-			return password;
+			return token;
 		}
 	}
-
 }

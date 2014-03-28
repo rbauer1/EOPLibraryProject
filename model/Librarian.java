@@ -21,6 +21,8 @@ import java.util.Properties;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import model.transaction.Transaction;
+import model.transaction.TransactionFactory;
 import userinterface.View;
 import userinterface.ViewFactory;
 import userinterface.WindowPosition;
@@ -96,6 +98,12 @@ public class Librarian implements IView, IModel, ISlideShow {
 			showView("LoginView");
 		} else if (key.equals(Key.EXIT_SYSTEM)) {
 			exitSystem();
+		} else if (key.equals("RecoverPasswordTransaction")){
+			executeTransaction(key, "RecoverPasswordTransactionCompleted");
+		} else if (key.equals("RecoverPasswordTransactionCompleted")){
+			showView("LoginView");
+		} else if (key.endsWith("Transaction")){
+			executeTransaction(key);
 		}
 		registry.updateSubscribers(key, this);
 	}
@@ -165,6 +173,37 @@ public class Librarian implements IView, IModel, ISlideShow {
 		swapToView(view);
 	}
 	
+	//---------------------------------------------------------------------
+	
+	/**
+	 * Begins execution on the transaction with the provided name. 
+	 * Listens to the provided returnEvent for completion of transaction.
+	 * @param name
+	 * @param returnEvent
+	 */
+	private void executeTransaction(String name, String returnEvent) {
+		try {
+			Transaction transaction = TransactionFactory.createTransaction(name);
+			transaction.subscribe(returnEvent, this);
+			transaction.doYourJob();
+		} catch (Exception e) {
+			new Event(Event.getLeafLevelClassName(this), "executeTransaction",
+					"Failure executing tranasction: " + e.toString(), Event.ERROR);
+		}
+	}
+	
+	
+	//---------------------------------------------------------------------
+	
+	/**
+	 * Begins execution on the transaction with the provided name. 
+	 * Listens to "TranscationCompleted" for completion of transaction.
+	 * @param name
+	 */
+	private void executeTransaction(String name) {
+		executeTransaction(name, "TransactionCompleted");
+	}
+
 	//---------------------------------------------------------------------
 	
 	public void swapToView(IView newView) {
