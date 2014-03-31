@@ -87,11 +87,6 @@ public class AddBookView extends View {
 		}
 	}
 
-	// -------------------------------------------------------------------------------------
-	// via Observer pattern this method is invoked and it reflects the state of the
-	// process that is performed so far. This method takes care of displaying
-	// messages on AddTreeTransactionView
-	// -------------------------------------------------------------------------------------
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.INPUT_ERROR)) {
 			statusMessage.displayErrorMessage(value.toString());
