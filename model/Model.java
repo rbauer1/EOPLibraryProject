@@ -45,7 +45,7 @@ public abstract class Model extends EntityBase {
 	/**
 	 * Uses a query to create model from db.
 	 * Query must ensure that only one record is returned or 
-	 * InvalidPrimaryKeyException wil be thrown.
+	 * InvalidPrimaryKeyException will be thrown.
 	 * @param query 
 	 * @throws InvalidPrimaryKeyException
 	 */
