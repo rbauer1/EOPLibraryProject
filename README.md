@@ -1,4 +1,4 @@
 LibraryProject
 ==============
 
-CSC429 Mendatory team project
+CSC429 Mandatory team project
