@@ -9,107 +9,52 @@
  */
 package model;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.Properties;
 
 import exception.InvalidPrimaryKeyException;
 
 /**
- * Worker model that persists to the database.
+ * Book model that persists to the database.
  */
-public class BookBarcodePrefix extends EntityBase {
+public class BookBarcodePrefix extends Model {
 
 	public static final String TABLE_NAME = "bookbarcodeprefix";
 	public static final String PRIMARY_KEY = "PrefixValue";
+
 	private static Properties schema;
-	private boolean persisted;
-	private static SecureRandom random;
-	private String resetToken;
 
 	public BookBarcodePrefix(String id) throws InvalidPrimaryKeyException {
-		super(TABLE_NAME);
-		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + PRIMARY_KEY + " = '" + id + "'";
-		List<?> result = getSelectQueryResult(query);
-		if (result == null || result.size() != 1) {
-			throw new InvalidPrimaryKeyException("Invalid primary key value: " + id);
-		}
-		persisted = true;
-		setPersistentState((Properties) result.get(0));
+		super(PRIMARY_KEY, id);
 	}
 
 	public BookBarcodePrefix(Properties persistentState, boolean persisted) {
-		super(TABLE_NAME);
-		this.persisted = persisted;
-		setPersistentState(persistentState);
+		super(persistentState);
 	}
 
 	public BookBarcodePrefix(Properties persistentState) {
 		this(persistentState, false);
 	}
 
-	public Object getState(String key) {
-		return persistentState.getProperty(key);
-	}
-
-	public void stateChangeRequest(String key, Object value) {
-	}
-
-	public boolean save() {
-		try {
-			String key = (String) getState(PRIMARY_KEY);
-			if (persisted && key != null && key != "") {
-				update();
-			} else {
-				insert();
-			}
-		} catch (SQLException e) {
-			System.err.println("Error saving record to database: " + e.getMessage());
-			return false;
+	@Override
+	public Properties getSchema() {
+		if (schema == null) {
+			schema = getSchemaInfo(TABLE_NAME);
 		}
-		persisted = true;
-		return true;
-	}
-
-	private void insert() throws SQLException {
-		insertPersistentState(schema, persistentState);
-	}
-
-	private void update() throws SQLException {
-		Properties whereClause = new Properties();
-		whereClause.setProperty(PRIMARY_KEY, persistentState.getProperty(PRIMARY_KEY));
-		updatePersistentState(schema, persistentState, whereClause);
-	}
-
-	private void setPersistentState(Properties state) {
-		this.persistentState = new Properties();
-		Enumeration<?> keys = state.propertyNames();
-		while (keys.hasMoreElements()) {
-			String key = (String) keys.nextElement();
-			String value = state.getProperty(key);
-
-			if (value != null && key != null) {
-				this.persistentState.setProperty(key, value);
-			}
-		}
-	}
-	
-	public String getResetToken() {
-		  if(random == null){
-			  random = new SecureRandom();
-		  }
-		  resetToken = new BigInteger(130, random).toString(32);
-		  return resetToken;
+		return schema;
 	}
 
 	@Override
-	protected void initializeSchema(String tableName) {
-		if (schema == null) {
-			schema = getSchemaInfo(tableName);
-		}
+	public String getTableName() {
+		return TABLE_NAME;
 	}
 
+	@Override
+	public String getPrimaryKey() {
+		return PRIMARY_KEY;
+	}
+
+	@Override
+	public boolean isPrimaryKeyAutoIncrement() {
+		return false;
+	}
 }
