@@ -4,8 +4,6 @@ import impresario.IModel;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics;
-import java.awt.event.FocusEvent;
-import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.Properties;
 
@@ -23,8 +21,7 @@ import javax.swing.ScrollPaneConstants;
 import utilities.Key;
 
 //======================================================================
-public class AddBookView extends View
-{
+public class AddBookView extends View {
 	private static final long serialVersionUID = -6030753682831962753L;
 
 	private MessageView statusLog;
@@ -36,474 +33,258 @@ public class AddBookView extends View
 	private JTextField yearOfPubField;
 	private JTextField isbnField;
 	private JTextField suggestedPriceField;
-	private JButton clearButton;
-
 	private JComboBox<String> bookConditionBox;
 	private JComboBox<String> bookStatusBox;
 	private JTextArea notesArea;
-
 	private JButton submitButton;
 	private JButton cancelButton;
-
-	private ArrayList treeTypes;
-
+	private MessageView statusMessage;
 
 	// constructor for this class -- takes a model object and
 	// gathers all the components into this view
-	//----------------------------------------------------------
-	public AddBookView ( IModel model )
-	{
+	// ----------------------------------------------------------
+	public AddBookView(IModel model) {
 
-		super( model, "AddBookView" );
-
-		//setBackground ( blue );
-
-		// set the layout for this panel
-		setLayout( new BorderLayout () );
-
+		super(model, "AddBookView");
+		setLayout(new BorderLayout());
 		// create our GUI components, add them to this panel
-		add( createTitle(), BorderLayout.NORTH );
-
-		add( createForm (), BorderLayout.CENTER );
-
+		add(createTitle(), BorderLayout.NORTH);
+		add(createForm(), BorderLayout.CENTER);
 		// Error message area
-		add( createStatusLog("                          "), BorderLayout.SOUTH );
+		add(createStatusLog("                          "), BorderLayout.SOUTH);
+		myModel.subscribe(Key.INPUT_ERROR, this);
 
-		// Observer pattern:
-		// in order to know how to proceed and what message to display
-		// subscribes to "LookupBarcode" and "SubmitNewTree" keys to receive the info needed,
-		// once the processing of "LookupBarcode" and "SubmitNewTree" calls are finished
-//		myModel.subscribe( "LookupBarcode", this );
-//		myModel.subscribe( "SubmitNewTree", this );
 	}
 
-	//=============== 2 Main Process Events done via Observer Pattern  ====================
-
-	//------------------------------------------------------------------------------------
-	// processAction method works via Observer pattern with this (AddTreeTransactionView)
-	// view's subscribers, in this case with AddTreeTransaction, which performs actual
-	// job of Adding a Tree, Looking Up of Barcode and so on....
-	//------------------------------------------------------------------------------------
-	public void processAction( EventObject evt )
-	{
+	public void processAction(EventObject evt) {
 		// Always clear the status log for a new action
 		clearErrorMessage();
 
-		if ( evt.getSource() == cancelButton )
-		{
-			// Call method in TreeTransaction via AddTreeTransaction dependency
-			// ( "CancelAddTreeTransactionView", "CancelSubTransaction") to
-			// display TreeTransaction menu
-			myRegistry.updateSubscribers( "CancelAddBookView", null );
-		}
-		else if ( evt.getSource() == barcodeField )
-		{
-			// Call method in AddTreeTransaction via subscription
-			// after minor validation is performed in barcodeFieldValidated ()
-			//TODO figure out if this is needed
-			if ( barcodeFieldValidated ())
-			{
-				barcodeField.removeActionListener( this );
+		if (evt.getSource() == cancelButton) {
+			myModel.stateChangeRequest(Key.ADD_BOOK_COMPLETED, null);
+		}else if (evt.getSource() == submitButton) {
+			Properties newBookProps = new Properties();
+			newBookProps.put("Barcode", barcodeField.getText().trim());
+			newBookProps.put("Title", titleField.getText().trim());
+			newBookProps.put("Author1", authorField.getText().trim());
+			// TODO figure out a way to make this better
+			newBookProps.put("Author2", authorField.getText().trim());
+			newBookProps.put("Author3", authorField.getText().trim());
+			newBookProps.put("Author4", authorField.getText().trim());
+			newBookProps.put("Publisher", publisherField.getText().trim());
+			newBookProps.put("YearOfPublication", yearOfPubField.getText().trim());
+			newBookProps.put("ISBN", isbnField.getText().trim());
+			newBookProps.put("BookCondition", bookConditionBox.getSelectedItem());
+			newBookProps.put("SuggestedPrice", suggestedPriceField.getText().trim());
+			newBookProps.put("Notes", notesArea.getText());
+			newBookProps.put("BookStatus", bookStatusBox.getSelectedItem());
 
-				// MODEL MAPPING: TreeSeqDiag_R3 page Add a Tree says lookup (barcode)
-				myRegistry.updateSubscribers( "LookupBarcode", barcodeField.getText().trim() );
-			}
-		}
-		else if ( evt.getSource() == bookConditionBox )
-		{
-			if ( bookConditionBox.getSelectedIndex() == 0 )
-			{
-				displayErrorMessage ( "Please, select a valid Tree Type " +
-						              "from the Tree Type Drop down List!" );
-			}
+			// TODO this is just for test purposes
+			newBookProps.put("Discipline", "Computer Science");
+			newBookProps.put("DateOfLastUpdate", "2014-03-31");
 
-		}
-		else if ( evt.getSource() == clearButton )
-		{
-			// if the user needs to clear form, due to
-			resetForm ();
-		}
-		else if ( evt.getSource() == submitButton )
-		{
-			// make sure that a tree type is selected
-			Properties newBookProps = new Properties ();
-			newBookProps.put( "Barcode", 			barcodeField.getText().trim());
-			newBookProps.put( "Title", 				titleField.getText().trim());
-			newBookProps.put( "Author", 			authorField.getText().trim());
-			newBookProps.put( "Publisher", 			publisherField.getText().trim());
-			newBookProps.put( "YearOfPublication", 	yearOfPubField.getText().trim());
-			newBookProps.put( "ISBN", 				isbnField.getText().trim());
-			newBookProps.put( "Condition", 			bookConditionBox.getSelectedItem());
-			newBookProps.put( "SuggestedPrice", 	suggestedPriceField.getText().trim());
-			newBookProps.put( "Notes", 				notesArea.getText());
-			newBookProps.put( "Status", 			bookStatusBox.getSelectedItem());
-
-			myRegistry.updateSubscribers(Key.SUBMIT_NEW_BOOK, newBookProps );
+			myModel.stateChangeRequest(Key.SUBMIT_NEW_BOOK, newBookProps);
 		}
 	}
 
-	//-------------------------------------------------------------------------------------
+	// -------------------------------------------------------------------------------------
 	// via Observer pattern this method is invoked and it reflects the state of the
 	// process that is performed so far. This method takes care of displaying
 	// messages on AddTreeTransactionView
-	//-------------------------------------------------------------------------------------
-	public void updateState(String key, Object value)
-	{
-//		TODO figure out if this is needed
-		// indicates how the view state gets updated.
-//		if ( key.equals( "LookupBarcode"  ))
-//		{
-//			// we expect the value variable to contain message "Proceed" or
-//			// "Barcode is already associated with some other Tree",
-//			// hence displayErrorMessage if it contains the later, else
-//			// disable Barcode field and enable rest of the form
-//			// via method populateFields()
-//
-//			if ( ((String) value).equals( "Proceed" ) )
-//			{
-//				enableFields();
-//			}
-//			else
-//			{
-//				displayErrorMessage ( (String) value );
-//				resetForm ();
-//			}
-//		}
-		// MODEL MAPPING: TreeSeqDiag_R3 page Add a Tree says
-		// "Book Successfully Inserted message", i.e.
-		// displays the message regarding the status of new Book Insertion into DB
-		if ( key.equals(Key.SUBMIT_NEW_BOOK))
-		{
-			String message = ( String )value;
-
-			// if an Error occurred during the Insertion display error message
-			// and clear all the fields, for the user to try again
-			if (( message.startsWith("ERR")) || (message.startsWith("Err") ))
-			{
-				displayErrorMessage ( message );
-				enableFields();
-			}
-			// display success message and reset the entire form
-			else
-			{
-				displayMessage( message );
-				resetForm ();
-			}
+	// -------------------------------------------------------------------------------------
+	public void updateState(String key, Object value) {
+		if (key.equals(Key.INPUT_ERROR)) {
+			statusMessage.displayErrorMessage(value.toString());
 		}
-
 	}
 
-	//================== End 2 Main Process Events done via Observer Pattern =================
+	// --------------------------------------------------------------
+	// TODO complete this
+	private void resetForm() {
+		barcodeField.setText("");
+		barcodeField.setEnabled(true);
+		barcodeField.setFocusable(true);
+		barcodeField.requestFocus(true);
+		barcodeField.addActionListener(this);
 
-	//================== Back-Process of GUI/data validation, population and so on ===========
+		bookConditionBox.removeActionListener(this);
+		bookConditionBox.setSelectedIndex(0);
+		bookConditionBox.setEnabled(false);
 
-	//-------------------------------------------------------------
-	//TODO almost definitely don't need this
-//	private void populateTreeTypeBox ()
-//	{
-//		treeTypes = (ArrayList) myModel.getState ( "TreeTypeCollection" );
-//
-//		bookConditionBox.removeActionListener( this );
-//
-//		for( Object type : treeTypes )
-//		{
-//			// extract description of the Tree Type and load it into comboBox
-//			bookConditionBox.addItem( ((Properties)type).getProperty( "TypeDescription" ) );
-//
-//		} //loop over all the treeTypes until the match found
-//
-//		bookConditionBox.addActionListener( this );
-//	}
+		bookStatusBox.setSelectedIndex(0);
+		bookStatusBox.setEnabled(false);
 
-	//--------------------------------------------------------------
-	private void resetForm ()
-	{
-		barcodeField.setText ( "" );
-		barcodeField.setEnabled ( true );
-		barcodeField.setFocusable( true );
-		barcodeField.requestFocus( true );
-		barcodeField.addActionListener( this );
+		submitButton.setEnabled(false);
+		cancelButton.setText("Done");
 
-		bookConditionBox.removeActionListener( this );
-		bookConditionBox.setSelectedIndex( 0 );
-		bookConditionBox.setEnabled ( false );
-
-		bookStatusBox.setSelectedIndex( 0 );
-		bookStatusBox.setEnabled ( false );
-
-		submitButton.setEnabled ( false );
-		clearButton.setEnabled( false );
-		cancelButton.setText( "Done" );
-
-		notesArea.setText( "" );
-		notesArea.setEnabled ( false );
+		notesArea.setText("");
+		notesArea.setEnabled(false);
 	}
 
-	//-------------------------------------------------------------
-	private void enableFields()
-	{
-		barcodeField.setEnabled ( false );
-
-		bookConditionBox.removeActionListener( this );
-
-		bookConditionBox.setEnabled ( true );
-		bookStatusBox.setEnabled ( true );
-		submitButton.setEnabled ( true );
-		notesArea.setEnabled ( true );
-
-		String typeBarcodePrefix =  barcodeField.getText().trim().substring( 0, 2 );
-
-		for( Object type : treeTypes )
-		{
-			// preselect the tree type that is associated with the barcode supplied
-			if ( ((Properties)type).getProperty( "BarcodePrefix" ).equals( typeBarcodePrefix ) )
-			{
-				bookConditionBox.setSelectedItem (((Properties)type).getProperty( "TypeDescription" ));
-			}
-
-		} //loop over all the treeTypes until the match found
-
-
-		// if an invalid, (i.e. with no valid tree type) barcode was
-		// scanned/entered user needs to clear form
-		if ( bookConditionBox.getSelectedIndex () == 0 )
-		{
-			clearButton.setEnabled( true );
-		}
-
-		bookConditionBox.addActionListener( this );
-	}
-
-	//----------------------------------------------------------------
-	// This method will search treeTypes Vector for
-	// the Tree Type ID and returns it.
-	//----------------------------------------------------------------
-	private String getTreeTypeID()
-	{
-		String selection = (String)bookConditionBox.getSelectedItem();
-
-		for( Object type : treeTypes )
-		{
-			// extract description and ID, because search is done based
-			// on description and return the corresponding ID
-			String description = ((Properties)type).getProperty( "TypeDescription" );
-			String typeID = ((Properties)type).getProperty( "ID" );
-
-			// if match is found - return ID
-			if ( description.equals (selection))
-			{
-				return typeID;
-			}
-		} //loop over all the treeTypes until the match found
-
-		return null;
-	}
-
-	//-----------------------------------------------------------------
-	// Called when Barcode Field gains focus for the very 1st time,
-	// would be used if the barcode is entered manually - here it is
-	// not needed due to using barcode scanner, the focus is in
-	// the barcode field all the time
-	//----------------------------------------------------------------
-	public void focusGained( FocusEvent evt )
-	{
-		// clear the field
-		//barcodeField.setText( " " );
-
-		// Always clear the status log for a new action
-		//clearErrorMessage();
-	}
-
-	//-----------------------------------------------------------------
-	// Called when Barcode Field looses focus
-	//----------------------------------------------------------------
-	public void focusLost ( FocusEvent evt )
-	{
-
-		// Always clear the status log for a new action
-		// clearErrorMessage();
-	}
-
-	//----------------------------------------------------------
-	public void displayErrorMessage(String message)
-	{
-		statusLog.displayErrorMessage(message);
-	}
-
-	//----------------------------------------------------------
-	public void clearErrorMessage()
-	{
-		statusLog.clearErrorMessage();
-	}
-
-	//--------------------------------------------------------------------------
-	protected void displayMessage( String message )
-	{
-		statusLog.displayMessage( message );
-	}
-
-	// There is no need for this b/c we don't have any tables here.
-	//----------------------------------------------------------
-	protected void processListSelection(EventObject evt) { }
-
-	//-----------------------------------------------------------------------
-	private boolean barcodeFieldValidated ()
-	{
-		String barcode = barcodeField.getText().trim();
-
-		if ( barcode.length() > 20 )
-		{
-			displayErrorMessage( "The Maximum Length of Barcode is 20!" );
-			barcodeField.setText ( "" );
-			barcodeField.requestFocus( true );
-		}
-		if ( barcode.length() < 1 )
-		{
-			displayErrorMessage( "Barcode field can NOT be empty!" );
-		}
-		else
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	//================== End of Back-Process ===================================
-
-
-	//================== GUI CREATION SECTION ===================================
-
-	// Override the paint method to ensure we can set the focus when made visible
-	//---------------------------------------------------------------------------
-	public void paint(Graphics g)
-	{
-		super.paint(g);
-		barcodeField.requestFocus( true );
-
-	}
-
-	//----------------------------------------------------------------
+	// ----------------------------------------------------------------
 	// Create this View Title with the string specified and formatted
 	// to this program standard in the superclass View
-	//-----------------------------------------------------------------
-	private JPanel createTitle()
-	{
-		return formatViewTitle ( "Add a Tree" );
+	// -----------------------------------------------------------------
+	private JPanel createTitle() {
+		return formatViewTitle("Add a Book");
 	}
 
-
-	//---------------------------------------------------------------------
+	// ---------------------------------------------------------------------
 	// Create the actual form that allows the user to input the new data
 	// regarding a new tree
-	//---------------------------------------------------------------------
-	private JPanel createForm ()
-	{
-		JPanel formPanel = new JPanel ();
-		formPanel.setLayout( new BoxLayout ( formPanel, BoxLayout.Y_AXIS ));
-		formPanel.setBackground ( blue );
+	// ---------------------------------------------------------------------
+	private JPanel createForm() {
+		JPanel formPanel = new JPanel();
+		formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+		formPanel.setBackground(blue);
 
-		formPanel.add( createBarcodePanel ());
-		formPanel.add( Box.createRigidArea( size ));
-//		formPanel.add( createTreeTypePanel () );
+		formPanel.add(createFieldPanel());
+		formPanel.add(Box.createRigidArea(size));
+		// formPanel.add( createTreeTypePanel () );
 
-		formPanel.add( Box.createRigidArea( size ));
-		formPanel.add( createTreeStatusPanel ());
+		formPanel.add(Box.createRigidArea(size));
+		formPanel.add(createBookStatusPanel());
 
-		formPanel.add( Box.createRigidArea( size ));
-		formPanel.add( createTreeNotesPanel ());
+		formPanel.add(Box.createRigidArea(size));
+		formPanel.add(createBookConditionPanel());
 
-		formPanel.add( Box.createRigidArea( size ));
-		formPanel.add( createButtonsPanel ());
+		formPanel.add(Box.createRigidArea(size));
+		formPanel.add(createBookNotesPanel());
 
-		formPanel.setBorder ( formBorder );
+		formPanel.add(Box.createRigidArea(size));
+		formPanel.add(createButtonsPanel());
+
+		formPanel.setBorder(formBorder);
 		return formPanel;
 
 	}
 
-	//----------------------------------------------------------------------------------
-	private JPanel createBarcodePanel ()
-	{
-		barcodeField = new JTextField ( 16 );
+	// ----------------------------------------------------------------------------------
+	private JPanel createFieldPanel() {
+		JPanel fieldPanel = new JPanel();
+		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.Y_AXIS));
+		fieldPanel.setBackground(blue);
 
-		barcodeField.setText( " " );
-		barcodeField.addActionListener( this );
+		barcodeField = new JTextField(16);
+		barcodeField.setText(" ");
+		barcodeField.addActionListener(this);
+		JPanel barcodePanel = formatCurrentPanel("Barcode:", barcodeField);
 
-		// create "raw" JButton and call superclass View to format
-		// it to the program's standard, add it to the panel
-		clearButton = new JButton( "Clear Barcode" );
+		titleField = new JTextField(16);
+		titleField.setText(" ");
+		titleField.addActionListener(this);
+		JPanel titlePanel = formatCurrentPanel("Title:", titleField);
 
-		clearButton.setEnabled( false );
+		authorField = new JTextField(16);
+		authorField.setText(" ");
+		authorField.addActionListener(this);
+		JPanel authorPanel = formatCurrentPanel("Author:", authorField);
 
-		JPanel barcodePanel = formatCurrentPanel ( "Barcode:", barcodeField );
-		barcodePanel.add( formatButtonSmall ( clearButton ));
+		publisherField = new JTextField(16);
+		publisherField.setText(" ");
+		publisherField.addActionListener(this);
+		JPanel publisherPanel = formatCurrentPanel("Publisher:", publisherField);
 
-		return barcodePanel;
+		yearOfPubField = new JTextField(16);
+		yearOfPubField.setText(" ");
+		yearOfPubField.addActionListener(this);
+		JPanel yearOfPubPanel = formatCurrentPanel("Year of Publication:",
+				yearOfPubField);
+
+		isbnField = new JTextField(16);
+		isbnField.setText(" ");
+		isbnField.addActionListener(this);
+		JPanel isbnPanel = formatCurrentPanel("ISBN:", isbnField);
+
+		// TODO change to restrict to monetary numbers
+		suggestedPriceField = new JTextField(16);
+		suggestedPriceField.setText(" ");
+		suggestedPriceField.addActionListener(this);
+		JPanel suggestedPricePanel = formatCurrentPanel("Suggested Price:",
+				suggestedPriceField);
+
+		fieldPanel.add(barcodePanel);
+		fieldPanel.add(titlePanel);
+		fieldPanel.add(authorPanel);
+		fieldPanel.add(publisherPanel);
+		fieldPanel.add(yearOfPubPanel);
+		fieldPanel.add(isbnPanel);
+		fieldPanel.add(suggestedPricePanel);
+
+		return fieldPanel;
 	}
 
-
-	//----------------------------------------------------------------------------------------
-//	private JPanel createTreeTypePanel ()
-//	{
-//		bookConditionBox = new JComboBox<String> ( new String [] { "-----------------------" });
-//
-//		bookConditionBox.setEnabled( false );
-//		populateTreeTypeBox ();
-//
-//		return formatCurrentPanel ( "Tree Type:", bookConditionBox );
-//	}
-
-	//-----------------------------------------------------------------------------------------
-	private JPanel createTreeStatusPanel ()
-	{
-		String[] status = { "Available", "Sold", "Damaged" };
-		bookStatusBox = new JComboBox<String> ( status );
-		bookStatusBox.setEnabled( false );
-
-		return formatCurrentPanel ( "Status:", bookStatusBox );
+	// -----------------------------------------------------------------------------------------
+	private JPanel createBookStatusPanel() {
+		String[] status = { "Active", "Lost", "Inactive" };
+		bookStatusBox = new JComboBox<String>(status);
+		return formatCurrentPanel("Status:", bookStatusBox);
 	}
 
-	//-----------------------------------------------------------------------------
-	private JPanel createTreeNotesPanel ()
-	{
-		notesArea = new JTextArea ();
-		JScrollPane notesPane = new JScrollPane ( notesArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS ,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED );
-		notesArea.setEnabled( false );
-
-		return formatCurrentPanel ( "Notes:", notesPane );
+	private JPanel createBookConditionPanel() {
+		String[] status = { "Good", "Damaged" };
+		bookConditionBox = new JComboBox<String>(status);
+		return formatCurrentPanel("Condition:", bookConditionBox);
 	}
 
-	//-------------------------------------------------------------
-	private JPanel createButtonsPanel ()
-	{
+	// -----------------------------------------------------------------------------
+	private JPanel createBookNotesPanel() {
+		notesArea = new JTextArea();
+		JScrollPane notesPane = new JScrollPane(notesArea,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+		return formatCurrentPanel("Notes:", notesPane);
+	}
+
+	// -------------------------------------------------------------
+	private JPanel createButtonsPanel() {
 		JPanel buttonsPanel = new JPanel();
-		buttonsPanel.setBackground( blue );
+		buttonsPanel.setBackground(blue);
 
 		// create "raw" JButtons and call superclass View to format
 		// the buttons to the program's standard, add them to the panel
-		submitButton = new JButton( "Add" );
-		buttonsPanel.add( formatButtonSmall ( submitButton ));
-		submitButton.setEnabled( false );
+		submitButton = new JButton("Add");
+		buttonsPanel.add(formatButtonSmall(submitButton));
+		buttonsPanel.add(new JLabel("     "));
 
-		buttonsPanel.add( new JLabel ("     "));
-
-		cancelButton = new JButton( "Return" );
-		buttonsPanel.add( formatButtonSmall ( cancelButton ));
-		buttonsPanel.setAlignmentX( CENTER_ALIGNMENT );
+		cancelButton = new JButton("Back");
+		buttonsPanel.add(formatButtonSmall(cancelButton));
+		buttonsPanel.setAlignmentX(CENTER_ALIGNMENT);
 
 		return buttonsPanel;
 
 	}
+
 	// Create the status log field
-	//-------------------------------------------------------------
-	private JPanel createStatusLog( String initialMessage )
-	{
-
-		statusLog = new MessageView( initialMessage );
-
+	// -------------------------------------------------------------
+	private JPanel createStatusLog(String initialMessage) {
+		statusLog = new MessageView(initialMessage);
 		return statusLog;
 	}
 
+	public void displayErrorMessage(String message) {
+		statusLog.displayErrorMessage(message);
+	}
+
+	// ----------------------------------------------------------
+	public void clearErrorMessage() {
+		statusLog.clearErrorMessage();
+	}
+
+	// --------------------------------------------------------------------------
+	protected void displayMessage(String message) {
+		statusLog.displayMessage(message);
+	}
+
+	// There is no need for this b/c we don't have any tables here.
+	// ----------------------------------------------------------
+	protected void processListSelection(EventObject evt) {
+	}
+
+	public void paint(Graphics g) {
+		super.paint(g);
+		barcodeField.requestFocus(true);
+	}
 
 }

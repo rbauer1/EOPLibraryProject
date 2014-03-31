@@ -12,13 +12,11 @@ package model.transaction;
 import java.util.Properties;
 
 import model.Book;
-import model.Worker;
 import userinterface.View;
-import exception.InvalidPrimaryKeyException;
+import utilities.Key;
 
 public class AddBookTransaction extends Transaction {
 	private Book book;
-	private String resetCode;
 
 	public AddBookTransaction() {
 		super();
@@ -31,10 +29,8 @@ public class AddBookTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals("RequestResetToken")){
-			sendPasswordResetToken((Properties) value);
-		}else if(key.equals("ResetPassword")){
-			resetPassword((Properties) value);
+		if(key.equals(Key.SUBMIT_NEW_BOOK)){
+			submitNewBook((Properties) value);
 		}
 		registry.updateSubscribers(key, this);
 	}
@@ -50,31 +46,9 @@ public class AddBookTransaction extends Transaction {
 		return getView("AddBookView");
 	}
 
-	private void sendPasswordResetToken(Properties workerData){
-		try {
-			book = new Book(workerData.getProperty("Barcode"));
-			String title = (String)book.getState("Title");
-			String author = (String)book.getState("FirstName") + " " + (String)book.getState("LastName");
-			resetCode = book.getResetToken();
-			swapToView(getView("PasswordResetView"));
-		} catch (InvalidPrimaryKeyException e) {
-			stateChangeRequest("InputError", "Invalid Banner Id.");
-		}
+	private void submitNewBook(Properties bookData){
+		book = new Book(bookData);
+		book.save();
 	}
 	
-	private void resetPassword(Properties passwordData){
-		String password = passwordData.getProperty("Password");
-		if(!resetCode.equals(passwordData.getProperty("ResetCode"))){
-			stateChangeRequest("InputError", "Invalid reset code.");
-		}
-		if(password.length() < 6){
-			stateChangeRequest("InputError", "Password must be greater than 5 characters long!");
-		}
-		if(!password.equals(passwordData.getProperty("PasswordConfirmation"))){
-			stateChangeRequest("InputError", "Password and password confirmation must match.");
-		}
-		book.stateChangeRequest("Password", password);
-		book.save();
-		stateChangeRequest("RecoverPasswordTransactionCompleted", null);
-	}
 }

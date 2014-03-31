@@ -177,9 +177,7 @@ public class ForgotPasswordView extends View {
 				workerData.setProperty("BannerID", bannerId);
 				myModel.stateChangeRequest(Key.REQUEST_RESET_TOKEN, workerData);
 			}
-
 		}
-
 	}
 
 	// ---------------------------------------------------------------------

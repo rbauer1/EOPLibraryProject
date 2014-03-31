@@ -16,6 +16,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
+import utilities.Key;
+
 import exception.InvalidPrimaryKeyException;
 
 /**
@@ -57,7 +59,9 @@ public class Book extends EntityBase {
 	}
 
 	public void stateChangeRequest(String key, Object value) {
-		this.persistentState.setProperty(key, (String) value);
+		if(key.equals(Key.SUBMIT_NEW_BOOK)){
+			persistentState = (Properties)value;
+		}
 	}
 
 	public boolean save() {

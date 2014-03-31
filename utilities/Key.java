@@ -20,6 +20,7 @@ public class Key {
 	
 	public static final String RECOVER_PW_COMPLETED = "RecoverPasswordTransactionCompleted";
 	public static final String ADD_BOOK_COMPLETED = "AddBookTransactionCompleted";
+	
 	public static final String TRANSACTION_COMPLETED = "TransactionCompleted";
 	
 	public static final String REQUEST_RESET_TOKEN = "RequestResetToken";
