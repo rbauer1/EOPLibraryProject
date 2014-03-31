@@ -24,6 +24,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import utilities.Key;
+
 /**
  * The Forgot Password View for the EOP Library application. Provides the
  * interface for the workers to recover their password to the system.
@@ -65,7 +67,7 @@ public class ForgotPasswordView extends View {
 		add(createStatusMessage(" "));
 
 		// Subscribe the to model events
-		myModel.subscribe("InputError", this);
+		myModel.subscribe(Key.INPUT_ERROR, this);
 	}
 
 	// ---------------------------------------------------------------------
@@ -167,13 +169,13 @@ public class ForgotPasswordView extends View {
 		statusMessage.clearErrorMessage();
 
 		if (evt.getSource() == cancelButton) {
-			myModel.stateChangeRequest("RecoverPasswordTransactionCompleted", null);
+			myModel.stateChangeRequest(Key.RECOVER_PW_COMPLETED, null);
 		} else if (evt.getSource() == submitButton) {
 			String bannerId = this.bannerId.getText();
 			if (validate(bannerId)) {
 				Properties workerData = new Properties();
 				workerData.setProperty("BannerID", bannerId);
-				myModel.stateChangeRequest("RequestResetToken", workerData);
+				myModel.stateChangeRequest(Key.REQUEST_RESET_TOKEN, workerData);
 			}
 
 		}
@@ -187,7 +189,7 @@ public class ForgotPasswordView extends View {
 	 * update what is displayed in the view.
 	 */
 	public void updateState(String key, Object value) {
-		if (key.equals("InputError") == true) {
+		if (key.equals(Key.INPUT_ERROR)) {
 			statusMessage.displayErrorMessage(value.toString());
 		}
 

@@ -27,6 +27,8 @@ import javax.swing.JPanel;
 public class MessageView extends JPanel
 {
 	
+	private static final long serialVersionUID = 7201794639172698857L;
+
 	// GUI elements
 	private JLabel statusLog;
 	

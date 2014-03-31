@@ -26,15 +26,15 @@ public class TransactionFactory {
 	public static Transaction createTransaction(String transactionName){
 		try {
 			return (Transaction) Class.forName(TRANSACTION_PACKAGE + transactionName).newInstance();
+			
+			
+			
 		} catch (ClassNotFoundException e) {
-			new Event("TransactionFactory", "createTransaction",
-					"Invalid transaction name.", Event.FATAL);
+			new Event("TransactionFactory", "createTransaction", "Invalid transaction name.", Event.FATAL);
 		} catch (InstantiationException e) {
-			new Event("TransactionFactory", "createTransaction",
-					"Error occured while instantiating transaction.", Event.FATAL);
+			new Event("TransactionFactory", "createTransaction", "Error occured while instantiating transaction.", Event.FATAL);
 		} catch (IllegalAccessException e) {
-			new Event("TransactionFactory", "createTransaction",
-					"Illegal Access for provided transaction name.", Event.FATAL);
+			new Event("TransactionFactory", "createTransaction", "Illegal Access for provided transaction name.", Event.FATAL);
 		}
 		throw new IllegalArgumentException("Invalid transaction name provided");
 	}

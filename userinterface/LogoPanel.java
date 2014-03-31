@@ -26,6 +26,7 @@ import javax.swing.SwingConstants;
 //============================================================
 public class LogoPanel extends JPanel
 {
+	private static final long serialVersionUID = 437901299835092005L;
 
 	//----------------------------------------------------------
 	// Construct the Logo Panel once in the beginning of the

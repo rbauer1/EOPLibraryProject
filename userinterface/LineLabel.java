@@ -21,8 +21,8 @@ import javax.swing.JPanel;
 //==========================================================
 public class LineLabel extends JPanel
 {
-   
-    private int width;
+	private static final long serialVersionUID = 7111862247286719786L;
+	private int width;
     
     //-----------------------------------------------------
     public LineLabel()

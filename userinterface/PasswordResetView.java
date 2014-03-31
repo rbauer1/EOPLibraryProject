@@ -25,6 +25,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import utilities.Key;
+
 /**
  * The Password Reset View for the EOP Library application. Provides the
  * interface for the workers to reset their password with the reset token emailed to them.
@@ -69,7 +71,7 @@ public class PasswordResetView extends View {
 		add(createStatusMessage(" "));
 
 		// Subscribe the to model events
-		myModel.subscribe("InputError", this);
+		myModel.subscribe(Key.INPUT_ERROR, this);
 	}
 
 	// ---------------------------------------------------------------------
@@ -185,7 +187,7 @@ public class PasswordResetView extends View {
 		statusMessage.clearErrorMessage();
 
 		if (evt.getSource() == cancelButton) {
-			myModel.stateChangeRequest("RecoverPasswordTransactionCompleted", null);
+			myModel.stateChangeRequest(Key.RECOVER_PW_COMPLETED, null);
 		} else if (evt.getSource() == submitButton) {
 			String resetCode = this.resetCode.getText();
 			String password = new String(this.password.getPassword());
@@ -196,7 +198,7 @@ public class PasswordResetView extends View {
 				passwordData.setProperty("ResetCode", resetCode);
 				passwordData.setProperty("Password", password);
 				passwordData.setProperty("PasswordConfirmation", passwordConfirmation);
-				myModel.stateChangeRequest("ResetPassword", passwordData);
+				myModel.stateChangeRequest(Key.RESET_PW, passwordData);
 			}
 
 		}
@@ -210,7 +212,7 @@ public class PasswordResetView extends View {
 	 * update what is displayed in the view.
 	 */
 	public void updateState(String key, Object value) {
-		if (key.equals("InputError") == true) {
+		if (key.equals(Key.INPUT_ERROR)) {
 			statusMessage.displayErrorMessage(value.toString());
 		}
 

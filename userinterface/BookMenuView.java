@@ -134,7 +134,7 @@ public class BookMenuView extends View
 		}
 		else if (src == btnAdd)
 		{
-			myModel.stateChangeRequest("PerformTransView", null);
+			myModel.stateChangeRequest(Key.EXECUTE_ADD_BOOK, null);
 		}
 		
 		else if (src == btnModify)

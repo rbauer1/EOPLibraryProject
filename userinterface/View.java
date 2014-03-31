@@ -56,6 +56,7 @@ import javax.swing.event.ListSelectionListener;
 public abstract class View extends JPanel implements IView, IControl, 
 	ActionListener, FocusListener, ListSelectionListener
 {
+	private static final long serialVersionUID = 2685375555464693343L;
 	// private data
 	protected IModel myModel;
 	protected ControlRegistry myRegistry;

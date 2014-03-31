@@ -94,13 +94,19 @@ public class Librarian implements IView, IModel, ISlideShow {
 			loginErrorMessage = value.toString();
 		} else if (key.equals(Key.BACK_TO_MAIN_MENU)) {
 			showView("MainMenuView");
+		} else if (key.equals(Key.TO_BOOK_MENU)) {
+			showView("BookMenuView");
+		} else if (key.equals(Key.EXECUTE_ADD_BOOK)) {
+			executeTransaction(key, Key.ADD_BOOK_COMPLETED);
+		} else if (key.equals(Key.ADD_BOOK_COMPLETED)) {
+			showView("AddBookView");
 		} else if (key.equals(Key.LOGOUT)) {
 			showView("LoginView");
 		} else if (key.equals(Key.EXIT_SYSTEM)) {
 			exitSystem();
-		} else if (key.equals("RecoverPasswordTransaction")){
-			executeTransaction(key, "RecoverPasswordTransactionCompleted");
-		} else if (key.equals("RecoverPasswordTransactionCompleted")){
+		} else if (key.equals(Key.EXECUTE_RECOVER_PW)){
+			executeTransaction(key, Key.RECOVER_PW_COMPLETED);
+		} else if (key.equals(Key.RECOVER_PW_COMPLETED)){
 			showView("LoginView");
 		} else if (key.endsWith("Transaction")){
 			executeTransaction(key);
@@ -201,15 +207,14 @@ public class Librarian implements IView, IModel, ISlideShow {
 	 * @param name
 	 */
 	private void executeTransaction(String name) {
-		executeTransaction(name, "TransactionCompleted");
+		executeTransaction(name, Key.TRANSACTION_COMPLETED);
 	}
 
 	//---------------------------------------------------------------------
 	
 	public void swapToView(IView newView) {
 		if (newView == null) {
-			new Event(Event.getLeafLevelClassName(this), "swapToView",
-					"Missing view for display ", Event.ERROR);
+			new Event(Event.getLeafLevelClassName(this), "swapToView", "Missing view for display ", Event.ERROR);
 			throw new NullPointerException();
 		}
 
@@ -229,8 +234,7 @@ public class Librarian implements IView, IModel, ISlideShow {
 			// Place in center
 			WindowPosition.placeCenter(frame);
 		} else {
-			new Event(Event.getLeafLevelClassName(this), "swapToView",
-					"Non-displayable view object sent ", Event.ERROR);
+			new Event(Event.getLeafLevelClassName(this), "swapToView", "Non-displayable view object sent ", Event.ERROR);
 			throw new IllegalArgumentException();
 		}
 	}

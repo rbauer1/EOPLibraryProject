@@ -40,8 +40,8 @@ public class LoginView extends View {
 	private JButton exitButton;
 
 	/** Data entry fields */
-	private JTextField bannerId;
-	private JPasswordField password;
+	private JTextField bannerIdField;
+	private JPasswordField passwordField;
 
 	/** Shows messages for view */
 	private MessageView statusMessage;
@@ -81,7 +81,7 @@ public class LoginView extends View {
 	 */
 	public void paint(Graphics g) {
 		super.paint(g);
-		bannerId.requestFocus();
+		bannerIdField.requestFocus();
 
 	}
 
@@ -106,11 +106,11 @@ public class LoginView extends View {
 		dataEntryPanel.setLayout(new BoxLayout(dataEntryPanel, BoxLayout.Y_AXIS));
 		dataEntryPanel.setBackground(blue);
 
-		bannerId = new JTextField(25);
-		dataEntryPanel.add(formatCurrentPanelCenter("Username", bannerId));
+		bannerIdField = new JTextField(25);
+		dataEntryPanel.add(formatCurrentPanelCenter("Username", bannerIdField));
 
-		password = new JPasswordField(25);
-		dataEntryPanel.add(formatCurrentPanelCenter("Password", password));
+		passwordField = new JPasswordField(25);
+		dataEntryPanel.add(formatCurrentPanelCenter("Password", passwordField));
 
 		dataEntryPanel.add(Box.createRigidArea(new Dimension(200, 50)));
 
@@ -190,16 +190,17 @@ public class LoginView extends View {
 		if (evt.getSource() == exitButton) {
 			myModel.stateChangeRequest(Key.EXIT_SYSTEM, null);
 		} else if (evt.getSource() == forgotPasswordButton) {
-			myModel.stateChangeRequest("RecoverPasswordTransaction", null);
+			myModel.stateChangeRequest(Key.EXECUTE_RECOVER_PW, null);
 		} else if (evt.getSource() == loginButton) {
-			String bannerId = this.bannerId.getText();
-			String password = new String(this.password.getPassword());
-			
+			String bannerId = bannerIdField.getText();
+			String password = new String(passwordField.getPassword());
+			bannerIdField.setText("");
+			passwordField.setText("");
 			if (validate(bannerId, password)) {
 				Properties workerData = new Properties();
 				workerData.setProperty("BannerID", bannerId);
 				workerData.setProperty("Password", password);		
-				myModel.stateChangeRequest("Login", workerData);
+				myModel.stateChangeRequest(Key.LOGIN, workerData);
 			}
 
 		}
@@ -213,7 +214,7 @@ public class LoginView extends View {
 	 * Should be used to update what is displayed in the view.
 	 */
 	public void updateState(String key, Object value) {
-		if (key.equals("LoginError") == true) {
+		if (key.equals(Key.LOGIN_ERROR)) {
 			statusMessage.displayErrorMessage(value.toString());
 		}
 

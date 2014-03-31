@@ -10,31 +10,27 @@
 package model;
 
 import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
-import utilities.Key;
 import exception.InvalidPrimaryKeyException;
 
 /**
  * Worker model that persists to the database.
  */
-public class Worker extends EntityBase {
+public class Book extends EntityBase {
 
-	public static final String TABLE_NAME = "worker";
-	public static final String PRIMARY_KEY = "BannerID";
-	public static final String SALT = "68352016baee847f64eb6c2a35eeea67";
+	public static final String TABLE_NAME = "book";
+	public static final String PRIMARY_KEY = "Barcode";
 	private static Properties schema;
 	private boolean persisted;
 	private static SecureRandom random;
 	private String resetToken;
 
-	public Worker(String id) throws InvalidPrimaryKeyException {
+	public Book(String id) throws InvalidPrimaryKeyException {
 		super(TABLE_NAME);
 		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + PRIMARY_KEY
 				+ " = '" + id + "'";
@@ -46,13 +42,13 @@ public class Worker extends EntityBase {
 		setPersistentState((Properties) result.get(0));
 	}
 
-	public Worker(Properties persistentState, boolean persisted) {
+	public Book(Properties persistentState, boolean persisted) {
 		super(TABLE_NAME);
 		this.persisted = persisted;
 		setPersistentState(persistentState);
 	}
 
-	public Worker(Properties persistentState) {
+	public Book(Properties persistentState) {
 		this(persistentState, false);
 	}
 
@@ -61,9 +57,6 @@ public class Worker extends EntityBase {
 	}
 
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.PW)){
-			value = encrypt((String) value);
-		}
 		this.persistentState.setProperty(key, (String) value);
 	}
 
@@ -90,8 +83,7 @@ public class Worker extends EntityBase {
 
 	private void update() throws SQLException {
 		Properties whereClause = new Properties();
-		whereClause.setProperty(PRIMARY_KEY,
-				persistentState.getProperty(PRIMARY_KEY));
+		whereClause.setProperty(PRIMARY_KEY, persistentState.getProperty(PRIMARY_KEY));
 		updatePersistentState(schema, persistentState, whereClause);
 	}
 
@@ -108,9 +100,6 @@ public class Worker extends EntityBase {
 		}
 	}
 	
-	public boolean validPassword(String password) {
-		return persistentState.get("Password").equals(encrypt(password));
-	}	
 	
 	public String getResetToken() {
 		  if(random == null){
@@ -127,23 +116,4 @@ public class Worker extends EntityBase {
 		}
 	}
 
-	private static String encrypt(String token) {
-		try{
-			// Create MessageDigest instance for MD5
-	        MessageDigest md = MessageDigest.getInstance("MD5");
-	        //Add salt to digest
-	        md.update(SALT.getBytes());
-	        //Add password to digest
-	        byte[] bytes = md.digest(token.getBytes());
-	        //This bytes[] has bytes in decimal format;
-	        //Convert it to hexadecimal format
-	        StringBuilder sb = new StringBuilder();
-	        for(int i=0; i< bytes.length ;i++){
-	            sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-	        }
-			return sb.toString().substring(0, 20);
-		} catch (NoSuchAlgorithmException e) {
-			return token;
-		}
-	}
 }
