@@ -45,7 +45,6 @@ public abstract class EntityBase extends Persistable
 	private int referenceCount;		// the number of others using us
 	protected boolean dirty;		// true if the data has changed
 	protected Properties persistentState;	// the field names and values from the database
-	private String myTableName;				// the name of our database table
 
 	protected Hashtable<String, View> myViews;
 	protected JFrame myFrame;
@@ -55,26 +54,19 @@ public abstract class EntityBase extends Persistable
 	// forward declarations
 	public abstract Object getState(String key);
 	public abstract void stateChangeRequest(String key, Object value);
-	protected abstract void initializeSchema(String tableName);
 
 	// constructor for this class
 	//----------------------------------------------------------
-	protected EntityBase(String tablename)
+	protected EntityBase()
 	{
 		myFrame = MainFrame.getInstance();
 		myViews = new Hashtable<String, View>();
-
-		// save our table name for later
-		myTableName = tablename;
-
-		// extract the schema from the database, calls methods in subclasses
-		initializeSchema(myTableName);
 
 		// create a place to hold our state from the database
 		persistentState = new Properties();
 
 		// create a registry for subscribers
-		myRegistry = new ModelRegistry("EntityBase." + tablename);	// for now
+		myRegistry = new ModelRegistry(this.getClass().getSimpleName());
 
 		// initialize the reference count
 		referenceCount = 0;

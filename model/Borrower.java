@@ -11,28 +11,27 @@ package model;
 
 import java.util.Properties;
 
-import utilities.DateUtil;
 import exception.InvalidPrimaryKeyException;
 
 /**
- * Book model that persists to the database.
+ * Borrower model that persists to the database.
  */
-public class Book extends Model {
+public class Borrower extends Model {
 
-	public static final String TABLE_NAME = "book";
-	public static final String PRIMARY_KEY = "Barcode";
+	public static final String TABLE_NAME = "studentborrower";
+	public static final String PRIMARY_KEY = "BannerID";
 	
 	private static Properties schema;
 
-	public Book(String id) throws InvalidPrimaryKeyException {
+	public Borrower(String id) throws InvalidPrimaryKeyException {
 		super(PRIMARY_KEY, id);
 	}
 
-	public Book(Properties persistentState, boolean persisted) {
+	public Borrower(Properties persistentState, boolean persisted) {
 		super(persistentState);
 	}
 
-	public Book(Properties persistentState) {
+	public Borrower(Properties persistentState) {
 		this(persistentState, false);
 	}
 	
@@ -43,21 +42,7 @@ public class Book extends Model {
 		}
 		return schema;
 	}
-	
-	@Override
-	public boolean beforeSave() {
-		try {
-			BookBarcodePrefix barcodePrefix = new BookBarcodePrefix((persistentState.getProperty(PRIMARY_KEY)).substring(0, 3));
-			persistentState.setProperty("Discipline", (String)barcodePrefix.getState("Discipline"));
-			persistentState.setProperty("DateOfLastUpdate", DateUtil.getDate());
-		} catch (InvalidPrimaryKeyException e) {
-			//TODO better error message
-			System.err.println("Error saving record to database: " + e.getMessage());
-			return false;
-		}
-		return true;
-	}
-	
+
 	@Override
 	public String getTableName() {
 		return TABLE_NAME;

@@ -13,9 +13,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.SQLException;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.Properties;
 
 import utilities.Key;
@@ -24,90 +21,61 @@ import exception.InvalidPrimaryKeyException;
 /**
  * Worker model that persists to the database.
  */
-public class Worker extends EntityBase {
+public class Worker extends Model {
 
 	public static final String TABLE_NAME = "worker";
 	public static final String PRIMARY_KEY = "BannerID";
-	public static final String SALT = "68352016baee847f64eb6c2a35eeea67";
+	
+	private static final String SALT = "68352016baee847f64eb6c2a35eeea67";
 	private static Properties schema;
-	private boolean persisted;
+
 	private static SecureRandom random;
 	private String resetToken;
 
 	public Worker(String id) throws InvalidPrimaryKeyException {
-		super(TABLE_NAME);
-		String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + PRIMARY_KEY
-				+ " = '" + id + "'";
-		List<?> result = getSelectQueryResult(query);
-		if (result == null || result.size() != 1) {
-			throw new InvalidPrimaryKeyException("Invalid primary key value: " + id);
-		}
-		this.persisted = true;
-		setPersistentState((Properties) result.get(0));
+		super(PRIMARY_KEY, id);
 	}
 
 	public Worker(Properties persistentState, boolean persisted) {
-		super(TABLE_NAME);
-		this.persisted = persisted;
-		setPersistentState(persistentState);
+		super(persistentState);
 	}
 
 	public Worker(Properties persistentState) {
 		this(persistentState, false);
 	}
 
-	public Object getState(String key) {
-		return this.persistentState.getProperty(key);
-	}
-
+	@Override
 	public void stateChangeRequest(String key, Object value) {
 		if(key.equals(Key.PW)){
 			value = encrypt((String) value);
 		}
-		this.persistentState.setProperty(key, (String) value);
-	}
-
-	public boolean save() {
-		try {
-			String key = (String) this.getState(PRIMARY_KEY);
-			if (this.persisted && key != null && key != "") {
-				update();
-			} else {
-				insert();
-			}
-		} catch (SQLException e) {
-			System.err.println("Error saving record to database: "
-					+ e.getMessage());
-			return false;
-		}
-		this.persisted = true;
-		return true;
-	}
-
-	private void insert() throws SQLException {
-		insertPersistentState(schema, persistentState);
-	}
-
-	private void update() throws SQLException {
-		Properties whereClause = new Properties();
-		whereClause.setProperty(PRIMARY_KEY,
-				persistentState.getProperty(PRIMARY_KEY));
-		updatePersistentState(schema, persistentState, whereClause);
-	}
-
-	private void setPersistentState(Properties state) {
-		this.persistentState = new Properties();
-		Enumeration<?> keys = state.propertyNames();
-		while (keys.hasMoreElements()) {
-			String key = (String) keys.nextElement();
-			String value = state.getProperty(key);
-
-			if (value != null && key != null) {
-				this.persistentState.setProperty(key, value);
-			}
-		}
+		super.stateChangeRequest(key, value);
 	}
 	
+	@Override
+	public Properties getSchema() {
+		if (schema == null) {
+			schema = getSchemaInfo(TABLE_NAME);
+		}
+		return schema;
+	}
+
+	@Override
+	public String getTableName() {
+		return TABLE_NAME;
+	}
+
+	@Override
+	public String getPrimaryKey() {
+		return PRIMARY_KEY;
+	}
+
+	@Override
+	public boolean isPrimaryKeyAutoIncrement() {
+		return false;
+	}
+
+
 	public boolean validPassword(String password) {
 		return persistentState.get("Password").equals(encrypt(password));
 	}	
@@ -118,13 +86,6 @@ public class Worker extends EntityBase {
 		  }
 		  resetToken = new BigInteger(130, random).toString(32);
 		  return resetToken;
-	}
-
-	@Override
-	protected void initializeSchema(String tableName) {
-		if (schema == null) {
-			schema = getSchemaInfo(tableName);
-		}
 	}
 
 	private static String encrypt(String token) {
