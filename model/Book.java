@@ -16,8 +16,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
+import utilities.DateUtil;
 import utilities.Key;
-
 import exception.InvalidPrimaryKeyException;
 
 /**
@@ -55,7 +55,7 @@ public class Book extends EntityBase {
 	}
 
 	public Object getState(String key) {
-		return this.persistentState.getProperty(key);
+		return persistentState.getProperty(key);
 	}
 
 	public void stateChangeRequest(String key, Object value) {
@@ -66,15 +66,22 @@ public class Book extends EntityBase {
 
 	public boolean save() {
 		try {
-			String key = (String) this.getState(PRIMARY_KEY);
+			String key = (String) getState(PRIMARY_KEY);
+			BookBarcodePrefix barcodePrefix = new BookBarcodePrefix((persistentState.getProperty(PRIMARY_KEY)).substring(0, 3));
+			persistentState.setProperty("Discipline", (String)barcodePrefix.getState("Discipline"));
+			persistentState.setProperty("DateOfLastUpdate", DateUtil.getDate());
 			if (this.persisted && key != null && key != "") {
 				update();
 			} else {
 				insert();
 			}
 		} catch (SQLException e) {
-			System.err.println("Error saving record to database: "
-					+ e.getMessage());
+			System.err.println("Error saving record to database: " + e.getMessage());
+			return false;
+		} catch (InvalidPrimaryKeyException e) {
+			// TODO Auto-generated catch block
+			System.err.println("Error saving record to database: " + e.getMessage());
+			e.printStackTrace();
 			return false;
 		}
 		this.persisted = true;

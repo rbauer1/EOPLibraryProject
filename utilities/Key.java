@@ -14,6 +14,8 @@ public class Key {
 	
 	public static final String TO_BOOK_MENU = "ToBookMenuView";
 	
+	public static final String ADD_BOOK_SUCCESS = "BookAddedSuccessfully";
+	
 	public static final String EXECUTE_ADD_BOOK = "AddBookTransaction";
 	
 	public static final String EXECUTE_RECOVER_PW = "RecoverPasswordTransaction";

@@ -48,7 +48,11 @@ public class AddBookTransaction extends Transaction {
 
 	private void submitNewBook(Properties bookData){
 		book = new Book(bookData);
-		book.save();
+		if(book.save()){
+			stateChangeRequest(Key.ADD_BOOK_SUCCESS, null);
+		}else{
+			stateChangeRequest(Key.INPUT_ERROR, null);
+		}
 	}
 	
 }

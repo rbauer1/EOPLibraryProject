@@ -16,8 +16,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
-import utilities.Key;
-
 import exception.InvalidPrimaryKeyException;
 
 /**
@@ -39,7 +37,7 @@ public class BookBarcodePrefix extends EntityBase {
 		if (result == null || result.size() != 1) {
 			throw new InvalidPrimaryKeyException("Invalid primary key value: " + id);
 		}
-		this.persisted = true;
+		persisted = true;
 		setPersistentState((Properties) result.get(0));
 	}
 
@@ -54,19 +52,16 @@ public class BookBarcodePrefix extends EntityBase {
 	}
 
 	public Object getState(String key) {
-		return this.persistentState.getProperty(key);
+		return persistentState.getProperty(key);
 	}
 
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.SUBMIT_NEW_BOOK)){
-			persistentState = (Properties)value;
-		}
 	}
 
 	public boolean save() {
 		try {
-			String key = (String) this.getState(PRIMARY_KEY);
-			if (this.persisted && key != null && key != "") {
+			String key = (String) getState(PRIMARY_KEY);
+			if (persisted && key != null && key != "") {
 				update();
 			} else {
 				insert();
@@ -75,7 +70,7 @@ public class BookBarcodePrefix extends EntityBase {
 			System.err.println("Error saving record to database: " + e.getMessage());
 			return false;
 		}
-		this.persisted = true;
+		persisted = true;
 		return true;
 	}
 

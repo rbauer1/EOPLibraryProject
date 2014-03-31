@@ -38,7 +38,6 @@ public class AddBookView extends View {
 	private JTextArea notesArea;
 	private JButton submitButton;
 	private JButton cancelButton;
-	private MessageView statusMessage;
 
 	// constructor for this class -- takes a model object and
 	// gathers all the components into this view
@@ -51,8 +50,10 @@ public class AddBookView extends View {
 		add(createTitle(), BorderLayout.NORTH);
 		add(createForm(), BorderLayout.CENTER);
 		// Error message area
+		add(createStatusMessage("Hello!"), BorderLayout.SOUTH);
 		add(createStatusLog("                          "), BorderLayout.SOUTH);
 		myModel.subscribe(Key.INPUT_ERROR, this);
+		myModel.subscribe(Key.ADD_BOOK_SUCCESS, this);
 
 	}
 
@@ -68,9 +69,9 @@ public class AddBookView extends View {
 			newBookProps.put("Title", titleField.getText().trim());
 			newBookProps.put("Author1", authorField.getText().trim());
 			// TODO figure out a way to make this better
-			newBookProps.put("Author2", authorField.getText().trim());
-			newBookProps.put("Author3", authorField.getText().trim());
-			newBookProps.put("Author4", authorField.getText().trim());
+//			newBookProps.put("Author2", authorField.getText().trim());
+//			newBookProps.put("Author3", authorField.getText().trim());
+//			newBookProps.put("Author4", authorField.getText().trim());
 			newBookProps.put("Publisher", publisherField.getText().trim());
 			newBookProps.put("YearOfPublication", yearOfPubField.getText().trim());
 			newBookProps.put("ISBN", isbnField.getText().trim());
@@ -79,17 +80,15 @@ public class AddBookView extends View {
 			newBookProps.put("Notes", notesArea.getText());
 			newBookProps.put("BookStatus", bookStatusBox.getSelectedItem());
 
-			// TODO this is just for test purposes
-			newBookProps.put("Discipline", "Computer Science");
-			newBookProps.put("DateOfLastUpdate", "2014-03-31");
-
 			myModel.stateChangeRequest(Key.SUBMIT_NEW_BOOK, newBookProps);
 		}
 	}
 
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.INPUT_ERROR)) {
-			statusMessage.displayErrorMessage(value.toString());
+			statusLog.displayErrorMessage(value.toString());
+		}else if(key.equals(Key.ADD_BOOK_SUCCESS)){
+			statusLog.displayMessage("Book added successfully"); //TODO figure out how to use value
 		}
 	}
 
@@ -135,17 +134,15 @@ public class AddBookView extends View {
 
 		formPanel.add(createFieldPanel());
 		formPanel.add(Box.createRigidArea(size));
-		// formPanel.add( createTreeTypePanel () );
 
-		formPanel.add(Box.createRigidArea(size));
-		formPanel.add(createBookStatusPanel());
-
-		formPanel.add(Box.createRigidArea(size));
-		formPanel.add(createBookConditionPanel());
-
-		formPanel.add(Box.createRigidArea(size));
-		formPanel.add(createBookNotesPanel());
-
+		JPanel boxesAndNotesPanel = new JPanel();
+		boxesAndNotesPanel.setLayout(new BoxLayout(boxesAndNotesPanel, BoxLayout.X_AXIS));
+		
+		boxesAndNotesPanel.add(createBoxesPanel());
+		boxesAndNotesPanel.add(createBookNotesPanel());
+		
+		formPanel.add(boxesAndNotesPanel);
+		
 		formPanel.add(Box.createRigidArea(size));
 		formPanel.add(createButtonsPanel());
 
@@ -159,7 +156,7 @@ public class AddBookView extends View {
 		JPanel fieldPanel = new JPanel();
 		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.Y_AXIS));
 		fieldPanel.setBackground(blue);
-
+		
 		barcodeField = new JTextField(16);
 		barcodeField.setText(" ");
 		barcodeField.addActionListener(this);
@@ -169,6 +166,11 @@ public class AddBookView extends View {
 		titleField.setText(" ");
 		titleField.addActionListener(this);
 		JPanel titlePanel = formatCurrentPanel("Title:", titleField);
+		
+		JPanel row1 = new JPanel();
+		row1.setLayout(new BoxLayout(row1, BoxLayout.X_AXIS));
+		row1.add(barcodePanel);
+		row1.add(titlePanel);
 
 		authorField = new JTextField(16);
 		authorField.setText(" ");
@@ -180,6 +182,11 @@ public class AddBookView extends View {
 		publisherField.addActionListener(this);
 		JPanel publisherPanel = formatCurrentPanel("Publisher:", publisherField);
 
+		JPanel row2 = new JPanel();
+		row2.setLayout(new BoxLayout(row2, BoxLayout.X_AXIS));
+		row2.add(authorPanel);
+		row2.add(publisherPanel);
+		
 		yearOfPubField = new JTextField(16);
 		yearOfPubField.setText(" ");
 		yearOfPubField.addActionListener(this);
@@ -190,36 +197,36 @@ public class AddBookView extends View {
 		isbnField.setText(" ");
 		isbnField.addActionListener(this);
 		JPanel isbnPanel = formatCurrentPanel("ISBN:", isbnField);
+		
+		JPanel row3 = new JPanel();
+		row3.setLayout(new BoxLayout(row3, BoxLayout.X_AXIS));
+		row3.add(yearOfPubPanel);
+		row3.add(isbnPanel);
 
 		// TODO change to restrict to monetary numbers
 		suggestedPriceField = new JTextField(16);
 		suggestedPriceField.setText(" ");
 		suggestedPriceField.addActionListener(this);
-		JPanel suggestedPricePanel = formatCurrentPanel("Suggested Price:",
-				suggestedPriceField);
-
-		fieldPanel.add(barcodePanel);
-		fieldPanel.add(titlePanel);
-		fieldPanel.add(authorPanel);
-		fieldPanel.add(publisherPanel);
-		fieldPanel.add(yearOfPubPanel);
-		fieldPanel.add(isbnPanel);
+		JPanel suggestedPricePanel = formatCurrentPanel("Suggested Price:", suggestedPriceField);
+		fieldPanel.add(row1);
+		fieldPanel.add(row2);
+		fieldPanel.add(row3);
 		fieldPanel.add(suggestedPricePanel);
 
 		return fieldPanel;
 	}
 
 	// -----------------------------------------------------------------------------------------
-	private JPanel createBookStatusPanel() {
+	private JPanel createBoxesPanel() {
+		JPanel boxes = new JPanel();
+		boxes.setLayout(new BoxLayout(boxes, BoxLayout.Y_AXIS));
 		String[] status = { "Active", "Lost", "Inactive" };
 		bookStatusBox = new JComboBox<String>(status);
-		return formatCurrentPanel("Status:", bookStatusBox);
-	}
-
-	private JPanel createBookConditionPanel() {
-		String[] status = { "Good", "Damaged" };
-		bookConditionBox = new JComboBox<String>(status);
-		return formatCurrentPanel("Condition:", bookConditionBox);
+		String[] choices = { "Good", "Damaged" };
+		bookConditionBox = new JComboBox<String>(choices);
+		boxes.add(formatCurrentPanel("Condition:", bookConditionBox));
+		boxes.add(formatCurrentPanel("Status:", bookStatusBox));
+		return boxes;
 	}
 
 	// -----------------------------------------------------------------------------
@@ -268,8 +275,14 @@ public class AddBookView extends View {
 	}
 
 	// --------------------------------------------------------------------------
-	protected void displayMessage(String message) {
-		statusLog.displayMessage(message);
+	/**
+	 * Creates status message panel with the provided message.
+	 * @param initialMessage
+	 * @return status message panel
+	 */
+	private JPanel createStatusMessage(String initialMessage) {
+		statusLog = new MessageView(initialMessage);
+		return statusLog;
 	}
 
 	// There is no need for this b/c we don't have any tables here.

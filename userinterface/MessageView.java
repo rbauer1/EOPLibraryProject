@@ -43,7 +43,7 @@ public class MessageView extends JPanel
 	{
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		
-		setBackground ( blue );
+		setBackground (blue);
 		
 		add(createStatusLog(initialMessage));
 		
