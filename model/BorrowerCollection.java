@@ -2,11 +2,11 @@ package model;
 
 import java.util.Properties;
 
-public class BookCollection extends ModelCollection<Book> {
+public class BorrowerCollection extends ModelCollection<Borrower> {
 	
 	private static Properties schema;
 
-	public BookCollection() {
+	public BorrowerCollection() {
 		super();
 	}
 
@@ -20,11 +20,11 @@ public class BookCollection extends ModelCollection<Book> {
 
 	@Override
 	protected String getTableName() {
-		return Book.TABLE_NAME;
+		return Borrower.TABLE_NAME;
 	}
 
 	@Override
-	protected Book createEntity(Properties persistentState) {
-		return new Book(persistentState, true);
+	protected Borrower createEntity(Properties persistentState) {
+		return new Borrower(persistentState, true);
 	}
 }

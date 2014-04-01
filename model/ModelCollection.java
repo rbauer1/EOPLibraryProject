@@ -210,6 +210,16 @@ public abstract class ModelCollection<T extends Model> extends EntityBase {
 	public List<T> getEntities() {
 		return this.entities;
 	}
+	
+	@Override
+	public Object getState(String key) {
+		return null;
+	}
+
+	@Override
+	public void stateChangeRequest(String key, Object value) {
+		registry.updateSubscribers(key, this);
+	}
 
 	/**
 	 * Returns a property object of schema. Creates it if not exist.
