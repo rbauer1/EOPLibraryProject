@@ -46,18 +46,9 @@ public class SQLQueryStatement extends SQLStatement
     //------------------------------------------------------------
     public SQLQueryStatement(Properties selSchema,
     						 Properties projectionSchema,
-    						 Properties selectionValues)
+    						 Properties selectionValues,
+    						 boolean exactMatch)
     {
-    	
-    	/* DEBUG
-    	// Display the selection schema
-    	Enumeration typeVals = selSchema.propertyNames();
-    	while (typeVals.hasMoreElements() == true)
-    	{
-    		String field = (String)typeVals.nextElement();
-    		System.out.println("SQLQueryStatement: key = " + field + " ; value = " + selSchema.getProperty(field));
-    	}
-    	*/
     	
 		// Begin construction of the actual SQL statement
 		theSQLStatement = "SELECT ";
@@ -112,9 +103,9 @@ public class SQLQueryStatement extends SQLStatement
 					// extract the type from the schema
 					String actualType = selSchema.getProperty(theFieldName);
 					
-					// DEBUG: System.out.println("SQLQueryStatement: field = " + theFieldName + " ; type = " + actualType);
-	
 					
+	
+					// if the type is numeric, do NOT include quotes
 					if (actualType != null) 
 					{
 						// if the type is numeric, do NOT include quotes
@@ -124,13 +115,10 @@ public class SQLQueryStatement extends SQLStatement
 								theWhereString += theConjunctionClause + theFieldName + " = " + theFieldValue;	// cannot partial match a numeric
 						}
 						else
-						{
-						
-							// must the a text type 
+						{	// must the a text type 
 							// first check if the value is a field name
 							if (selSchema.containsKey(theFieldValue) == true)
 							{
-				
 								theWhereString += theConjunctionClause + theFieldName + " = " + theFieldValue;	// two SQL variables are being compared	
 							}
 							else
@@ -138,16 +126,17 @@ public class SQLQueryStatement extends SQLStatement
 							// if theFieldValue is zero length, leave the quotes out (search for blank field)
 							if (theFieldValue.length() > 0)
 							{
-								
-								theWhereString += theConjunctionClause + theFieldName + " LIKE '" + theFieldValue + "%'";
+								if(exactMatch){
+									theWhereString += theConjunctionClause + theFieldName + " = '" + theFieldValue + "'";
+								}else{
+									theWhereString += theConjunctionClause + theFieldName + " LIKE '" + theFieldValue + "%'";
+								}
 							}
-								
+							
 						}
-						
 					}
 					else
 					{
-					
 						theWhereString += theConjunctionClause + theFieldName + " = " + theFieldValue;	// two SQL variables are being compared
 					}	
 
