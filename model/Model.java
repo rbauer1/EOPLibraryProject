@@ -183,12 +183,7 @@ public abstract class Model extends EntityBase {
 	public boolean remove(){
 		Object key = this.getState(getPrimaryKey());
 		if(this.persisted && key != null && (String)key != ""){
-			try {
-				deletePersistentState(getSchema(), persistentState);
-			} catch (SQLException e) {
-				System.err.println("Error deleting record from database: " + e.getMessage());
-				return false;
-			}			
+			deletePersistentState(getSchema(), persistentState);
 		}
 		this.persisted = false;
 		return true;

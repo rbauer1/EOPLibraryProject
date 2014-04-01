@@ -56,6 +56,15 @@ public abstract class ModelCollection<T extends Model> extends EntityBase {
 	}
 	
 	/**
+	 * Fills collection with all entities in table that match provided whereClause
+	 * Uses Like SQL operator.
+	 * @param whereClause - properties object where keys are column names
+	 */
+	public void findLike(Properties whereClause) {
+		setEntitiesFromQueryResult(getPersistentStateLike(getSchema(), whereClause));
+	}
+	
+	/**
 	 * Fills collection with all entities in table where column of name key == value
 	 * @param key - column name
 	 * @param value - column value
