@@ -12,8 +12,11 @@ package model;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
+import model.validation.ModelValidator;
+import event.Event;
 import exception.InvalidPrimaryKeyException;
 
 /**
@@ -22,6 +25,8 @@ import exception.InvalidPrimaryKeyException;
 public abstract class Model extends EntityBase {
 	
 	private boolean persisted;
+	protected ModelValidator validator;
+
 	
 	/**
 	 * Constructor that calls EntityBase constructor and sets persisted.
@@ -31,6 +36,8 @@ public abstract class Model extends EntityBase {
 	private Model(boolean persisted){
 		super();
 		this.persisted = persisted;
+		this.validator = new ModelValidator(this);
+		setupValidations();
 	}
 
 	/**
@@ -67,6 +74,10 @@ public abstract class Model extends EntityBase {
 		find(whereClause);
 	}
 	
+	/**
+	 * Hook method to set up validations in subclasses.
+	 */
+	protected abstract void setupValidations();
 	
 	/**
 	 * Returns a property object of schema. Creates it if not exist.
@@ -114,6 +125,38 @@ public abstract class Model extends EntityBase {
 	}
 	
 	/**
+	 * Execute the models validations.
+	 * @return true if model is valid
+	 */
+	public boolean validate() {
+		return validator.validate();
+	}
+	
+	/**
+	 * Execute the models validations for the provided key.
+	 * @return true if validations succeed
+	 */
+	public boolean validate(String key) {
+		return validator.validate(key);
+	}
+	
+	/**
+	 * Return the error messages for the model.
+	 * @return map of errors
+	 */
+	public Map<String, List<String>> getErrors() {
+		return validator.getErrors();
+	}
+	
+	/**
+	 * Return the error messages for the provided key.
+	 * @return list of errors for the key.
+	 */
+	public List<String> getErrors(String key) {
+		return validator.getErrors(key);
+	}
+	
+	/**
 	 * Can be used to perform pre-save logic.
 	 * Hook method that is called before save. Should be overridden in subclass.
 	 * Must return true for save to continue. Returning false will cancel save.
@@ -156,7 +199,7 @@ public abstract class Model extends EntityBase {
 	 * @return true if save succeeds
 	 */
 	public boolean save() {
-		if(!beforeSave()){
+		if(!beforeSave() || !validate()){
 			return false;
 		}
 		try {
@@ -167,8 +210,8 @@ public abstract class Model extends EntityBase {
 				insert();
 			}
 		} catch (SQLException e) {
-			System.err.println("Error saving record to database: "
-					+ e.getMessage());
+			new Event(Event.getLeafLevelClassName(this), "save",
+					"SQL error while saving: " + e.toString(), Event.ERROR);
 			return false;
 		}
 		this.persisted = true;

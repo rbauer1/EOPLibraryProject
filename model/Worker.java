@@ -26,22 +26,48 @@ public class Worker extends Model {
 	public static final String TABLE_NAME = "worker";
 	public static final String PRIMARY_KEY = "BannerID";
 	
+	/** salt that is append to passwords before encrypting  */
 	private static final String SALT = "68352016baee847f64eb6c2a35eeea67";
+	
+	/** Schema for the related table */
 	private static Properties schema;
 
+	/** Random generator for generating password reset code */
 	private static SecureRandom random;
-	private String resetToken;
+	
+	/** Reset code generated for this worker */
+	private String resetCode;
 
+	/**
+	 * Constructs Worker by querying db with primary key.
+	 * @param id - primary key
+	 * @throws InvalidPrimaryKeyException if query doesn't return 1 result
+	 */
 	public Worker(String id) throws InvalidPrimaryKeyException {
 		super(PRIMARY_KEY, id);
 	}
 
+	/**
+	 * Constructs new Worker from properties object.
+	 * Must specify if it is persisted.
+	 * @param persistentState
+	 * @param persisted
+	 */
 	public Worker(Properties persistentState, boolean persisted) {
 		super(persistentState);
 	}
 
+	/**
+	 * Constructs new Worker from properties object that has not been persisted yet.
+	 * @param persistentState
+	 */
 	public Worker(Properties persistentState) {
 		this(persistentState, false);
+	}
+	
+	@Override
+	protected void setupValidations(){
+		//validator.addValidation(new AlphaNumericValidation("Barcode", "Barcode"));
 	}
 
 	@Override
@@ -76,18 +102,32 @@ public class Worker extends Model {
 	}
 
 
+	/**
+	 * Checks if provided password matches worker's password.
+	 * @param password- inputted by user
+	 * @return true if passwords match
+	 */
 	public boolean validPassword(String password) {
 		return persistentState.get("Password").equals(encrypt(password));
 	}	
 	
+	/**
+	 * Generate a password reset token for worker
+	 * @return random string of length 32
+	 */
 	public String getResetToken() {
 		  if(random == null){
 			  random = new SecureRandom();
 		  }
-		  resetToken = new BigInteger(130, random).toString(32);
-		  return resetToken;
+		  resetCode = new BigInteger(130, random).toString(32);
+		  return resetCode;
 	}
 
+	/**
+	 * Encrypts a string using an MD5 hash
+	 * @param token
+	 * @return encrypted string
+	 */
 	private static String encrypt(String token) {
 		try{
 			// Create MessageDigest instance for MD5

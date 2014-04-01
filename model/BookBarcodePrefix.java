@@ -21,20 +21,41 @@ public class BookBarcodePrefix extends Model {
 	public static final String TABLE_NAME = "bookbarcodeprefix";
 	public static final String PRIMARY_KEY = "PrefixValue";
 
+	/** Schema for the related table */
 	private static Properties schema;
 
+	/**
+	 * Constructs BookBarcodePrefix by querying db with primary key.
+	 * @param id - primary key
+	 * @throws InvalidPrimaryKeyException if query doesn't return 1 result
+	 */
 	public BookBarcodePrefix(String id) throws InvalidPrimaryKeyException {
 		super(PRIMARY_KEY, id);
 	}
 
+	/**
+	 * Constructs new BookBarcodePrefix from properties object.
+	 * Must specify if it is persisted.
+	 * @param persistentState
+	 * @param persisted
+	 */
 	public BookBarcodePrefix(Properties persistentState, boolean persisted) {
 		super(persistentState);
 	}
 
+	/**
+	 * Constructs new BookBarcodePrefix from properties object that has not been persisted yet.
+	 * @param persistentState
+	 */
 	public BookBarcodePrefix(Properties persistentState) {
 		this(persistentState, false);
 	}
 
+	@Override
+	protected void setupValidations(){
+		//validator.addValidation(new AlphaNumericValidation("Barcode", "Barcode"));
+	}
+	
 	@Override
 	public Properties getSchema() {
 		if (schema == null) {

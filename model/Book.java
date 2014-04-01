@@ -22,18 +22,38 @@ public class Book extends Model {
 	public static final String TABLE_NAME = "book";
 	public static final String PRIMARY_KEY = "Barcode";
 	
+	/** Schema for the related table */
 	private static Properties schema;
 
+	/**
+	 * Constructs Book by querying db with primary key.
+	 * @param id - primary key
+	 * @throws InvalidPrimaryKeyException if query doesn't return 1 result
+	 */
 	public Book(String id) throws InvalidPrimaryKeyException {
 		super(PRIMARY_KEY, id);
 	}
 
+	/**
+	 * Constructs new Book from properties object.
+	 * Must specify if it is persisted.
+	 * @param persistentState
+	 * @param persisted
+	 */
 	public Book(Properties persistentState, boolean persisted) {
 		super(persistentState);
 	}
 
+	/**
+	 * Constructs new Book from properties object that has not been persisted yet.
+	 * @param persistentState
+	 */
 	public Book(Properties persistentState) {
 		this(persistentState, false);
+	}
+	@Override
+	protected void setupValidations(){
+		//validator.addValidation(new AlphaNumericValidation("Barcode", "Barcode"));
 	}
 	
 	@Override
