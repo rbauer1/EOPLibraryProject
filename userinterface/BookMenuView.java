@@ -139,7 +139,7 @@ public class BookMenuView extends View
 		
 		else if (src == btnModify)
 		{
-			myRegistry.updateSubscribers("ListTransactionsView", null);
+			myModel.stateChangeRequest(Key.EXECUTE_LIST_BOOKS, null);
 		}
 		else if (src == btnDelete)
 		{

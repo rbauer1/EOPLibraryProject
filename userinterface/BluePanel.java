@@ -13,6 +13,7 @@
 package userinterface;
 
 import java.awt.Color;
+import java.awt.LayoutManager;
 
 import javax.swing.JPanel;
 
@@ -20,8 +21,10 @@ public class BluePanel extends JPanel {
 	private static final long serialVersionUID = 3274303070952112811L;
 
 	public BluePanel() {
-
 		setBackground(new Color(133, 195, 230));
-
+	}
+	
+	public BluePanel(LayoutManager lm){
+		super(lm);
 	}
 }

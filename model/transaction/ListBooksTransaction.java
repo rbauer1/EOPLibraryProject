@@ -9,29 +9,35 @@
  */
 package model.transaction;
 
+import java.util.List;
 import java.util.Properties;
 
 import model.Book;
+import model.BookCollection;
 import userinterface.View;
 import utilities.Key;
 
-public class AddBookTransaction extends Transaction {
-	private Book book;
+public class ListBooksTransaction extends Transaction {
+	private BookCollection bookCollection;
+	private List<Book> books;
 
-	public AddBookTransaction() {
+	public ListBooksTransaction() {
 		super();
 	}
 
 	@Override
-	public Object getState(String key) {
-		
+	public Object getState(String key) 
+	{
+		if(key.equals(Key.GET_BOOK_COLLECTION)){
+			return books;
+		}
 		return null;
 	}
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.SUBMIT_NEW_BOOK)){
-			submitNewBook((Properties) value);
+		if(key.equals(Key.GET_BOOK_COLLECTION)){
+			getBooks((Properties)value);
 		}
 		registry.updateSubscribers(key, this);
 	}
@@ -44,16 +50,14 @@ public class AddBookTransaction extends Transaction {
 
 	@Override
 	protected View createView() {
-		return getView("AddBookView");
+		return getView("ListBooksView");
 	}
 
-	private void submitNewBook(Properties bookData){
-		book = new Book(bookData);
-		if(book.save()){
-			stateChangeRequest(Key.ADD_BOOK_SUCCESS, null);
-		}else{
-			stateChangeRequest(Key.INPUT_ERROR, null);
-		}
+	private void getBooks(Properties props){
+		System.out.println(props);
+		bookCollection = new BookCollection();
+		bookCollection.find(props);
+		books = bookCollection.getEntities();
 	}
 	
 }

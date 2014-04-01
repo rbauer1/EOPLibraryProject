@@ -10,7 +10,7 @@
 package model;
 
 import java.util.Properties;
-
+import utilities.Key;
 import utilities.DateUtil;
 import exception.InvalidPrimaryKeyException;
 
@@ -62,6 +62,14 @@ public class Book extends Model {
 			schema = getSchemaInfo(TABLE_NAME);
 		}
 		return schema;
+	}
+	
+	@Override
+	public Object getState(String key) {
+		if(key.equals(Key.GET_PERSISTENT_STATE)){
+			return persistentState;
+		}
+		return null;
 	}
 	
 	@Override

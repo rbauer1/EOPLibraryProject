@@ -1,5 +1,7 @@
 package userinterface;
 
+import model.Book;
+import utilities.Key;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -13,10 +15,13 @@ public class BookTableModel extends AbstractTableModel implements TableModel
 	private static final long serialVersionUID = 4213802193658338074L;
 	private ArrayList myState;
 	private ArrayList myColumns;
+	
+	//TODO order columns correctly. 
+	//TODO don't display unnecessary columns
 
-	public BookTableModel ( ArrayList treeData )
+	public BookTableModel ( ArrayList bookData )
 	{
-		myState = treeData;
+		myState = bookData;
 
 
 		//--------------------------------------------------------
@@ -24,7 +29,7 @@ public class BookTableModel extends AbstractTableModel implements TableModel
 
 		if ( myState.size() > 0 )
 		{
-			Properties firstElement = ( Properties )myState.get(0);
+			Properties firstElement = ((Book)myState.get(0)).getSchema();
 
 			Enumeration allColumnNames = firstElement.keys();
 
@@ -58,7 +63,7 @@ public class BookTableModel extends AbstractTableModel implements TableModel
 	public Object getValueAt ( int rowIndex, int columnIndex )
 	{		
 		//-----------------------------------------------------------------
-		Properties reportRow = (Properties) myState.get( rowIndex );
+		Properties reportRow = (Properties)((Book)myState.get(rowIndex)).getState(Key.GET_PERSISTENT_STATE);
 
 		if (( columnIndex >= 0 ) && ( columnIndex <= myColumns.size() - 1 ))
 		{

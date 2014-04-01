@@ -90,26 +90,23 @@ public class Librarian implements IView, IModel, ISlideShow {
 		if (key.equals(Key.LOGIN)) {
 			loginErrorMessage = "";
 			loginWorker((Properties) value);
-		} else if (key.equals(Key.LOGIN_ERROR)) {
-			loginErrorMessage = value.toString();
-		} else if (key.equals(Key.BACK_TO_MAIN_MENU)) {
-			showView("MainMenuView");
-		} else if (key.equals(Key.TO_BOOK_MENU)) {
-			showView("BookMenuView");
-		} else if (key.equals(Key.EXECUTE_ADD_BOOK)) {
-			executeTransaction(key, Key.ADD_BOOK_COMPLETED);
-		} else if (key.equals(Key.ADD_BOOK_COMPLETED)) {
-			showView("BookMenuView");
-		} else if (key.equals(Key.LOGOUT)) {
-			showView("LoginView");
-		} else if (key.equals(Key.EXIT_SYSTEM)) {
-			exitSystem();
-		} else if (key.equals(Key.EXECUTE_RECOVER_PW)){
-			executeTransaction(key, Key.RECOVER_PW_COMPLETED);
-		} else if (key.equals(Key.RECOVER_PW_COMPLETED)){
-			showView("LoginView");
-		} else if (key.endsWith("Transaction")){
-			executeTransaction(key);
+		} else if (key.equals(Key.LOGIN_ERROR)) {			loginErrorMessage = value.toString();
+		
+		} else if (key.equals(Key.BACK_TO_MAIN_MENU)) {		showView("MainMenuView");
+		} else if (key.equals(Key.TO_BOOK_MENU)) {			showView("BookMenuView");
+		
+		} else if (key.equals(Key.EXECUTE_LIST_BOOKS)) {	executeTransaction(key, Key.LIST_BOOKS_COMPLETED);
+		} else if (key.equals(Key.LIST_BOOKS_COMPLETED)) {	showView("BookMenuView");
+		
+		} else if (key.equals(Key.EXECUTE_ADD_BOOK)) {		executeTransaction(key, Key.ADD_BOOK_COMPLETED);
+		} else if (key.equals(Key.ADD_BOOK_COMPLETED)) {	showView("BookMenuView");
+		
+		} else if (key.equals(Key.EXECUTE_RECOVER_PW)){		executeTransaction(key, Key.RECOVER_PW_COMPLETED);
+		} else if (key.equals(Key.RECOVER_PW_COMPLETED)){	showView("LoginView");
+		} else if (key.endsWith("Transaction")){			executeTransaction(key);
+		
+		} else if (key.equals(Key.LOGOUT)) {				showView("LoginView");
+		} else if (key.equals(Key.EXIT_SYSTEM)) {			exitSystem();
 		}
 		registry.updateSubscribers(key, this);
 	}
