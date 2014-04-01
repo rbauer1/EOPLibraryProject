@@ -37,7 +37,8 @@ import event.Event;
 //==============================================================
 public class PropertyFile extends Properties
 {
-    // data members
+	private static final long serialVersionUID = -6956339534115540152L;
+	// data members
     private String myFilename;
 	private static boolean allowWrites = true;
 

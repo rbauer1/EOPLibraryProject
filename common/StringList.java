@@ -36,7 +36,7 @@ import java.util.Enumeration;
 public class StringList 
 	implements Enumeration
 {
-	/** The delimeter for elements in the list */
+	/** The delimiter for elements in the list */
 	private char delimiter = ',';
 	/** Reference to the string */
 	private String myString = null;		

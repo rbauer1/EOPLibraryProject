@@ -29,14 +29,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.EventObject;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -57,60 +53,57 @@ public abstract class View extends JPanel implements IView, IControl,
 	ActionListener, FocusListener, ListSelectionListener
 {
 	private static final long serialVersionUID = 2685375555464693343L;
-	// private data
+	/**private data**/
 	protected IModel myModel;
 	protected ControlRegistry myRegistry;
 
-	// forward declaration
+	/**forward declaration**/
 	protected abstract void processAction(EventObject evt);
 
-	// forward declaration
+	/** forward declaration **/
 	protected abstract void processListSelection(EventObject evt);
 
-	// GUI components
+	/** GUI components **/
 	protected final Color blue = new Color ( 133, 195, 230 );
 	//protected final Color blue =  Color.white;
 
-	// preferred empty box size, used to position components
+	/** preferred empty box size, used to position components **/
 	final Dimension size = new Dimension( 200, 15 );
 
-	// indicate preferred size of a Button 
+	/** indicate preferred size of a Button  **/
 	final Dimension sizeButton = new Dimension( 175, 25 );
 	
-	// indicate preferred size of a Combo Box 
+	/** indicate preferred size of a Combo Box  **/
 	final Dimension smallDropDown = new Dimension( 85, 25 );
 	
-	// indicate preferred size of a Button 
+	/** indicate preferred size of a Button  **/
 	final Dimension sizeButtonSmall = new Dimension( 100, 25 );
 
-	// indicates preferred size of a Text Area 
+	/** indicates preferred size of a Text Area  **/
 	final Dimension sizeArea = new Dimension( 300, 70 );
 
-	// indicates preferred size of a Label  
+	/** indicates preferred size of a Label   **/
 	final Dimension sizeLabel = new Dimension( 102, 30 );
 	
-	// indicates preferred size of a Large Label  
+	/** indicates preferred size of a Large Label   **/
 	final Dimension sizeMidLabel = new Dimension( 153, 30 );
 		
-	// indicates preferred size of a Large Label  
+	/** indicates preferred size of a Large Label   **/
 	final Dimension sizeLargeLabel = new Dimension( 204, 30 );
 
-	// indicates preferred size for a form
+	/** indicates preferred size for a form **/
 	final Dimension sizeFormSpace = new Dimension( 100, 5 );
 
-	// indicate the font for a View's Title, will be used 
-	// to format all Views Titles
+	/** indicate the font for a View's Title, will be used to format all Views Titles **/
 	final Font myTitleFont = new Font("Arial", Font.BOLD, 13 );
 
 
-	// indicate the font for all components that will be used 
-	// in the program views, i.e. JButtons, JTextFields, JLabels and etc.
+	/** indicate the font for all components that will be used in the program views, i.e. JButtons, JTextFields, JLabels and etc. **/
 	final Font myComponentsFont = new Font( "Arial", Font.TYPE1_FONT, 12 );
 	
 	final Border formBorder = BorderFactory.createEmptyBorder( 20, 50, 20, 20 );
 	
-	// Class constructor
-	//----------------------------------------------------------
+	/** Class constructor **/
 	public View(IModel model, String classname)
 	{
 		myModel = model;
@@ -124,8 +117,7 @@ public abstract class View extends JPanel implements IView, IControl,
 		myRegistry = new ControlRegistry(model.getClass().getSimpleName());
 	}
 
-	// process events generated from our GUI components
-	//-------------------------------------------------------------
+	/** process events generated from our GUI components **/
 	public void actionPerformed(ActionEvent evt) 
 	{
 		// DEBUG: System.out.println("View.actionPerformed(): " + evt.toString());
@@ -133,8 +125,7 @@ public abstract class View extends JPanel implements IView, IControl,
 		processAction(evt);
 	}
 
-	// Same as hitting return in a field, fire postStateChange
-	//----------------------------------------------------------
+	/** Same as hitting return in a field, fire postStateChange **/
 	public void focusLost(FocusEvent evt)
 	{
 		// DEBUG: System.out.println("CustomerView.focusLost()");
@@ -145,270 +136,43 @@ public abstract class View extends JPanel implements IView, IControl,
 		processAction(evt);
 	}
 
-	//----------------------------------------------------------
 	public void focusGained(FocusEvent evt)
 	{
 		// We don't need this for now
 	}
 
-	// Listen the value changes (selection etc.) 
-	//----------------------------------------------------------
+	/** Listen the value changes (selection etc.)  **/
 	public void valueChanged(ListSelectionEvent evt)
 	{
 		processListSelection(evt);
 	}
 
-	//----------------------------------------------------------
 	public void setRegistry(ControlRegistry registry)
 	{
 		myRegistry = registry;
 	}
 
-	// Allow models to register for state updates
-	//----------------------------------------------------------
+	/** Allow models to register for state updates **/
 	public void subscribe(String key,  IModel subscriber)
 	{
 		myRegistry.subscribe(key, subscriber);
 	}
 
 
-	// Allow models to unregister for state updates
-	//----------------------------------------------------------
+	/** Allow models to unregister for state updates **/
 	public void unSubscribe(String key, IModel subscriber)
 	{
 		myRegistry.unSubscribe(key, subscriber);
 	}
 
-	//----------------------------------------------------------
-	protected String mapMonthToString(int month)
-	{
-		if (month == Calendar.JANUARY)
-		{
-			return "January";
-		}
-		else
-		if (month == Calendar.FEBRUARY)
-		{
-			return "February";
-		}
-		else
-		if (month == Calendar.MARCH)
-		{
-			return "March";
-		}
-		else
-		if (month == Calendar.APRIL)
-		{
-			return "April";
-		}
-		else
-		if (month == Calendar.MAY)
-		{
-			return "May";
-		}
-		else
-		if (month == Calendar.JUNE)
-		{
-			return "June";
-		}
-		else
-		if (month == Calendar.JULY)
-		{
-			return "July";
-		}
-		else
-		if (month == Calendar.AUGUST)
-		{
-			return "August";
-		}
-		else
-		if (month == Calendar.SEPTEMBER)
-		{
-			return "September";
-		}
-		else
-		if (month == Calendar.OCTOBER)
-		{
-			return "October";
-		}
-		else
-		if (month == Calendar.NOVEMBER)
-		{
-			return "November";
-		}
-		else
-		if (month == Calendar.DECEMBER)
-		{
-			return "December";
-		}
 
-		return "";
-	}
-
-	//----------------------------------------------------------
-	protected int mapMonthNameToIndex(String monthName)
-	{
-		if (monthName.equals("January") == true)
-		{
-			return Calendar.JANUARY;
-		}
-		else
-		if (monthName.equals("February") == true)
-		{
-			return Calendar.FEBRUARY;
-		}
-		else
-		if (monthName.equals("March") == true)
-		{
-			return Calendar.MARCH;
-		}
-		else
-		if (monthName.equals("April") == true)
-		{
-			return Calendar.APRIL;
-		}
-		else
-		if (monthName.equals("May") == true)
-		{
-			return Calendar.MAY;
-		}
-		else
-		if (monthName.equals("June") == true)
-		{
-			return Calendar.JUNE;
-		}
-		else
-		if (monthName.equals("July") == true)
-		{
-			return Calendar.JULY;
-		}
-		else
-		if (monthName.equals("August") == true)
-		{
-			return Calendar.AUGUST;
-		}
-		else
-		if (monthName.equals("September") == true)
-		{
-			return Calendar.SEPTEMBER;
-		}
-		else
-		if (monthName.equals("October") == true)
-		{
-			return Calendar.OCTOBER;
-		}
-		else
-		if (monthName.equals("November") == true)
-		{
-			return Calendar.NOVEMBER;
-		}
-		else
-		if (monthName.equals("December") == true)
-		{
-			return Calendar.DECEMBER;
-		}
-
-		return -1;
-	}
-
-
-	//----------------------------------------------------
-	protected boolean checkProperLetters(String value)
-	{
-		for (int cnt = 0; cnt < value.length(); cnt++)
-		{
-			char ch = value.charAt(cnt);
-
-			if ((ch >= 'A') && (ch <= 'Z') || (ch >= 'a') && (ch <= 'z'))
-			{
-			}
-			else
-				if ((ch == '-') || (ch == ',') || (ch == '.') || (ch == ' '))
-				{
-				}
-				else
-				{
-					return false;
-				}
-		}
-
-		return true;
-	}
-
-	/* aozgo1: We do not need this know. We have more efficient solution!
-	 * See what I did @AddScoutView, @UpdateScoutView or @SearchScoutView. */
-	//----------------------------------------------------
-	protected boolean checkProperPhoneNumber(String value)
-	{
-		if ((value == null) || (value.length() < 7))
-		{
-			return false;
-		}
-
-		for (int cnt = 0; cnt < value.length(); cnt++)
-		{
-			char ch = value.charAt(cnt);
-
-			if ((ch >= '0') && (ch <= '9'))
-			{
-			}
-			else
-			if ((ch == '-') || (ch == '(') || (ch == ')') || (ch == ' '))
-			{
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/*
-	 * aozgo1: Checks if the Troop ID or ID entered by user is valid 
-	 * 		   or not.  
-	 */
-	//----------------------------------------------------------
-	protected boolean checkProperTId(String value)
-	{	
-		for (int cnt = 0; cnt < value.length(); cnt++)
-		{
-			char ch = value.charAt(cnt);
-
-			if ((ch >= '0') && (ch <= '9')) 
-			{ 
-				// Do nothing
-			}
-			else
-			if ((ch < '0') || (ch > '9'))
-			{
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	//----------------------------------------------------------
-	protected String convertToDefaultDateFormat(Date theDate)
-	{
-
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-
-		String valToReturn = formatter.format(theDate);	
-
-		return valToReturn;
-
-	}
-
-	//----------------------------------------------------------------
-	// This method receives a "raw" JButton and formats it to the 
-	// format, that will be used for all the buttons that appear in
-	// the program. Returns the formatted button to the caller.
-	// The method may be called by any of the class, that 
-	// extended View class.
-	//-----------------------------------------------------------------
+	/**
+	* This method receives a "raw" JButton and formats it to the 
+	* format, that will be used for all the buttons that appear in
+	* the program. Returns the formatted button to the caller.
+	* The method may be called by any of the class, that 
+	* extended View class.
+	**/
 	protected JButton formatButton ( JButton buttonToFormat )
 	{
 
@@ -424,14 +188,14 @@ public abstract class View extends JPanel implements IView, IControl,
 
 	}
 	
-	//----------------------------------------------------------------
-	// JOSH ADDED FOR SMALL BUTTONS
-	// This method receives a "raw" JButton and formats it to the 
-	// format, that will be used for all the buttons that appear in
-	// the program. Returns the formatted button to the caller.
-	// The method may be called by any of the class, that 
-	// extended View class.
-	//-----------------------------------------------------------------
+	/**
+	* JOSH ADDED FOR SMALL BUTTONS
+	* This method receives a "raw" // ?\-+\n\t?\n?((?:\t+//(?: ?.*)\n\n?)*)\t// ?\-+JButton and formats it to the 
+	* format, that will be used for all the buttons that appear in
+	* the program. Returns the formatted button to the caller.
+	* The method may be called by any of the class, that 
+	* extended View class.
+	**/
 	protected JButton formatButtonSmall ( JButton buttonToFormat )
 	{
 
@@ -447,12 +211,12 @@ public abstract class View extends JPanel implements IView, IControl,
 
 	}
 
-	//-------------------------------------------------------------------
-	// This method receives a String viewTitle and formats it to the 
-	// format, that will be used for all the Views' titles that appear in
-	// the program. Returns the formatted JPanel to the caller.
-	// The method may be called by any child of View class.
-	//--------------------------------------------------------------------
+	/**
+	* This method receives a String viewTitle and formats it to the 
+	* format, that will be used for all the Views' titles that appear in
+	* the program. Returns the formatted JPanel to the caller.
+	* The method may be called by any child of View class.
+	**/
 	protected JPanel formatViewTitle ( String viewTitle )
 	{
 		JPanel container = new JPanel( );
@@ -472,17 +236,17 @@ public abstract class View extends JPanel implements IView, IControl,
 		return container;
 	}
 
-	//------------------------------------------------------------------------------------
-	// ANNA UPDATED ON 3.31.12: this method will take over job of formatButton
-	// ANNA UPDATED ON 4.23.12: this method will perform a job of a switching 
+	/**
+	* ANNA UPDATED ON 3.31.12: this method will take over job of formatButton
+	* ANNA UPDATED ON 4.23.12: this method will perform a job of a switching 
 
-	// The main idea is: when any child of View is created, all the components (such as
-	// buttons, text fields, combo drop down boxes and tables) are sent to this method 
-	// to get formatting that is consistent throughout the entire application.
-	// @param is JComponent componentToFormat - any component that needs formating
-	// @return JComponent componentToFormat the same component that was sent to this 
-	// method, but already formatted.	
-	//------------------------------------------------------------------------------------
+	* The main idea is: when any child of View is created, all the components (such as
+	* buttons, text fields, combo drop down boxes and tables) are sent to this method 
+	* to get formatting that is consistent throughout the entire application.
+	* @param is JComponent componentToFormat - any component that needs formating
+	* @return JComponent componentToFormat the same component that was sent to this 
+	* method, but already formatted.	
+	**/
 	protected JComponent formatComponent ( JComponent componentToFormat )
 	{
 		// all the components will be of uniform Font and Alignment
@@ -517,52 +281,50 @@ public abstract class View extends JPanel implements IView, IControl,
 		return componentToFormat;
 	}
 	
-		//------------------------------------------------------------------------------------
-		
-		// The main idea is: when any child of View is created, all the components (such as
-		// buttons, text fields, combo drop down boxes and tables) are sent to this method 
-		// to get formatting that is consistent throughout the entire application.
-		// @param is JComponent componentToFormat - any component that needs formating
-		// @return JComponent componentToFormat the same component that was sent to this 
-		// method, but already formatted.	
-		//------------------------------------------------------------------------------------
-		protected JComponent formatComponentLarge ( JComponent componentToFormat )
+	/**
+	
+	* The main idea is: when any child of View is created, all the components (such as
+	* buttons, text fields, combo drop down boxes and tables) are sent to this method 
+	* to get formatting that is consistent throughout the entire application.
+	* @param is JComponent componentToFormat - any component that needs formating
+	* @return JComponent componentToFormat the same component that was sent to this 
+	* method, but already formatted.	
+	**/
+	protected JComponent formatComponentLarge ( JComponent componentToFormat )
+	{
+		// all the components will be of uniform Font and Alignment
+		componentToFormat.setFont( myComponentsFont );
+		componentToFormat.setAlignmentX( CENTER_ALIGNMENT );
+
+		// if the component is JLabel call the method 
+		// formatLabel ( JLabel labelToFormat ), then return it
+		if ( componentToFormat instanceof JLabel ) 
 		{
-			// all the components will be of uniform Font and Alignment
-			componentToFormat.setFont( myComponentsFont );
-			componentToFormat.setAlignmentX( CENTER_ALIGNMENT );
-
-			// if the component is JLabel call the method 
-			// formatLabel ( JLabel labelToFormat ), then return it
-			if ( componentToFormat instanceof JLabel ) 
-			{
-				return formatLargeLabel ( (JLabel) componentToFormat );
-				
-			}
-
+			return formatLargeLabel ( (JLabel) componentToFormat );
 			
-			if (!( componentToFormat instanceof JLabel ) && 
-				!( componentToFormat instanceof JRadioButton ))
-			{
-				componentToFormat.setBorder ( new LineBorder ( Color.black, 1 ) );
-				componentToFormat.setPreferredSize( componentToFormat instanceof JScrollPane ? sizeArea : sizeButton );
-				componentToFormat.setMaximumSize(  componentToFormat instanceof JScrollPane ? sizeArea : sizeButton );
-			}
-
-			
-			// if the component is a JButton then call formatButton method 
-			// to add additional formats it needs, such as action listener
-			if ( componentToFormat instanceof JButton )
-			{
-				return formatButton ( ( JButton )componentToFormat );
-			}
-
-			return componentToFormat;
 		}
 
-	//---------------------------------------------------------------------------
-	//
-	//---------------------------------------------------------------------------
+		
+		if (!( componentToFormat instanceof JLabel ) && 
+			!( componentToFormat instanceof JRadioButton ))
+		{
+			componentToFormat.setBorder ( new LineBorder ( Color.black, 1 ) );
+			componentToFormat.setPreferredSize( componentToFormat instanceof JScrollPane ? sizeArea : sizeButton );
+			componentToFormat.setMaximumSize(  componentToFormat instanceof JScrollPane ? sizeArea : sizeButton );
+		}
+
+		
+		// if the component is a JButton then call formatButton method 
+		// to add additional formats it needs, such as action listener
+		if ( componentToFormat instanceof JButton )
+		{
+			return formatButton ( ( JButton )componentToFormat );
+		}
+
+		return componentToFormat;
+	}
+
+
 	protected JLabel formatLabel ( JLabel labelToFormat )
 	{
 		labelToFormat.setPreferredSize( sizeLabel );
@@ -572,9 +334,7 @@ public abstract class View extends JPanel implements IView, IControl,
 
 	}
 	
-	//---------------------------------------------------------------------------
-	//
-	//---------------------------------------------------------------------------
+
 	protected JLabel formatLargeLabel ( JLabel labelToFormat )
 	{
 		labelToFormat.setPreferredSize( sizeMidLabel );
@@ -584,9 +344,7 @@ public abstract class View extends JPanel implements IView, IControl,
 
 	}
 	
-	//---------------------------------------------------------------------------
-	//
-	//---------------------------------------------------------------------------
+
 	protected JComboBox formatDropDown ( JComboBox dropDown )
 	{
 			dropDown.setPreferredSize( smallDropDown );
@@ -599,11 +357,11 @@ public abstract class View extends JPanel implements IView, IControl,
 			return dropDown;
 	}
 	
-	//---------------------------------------------------------------------------
-	// This method is called from any of the children of View class when there 
-	// is a need for combination/layout in the form of:
-	// Label:      Text_Field
-	//---------------------------------------------------------------------------
+	/**
+	* This method is called from any of the children of View class when there 
+	* is a need for combination/layout in the form of:
+	* Label:      Text_Field
+	**/
 	protected JPanel formatCurrentPanel ( String labelName, JComponent component )
 	{
 		JPanel currentPanel = new JPanel ( );
@@ -619,11 +377,11 @@ public abstract class View extends JPanel implements IView, IControl,
 		return currentPanel;
 	}	
 	
-	//---------------------------------------------------------------------------
-	// This method is called from any of the children of View class when there 
-	// is a need for combination/layout in the form of:
-	// Label:      Text_Field
-	//---------------------------------------------------------------------------
+	/**
+	* This method is called from any of the children of View class when there 
+	* is a need for combination/layout in the form of:
+	* Label:      Text_Field
+	**/
 	protected JPanel formatCurrentPanelLarge ( String labelName, JComponent component )
 	{
 		JPanel currentPanel = new JPanel ( );
@@ -639,12 +397,12 @@ public abstract class View extends JPanel implements IView, IControl,
 		return currentPanel;
 	}	
 	
-	//---------------------------------------------------------------------------
-	// This method is called from any of the children of View class when there 
-	// is a need for combination/layout in the form of:
-	// Label:      Text_Field
-	// Plus, the contents of the whole panel is centered
-	//---------------------------------------------------------------------------
+	/**
+	* This method is called from any of the children of View class when there 
+	* is a need for combination/layout in the form of:
+	* Label:      Text_Field
+	* Plus, the contents of the whole panel is centered
+	**/
 	protected JPanel formatCurrentPanelCenter ( String labelName, JComponent component )
 	{
 		JPanel currentPanel = new JPanel ( );
@@ -660,13 +418,13 @@ public abstract class View extends JPanel implements IView, IControl,
 		return currentPanel;
 	}	
 	
-	// ADDED BY S. MITRA 2013/03/03
-	//---------------------------------------------------------------------------
-	// This method is called from any of the children of View class when there 
-	// is a need for combination/layout in the form of:
-	// Label:      Text_Field
-	// This sends the actual JLabel object from the client to this method
-	//---------------------------------------------------------------------------
+	/** ADDED BY S. MITRA 2013/03/03
+	*
+	* This method is called from any of the children of View class when there 
+	* is a need for combination/layout in the form of:
+	* Label:      Text_Field
+	* This sends the actual JLabel object from the client to this method
+	**/
 	protected JPanel formatCurrentPanel ( JLabel lbl, JComponent component )
 	{
 		JPanel currentPanel = new JPanel ( );
@@ -681,13 +439,13 @@ public abstract class View extends JPanel implements IView, IControl,
 		return currentPanel;
 	}	
 	
-	// ADDED BY ANDREW ALLEN 2013/04/05
-	//---------------------------------------------------------------------------
-	// This method is called from any of the children of View class when there 
-	// is a need for combination/layout in the form of:
-	// Label:      Text_Field
-	// This sends the actual JLabel object from the client to this method
-	//---------------------------------------------------------------------------
+	/** ADDED BY ANDREW ALLEN 2013/04/05
+	*
+	* This method is called from any of the children of View class when there 
+	* is a need for combination/layout in the form of:
+	* Label:      Text_Field
+	* This sends the actual JLabel object from the client to this method
+	**/
 	protected JPanel formatCurrentPanelLarge ( JLabel lbl, JComponent component )
 	{
 		JPanel currentPanel = new JPanel ( );
@@ -702,9 +460,9 @@ public abstract class View extends JPanel implements IView, IControl,
 		return currentPanel;
 	}	
 	
-	//---------------------------------------------------------------------------
-	// MONEY
-	//---------------------------------------------------------------------------
+	/**
+	* MONEY
+	**/
 	protected JPanel formatMoneyPanel ( String labelName, JComponent component )
 	{
 		// indicates preferred size of a Label that is used in conjunction
@@ -733,10 +491,9 @@ public abstract class View extends JPanel implements IView, IControl,
 	}
 	
 
-	// ADDED BY ANDREW ALLEN 4/5/13
-	//---------------------------------------------------------------------------
-	// MONEY
-	//---------------------------------------------------------------------------
+	/** ADDED BY ANDREW ALLEN 4/5/13
+	 * MONEY
+	**/
 	protected JPanel formatMoneyPanelLarge ( String labelName, JComponent component )
 	{
 		// indicates preferred size of a long Label that is used in conjunction
@@ -764,13 +521,13 @@ public abstract class View extends JPanel implements IView, IControl,
 	}
 	
 	
-	//---------------------------------------------------------------------------
-	// Method is overloaded: program will modify the appearance of the Panel 
-	// based on the number of components sent to it.
-	// This method is called from any of the children of View class when there 
-	// is a need for combination/layout in the form of:
-	// Label:      Comp_1	Comp_2	Comp_3
-	//---------------------------------------------------------------------------
+	/**
+	* Method is overloaded: program will modify the appearance of the Panel 
+	* based on the number of components sent to it.
+	* This method is called from any of the children of View class when there 
+	* is a need for combination/layout in the form of:
+	* Label:      Comp_1	Comp_2	Comp_3
+	**/
 	protected JPanel formatCurrentPanel ( String labelName, JComponent comp_1, 
 										  JComponent comp_2, JComponent comp_3 )
 	{
@@ -794,13 +551,13 @@ public abstract class View extends JPanel implements IView, IControl,
 	}	
 	
 
-	//---------------------------------------------------------------------------
-	// Method is overloaded: program will modify the appearance of the Panel 
-	// based on the number of components sent to it.
-	// This method is called from any of the children of View class when there 
-	// is a need for combination/layout in the form of:
-	// Label:      Comp_1	Comp_2	Comp_3
-	//---------------------------------------------------------------------------
+	/**
+	* Method is overloaded: program will modify the appearance of the Panel 
+	* based on the number of components sent to it.
+	* This method is called from any of the children of View class when there 
+	* is a need for combination/layout in the form of:
+	* Label:      Comp_1	Comp_2	Comp_3
+	**/
 	protected JPanel formatCurrentPanelLarge ( String labelName, JComponent comp_1, 
 										  JComponent comp_2, JComponent comp_3 )
 	{
@@ -823,7 +580,7 @@ public abstract class View extends JPanel implements IView, IControl,
 		return currentPanel;
 	}	
 
-	//---------------------------------------------------------------------------
+
 	protected JPanel formatCurrentPanelLeft ( String labelName, JComponent comp_1, 
 											  JComponent comp_2, JComponent comp_3 )
 	{
@@ -851,11 +608,11 @@ public abstract class View extends JPanel implements IView, IControl,
 	
 	
 	
-	//---------------------------------------------------------------------------
-	// This method is called from any of the children of View class when there 
-	// is a need for a label in the middle   EX
-	//                     OR                       
-	//---------------------------------------------------------------------------
+	/**
+	* This method is called from any of the children of View class when there 
+	* is a need for a label in the middle   EX
+	*                     OR                       
+	**/
 	protected JPanel formatMiddleLabel( String label )
 	{
 		JPanel currentPanel = new BluePanel();
@@ -870,165 +627,13 @@ public abstract class View extends JPanel implements IView, IControl,
 		return currentPanel;
 	}
 	
-	/*
-	 * 
-	 */
-	public void resetDayArray(JComboBox theBox, String month, int year)
-	{
-		String[] dayArray;
-		int numDays = 31;
-		//Adjust for numbers
-		if(month.equals("01") || month.equals("1"))
-			month = "January";
-		if(month.equals("02") || month.equals("2"))
-			month = "February";
-		if(month.equals("03") || month.equals("3"))
-			month = "March";
-		if(month.equals("04") || month.equals("4"))
-			month = "April";
-		if(month.equals("05") || month.equals("5"))
-			month = "May";
-		if(month.equals("06") || month.equals("6"))
-			month = "June";
-		if(month.equals("07") || month.equals("7"))
-			month = "July";
-		if(month.equals("08") || month.equals("8"))
-			month = "August";
-		if(month.equals("09") || month.equals("9"))
-			month = "September";
-		if(month.equals("10") || month.equals("10"))
-			month = "October";
-		if(month.equals("11") || month.equals("11"))
-			month = "November";
-		if(month.equals("12") || month.equals("12"))
-			month = "December";
-		//------------End Adjustments
-		
-		
-		
-		//Sep, Ap, June, Nov
-		//Jan, Mar, May, July, Aug, Oct, Dec
-		//Feb
-		if(month.equals("April") || month.equals("June") || month.equals("September") || month.equals("November"))
-		{
-			numDays = 30;
-		}
-		else if(month.equals("January") || month.equals("March") || month.equals("May") || month.equals("August") || month.equals("October") || month.equals("December"))
-		{
-			numDays = 31;
-		}
-		else if(month.equals("February"))
-		{
-			boolean leapYear = getLeapYear(year);
-			if(leapYear)
-				numDays = 29;
-			else
-				numDays = 28;
-		}
-		else //Default to 31 in case
-		{
-			numDays = 31;
-		}
-		
-		dayArray = new String[numDays];
-		for(int x = 1; x <= numDays; x++)
-		{
-			String prefix = "";
-			if ((1 <= x) && (x <=9))
-				prefix = "0";
-			dayArray[x-1] = "" + prefix + x;
-		}
-		theBox.removeAllItems();
-		theBox.setModel(new DefaultComboBoxModel (dayArray));
-	}
 	
-	private boolean getLeapYear(int year)
-	{
-		if(year%4 == 0 && (year%100 != 0 || year%400 == 0))
-			return true;
-		else
-			return false;
-	}
-	
-	
-	// If you need days with leading zeros, use this method.
-	//-----------------------------------------------------------------
-	public void resetDayArrayWithLeadingZeros(JComboBox theBox, String month, int year)
-	{
-		String[] dayArray;
-		int numDays = 31;
-		//Adjust for numbers
-		if(month.equals("01") || month.equals("1"))
-			month = "January";
-		if(month.equals("02") || month.equals("2"))
-			month = "February";
-		if(month.equals("03") || month.equals("3"))
-			month = "March";
-		if(month.equals("04") || month.equals("4"))
-			month = "April";
-		if(month.equals("05") || month.equals("5"))
-			month = "May";
-		if(month.equals("06") || month.equals("6"))
-			month = "June";
-		if(month.equals("07") || month.equals("7"))
-			month = "July";
-		if(month.equals("08") || month.equals("8"))
-			month = "August";
-		if(month.equals("09") || month.equals("9"))
-			month = "September";
-		if(month.equals("10") || month.equals("10"))
-			month = "October";
-		if(month.equals("11") || month.equals("11"))
-			month = "November";
-		if(month.equals("12") || month.equals("12"))
-			month = "December";
-		//------------End Adjustments
-		
-		
-		
-		//Sep, Ap, June, Nov
-		//Jan, Mar, May, July, Aug, Oct, Dec
-		//Feb
-		if(month.equals("April") || month.equals("June") || month.equals("September") || month.equals("November"))
-		{
-			numDays = 30;
-		}
-		else if(month.equals("January") || month.equals("March") || month.equals("May") || month.equals("August") || month.equals("October") || month.equals("December"))
-		{
-			numDays = 31;
-		}
-		else if(month.equals("February"))
-		{
-			boolean leapYear = getLeapYear(year);
-			if(leapYear)
-				numDays = 29;
-			else
-				numDays = 28;
-		}
-		else //Default to 31 in case
-		{
-			numDays = 31;
-		}
-		
-		dayArray = new String[numDays];
-		
-		for(int x = 1; x <= 9; x++)
-			dayArray[x-1] = "0" + x;
-		
-		for(int x = 10; x <= numDays; x++)
-			dayArray[x-1] = "" + x;
-		
-		theBox.removeAllItems();
-		theBox.setModel(new DefaultComboBoxModel (dayArray));
-	}
-	
-	//-------------------------------------------------------------
+
 	protected void writeToFile(String fName)
 	{
 		
 	}
 	
-	//--------------------------------------------------------------------------
 	protected void saveToExcelFile()
 	{
 		// Put up JFileChooser
