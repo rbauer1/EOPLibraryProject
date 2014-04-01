@@ -9,40 +9,35 @@
  */
 package model.transaction;
 
-import java.util.List;
+
 import java.util.Properties;
 
-import model.Book;
-import model.BookCollection;
 import userinterface.View;
 import utilities.Key;
+import model.Book;
 
-public class ListBooksTransaction extends Transaction {
-	private BookCollection bookCollection;
-	private List<Book> books;
-	private Book selectedBook;
-
-	public ListBooksTransaction() {
+public class DeleteBooksTransaction extends Transaction {
+	private Transaction listBooksTransaction;
+	public DeleteBooksTransaction() {
 		super();
 	}
 
 	@Override
-	public Object getState(String key) 
-	{
-		if(key.equals(Key.GET_BOOK_COLLECTION)){
-			return books;
-		}else if(key.equals(Key.SELECT_BOOK)){
-			return selectedBook;
-		}
+	public Object getState(String key) {
 		return null;
+	}
+	
+	@Override
+	public void execute(){
+		listBooksTransaction = 
+				TransactionFactory.executeTransaction(this, "ListBooksTransaction", 
+						Key.BACK_TO_BOOK_MENU, Key.SELECT_BOOK);
 	}
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.GET_BOOK_COLLECTION)){
-			getBooks((Properties)value);
-		}else if(key.equals(Key.SELECT_BOOK)){
-			selectedBook = (Book)value;
+		if(key.equals(Key.SELECT_BOOK)){
+			((Book)value).setInactive();
 		}
 		registry.updateSubscribers(key, this);
 	}
@@ -55,14 +50,11 @@ public class ListBooksTransaction extends Transaction {
 
 	@Override
 	protected View createView() {
-		return getView("ListBooksView");
+		return null;
 	}
-	
-	private void getBooks(Properties props){
-		System.out.println(props);
-		bookCollection = new BookCollection();
-		bookCollection.find(props);
-		books = bookCollection.getEntities();
+
+	private void submitNewBook(Properties bookData){
+		
 	}
 	
 }

@@ -130,7 +130,7 @@ public class MainMenuView extends View
 		else if (evt.getSource() == btnBookActions)
 		{
 //			myRegistry.updateSubscribers("PerformTransView", null);
-			myModel.stateChangeRequest(Key.TO_BOOK_MENU, null);
+			myModel.stateChangeRequest(Key.BACK_TO_BOOK_MENU, null);
 		}
 		
 		else if (evt.getSource() == btnBorrowerActions)

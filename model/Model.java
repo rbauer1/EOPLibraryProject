@@ -115,6 +115,13 @@ public abstract class Model extends EntityBase {
 	}
 
 	/**
+	 * Returns the persistentState of this Model
+	 */
+	public Properties getPersistentState(){
+		return persistentState;
+	}
+	
+	/**
 	 * Changes value of column for provided key in persistent state.
 	 * This method can be overridden in subclasses to implement specific functionality.
 	 * @param key - column name
@@ -198,8 +205,10 @@ public abstract class Model extends EntityBase {
 			return false;
 		}
 		try {
-			String key = (String) this.getState(getPrimaryKey());
-			if (this.persisted && key != null && key != "") {
+			String keyValue = (String) this.getState(getPrimaryKey());
+			System.out.println(keyValue);
+			System.out.println(this.persisted);
+			if (this.persisted && keyValue != null && keyValue != "") {
 				update();
 			} else {
 				insert();

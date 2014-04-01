@@ -9,6 +9,8 @@
  */
 package model.transaction;
 
+import impresario.IView;
+import utilities.Key;
 import event.Event;
 
 /**
@@ -35,5 +37,38 @@ public class TransactionFactory {
 		}
 		throw new IllegalArgumentException("Invalid transaction name provided");
 	}
+	
+	
+		/**
+		 * Begins execution on the transaction with the provided name. 
+		 * Listens to the provided returnEvent for completion of transaction.
+		 * @param subscriber
+		 * @param name
+		 * @param returnEvent
+		 */
+		public static Transaction executeTransaction(IView subscriber, String name, String... returnEvent) {
+			try {
+				Transaction transaction = TransactionFactory.createTransaction(name);
+				for(String rE : returnEvent) transaction.subscribe(rE, subscriber);
+				transaction.execute();
+				return transaction;
+			} catch (Exception e) {
+				new Event("TransactionFactory", "executeTransaction",
+						"Failure executing tranasction: " + e.toString(), Event.ERROR);
+			}
+			return null;
+		}
+		
+		
+		
+		/**
+		 * Begins execution on the transaction with the provided name. 
+		 * Listens to "TranscationCompleted" for completion of transaction.
+		 * @param subscriber
+		 * @param name
+		 */
+		public static Transaction executeTransaction(IView subscriber, String name) {
+			return executeTransaction(subscriber, name, Key.TRANSACTION_COMPLETED);
+		}
 	
 }

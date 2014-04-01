@@ -64,7 +64,7 @@ public class AddBookView extends View {
 		clearErrorMessage();
 
 		if (evt.getSource() == cancelButton) {
-			myModel.stateChangeRequest(Key.ADD_BOOK_COMPLETED, null);
+			myModel.stateChangeRequest(Key.BACK_TO_BOOK_MENU, null);
 		}else if (evt.getSource() == clearButton){
 			resetForm();
 		}else if (evt.getSource() == submitButton) {

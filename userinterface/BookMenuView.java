@@ -139,22 +139,22 @@ public class BookMenuView extends View
 		
 		else if (src == btnModify)
 		{
-			myModel.stateChangeRequest(Key.EXECUTE_LIST_BOOKS, null);
+			myModel.stateChangeRequest(Key.EXECUTE_MODIFY_BOOK, null);
 		}
 		else if (src == btnDelete)
 		{
-			myRegistry.updateSubscribers("RevenueReportView", null);
+			myModel.stateChangeRequest(Key.EXECUTE_DELETE_BOOK, null);
 		}
-		else if (src == btnAdd)
+		else if (src == btnProcessLostBook)
 		{
 			myRegistry.updateSubscribers("PerformTransView", null);
 		}
 		
-		else if (src == btnModify)
+		else if (src == btnListAvailable)
 		{
 			myRegistry.updateSubscribers("ListTransactionsView", null);
 		}
-		else if (src == btnDelete)
+		else if (src == btnListUnavailable)
 		{
 			myRegistry.updateSubscribers("RevenueReportView", null);
 		}

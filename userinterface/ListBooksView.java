@@ -3,7 +3,6 @@ package userinterface;
 // system imports
 // project imports
 import impresario.IModel;
-import utilities.Key;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -35,8 +34,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import model.BookCollection;
 import model.Book;
+import utilities.Key;
 
 //==============================================================
 public class ListBooksView extends View
@@ -45,7 +44,7 @@ public class ListBooksView extends View
 	// GUI components
 	private JTextField barcodeField;
 	private JTextField author1Field;
-	private JTextField author2Field;
+	private JTextField isbnField;
 	private JTextField titleField;
 	@SuppressWarnings("rawtypes")
 	private JComboBox statusList;
@@ -59,12 +58,11 @@ public class ListBooksView extends View
 	private JButton cancelButton;
 
 	// ComboBox data
-	private String[] status = {"Active", "Inactive", "Any"};
+	private String[] status = {"Active", "Lost", "Any"};
 
 	// Collection to keep search result
-	private ArrayList<Book> bookArrayList;
+	private ArrayList<Book> books;
 	private List<Book> allBooks;
-	private Book selectedBook;
 
 	// Selected row index to check if any row is selected
 	private int selectedRowIndex;
@@ -84,7 +82,7 @@ public class ListBooksView extends View
 		super(transaction, "ListBooksView");
 
 		// Set everything for initial use
-		bookArrayList = new ArrayList<Book>();
+		books = new ArrayList<Book>();
 
 		// Get the operation type
 		operationType = (String) myModel.getState("OperationType");
@@ -176,13 +174,12 @@ public class ListBooksView extends View
 		tablePanel.setLayout( new BoxLayout ( tablePanel, BoxLayout.Y_AXIS ));
 
 		Vector<String> columnNames = new Vector<String>();
-
 		columnNames.add("Barcode");
 		columnNames.add("Title");
+		columnNames.add("Author");
 		columnNames.add("Discipline");
-		columnNames.add("Author1");
-		columnNames.add("Author2");
-		columnNames.add("Status");
+		columnNames.add("ISBN");
+		columnNames.add("Date Of Last Update");
 
 		emptyTable = new DefaultTableModel(columnNames, 0);
 
@@ -190,6 +187,7 @@ public class ListBooksView extends View
 		bookTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		bookTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		bookTable.setPreferredScrollableViewportSize(new Dimension(900,400));
+		bookTable.setAutoCreateRowSorter( true );
 		bookTable.getSelectionModel().addListSelectionListener(this);
 
 		/* Add a mouse listener to detect double-clicks if it's an
@@ -227,6 +225,7 @@ public class ListBooksView extends View
 	}
 
 	//-----------------------------------------------------------------
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private JPanel createDataEntryFields()
 	{
 		JPanel entryFieldsPanel = new BluePanel();
@@ -257,7 +256,7 @@ public class ListBooksView extends View
 		leftPanel.add(formatCurrentPanel("Barcode:", barcodeField));
 
 		author1Field = new JTextField(16);
-		leftPanel.add(formatCurrentPanel("Author1:", author1Field));
+		leftPanel.add(formatCurrentPanel("Author:", author1Field));
 		
 		
 		JPanel rightPanel = new BluePanel();
@@ -266,8 +265,8 @@ public class ListBooksView extends View
 		titleField = new JTextField(16);
 		rightPanel.add(formatCurrentPanel("Title:", titleField));
 		
-		author2Field = new JTextField(16);
-		rightPanel.add(formatCurrentPanel("Author2:", author2Field));
+		isbnField = new JTextField(16);
+		rightPanel.add(formatCurrentPanel("ISBN:", isbnField));
 
 		statusList = new JComboBox(status);
 		statusList.setPreferredSize(new Dimension(80, 25));
@@ -296,7 +295,8 @@ public class ListBooksView extends View
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setBackground( blue );
 
-		submitButton = new JButton( "Submit" );
+		//TODO this should read either Update or Delete depending on the intended user action
+		submitButton = new JButton( "Submit" ); 
 		buttonsPanel.add( formatButtonSmall ( submitButton ));
 
 		cancelButton = new JButton( "Cancel" );
@@ -309,13 +309,13 @@ public class ListBooksView extends View
 	//-------------------------------------------------------------
 	protected void getEntryTableModelValues()
 	{
-		bookArrayList.clear();
+		books.clear();
 
 		try
 		{
 			myModel.stateChangeRequest(Key.GET_BOOK_COLLECTION, getInfoFromFields());
 			// Get and set the table model
-			TableModel tableModel = new BookTableModel(bookArrayList);
+			TableModel tableModel = new BookTableModel(books);
 			bookTable.setModel(tableModel);
 			bookTable.repaint();
 		}
@@ -341,14 +341,10 @@ public class ListBooksView extends View
 		Properties bookInfo = new Properties();
 		bookInfo.setProperty("Barcode", barcodeField.getText());
 		bookInfo.setProperty("Author1", author1Field.getText());
-		bookInfo.setProperty("Author2", author2Field.getText());
+		bookInfo.setProperty("ISBN", isbnField.getText());
 		bookInfo.setProperty("Title", 	titleField.getText());
 		String status = (String)statusList.getSelectedItem();
-		if(status.equals("Any")){
-			bookInfo.setProperty("BookStatus", "");
-		}else{
-			bookInfo.setProperty("BookStatus", status);
-		}
+		bookInfo.setProperty("BookStatus", (status.equals("Any")?"":status));
 		return bookInfo;
 	}
 
@@ -373,16 +369,9 @@ public class ListBooksView extends View
 	//-------------------------------------------------------------
 	private void proceed(int selectedRowIndex)
 	{
-		//TODO
-		//TODO
-//		selectedBook = bookArrayList.get(selectedRowIndex);
-//
-//		Properties prps = new Properties();
-//
-//		prps.setProperty("LastName", (String) selectedBook.elementAt(0));
-//		prps.setProperty("FirstName", (String) selectedBook.elementAt(1));
-//		prps.setProperty("DateOfBirth", (String) selectedBook.elementAt(3));
-//
+		System.out.println(books);
+		myModel.stateChangeRequest(Key.SELECT_BOOK, books.get(selectedRowIndex));
+		
 //		// OperationType = Update
 //		if(operationType.contains("Update"))
 //		{
@@ -427,7 +416,7 @@ public class ListBooksView extends View
 //				bookTable.repaint();
 //			}
 		}else if (evt.getSource() == cancelButton){
-			myModel.stateChangeRequest(Key.LIST_BOOKS_COMPLETED, null);
+			myModel.stateChangeRequest(Key.BACK_TO_BOOK_MENU, null);
 		}else if(evt.getSource() == submitButton){
 			selectedRowIndex = isRowSelected();
 			if(isRowSelected() > -1){
@@ -504,7 +493,7 @@ public class ListBooksView extends View
 			if(! emptySearchResult)
 			{
 				getEntryTableModelValues();
-				displayMessage("Number of Books Found: " + bookArrayList.size());
+				displayMessage("Number of Books Found: " + books.size());
 			}
 		}
 	}
@@ -540,7 +529,7 @@ public class ListBooksView extends View
 	public void updateState(String key, Object value)
 	{
 		if(key.equals(Key.GET_BOOK_COLLECTION)){
-			bookArrayList = (ArrayList<Book>)value;
+			books = (ArrayList<Book>)value;
 		}
 	}
 

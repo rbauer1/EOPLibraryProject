@@ -53,9 +53,7 @@ public abstract class Transaction implements IView, IModel, ISlideShow {
 	}
 
 	//---------------------------------------------------------------------
-	
-	public abstract Object getState(String key);
-	public abstract void stateChangeRequest(String key, Object value);
+
 	protected abstract void setDependencies();	
 	protected abstract View createView();
 	
@@ -65,7 +63,7 @@ public abstract class Transaction implements IView, IModel, ISlideShow {
 	 * Begins execution of the Transaction. Uses createView 
 	 * as a hook method that should be implemented in sub classes
 	 */
-	public void doYourJob() {
+	public void execute() {
 		View currentView = createView();
 		swapToView(currentView);
 	}

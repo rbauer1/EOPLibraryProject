@@ -72,6 +72,11 @@ public class Book extends Model {
 		return null;
 	}
 	
+	public boolean setInactive(){
+		persistentState.setProperty("BookStatus", "Inactive");
+		return save();
+	}
+	
 	@Override
 	public boolean beforeSave() {
 		try {

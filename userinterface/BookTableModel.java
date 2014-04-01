@@ -1,92 +1,50 @@
 package userinterface;
 
-import model.Book;
-import utilities.Key;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
+import model.Book;
+
 //==============================================================================
-public class BookTableModel extends AbstractTableModel implements TableModel
-{
+public class BookTableModel extends AbstractTableModel implements TableModel {
 	private static final long serialVersionUID = 4213802193658338074L;
-	private ArrayList myState;
-	private ArrayList myColumns;
-	
-	//TODO order columns correctly. 
-	//TODO don't display unnecessary columns
+	private List<Properties> state;
+	/**	Names of columns as will appear on table in GUI */
+	private static final String[] COL_NAMES_DISP = {"Barcode","Title","Author","Discipline","ISBN","Date Of Last Update"};
+	/**	Names of properties corresponding to database  */
+	private static final String[] COL_NAMES_PROPS = {"Barcode","Title","Author1","Discipline","ISBN","DateOfLastUpdate"};
+	private static final int NUM_COLS = 6;
 
-	public BookTableModel ( ArrayList bookData )
-	{
-		myState = bookData;
-
-
-		//--------------------------------------------------------
-		myColumns = new ArrayList();
-
-		if ( myState.size() > 0 )
-		{
-			Properties firstElement = ((Book)myState.get(0)).getSchema();
-
-			Enumeration allColumnNames = firstElement.keys();
-
-			while ( allColumnNames.hasMoreElements() )
-			{
-				String nextColumnName = (String)allColumnNames.nextElement();
-				myColumns.add( nextColumnName );
-			}
-
-		}
-
-		//----------------------------------------------------------------
-
-
+	public BookTableModel(List<Book> bookData) {
+		state = new ArrayList<Properties>();
+		for(Book b : bookData) state.add(b.getPersistentState());
 	}
 
-	//--------------------------------------------------------------------------
-	public int getColumnCount()
-	{
-		//return 5;
-		return myColumns.size();
+	public int getColumnCount() {
+		return NUM_COLS;
 	}
 
-	//--------------------------------------------------------------------------
-	public int getRowCount()
-	{
-		return myState.size();
+	public int getRowCount() {
+		return state.size();
 	}
 
-	//--------------------------------------------------------------------------
-	public Object getValueAt ( int rowIndex, int columnIndex )
-	{		
-		//-----------------------------------------------------------------
-		Properties reportRow = (Properties)((Book)myState.get(rowIndex)).getState(Key.GET_PERSISTENT_STATE);
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		Properties reportRow = state.get(rowIndex);
 
-		if (( columnIndex >= 0 ) && ( columnIndex <= myColumns.size() - 1 ))
-		{
-			String columnName = ( String )myColumns.get( columnIndex );
-			return reportRow.getProperty( columnName );
+		if (columnIndex >= 0 && columnIndex < NUM_COLS) {
+			return reportRow.getProperty(COL_NAMES_PROPS[columnIndex]);
 		}
 
 		return null;
-		//-----------------------------------------------------------------
-
 
 	}
 
-	//--------------------------------------------------------------------------
-	public String getColumnName( int columnIndex )
-	{
-		//----------------------------------------------------------
-		if (( columnIndex >= 0 ) && ( columnIndex <= myColumns.size() - 1 ))
-		{
-			return ( String ) myColumns.get( columnIndex );
-		}
-
-		return "UNKNOWN";
-		//------------------------------------------------------------------
+	public String getColumnName(int columnIndex) {
+		if(columnIndex > NUM_COLS || columnIndex < 0) return "??";
+		return COL_NAMES_DISP[columnIndex];
 	}
 }

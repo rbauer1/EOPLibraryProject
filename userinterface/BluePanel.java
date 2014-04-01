@@ -19,12 +19,13 @@ import javax.swing.JPanel;
 
 public class BluePanel extends JPanel {
 	private static final long serialVersionUID = 3274303070952112811L;
-
+	private static final Color BLUE = new Color(133, 195, 230); 
 	public BluePanel() {
-		setBackground(new Color(133, 195, 230));
+		setBackground(BLUE);
 	}
 	
 	public BluePanel(LayoutManager lm){
 		super(lm);
+		setBackground(BLUE);
 	}
 }

@@ -90,23 +90,30 @@ public class Librarian implements IView, IModel, ISlideShow {
 		if (key.equals(Key.LOGIN)) {
 			loginErrorMessage = "";
 			loginWorker((Properties) value);
-		} else if (key.equals(Key.LOGIN_ERROR)) {			loginErrorMessage = value.toString();
-		
-		} else if (key.equals(Key.BACK_TO_MAIN_MENU)) {		showView("MainMenuView");
-		} else if (key.equals(Key.TO_BOOK_MENU)) {			showView("BookMenuView");
-		
-		} else if (key.equals(Key.EXECUTE_LIST_BOOKS)) {	executeTransaction(key, Key.LIST_BOOKS_COMPLETED);
-		} else if (key.equals(Key.LIST_BOOKS_COMPLETED)) {	showView("BookMenuView");
-		
-		} else if (key.equals(Key.EXECUTE_ADD_BOOK)) {		executeTransaction(key, Key.ADD_BOOK_COMPLETED);
-		} else if (key.equals(Key.ADD_BOOK_COMPLETED)) {	showView("BookMenuView");
-		
-		} else if (key.equals(Key.EXECUTE_RECOVER_PW)){		executeTransaction(key, Key.RECOVER_PW_COMPLETED);
-		} else if (key.equals(Key.RECOVER_PW_COMPLETED)){	showView("LoginView");
-		} else if (key.endsWith("Transaction")){			executeTransaction(key);
-		
-		} else if (key.equals(Key.LOGOUT)) {				showView("LoginView");
-		} else if (key.equals(Key.EXIT_SYSTEM)) {			exitSystem();
+			//TODO Possibly start using TO_BOOK_MENU in place of XXX_COMPLETED for Book transactions
+			
+		} else if (key.equals(Key.LOGIN_ERROR)) {			
+			loginErrorMessage = value.toString();
+		} else if (key.equals(Key.BACK_TO_MAIN_MENU)) {		
+			showView("MainMenuView");
+		} else if (key.equals(Key.BACK_TO_BOOK_MENU)) {		
+			showView("BookMenuView");
+		} else if (key.equals(Key.EXECUTE_ADD_BOOK)) {		
+			TransactionFactory.executeTransaction(this, key, Key.BACK_TO_BOOK_MENU);
+		} else if (key.equals(Key.EXECUTE_MODIFY_BOOK)) {	
+			TransactionFactory.executeTransaction(this, key, Key.BACK_TO_BOOK_MENU);
+		} else if (key.equals(Key.EXECUTE_DELETE_BOOK)) {	
+			TransactionFactory.executeTransaction(this, key, Key.BACK_TO_BOOK_MENU);
+		} else if (key.equals(Key.EXECUTE_RECOVER_PW)){		
+			TransactionFactory.executeTransaction(this, key, Key.RECOVER_PW_COMPLETED);
+		} else if (key.equals(Key.RECOVER_PW_COMPLETED)){	
+			showView("LoginView");
+		} else if (key.endsWith("Transaction")){			
+			TransactionFactory.executeTransaction(this, key);
+		} else if (key.equals(Key.LOGOUT)) {				
+			showView("LoginView");
+		} else if (key.equals(Key.EXIT_SYSTEM)) {			
+			exitSystem();
 		}
 		registry.updateSubscribers(key, this);
 	}
@@ -176,36 +183,7 @@ public class Librarian implements IView, IModel, ISlideShow {
 		swapToView(view);
 	}
 	
-	//---------------------------------------------------------------------
 	
-	/**
-	 * Begins execution on the transaction with the provided name. 
-	 * Listens to the provided returnEvent for completion of transaction.
-	 * @param name
-	 * @param returnEvent
-	 */
-	private void executeTransaction(String name, String returnEvent) {
-		try {
-			Transaction transaction = TransactionFactory.createTransaction(name);
-			transaction.subscribe(returnEvent, this);
-			transaction.doYourJob();
-		} catch (Exception e) {
-			new Event(Event.getLeafLevelClassName(this), "executeTransaction",
-					"Failure executing tranasction: " + e.toString(), Event.ERROR);
-		}
-	}
-	
-	
-	//---------------------------------------------------------------------
-	
-	/**
-	 * Begins execution on the transaction with the provided name. 
-	 * Listens to "TranscationCompleted" for completion of transaction.
-	 * @param name
-	 */
-	private void executeTransaction(String name) {
-		executeTransaction(name, Key.TRANSACTION_COMPLETED);
-	}
 
 	//---------------------------------------------------------------------
 	
