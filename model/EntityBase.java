@@ -1,27 +1,21 @@
-// tabs=4
-//************************************************************
-//	COPYRIGHT 2009 Sandeep Mitra and Michael Steves, The
-//    College at Brockport, State University of New York. -
-//	  ALL RIGHTS RESERVED
-//
-// This file is the product of The College at Brockport and cannot
-// be reproduced, copied, or used in any shape or form without
-// the express written consent of The College at Brockport.
-//************************************************************
-//
-// specify the package
+/**
+ * COPYRIGHT 2014 Sandeep Mitra and students 
+ * The College at Brockport, State University of New York.
+ * ALL RIGHTS RESERVED
+ * 
+ * This file is the product of The College at Brockport and cannot
+ * be reproduced, copied, or used in any shape or form without
+ * he express written consent of The College at Brockport. * 
+ */
 package model;
 
-// system imports
 import impresario.IModel;
 import impresario.ISlideShow;
 import impresario.IView;
 import impresario.ModelRegistry;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Hashtable;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.swing.JFrame;
@@ -30,209 +24,76 @@ import javax.swing.JPanel;
 import userinterface.MainFrame;
 import userinterface.View;
 import userinterface.WindowPosition;
-// project imports
 import database.Persistable;
 import event.Event;
 
+/**
+ * Super class for model objects. Handles setting up observer registry.
+ */
+public abstract class EntityBase extends Persistable implements IModel,
+		ISlideShow {
+	
+	/** Registry for entities interested in our events */
+	protected ModelRegistry registry;
 
-/** The superclass for all Scout Tree Sales app Model Entities that are also
- *  Persistable */
-//==============================================================
-public abstract class EntityBase extends Persistable
-	implements IModel, ISlideShow
-{
-	protected ModelRegistry myRegistry;	// registry for entities interested in our events
-	private int referenceCount;		// the number of others using us
-	protected boolean dirty;		// true if the data has changed
-	protected Properties persistentState;	// the field names and values from the database
+	/** Data store for fields from the db */
+	protected Properties persistentState;
 
-	protected Hashtable<String, View> myViews;
-	protected JFrame myFrame;
+	/** Data store for views that belong to this */
+	protected Map<String, View> views;
+	
+	/** Main display panel */
+	protected JFrame frame;
 
-	protected Properties mySchema;
-
-	// forward declarations
-	public abstract Object getState(String key);
-	public abstract void stateChangeRequest(String key, Object value);
-
-	// constructor for this class
-	//----------------------------------------------------------
-	protected EntityBase()
-	{
-		myFrame = MainFrame.getInstance();
-		myViews = new Hashtable<String, View>();
+	
+	/**
+	 * Constructs new entity and sets up registry.
+	 */
+	protected EntityBase() {
+		frame = MainFrame.getInstance();
+		views = new Hashtable<String, View>();
 
 		// create a place to hold our state from the database
 		persistentState = new Properties();
 
 		// create a registry for subscribers
-		myRegistry = new ModelRegistry(this.getClass().getSimpleName());
-
-		// initialize the reference count
-		referenceCount = 0;
-		// indicate the data in persistentState matches the database contents
-		dirty = false;
-    }
-
-	/** Register objects to receive state updates. */
-	//----------------------------------------------------------
-	public void subscribe(String key, IView subscriber)
-	{
-		// DEBUG: System.out.println("EntityBase[" + myTableName + "].subscribe");
-		// forward to our registry
-		myRegistry.subscribe(key, subscriber);
+		registry = new ModelRegistry(this.getClass().getSimpleName());
 	}
 
-	/** Unregister previously registered objects. */
-	//----------------------------------------------------------
-	public void unSubscribe(String key, IView subscriber)
-	{
-		// DEBUG: System.out.println("EntityBase.unSubscribe");
-		// forward to our registry
-		myRegistry.unSubscribe(key, subscriber);
+	@Override
+	public void subscribe(String key, IView subscriber) {
+		registry.subscribe(key, subscriber);
 	}
 
-
-    //-----------------------------------------------------------------------------------
-    // package level permission, only ObjectFactory should modify
-    void incrementReferenceCount()
-    {
-		referenceCount++;
-    }
-
-    //-----------------------------------------------------------------------------------
-    // package level permission, only ObjectFactory should modify
-    void decrementReferenceCount()
-    {
-		referenceCount--;
-    }
-
-    //-----------------------------------------------------------------------------------
-    // package level permission, only ObjectFactory should modify
-    int getReferenceCount()
-    {
-		return referenceCount;
-    }
-
-	//-----------------------------------------------------------------------------------
-    // package level permission, only ObjectFactory and others in same package should invoke
-    void releaseAggregates()
-    {
-    }
-
-	//----------------------------------------------------------
-	protected String convertToDefaultDateFormat(Date theDate)
-	{
-
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-
-		String valToReturn = formatter.format(theDate);
-
-		return valToReturn;
-
+	@Override
+	public void unSubscribe(String key, IView subscriber) {
+		registry.unSubscribe(key, subscriber);
 	}
 
-	//----------------------------------------------------------
-	protected String convertDateStringToDefaultDateFormat(String dateStr)
-	{
+	public void swapToView(IView otherView) {
 
-		Date theDate = validateDateString(dateStr);
-
-		if (theDate == null)
-		{
-			return null;
-		}
-		else
-		{
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-
-			String valToReturn = formatter.format(theDate);
-
-			return valToReturn;
-		}
-	}
-
-	//----------------------------------------------------------
-	protected Date validateDateString(String str)
-	{
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-
-			Date theDate = null;
-
-			try
-			{
-				theDate = formatter.parse(str);
-				return theDate;
-			}
-			catch (ParseException ex)
-			{
-				SimpleDateFormat formatter2 =
-					new SimpleDateFormat("yyyy-MM-dd");
-
-				try
-				{
-					theDate = formatter2.parse(str);
-					return theDate;
-				}
-				catch (ParseException ex2)
-				{
-					SimpleDateFormat formatter3 =
-						new SimpleDateFormat("yyyy/MMdd");
-
-					try
-					{
-						theDate = formatter3.parse(str);
-						return theDate;
-					}
-					catch (ParseException ex3)
-					{
-						SimpleDateFormat formatter4 =
-							new SimpleDateFormat("yyyyMM/dd");
-
-						try
-						{
-							theDate = formatter4.parse(str);
-							return theDate;
-						}
-						catch (ParseException ex4)
-						{
-							return null;
-						}
-					}
-				}
-			}
-	}
-
-
-	//-----------------------------------------------------------------------------
-	public void swapToView(IView otherView)
-	{
-
-		if (otherView == null)
-		{
+		if (otherView == null) {
 			new Event(Event.getLeafLevelClassName(this), "swapToView",
-				"Missing view for display ", Event.ERROR);
+					"Missing view for display ", Event.ERROR);
 			return;
 		}
 
-		if (otherView instanceof JPanel)
-		{
-			JPanel currentView = (JPanel)myFrame.getContentPane().getComponent(0);
+		if (otherView instanceof JPanel) {
+			JPanel currentView = (JPanel) frame.getContentPane()
+					.getComponent(0);
 			// and remove it
-			myFrame.getContentPane().remove(currentView);
+			frame.getContentPane().remove(currentView);
 			// add our view
-			myFrame.getContentPane().add((JPanel)otherView);
-			//pack the frame and show it
-			myFrame.pack();
-			//Place in center
-			WindowPosition.placeCenter(myFrame);
-		}//end of SwapToView
-		else
-		{
+			frame.getContentPane().add((JPanel) otherView);
+			// pack the frame and show it
+			frame.pack();
+			// Place in center
+			WindowPosition.placeCenter(frame);
+		}// end of SwapToView
+		else {
 			new Event(Event.getLeafLevelClassName(this), "swapToView",
-				"Non-displayable view object sent ", Event.ERROR);
+					"Non-displayable view object sent ", Event.ERROR);
 		}
 	}
 
 }
-
