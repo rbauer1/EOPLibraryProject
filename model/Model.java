@@ -177,6 +177,21 @@ public abstract class Model extends EntityBase {
 	}
 
 	/**
+	 * @return true if this is persisted
+	 */
+	public boolean isPersisted() {
+		return persisted;
+	}
+
+	/**
+	 * Set if this model is persisted in the db
+	 * @param persisted
+	 */
+	public void setPersisted(boolean persisted) {
+		this.persisted = persisted;
+	}
+
+	/**
 	 * Inserts a new model into the db.
 	 * @throws SQLException
 	 */
