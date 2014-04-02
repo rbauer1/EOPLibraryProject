@@ -14,11 +14,10 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 
+import utilities.DateUtil;
 import utilities.Key;
 
 //======================================================================
@@ -27,17 +26,17 @@ public class AddWorkerView extends View {
 
 	private MessageView statusLog;
 
-	private JTextField barcodeField;
-	private JTextField titleField;
-	private JTextField author1Field;
-	private JTextField author2Field;
-	private JTextField publisherField;
-	private JTextField yearOfPubField;
-	private JTextField isbnField;
-	private CurrencyTextField suggestedPriceField;
+	private JTextField bannerField;
+	private JTextField firstNameField;
+	private JPasswordField passwordField;
+	private JTextField lastNameField;
+	private JTextField emailField;
+	private JTextField phoneField;
 	@SuppressWarnings("rawtypes")
-	private JComboBox bookConditionBox;
-	private JTextArea notesArea;
+	private JComboBox credentialsBox;
+	private JComboBox yearBox;
+	private JComboBox monthBox;
+	private JComboBox dayBox;
 	private JButton submitButton;
 	private JButton clearButton;
 	private JButton cancelButton;
@@ -66,25 +65,24 @@ public class AddWorkerView extends View {
 		clearErrorMessage();
 
 		if (evt.getSource() == cancelButton) {
-			myModel.stateChangeRequest(Key.BACK_TO_BOOK_MENU, null);
+			myModel.stateChangeRequest(Key.BACK_TO_WORKER_MENU, null);
 		}else if (evt.getSource() == clearButton){
 			resetForm();
 		}else if (evt.getSource() == submitButton) {
-			Properties newBookProps = new Properties();
-			newBookProps.put("Barcode", barcodeField.getText().trim());
-			newBookProps.put("Title", titleField.getText().trim());
-			newBookProps.put("Author1", author1Field.getText().trim());
-			newBookProps.put("Author2", author2Field.getText().trim());
-//			newBookProps.put("Author3", authorField.getText().trim());
-//			newBookProps.put("Author4", authorField.getText().trim());
-			newBookProps.put("Publisher", publisherField.getText().trim());
-			newBookProps.put("YearOfPublication", yearOfPubField.getText().trim());
-			newBookProps.put("ISBN", isbnField.getText().trim());
-			newBookProps.put("BookCondition", bookConditionBox.getSelectedItem());
-			newBookProps.put("SuggestedPrice", suggestedPriceField.getText().trim());
-			newBookProps.put("Notes", notesArea.getText());
+			Properties newWorkerProps = new Properties();
+			newWorkerProps.put("BannerID", bannerField.getText().trim());
+			newWorkerProps.put("FirstName", firstNameField.getText().trim());
+			newWorkerProps.put("Password", passwordField.getText().trim());
+			newWorkerProps.put("LastName", lastNameField.getText().trim());
+			newWorkerProps.put("Email", emailField.getText().trim());
+			newWorkerProps.put("ContactPhone", phoneField.getText().trim());
+			newWorkerProps.put("DateOfHire", getDate());
+			newWorkerProps.put("Credentials", credentialsBox.getSelectedItem());
+			newWorkerProps.put("DateOfLatestCredentialsStatus", DateUtil.getDate());
+			newWorkerProps.put("DateOfLastUpdate", DateUtil.getDate());
+			newWorkerProps.put("ActiveStatus", "Active");
 
-			myModel.stateChangeRequest(Key.SUBMIT_WORKER, newBookProps);
+			myModel.stateChangeRequest(Key.SUBMIT_WORKER, newWorkerProps);
 		}
 	}
 
@@ -98,25 +96,23 @@ public class AddWorkerView extends View {
 
 	// --------------------------------------------------------------
 	private void resetForm() {
-		barcodeField.setText("");
-		titleField.setText("");
-		author1Field.setText("");
-		author2Field.setText("");
-		publisherField.setText("");
-		yearOfPubField.setText("");
-		isbnField.setText("");
-		suggestedPriceField.setText("");
+		bannerField.setText("");
+		firstNameField.setText("");
+		passwordField.setText("");
+		lastNameField.setText("");
+		emailField.setText("");
+		phoneField.setText("");
 		
-		bookConditionBox.setSelectedIndex(0);
+		credentialsBox.setSelectedIndex(0);
+		updateDate();
 
-		notesArea.setText("");
 	}
 
 	/**
 	* Create this View Title with the string specified and formatted to this program standard in the superclass View
 	**/
 	private JPanel createTitle() {
-		return formatViewTitle("Add a Book");
+		return formatViewTitle("Add a Woker");
 	}
 
 	/**
@@ -143,76 +139,91 @@ public class AddWorkerView extends View {
 		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.Y_AXIS));
 		JPanel fieldSubPanel = new BluePanel();
 		fieldSubPanel.setLayout(new BoxLayout(fieldSubPanel, BoxLayout.X_AXIS));
+		JPanel dropDownSubPanel = new BluePanel();
+		dropDownSubPanel.setLayout(new BoxLayout(dropDownSubPanel, BoxLayout.X_AXIS));
 		
 		
 		JLabel requiredValues = new JLabel("* Denotes required value");
 		requiredValues.setFont(new Font("Arial", Font.BOLD, 14));
 		requiredValues.setForeground(requiredFieldLabelColor);
 		
-		barcodeField = new JTextField(16);
-		barcodeField.setText(" ");
-		barcodeField.addActionListener(this);
+		bannerField = new JTextField(16);
+		bannerField.setText("");
+		bannerField.addActionListener(this);
 
-		author1Field = new JTextField(16);
-		author1Field.setText(" ");
-		author1Field.addActionListener(this);
+		passwordField = new JPasswordField(16);
+		passwordField.setText("");
+		passwordField.addActionListener(this);
 		
-		publisherField = new JTextField(16);
-		publisherField.setText(" ");
-		publisherField.addActionListener(this);
+		emailField = new JTextField(16);
+		emailField.setText("");
+		emailField.addActionListener(this);
 		
-		isbnField = new JTextField(16);
-		isbnField.setText(" ");
-		isbnField.addActionListener(this);
+		updateDate();
+		dropDownSubPanel.add(monthBox);
+		dropDownSubPanel.add(dayBox);
+		dropDownSubPanel.add(yearBox);
 		
-		String[] choices = { "Good", "Damaged" };
-		bookConditionBox = new JComboBox<String>(choices);
+		String[] choices = { "Ordinary", "Administrator" };
+		credentialsBox = new JComboBox<String>(choices);
 		
 		JPanel col1 = new BluePanel();
 		col1.setLayout(new BoxLayout(col1, BoxLayout.Y_AXIS));
 		col1.add(formatLargeLabel(requiredValues));
-		col1.add(formatCurrentPanel("* Barcode:", barcodeField));
-		col1.add(formatCurrentPanel("* Author1:", author1Field));
-		col1.add(formatCurrentPanel("*  Publisher:", publisherField));
-		col1.add(formatCurrentPanel("   ISBN:", isbnField));
-		col1.add(formatCurrentPanel("   Condition:", bookConditionBox));
+		col1.add(formatCurrentPanel("*  Banner ID:", bannerField));
+		col1.add(formatCurrentPanel("*  Password:", passwordField));
+		col1.add(formatCurrentPanel("*  Email:", emailField));
+		col1.add(formatCurrentPanel("   Date of hire:", dropDownSubPanel));
+		col1.add(formatCurrentPanel("   Credentials:", credentialsBox));
 
 		
-		titleField = new JTextField(16);
-		titleField.setText(" ");
-		titleField.addActionListener(this);
+		firstNameField = new JTextField(16);
+		firstNameField.setText(" ");
+		firstNameField.addActionListener(this);
 
-		author2Field = new JTextField(16);
-		author2Field.setText(" ");
-		author2Field.addActionListener(this);
+		lastNameField = new JTextField(16);
+		lastNameField.setText(" ");
+		lastNameField.addActionListener(this);
 		
-		yearOfPubField = new JTextField(16);
-		yearOfPubField.setText(" ");
-		yearOfPubField.addActionListener(this);
+		phoneField = new JTextField(16);
+		phoneField.setText(" ");
+		phoneField.addActionListener(this);
 		
-		suggestedPriceField = new CurrencyTextField(16,16);
-		suggestedPriceField.addActionListener(this);
-		
-		
+		//TODO Fix Phone
+//		phone1 = new NumericTextField(3, 3);
+//		phonePanel.add(formatCurrentPanel("Phone:", phone1));
+//		TextPrompt tp5 = new TextPrompt(" XXX", phone1);
+//		phone1.getDocument().addDocumentListener(new PhoneFieldDocumentListener());
+//		
+//		JLabel space_2 = new JLabel("- ");
+//		phonePanel.add(space_2);
+//		
+//		phone2 = new NumericTextField(3, 3);
+//		phonePanel.add(formatComponent(phone2));
+//		TextPrompt tp6 = new TextPrompt(" XXX", phone2);
+//		phone2.getDocument().addDocumentListener(new PhoneFieldDocumentListener());
+//		
+//		JLabel space_3 = new JLabel(" - ");
+//		phonePanel.add(space_3);
+//		
+//		phone3 = new NumericTextField(4, 4);
+//		phonePanel.add(formatComponent(phone3));
+//		TextPrompt tp7 = new TextPrompt(" XXXX", phone3);
+//		phone3.getDocument().addDocumentListener(new PhoneFieldDocumentListener());
+//		entryFieldsPanel.add(phonePanel);
 		
 		JPanel col2 = new BluePanel();
 		col2.setLayout(new BoxLayout(col2, BoxLayout.Y_AXIS));
 		col2.add(formatComponentLarge(new JLabel("")));
-		col2.add(formatCurrentPanelLarge("* Title:", titleField));
-		col2.add(formatCurrentPanelLarge("   Author2:", author2Field));
-		col2.add(formatCurrentPanelLarge("*  Year of Publication:",yearOfPubField));
-		col2.add(formatMoneyPanelLarge("*  Suggested Price:", suggestedPriceField));
+		col2.add(formatCurrentPanelLarge("*  First Name:", firstNameField));
+		col2.add(formatCurrentPanelLarge("*  Last Name:", lastNameField));
+		col2.add(formatCurrentPanelLarge("*  Phone Number:",phoneField));
 		col2.add(formatComponentLarge(new JLabel("")));
 		
 		fieldSubPanel.add(col1);
 		fieldSubPanel.add(col2);
 		
-		notesArea = new JTextArea();
-		
 		fieldPanel.add(fieldSubPanel);
-		fieldPanel.add(formatCurrentPanel("Additional Notes:", new JScrollPane(
-		notesArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-		ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)));
 		return fieldPanel;
 	}
 
@@ -239,7 +250,53 @@ public class AddWorkerView extends View {
 		return buttonsPanel;
 
 	}
+	// Create the date dropdowns
+	// -------------------------------------------------------------
+	private void updateDate() {
+		//TODO parse current date and set the dropboxes
+		String currentDate = DateUtil.getDate();
+		String tempYear = currentDate.substring(0,4);
+		String tempMonth = currentDate.substring(5,7);
+		String tempDay = currentDate.substring(8, 10);
+		
+		String[] year = { "1999", "2000", "2001", "2002", 
+				"2003", "2004", "2005", "2006", 
+				"2007", "2008", "2009", "2010", 
+				"2011", "2012", "2013", "2014", 
+				"2015", "2016", "2017", "2018", 
+				"2019", "2020", "2021", "2022", 
+				"2023", "2024", "2025", "2026", 
+				"2027", "2028", "2029", "2030",};
+		yearBox = new JComboBox(year);
+		yearBox.setSelectedItem(tempYear);
 
+		String[] month = { "January", "February", "March", 
+						"April", "May", "June", 
+						"July", "August", "September", 
+						"October", "November", "December"};
+		monthBox = new JComboBox(month);
+		monthBox.setSelectedItem(month[Integer.parseInt(tempMonth)-1]);
+
+		String[] day = { "01", "02", "03", "04", "05", "06", 
+						"07", "08", "09", "10", "11", "12", 
+						"13", "14", "15", "16", "17", "18", 
+						"19", "20", "21", "22", "23", "24", 
+						"25", "26", "27", "28", "29", "30", 
+						"31",};
+		dayBox = new JComboBox(day);
+		dayBox.setSelectedItem(tempDay);
+	}
+	// Create the date dropdowns
+	// -------------------------------------------------------------
+	private String getDate()
+	{
+		String date = "";
+		date = yearBox.getSelectedItem() + "-" + 
+				"" + monthBox.getSelectedIndex() + 1 + "-" + 
+				dayBox.getSelectedItem();
+		return date;
+	}
+	
 	// Create the status log field
 	// -------------------------------------------------------------
 	private JPanel createStatusLog(String initialMessage) {

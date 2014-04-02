@@ -105,7 +105,7 @@ public class Worker extends Model {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.PW)){
+		if(key.equals("Password")){
 			value = encrypt((String) value);
 		}
 		super.stateChangeRequest(key, value);

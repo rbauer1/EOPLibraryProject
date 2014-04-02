@@ -16,22 +16,23 @@ import java.util.EventObject;
 // project imports
 import impresario.IModel;
 
-public class MainMenuView extends View
+public class WorkerMenuView extends View
 {
-	private static final long serialVersionUID = -4462137345508528750L;
-	private JButton btnBookActions;
-	private JButton btnBorrowerActions;
-	private JButton btnWorkerActions;
-	private JButton btnCheckinBook;
-	private JButton btnCheckoutBook;
-	private JButton btnLogout;
+	private static final long serialVersionUID = -5522996085044073629L;
+	private JButton btnAdd;
+	private JButton btnModify;
+	private JButton btnDelete;
+	private JButton btnProcessLostBook;
+	private JButton btnListAvailable;
+	private JButton btnListUnavailable;
+	private JButton btnBack;
 
 	// For showing error message
 	private MessageView statusLog;
 
 	// constructor for this class -- takes a model object
 	//----------------------------------------------------------
-	public MainMenuView(IModel clerk)
+	public WorkerMenuView(IModel clerk)
 	{
 		super(clerk);
 
@@ -71,7 +72,7 @@ public class MainMenuView extends View
 	//-------------------------------------------------------------
 	private JPanel createNavigationButtons()
 	{
-		JPanel navigationPanel = new ColorPanel();	
+		JPanel navigationPanel = new BluePanel();	
 
 		navigationPanel.setLayout( new BoxLayout ( navigationPanel, BoxLayout.Y_AXIS ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
@@ -79,29 +80,33 @@ public class MainMenuView extends View
 
 		// create "raw" JButtons and call superclass View to format 
 		// the button to the program's standard, add them to the panel
-		btnBookActions = new JButton( "Book Actions" );
-		navigationPanel.add( formatComponent ( btnBookActions ));
+		btnAdd = new JButton( "Add Worker" );
+		navigationPanel.add( formatComponent ( btnAdd ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 
-		btnBorrowerActions = new JButton( "Student Borrower Actions" );
-		navigationPanel.add( formatComponent ( btnBorrowerActions ));
+		btnModify = new JButton( "Modify Book" );
+		navigationPanel.add( formatComponent ( btnModify ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 
-		btnWorkerActions = new JButton( "Workers Actions" );
-		navigationPanel.add( formatComponent ( btnWorkerActions ));
+		btnDelete = new JButton( "Delete Book" );
+		navigationPanel.add( formatComponent ( btnDelete ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 
-		btnCheckinBook = new JButton( "Check in a Book" );
-		navigationPanel.add( formatComponent ( btnCheckinBook ));
+		btnProcessLostBook = new JButton( "Process Lost Book" );
+		navigationPanel.add( formatComponent ( btnProcessLostBook ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 		
-		btnCheckoutBook = new JButton( "Check out a Book" );
-		navigationPanel.add( formatComponent ( btnCheckoutBook ));
+		btnListAvailable = new JButton( "List Available Books" );
+		navigationPanel.add( formatComponent ( btnListAvailable ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 		
-		btnLogout = new JButton( "Logout" );
-		btnLogout.setForeground( Color.red.darker().darker() );
-		navigationPanel.add( formatComponent ( btnLogout ));
+		btnListUnavailable = new JButton( "List Unavailable Books" );
+		navigationPanel.add( formatComponent ( btnListUnavailable ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
+		
+		btnBack = new JButton( "Back" );
+		btnBack.setForeground( Color.red.darker().darker() );
+		navigationPanel.add( formatComponent ( btnBack ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 
 		return navigationPanel;
@@ -121,47 +126,59 @@ public class MainMenuView extends View
 	//-------------------------------------------------------------
 	public void processAction(EventObject evt)
 	{
-		if (evt.getSource() == btnLogout)
+		Object src = evt.getSource();
+		if (src == btnBack)
 		{
-			// Call method in Clerk to exit system
-//			myRegistry.updateSubscribers( "CancelTransactionChoiceView", null );
-			myModel.stateChangeRequest(Key.LOGOUT, null);
+			// Call method in Librarian to go back
+			myModel.stateChangeRequest(Key.BACK_TO_MAIN_MENU, null);
 		}
-		else if (evt.getSource() == btnBookActions)
+		else if (src == btnAdd)
 		{
-//			myRegistry.updateSubscribers("PerformTransView", null);
-			myModel.stateChangeRequest(Key.BACK_TO_BOOK_MENU, null);
+			myModel.stateChangeRequest(Key.EXECUTE_ADD_WORKER, null);
 		}
 		
-		else if (evt.getSource() == btnBorrowerActions)
+		else if (src == btnModify)
+		{
+			myModel.stateChangeRequest(Key.EXECUTE_MODIFY_BOOK, null);
+		}
+		else if (src == btnDelete)
+		{
+			myModel.stateChangeRequest(Key.EXECUTE_DELETE_BOOK, null);
+		}
+		else if (src == btnProcessLostBook)
+		{
+			myRegistry.updateSubscribers("PerformTransView", null);
+		}
+		
+		else if (src == btnListAvailable)
 		{
 			myRegistry.updateSubscribers("ListTransactionsView", null);
 		}
-		else if (evt.getSource() == btnWorkerActions)
+		else if (src == btnListUnavailable)
 		{
-			myModel.stateChangeRequest(Key.BACK_TO_WORKER_MENU, null);
+			myRegistry.updateSubscribers("RevenueReportView", null);
 		}
 		// ADDED BY MITRA 1/6/14
-//		else if (evt.getSource() == btnReturnItem)
+//		else if (src == btnReturnItem)
 //		{
 //			myModel.stateChangeRequest("ReturnItem", null);
 //		}
 		
 		/**
 		else
-		if (evt.getSource() == updateScoutButton)
+		if (src == updateScoutButton)
 		{
 			myModel.stateChangeRequest("OperationType", "UpdateOperation");
 			myRegistry.updateSubscribers("SearchScoutView", null);
 		}
 		else
-		if (evt.getSource() == deleteScoutButton)
+		if (src == deleteScoutButton)
 		{
 			myModel.stateChangeRequest("OperationType", "DeleteOperation");
 			myRegistry.updateSubscribers("SearchScoutView", null);
 		}
 		else
-		if (evt.getSource() == hoursWorkedButton)
+		if (src == hoursWorkedButton)
 		{
 
 		}

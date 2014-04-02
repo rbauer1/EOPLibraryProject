@@ -19,6 +19,7 @@ public class Key {
 	
 	public static final String BACK_TO_MAIN_MENU = "BackToMainMenu";
 	public static final String BACK_TO_BOOK_MENU = "BackToBookMenu";
+	public static final String BACK_TO_WORKER_MENU = "BackToWorkerMenu";
 	
 	public static final String GET_BOOK_COLLECTION = "GetBookCollection";
 	
@@ -29,6 +30,7 @@ public class Key {
 	 * 
 	 */
 	public static final String EXECUTE_ADD_BOOK 	= "AddBookTransaction";
+	public static final String EXECUTE_ADD_WORKER 	= "AddWorkerTransaction";
 	public static final String EXECUTE_MODIFY_BOOK 	= "ModifyBooksTransaction";
 	public static final String EXECUTE_DELETE_BOOK 	= "DeleteBooksTransaction";
 	public static final String EXECUTE_RECOVER_PW 	= "RecoverPasswordTransaction";
