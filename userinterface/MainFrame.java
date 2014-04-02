@@ -9,6 +9,9 @@
  */
 package userinterface;
 
+import impresario.ISlideShow;
+import impresario.IView;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,11 +23,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import event.Event;
+
 /**
  * The main frame for the EOP Library application. All sub-panels (Views) are
  * inside this one frame only.
  */
-public class MainFrame extends JFrame implements ComponentListener {
+public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 
 	private static final long serialVersionUID = 3974890556338206717L;
 	private static final String COPYRIGHT = "Copyright (c) 2014: Department of Computer Science, The College at Brockport";
@@ -97,7 +102,7 @@ public class MainFrame extends JFrame implements ComponentListener {
 	 * 
 	 * @return instance 
 	 */
-	public static JFrame getInstance() {
+	public static MainFrame getInstance() {
 		if (instance == null) {
 			instance = new MainFrame("");
 		}
@@ -134,5 +139,32 @@ public class MainFrame extends JFrame implements ComponentListener {
 	@Override
 	public void componentShown(ComponentEvent arg0) {
 
+	}
+	
+	public void swapToView(IView newView) {
+		if (newView == null) {
+			new Event("MainFrame", "swapToView", "Missing view for display ", Event.ERROR);
+			throw new NullPointerException();
+		}
+
+		if (newView instanceof JPanel) {
+			// Component #2 is being accessed here because component #1 is the Logo Panel and remove it
+			JPanel currentView = (JPanel) this.getContentPane().getComponent(2);
+			if (currentView != null) {
+				this.getContentPane().remove(currentView);
+			}
+
+			// add our view into the CENTER of the MainFrame
+			this.getContentPane().add((JPanel)newView, BorderLayout.CENTER);
+
+			// pack the frame and show it
+			this.pack();
+
+			// Place in center
+			WindowPosition.placeCenter(this);
+		} else {
+			new Event("MainFrame", "swapToView", "Non-displayable view object sent ", Event.ERROR);
+			throw new IllegalArgumentException();
+		}
 	}
 }

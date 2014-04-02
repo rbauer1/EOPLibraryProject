@@ -10,30 +10,23 @@
 package model;
 
 import impresario.IModel;
-import impresario.ISlideShow;
 import impresario.IView;
 import impresario.ModelRegistry;
 
-import java.awt.BorderLayout;
 import java.util.HashMap;
 import java.util.Properties;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import model.transaction.Transaction;
 import model.transaction.TransactionFactory;
+import userinterface.MainFrame;
 import userinterface.View;
 import userinterface.ViewFactory;
-import userinterface.WindowPosition;
 import utilities.Key;
-import event.Event;
 import exception.InvalidPrimaryKeyException;
 
 /**
  * Overall class Librarian represents the System controller or Main Interface Agent
  */
-public class Librarian implements IView, IModel, ISlideShow {
+public class Librarian implements IView, IModel {
 
 	/** The registry of observers to this object */
 	private ModelRegistry registry;
@@ -42,13 +35,11 @@ public class Librarian implements IView, IModel, ISlideShow {
 	protected HashMap<String, View> views;
 	
 	/** The main display frame */
-	protected JFrame frame;
+	protected MainFrame frame;
 
 	protected String loginErrorMessage = "";
-
-	//---------------------------------------------------------------------
 	
-	public Librarian(JFrame frame) {
+	public Librarian(MainFrame frame) {
 		this.frame = frame;
 		this.views = new HashMap<String, View>();
 		this.registry = new ModelRegistry("Librarian");
@@ -59,8 +50,6 @@ public class Librarian implements IView, IModel, ISlideShow {
 		showView("LoginView");
 	}
 	
-	//---------------------------------------------------------------------
-
 	/**
 	 * Sets the dependencies for the observer registry
 	 */
@@ -70,8 +59,6 @@ public class Librarian implements IView, IModel, ISlideShow {
 		registry.setDependencies(dependencies);
 	}
 	
-	//---------------------------------------------------------------------
-
 	/**
 	 * Provides the value associated with the provided key.
 	 * @param key that references an attribute
@@ -83,8 +70,6 @@ public class Librarian implements IView, IModel, ISlideShow {
 		}
 		throw new IllegalArgumentException("Unknown key: " + key);
 	}
-
-	//---------------------------------------------------------------------
 	
 	public void stateChangeRequest(String key, Object value) {
 		if (key.equals(Key.LOGIN)) {
@@ -118,8 +103,6 @@ public class Librarian implements IView, IModel, ISlideShow {
 		registry.updateSubscribers(key, this);
 	}
 	
-	//---------------------------------------------------------------------
-
 	/**
 	 * Exits from the system, and is likely to be called as a result of
 	 * a click on a button labeled something like 'Exit Application'.
@@ -127,9 +110,11 @@ public class Librarian implements IView, IModel, ISlideShow {
 	protected void exitSystem() {
 		System.exit(0);
 	}
-	
-	//---------------------------------------------------------------------
-	
+		
+	/**
+	 * Tries to login a worker with the provided username and password.
+	 * @param workerData
+	 */
 	protected void loginWorker(Properties workerData) {
 		try {
 			Worker worker = new Worker(workerData.getProperty("BannerID"));
@@ -144,9 +129,6 @@ public class Librarian implements IView, IModel, ISlideShow {
 		}		
 	}
 	
-	
-	//---------------------------------------------------------------------
-
 	/** 
 	 * Register objects to receive state updates. 
 	 */
@@ -154,16 +136,12 @@ public class Librarian implements IView, IModel, ISlideShow {
 		registry.subscribe(key, subscriber);
 	}
 	
-	//---------------------------------------------------------------------
-
 	/** 
 	 * Unregister objects from state updates. 
 	 */
 	public void unSubscribe(String key, IView subscriber) {
 		registry.unSubscribe(key, subscriber);
 	}
-
-	//---------------------------------------------------------------------
 	
 	/**
 	 * Called when update occurs in entity this is subscribed to.
@@ -173,45 +151,12 @@ public class Librarian implements IView, IModel, ISlideShow {
 		stateChangeRequest(key, value);
 	}
 
-	//TODO should be moved, possibly to MainFrame
 	private void showView(String s){
 		View view = views.get(s);
 		if(view == null){
 			view = ViewFactory.createView(s,this);
 			views.put(s, view);
 		}
-		swapToView(view);
+		frame.swapToView(view);
 	}
-	
-	
-
-	//---------------------------------------------------------------------
-	
-	public void swapToView(IView newView) {
-		if (newView == null) {
-			new Event(Event.getLeafLevelClassName(this), "swapToView", "Missing view for display ", Event.ERROR);
-			throw new NullPointerException();
-		}
-
-		if (newView instanceof JPanel) {
-			// Component #2 is being accessed here because component #1 is the Logo Panel and remove it
-			JPanel currentView = (JPanel) frame.getContentPane().getComponent(2);
-			if (currentView != null) {
-				frame.getContentPane().remove(currentView);
-			}
-
-			// add our view into the CENTER of the MainFrame
-			frame.getContentPane().add((JPanel)newView, BorderLayout.CENTER);
-
-			// pack the frame and show it
-			frame.pack();
-
-			// Place in center
-			WindowPosition.placeCenter(frame);
-		} else {
-			new Event(Event.getLeafLevelClassName(this), "swapToView", "Non-displayable view object sent ", Event.ERROR);
-			throw new IllegalArgumentException();
-		}
-	}
-
 }

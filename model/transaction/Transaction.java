@@ -10,26 +10,19 @@
 package model.transaction;
 
 import impresario.IModel;
-import impresario.ISlideShow;
 import impresario.IView;
 import impresario.ModelRegistry;
 
-import java.awt.BorderLayout;
 import java.util.HashMap;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import userinterface.MainFrame;
 import userinterface.View;
 import userinterface.ViewFactory;
-import userinterface.WindowPosition;
-import event.Event;
 
 /**
  * Abstract class for all transactions in the system.
  */
-public abstract class Transaction implements IView, IModel, ISlideShow {
+public abstract class Transaction implements IView, IModel {
 
 	/** The registry of observers to this object */
 	protected ModelRegistry registry;
@@ -38,9 +31,7 @@ public abstract class Transaction implements IView, IModel, ISlideShow {
 	protected HashMap<String, View> views;
 	
 	/** The main display frame */
-	protected JFrame frame;
-	
-	//---------------------------------------------------------------------
+	protected MainFrame frame;
 	
 	/**
 	 * Constructor for Transactions
@@ -52,12 +43,18 @@ public abstract class Transaction implements IView, IModel, ISlideShow {
 		setDependencies();
 	}
 
-	//---------------------------------------------------------------------
-
+	/**
+	 * Set dependencies for the model registry.
+	 */
 	protected abstract void setDependencies();	
-	protected abstract View createView();
 	
-	//---------------------------------------------------------------------
+	
+	/**
+	 * Creates and returns the initial view.
+	 * Returns null if view-less transaction.
+	 * @return initial view
+	 */
+	protected abstract View createView();
 	
 	/**
 	 * Begins execution of the Transaction. Uses createView 
@@ -65,10 +62,8 @@ public abstract class Transaction implements IView, IModel, ISlideShow {
 	 */
 	public void execute() {
 		View currentView = createView();
-		swapToView(currentView);
+		frame.swapToView(currentView);
 	}
-	
-	//---------------------------------------------------------------------
 
 	/** 
 	 * Register objects to receive state updates. 
@@ -76,8 +71,6 @@ public abstract class Transaction implements IView, IModel, ISlideShow {
 	public void subscribe(String key, IView subscriber) {
 		registry.subscribe(key, subscriber);
 	}
-	
-	//---------------------------------------------------------------------
 
 	/** 
 	 * Unregister objects from state updates. 
@@ -86,8 +79,6 @@ public abstract class Transaction implements IView, IModel, ISlideShow {
 		registry.unSubscribe(key, subscriber);
 	}
 
-	//---------------------------------------------------------------------
-	
 	/**
 	 * Called when update occurs in entity this is subscribed to.
 	 */
@@ -95,52 +86,23 @@ public abstract class Transaction implements IView, IModel, ISlideShow {
 		// Every update will be handled in stateChangeRequest
 		stateChangeRequest(key, value);
 	}
-	
-	//---------------------------------------------------------------------
-	
-	public void swapToView(IView newView) {
-		if (newView == null) {
-			new Event(Event.getLeafLevelClassName(this), "swapToView",
-					"Missing view for display ", Event.ERROR);
-			throw new NullPointerException();
-		}
-
-		if (newView instanceof JPanel) {
-			// Component #2 is being accessed here because component #1 is the Logo Panel and remove it
-			JPanel currentView = (JPanel) frame.getContentPane().getComponent(2);
-			if (currentView != null) {
-				frame.getContentPane().remove(currentView);
-			}
-
-			// add our view into the CENTER of the MainFrame
-			frame.getContentPane().add((JPanel)newView, BorderLayout.CENTER);
-
-			// pack the frame and show it
-			frame.pack();
-
-			// Place in center
-			WindowPosition.placeCenter(frame);
-		} else {
-			new Event(Event.getLeafLevelClassName(this), "swapToView",
-					"Non-displayable view object sent ", Event.ERROR);
-			throw new IllegalArgumentException();
-		}
-	}
-	
-	//---------------------------------------------------------------------
-	
+		
 	/**
 	 * Returns the view with the provided name. Creates it using the View
 	 * factory if it cannot be found.
 	 * @param name
 	 * @return view
 	 */
-	public View getView(String name) {
+	protected View getView(String name) {
 		View view = views.get(name);
 		if(view == null){
 			view = ViewFactory.createView(name, this);
 			views.put(name, view);
 		}
 		return view;
+	}
+	
+	protected void showView(String name){
+		frame.swapToView(getView(name));
 	}
 }

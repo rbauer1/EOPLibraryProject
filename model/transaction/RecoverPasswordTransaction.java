@@ -65,7 +65,7 @@ public class RecoverPasswordTransaction extends Transaction {
 			sb.append("<p>To reset password, use the following reset code:</p>");
 			sb.append("<p>" + resetCode + "</p>");
 			mailer.send(email, "EOP Library Password Reset", sb.toString());
-			swapToView(getView("PasswordResetView"));
+			showView("PasswordResetView");
 		} catch (InvalidPrimaryKeyException e) {
 			stateChangeRequest(Key.INPUT_ERROR, "Invalid Banner Id.");
 		}

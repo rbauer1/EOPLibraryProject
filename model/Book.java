@@ -51,6 +51,7 @@ public class Book extends Model {
 	public Book(Properties persistentState) {
 		this(persistentState, false);
 	}
+	
 	@Override
 	protected void setupValidations(){
 		//validator.addValidation(new AlphaNumericValidation("Barcode", "Barcode"));
@@ -69,7 +70,7 @@ public class Book extends Model {
 		if(key.equals(Key.GET_PERSISTENT_STATE)){
 			return persistentState;
 		}
-		return persistentState.getProperty(key);
+		return super.getState(key);
 	}
 	
 	public boolean setInactive(){

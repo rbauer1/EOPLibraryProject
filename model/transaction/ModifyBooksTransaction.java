@@ -14,7 +14,6 @@ import java.util.Properties;
 
 import userinterface.View;
 import utilities.Key;
-import model.Book;
 
 public class ModifyBooksTransaction extends Transaction {
 	private Transaction listBooksTransaction;
