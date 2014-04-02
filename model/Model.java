@@ -212,8 +212,6 @@ public abstract class Model extends EntityBase {
 		}
 		try {
 			String keyValue = (String) this.getState(getPrimaryKey());
-			System.out.println(keyValue);
-			System.out.println(this.persisted);
 			if (this.persisted && keyValue != null && keyValue != "") {
 				update();
 			} else {

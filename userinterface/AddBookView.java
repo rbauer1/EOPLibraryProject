@@ -3,7 +3,8 @@ package userinterface;
 import impresario.IModel;
 
 import java.awt.BorderLayout;
-import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Font;
 import java.util.EventObject;
 import java.util.Properties;
 
@@ -40,6 +41,7 @@ public class AddBookView extends View {
 	private JButton submitButton;
 	private JButton clearButton;
 	private JButton cancelButton;
+	private static final Color requiredFieldLabelColor = new Color(0xA30000);
 
 	// constructor for this class -- takes a model object and
 	// gathers all the components into this view
@@ -51,8 +53,8 @@ public class AddBookView extends View {
 		// create our GUI components, add them to this panel
 		add(createTitle(), BorderLayout.NORTH);
 		add(createForm(), BorderLayout.CENTER);
-		// Error message area
-		add(createStatusMessage("Hello!"), BorderLayout.SOUTH);
+		// message area
+		statusLog = new MessageView("");
 		add(createStatusLog("                          "), BorderLayout.SOUTH);
 		myModel.subscribe(Key.INPUT_ERROR, this);
 		myModel.subscribe(Key.ADD_BOOK_SUCCESS, this);
@@ -88,7 +90,7 @@ public class AddBookView extends View {
 
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.INPUT_ERROR)) {
-			statusLog.displayErrorMessage(value.toString());
+			statusLog.displayErrorMessage("There was an error");
 		}else if(key.equals(Key.ADD_BOOK_SUCCESS)){
 			statusLog.displayMessage("Book added successfully"); 
 		}
@@ -139,84 +141,78 @@ public class AddBookView extends View {
 	private JPanel createFieldPanel() {
 		JPanel fieldPanel = new BluePanel();
 		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.Y_AXIS));
+		JPanel fieldSubPanel = new BluePanel();
+		fieldSubPanel.setLayout(new BoxLayout(fieldSubPanel, BoxLayout.X_AXIS));
+		
+		
+		JLabel requiredValues = new JLabel("* Denotes required value");
+		requiredValues.setFont(new Font("Arial", Font.BOLD, 14));
+		requiredValues.setForeground(requiredFieldLabelColor);
 		
 		barcodeField = new JTextField(16);
 		barcodeField.setText(" ");
 		barcodeField.addActionListener(this);
-		JPanel barcodePanel = formatCurrentPanel("Barcode:", barcodeField);
-
-		titleField = new JTextField(16);
-		titleField.setText(" ");
-		titleField.addActionListener(this);
-		JPanel titlePanel = formatCurrentPanelLarge("Title:", titleField);
-		
-		JPanel row1 = new BluePanel();
-		row1.setLayout(new BoxLayout(row1, BoxLayout.X_AXIS));
-		row1.add(barcodePanel);
-		row1.add(titlePanel);
 
 		author1Field = new JTextField(16);
 		author1Field.setText(" ");
 		author1Field.addActionListener(this);
-		JPanel author1Panel = formatCurrentPanel("Author1:", author1Field);
-
-		author2Field = new JTextField(16);
-		author2Field.setText(" ");
-		author2Field.addActionListener(this);
-		JPanel author2Panel = formatCurrentPanelLarge("Author2:", author2Field);
-
-		JPanel row2 = new BluePanel();
-		row2.setLayout(new BoxLayout(row2, BoxLayout.X_AXIS));
-		row2.add(author1Panel);
-		row2.add(author2Panel);
 		
 		publisherField = new JTextField(16);
 		publisherField.setText(" ");
 		publisherField.addActionListener(this);
-		JPanel publisherPanel = formatCurrentPanel("Publisher:", publisherField);
-		
-		yearOfPubField = new JTextField(16);
-		yearOfPubField.setText(" ");
-		yearOfPubField.addActionListener(this);
-		JPanel yearOfPubPanel = formatCurrentPanelLarge("Year of Publication:",
-				yearOfPubField);
-
-		JPanel row3 = new BluePanel();
-		row3.setLayout(new BoxLayout(row3, BoxLayout.X_AXIS));
-		row3.add(publisherPanel);
-		row3.add(yearOfPubPanel);
 		
 		isbnField = new JTextField(16);
 		isbnField.setText(" ");
 		isbnField.addActionListener(this);
-		JPanel isbnPanel = formatCurrentPanel("ISBN:", isbnField);
-		
-		suggestedPriceField = new CurrencyTextField(16,16);
-		suggestedPriceField.addActionListener(this);
-		JPanel suggestedPricePanel = formatMoneyPanelLarge("Suggested Price:", suggestedPriceField);
-		
-		JPanel row4 = new BluePanel();
-		row4.setLayout(new BoxLayout(row4, BoxLayout.X_AXIS));
-		row4.add(isbnPanel);
-		row4.add(suggestedPricePanel);
-		
 		
 		String[] choices = { "Good", "Damaged" };
 		bookConditionBox = new JComboBox<String>(choices);
 		
+		JPanel col1 = new BluePanel();
+		col1.setLayout(new BoxLayout(col1, BoxLayout.Y_AXIS));
+		col1.add(formatLargeLabel(requiredValues));
+		col1.add(formatCurrentPanel("* Barcode:", barcodeField));
+		col1.add(formatCurrentPanel("* Author1:", author1Field));
+		col1.add(formatCurrentPanel("*  Publisher:", publisherField));
+		col1.add(formatCurrentPanel("   ISBN:", isbnField));
+		col1.add(formatCurrentPanel("   Condition:", bookConditionBox));
+
+		
+		titleField = new JTextField(16);
+		titleField.setText(" ");
+		titleField.addActionListener(this);
+
+		author2Field = new JTextField(16);
+		author2Field.setText(" ");
+		author2Field.addActionListener(this);
+		
+		yearOfPubField = new JTextField(16);
+		yearOfPubField.setText(" ");
+		yearOfPubField.addActionListener(this);
+		
+		suggestedPriceField = new CurrencyTextField(16,16);
+		suggestedPriceField.addActionListener(this);
+		
+		
+		
+		JPanel col2 = new BluePanel();
+		col2.setLayout(new BoxLayout(col2, BoxLayout.Y_AXIS));
+		col2.add(formatComponentLarge(new JLabel("")));
+		col2.add(formatCurrentPanelLarge("* Title:", titleField));
+		col2.add(formatCurrentPanelLarge("   Author2:", author2Field));
+		col2.add(formatCurrentPanelLarge("*  Year of Publication:",yearOfPubField));
+		col2.add(formatMoneyPanelLarge("*  Suggested Price:", suggestedPriceField));
+		col2.add(formatComponentLarge(new JLabel("")));
+		
+		fieldSubPanel.add(col1);
+		fieldSubPanel.add(col2);
 		
 		notesArea = new JTextArea();
-		JScrollPane notesPane = new JScrollPane(notesArea,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
-		fieldPanel.add(row1);
-		fieldPanel.add(row2);
-		fieldPanel.add(row3);
-		fieldPanel.add(row4);
-		fieldPanel.add(formatCurrentPanel("Condition:", bookConditionBox));
-		fieldPanel.add(formatCurrentPanel("Additional Notes:", notesPane));
-
+		fieldPanel.add(fieldSubPanel);
+		fieldPanel.add(formatCurrentPanel("Additional Notes:", new JScrollPane(
+		notesArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+		ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)));
 		return fieldPanel;
 	}
 
@@ -260,25 +256,9 @@ public class AddBookView extends View {
 		statusLog.clearErrorMessage();
 	}
 
-	// --------------------------------------------------------------------------
-	/**
-	 * Creates status message panel with the provided message.
-	 * @param initialMessage
-	 * @return status message panel
-	 */
-	private JPanel createStatusMessage(String initialMessage) {
-		statusLog = new MessageView(initialMessage);
-		return statusLog;
-	}
-
 	// There is no need for this b/c we don't have any tables here.
 	// ----------------------------------------------------------
 	protected void processListSelection(EventObject evt) {
-	}
-
-	public void paint(Graphics g) {
-		super.paint(g);
-		barcodeField.requestFocus(true);
 	}
 
 }

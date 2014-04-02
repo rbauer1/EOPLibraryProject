@@ -16,7 +16,7 @@ import userinterface.View;
 import utilities.Key;
 
 public class ModifyBooksTransaction extends Transaction {
-	private Transaction listBooksTransaction;
+	private ListBooksTransaction listBooksTransaction;
 	public ModifyBooksTransaction() {
 		super();
 	}
@@ -29,8 +29,9 @@ public class ModifyBooksTransaction extends Transaction {
 	@Override
 	public void execute(){
 		listBooksTransaction = 
-				TransactionFactory.executeTransaction(this, "ListBooksTransaction", 
+				(ListBooksTransaction) TransactionFactory.executeTransaction(this, "ListBooksTransaction", 
 						Key.BACK_TO_BOOK_MENU, Key.SELECT_BOOK);
+		listBooksTransaction.setOpertationType("Modify");
 	}
 
 	@Override
@@ -51,8 +52,4 @@ public class ModifyBooksTransaction extends Transaction {
 		return null;
 	}
 
-	private void submitNewBook(Properties bookData){
-		
-	}
-	
 }

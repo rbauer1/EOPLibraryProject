@@ -31,7 +31,7 @@ public class DeleteBooksTransaction extends Transaction {
 	public void execute(){
 		listBooksTransaction = 
 				(ListBooksTransaction) TransactionFactory.executeTransaction(this, "ListBooksTransaction", 
-						Key.BACK_TO_BOOK_MENU, Key.SELECT_BOOK, Key.MODIFY_OR_DELETE);
+						Key.BACK_TO_BOOK_MENU, Key.SELECT_BOOK);
 		listBooksTransaction.setOpertationType("Delete");
 	}
 
