@@ -30,7 +30,7 @@ public class ModifyBooksTransaction extends Transaction {
 	public void execute(){
 		listBooksTransaction = 
 				(ListBooksTransaction) TransactionFactory.executeTransaction(this, "ListBooksTransaction", 
-						Key.BACK_TO_BOOK_MENU, Key.SELECT_BOOK);
+						Key.BACK_TO_BOOK_MENU, Key.SELECT_BOOK, Key.MODIFY_OR_DELETE);
 		listBooksTransaction.setOpertationType("Modify");
 	}
 
@@ -51,5 +51,4 @@ public class ModifyBooksTransaction extends Transaction {
 	protected View createView() {
 		return null;
 	}
-
 }

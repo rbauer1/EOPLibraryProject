@@ -62,7 +62,6 @@ public class ListBooksTransaction extends Transaction {
 	}
 	
 	private void getBooks(Properties props){
-		System.out.println(props);
 		bookCollection = new BookCollection();
 		bookCollection.find(props);
 		books = bookCollection.getEntities();
@@ -73,7 +72,6 @@ public class ListBooksTransaction extends Transaction {
 	 * @param operation
 	 */
 	protected void setOpertationType(String operation){
-		System.out.println("Reached");
 		operationType = operation;
 	}
 	

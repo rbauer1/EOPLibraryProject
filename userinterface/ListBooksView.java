@@ -1,7 +1,5 @@
 package userinterface;
 
-// system imports
-// project imports
 import impresario.IModel;
 
 import java.awt.BorderLayout;
@@ -280,6 +278,7 @@ public class ListBooksView extends View
 		//TODO this should read either Update or Delete depending on the intended user action
 		submitButton = new JButton( "" ); 
 		buttonsPanel.add( formatButtonSmall ( submitButton ));
+		submitButton.setVisible(false);
 
 		cancelButton = new JButton( "Cancel" );
 		buttonsPanel.add( formatButtonSmall ( cancelButton ));
@@ -368,6 +367,7 @@ public class ListBooksView extends View
 //			{
 				myModel.stateChangeRequest(Key.MODIFY_OR_DELETE, null);
 				submitButton.setText(operationType);
+				submitButton.setVisible(true);
 				// Empty the table
 				bookTable.setModel(emptyTable);
 				bookTable.repaint();
