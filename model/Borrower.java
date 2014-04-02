@@ -40,7 +40,7 @@ public class Borrower extends Model {
 	 * @param persisted
 	 */
 	public Borrower(Properties persistentState, boolean persisted) {
-		super(persistentState);
+		super(persistentState, persisted);
 	}
 
 	/**

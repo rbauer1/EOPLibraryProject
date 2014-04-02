@@ -58,7 +58,7 @@ public class SQLUpdateStatement extends SQLStatement
 		
 		// Now, traverse the update Properties object (used for creating
 		// the SET part of this statement)
-		Enumeration theSetColumns = updateValues.propertyNames();
+		Enumeration<?> theSetColumns = updateValues.propertyNames();
 		while (theSetColumns.hasMoreElements() == true)
 		{
 			if (theSetString.equals(""))
@@ -98,7 +98,7 @@ public class SQLUpdateStatement extends SQLStatement
 		// Now, traverse the WHERE clause Properties object
 		if (whereValues != null)
 		{
-			Enumeration theWhereColumns = whereValues.propertyNames();
+			Enumeration<?> theWhereColumns = whereValues.propertyNames();
 			while (theWhereColumns.hasMoreElements() == true)
 			{
 				if (theWhereString.equals(""))

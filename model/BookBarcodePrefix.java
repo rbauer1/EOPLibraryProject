@@ -40,7 +40,7 @@ public class BookBarcodePrefix extends Model {
 	 * @param persisted
 	 */
 	public BookBarcodePrefix(Properties persistentState, boolean persisted) {
-		super(persistentState);
+		super(persistentState, persisted);
 	}
 
 	/**

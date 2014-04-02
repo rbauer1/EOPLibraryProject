@@ -30,7 +30,7 @@ public class AddBookTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.SUBMIT_NEW_BOOK)){
+		if(key.equals(Key.SUBMIT_BOOK)){
 			submitNewBook((Properties) value);
 		}
 		registry.updateSubscribers(key, this);
@@ -50,7 +50,7 @@ public class AddBookTransaction extends Transaction {
 	private void submitNewBook(Properties bookData){
 		book = new Book(bookData);
 		if(book.save()){
-			stateChangeRequest(Key.ADD_BOOK_SUCCESS, null);
+			stateChangeRequest(Key.BOOK_SUBMIT_SUCCESS, null);
 		}else{
 			stateChangeRequest(Key.INPUT_ERROR, null);
 		}

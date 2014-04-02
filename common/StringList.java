@@ -45,7 +45,7 @@ public class StringList
 	/** Index bounds of current token */
 	private int start = 0, end = 0;		
 
-	/** Construct a StringList from a comma-delimeted string 
+	/** Construct a StringList from a comma-delimited string 
 	 *
 	 * @param	str		The comma-separated String to convert to an object of this type
 	 */

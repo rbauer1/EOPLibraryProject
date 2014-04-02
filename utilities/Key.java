@@ -10,7 +10,7 @@ public class Key {
 	
 	public static final String GET_PERSISTENT_STATE = "GetPersistentState";
 	
-	public static final String SUBMIT_NEW_BOOK = "SubmitNewBook";
+	public static final String SUBMIT_BOOK = "SubmitNewOrModifiedBook";
 	public static final String SELECT_BOOK = "SelectBook";
 	public static final String MODIFY_OR_DELETE = "ModifyOrDelete";
 	
@@ -19,7 +19,7 @@ public class Key {
 	
 	public static final String GET_BOOK_COLLECTION = "GetBookCollection";
 	
-	public static final String ADD_BOOK_SUCCESS = "BookAddedSuccessfully";
+	public static final String BOOK_SUBMIT_SUCCESS = "BookAddedOrModifiedSuccessfully";
 	
 	public static final String EXECUTE_ADD_BOOK 	= "AddBookTransaction";
 	public static final String EXECUTE_MODIFY_BOOK 	= "ModifyBooksTransaction";

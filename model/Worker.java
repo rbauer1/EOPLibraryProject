@@ -54,7 +54,7 @@ public class Worker extends Model {
 	 * @param persisted
 	 */
 	public Worker(Properties persistentState, boolean persisted) {
-		super(persistentState);
+		super(persistentState, persisted);
 	}
 
 	/**

@@ -54,7 +54,7 @@ public class SQLQueryStatement extends SQLStatement
 		theSQLStatement = "SELECT ";
 		
 		// add the fields from the schema, skip the tablename
-		Enumeration fields = projectionSchema.propertyNames();
+		Enumeration<?> fields = projectionSchema.propertyNames();
 		while (fields.hasMoreElements() == true)
 		{
 			String field = (String)fields.nextElement();
@@ -77,7 +77,7 @@ public class SQLQueryStatement extends SQLStatement
 		// Now, traverse the WHERE clause Properties object
 		if (selectionValues != null)
 		{
-			Enumeration theWhereFields = selectionValues.propertyNames();
+			Enumeration<?> theWhereFields = selectionValues.propertyNames();
 			while (theWhereFields.hasMoreElements() == true)
 			{
 				String theConjunctionClause = "";

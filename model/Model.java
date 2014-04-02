@@ -45,7 +45,16 @@ public abstract class Model extends EntityBase {
 	 * @param persistentState
 	 */
 	protected Model(Properties persistentState) {
-		this(false);
+		this(persistentState, false);
+	}
+	
+	/**
+	 * Constructs a new model from properties object.
+	 * @param persistentState
+	 * @param persisted
+	 */
+	protected Model(Properties persistentState, boolean persisted) {
+		this(persisted);
 		setPersistentState(persistentState);
 	}
 	
@@ -212,6 +221,8 @@ public abstract class Model extends EntityBase {
 		}
 		try {
 			String keyValue = (String) this.getState(getPrimaryKey());
+			System.out.println(persisted);
+			System.out.println(keyValue);
 			if (this.persisted && keyValue != null && keyValue != "") {
 				update();
 			} else {

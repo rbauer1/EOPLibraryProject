@@ -51,7 +51,7 @@ public class SQLSelectStatement extends SQLStatement
 		theSQLStatement = "SELECT ";
 		
 		// add the fields from the schema, skip the tablename
-		Enumeration fields = schema.propertyNames();
+		Enumeration<?> fields = schema.propertyNames();
 		while (fields.hasMoreElements() == true)
 		{
 			String field = (String)fields.nextElement();
@@ -74,7 +74,7 @@ public class SQLSelectStatement extends SQLStatement
 		// Now, traverse the WHERE clause Properties object
 		if (whereValues != null)
 		{
-			Enumeration theWhereFields = whereValues.propertyNames();
+			Enumeration<?> theWhereFields = whereValues.propertyNames();
 			while (theWhereFields.hasMoreElements() == true)
 			{
 				

@@ -41,7 +41,7 @@ public class Book extends Model {
 	 * @param persisted
 	 */
 	public Book(Properties persistentState, boolean persisted) {
-		super(persistentState);
+		super(persistentState, persisted);
 	}
 
 	/**

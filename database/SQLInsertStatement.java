@@ -58,7 +58,7 @@ public class SQLInsertStatement extends SQLStatement
 
 		// Now, traverse the Properties object. In this case, this loop
 		// must go at least one or we will get an error back from the db
-		Enumeration theValuesColumns = insertValues.propertyNames();
+		Enumeration<?> theValuesColumns = insertValues.propertyNames();
 
 		while (theValuesColumns.hasMoreElements() == true)
 		{

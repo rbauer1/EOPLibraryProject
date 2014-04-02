@@ -19,9 +19,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
+import model.Book;
 import utilities.Key;
 
-//======================================================================
 public class AddBookView extends View {
 	private static final long serialVersionUID = -6030753682831962753L;
 
@@ -57,8 +57,8 @@ public class AddBookView extends View {
 		statusLog = new MessageView("");
 		add(createStatusLog("                          "), BorderLayout.SOUTH);
 		myModel.subscribe(Key.INPUT_ERROR, this);
-		myModel.subscribe(Key.ADD_BOOK_SUCCESS, this);
-
+		myModel.subscribe(Key.BOOK_SUBMIT_SUCCESS, this);
+		myModel.subscribe(Key.SELECT_BOOK, this);
 	}
 
 	public void processAction(EventObject evt) {
@@ -84,18 +84,38 @@ public class AddBookView extends View {
 			newBookProps.put("SuggestedPrice", suggestedPriceField.getText().trim());
 			newBookProps.put("Notes", notesArea.getText());
 
-			myModel.stateChangeRequest(Key.SUBMIT_NEW_BOOK, newBookProps);
+			myModel.stateChangeRequest(Key.SUBMIT_BOOK, newBookProps);
 		}
 	}
 
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.INPUT_ERROR)) {
 			statusLog.displayErrorMessage("There was an error");
-		}else if(key.equals(Key.ADD_BOOK_SUCCESS)){
+		}else if(key.equals(Key.BOOK_SUBMIT_SUCCESS)){
 			statusLog.displayMessage("Book added successfully"); 
+		}else if(key.equals(Key.SELECT_BOOK)){
+			adjustViewForModifyTransaction((Book)value);
 		}
 	}
+	
+	private void adjustViewForModifyTransaction(Book b){
+		submitButton.setText("Modify");
+		populateFields(b);
+	}
 
+	private void populateFields(Book b){
+		barcodeField.setText((String)b.getState("Barcode"));
+		barcodeField.setEnabled(false);
+		titleField.setText((String)b.getState("Title"));
+		author1Field.setText((String)b.getState("Author1"));
+		author2Field.setText((String)b.getState("Author2"));
+		publisherField.setText((String)b.getState("Publisher"));
+		yearOfPubField.setText((String)b.getState("YearOfPublication"));
+		isbnField.setText((String)b.getState("ISBN"));
+		suggestedPriceField.setText((String)b.getState("SuggestedPrice"));
+		notesArea.setText((String)b.getState("Notes"));
+	}
+	
 	// --------------------------------------------------------------
 	private void resetForm() {
 		barcodeField.setText("");
@@ -241,7 +261,6 @@ public class AddBookView extends View {
 	}
 
 	// Create the status log field
-	// -------------------------------------------------------------
 	private JPanel createStatusLog(String initialMessage) {
 		statusLog = new MessageView(initialMessage);
 		return statusLog;
@@ -251,13 +270,11 @@ public class AddBookView extends View {
 		statusLog.displayErrorMessage(message);
 	}
 
-	// ----------------------------------------------------------
 	public void clearErrorMessage() {
 		statusLog.clearErrorMessage();
 	}
 
 	// There is no need for this b/c we don't have any tables here.
-	// ----------------------------------------------------------
 	protected void processListSelection(EventObject evt) {
 	}
 

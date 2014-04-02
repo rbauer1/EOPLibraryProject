@@ -40,7 +40,7 @@ public class Rental extends Model {
 	 * @param persisted
 	 */
 	public Rental(Properties persistentState, boolean persisted) {
-		super(persistentState);
+		super(persistentState, persisted);
 	}
 
 	/**

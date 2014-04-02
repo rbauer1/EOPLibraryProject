@@ -59,7 +59,7 @@ public class SQLDeleteStatement extends SQLStatement
 		// Now, traverse the WHERE clause Properties object
 		if (whereValues != null)
 		{
-			Enumeration theWhereColumns = whereValues.propertyNames();
+			Enumeration<?> theWhereColumns = whereValues.propertyNames();
 			while (theWhereColumns.hasMoreElements() == true)
 			{
 				if (theWhereString.equals(""))
