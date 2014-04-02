@@ -11,8 +11,11 @@ public class Key {
 	public static final String GET_PERSISTENT_STATE = "GetPersistentState";
 	
 	public static final String SUBMIT_BOOK = "SubmitNewOrModifiedBook";
+	public static final String SUBMIT_WORKER = "SubmitNewOrModifiedWorker";
 	public static final String SELECT_BOOK = "SelectBook";
 	public static final String MODIFY_OR_DELETE = "ModifyOrDelete";
+	
+	public static final String SUBMIT_NEW_WORKER = "SubmitNewWorker";
 	
 	public static final String BACK_TO_MAIN_MENU = "BackToMainMenu";
 	public static final String BACK_TO_BOOK_MENU = "BackToBookMenu";
@@ -20,6 +23,7 @@ public class Key {
 	public static final String GET_BOOK_COLLECTION = "GetBookCollection";
 	
 	public static final String BOOK_SUBMIT_SUCCESS = "BookAddedOrModifiedSuccessfully";
+	public static final String WORKER_SUBMIT_SUCCESS = "WorkerAddedOrModifiedSuccessfully";
 	
 	/**
 	 * 
