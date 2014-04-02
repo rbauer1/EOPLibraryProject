@@ -11,6 +11,13 @@ package model;
 
 import java.util.Properties;
 
+import model.validation.BannerIdValidation;
+import model.validation.DateValidation;
+import model.validation.InclusionValidation;
+import model.validation.LengthValidation;
+import model.validation.NumericValidation;
+import model.validation.PhoneValidation;
+import model.validation.PresenceValidation;
 import exception.InvalidPrimaryKeyException;
 
 /**
@@ -53,7 +60,40 @@ public class Borrower extends Model {
 	
 	@Override
 	protected void setupValidations(){
-		//validator.addValidation(new AlphaNumericValidation("Barcode", "Barcode"));
+		validator.addValidation(new PresenceValidation("BannerID", "Banner Id"));
+		validator.addValidation(new BannerIdValidation("BannerID", "Banner Id"));
+		
+		validator.addValidation(new PresenceValidation("FirstName", "First Name"));
+		validator.addValidation(new BannerIdValidation("FirstName", "First Name"));
+		
+		validator.addValidation(new PresenceValidation("LastName", "Last Name"));
+		validator.addValidation(new BannerIdValidation("LastName", "Last Name"));
+		
+		validator.addValidation(new PresenceValidation("ContactPhone", "Phone"));
+		validator.addValidation(new PhoneValidation("ContactPhone", "Phone"));
+		
+		validator.addValidation(new PresenceValidation("Email", "Email"));
+		validator.addValidation(new PhoneValidation("Email", "Email"));
+		
+		validator.addValidation(new InclusionValidation("BorrowerStatus", "Borrower Status", new String[] {"Good Standing", "Delinquent"}));
+
+		validator.addValidation(new PresenceValidation("DateOfLatestBorrowerStatus", "Date Borrower Status Updated"));
+		validator.addValidation(new DateValidation("DateOfLatestBorrowerStatus", "Date Borrower Status Updated"));
+		
+		validator.addValidation(new PresenceValidation("DateOfFirstRegistration", "Date Registered"));
+		validator.addValidation(new DateValidation("DateOfFirstRegistration", "Date Registered"));
+		
+		NumericValidation penaltyValidation = new NumericValidation("MonetaryPenalty", "Monetary Penalty");
+		penaltyValidation.requireGreaterThanOrEqualTo(0);
+		penaltyValidation.allowEmpty();
+		validator.addValidation(penaltyValidation);
+				
+		validator.addValidation(new LengthValidation("Notes", "Notes", 0, 300));
+	
+		validator.addValidation(new InclusionValidation("ActiveStatus", "Status", new String[] {"Active", "Inactive"}));
+
+		validator.addValidation(new PresenceValidation("DateOfLastUpdate", "Date Updated"));
+		validator.addValidation(new DateValidation("DateOfLastUpdate", "Date Updated"));
 	}
 	
 	@Override

@@ -5,6 +5,9 @@ package model.validation;
  */
 public class NumericValidation extends Validation {
 	
+	/** Allow field to be empty */
+	private boolean allowEmpty = false;
+	
 	/** Ensure field be an integer */
 	private boolean requireInteger;
 	
@@ -140,25 +143,33 @@ public class NumericValidation extends Validation {
 	}
 	
 	/**
-	 * Require field be even if requireEven true.
-	 * @param requireEven 
+	 * Require field be even 
 	 */
-	public void requireEven(Boolean requireEven) {
-		this.requireEven = requireEven;
+	public void requireEven() {
+		this.requireEven = true;
 		this.requireOdd = null;
 	}
 
 	/**
-	 * Require field be odd if requireOdd true.
-	 * @param requireOdd
+	 * Require field be odd
 	 */
-	public void requireOdd(Boolean requireOdd) {
-		this.requireOdd = requireOdd;
+	public void requireOdd() {
+		this.requireOdd = true;
 		this.requireEven = null;
+	}
+	
+	/**
+	 * Allow field to be empty
+	 */
+	public void allowEmpty() {
+		this.allowEmpty = true;
 	}
 	
 	@Override
 	public boolean execute(Object value, ModelValidator validator) {
+		if(allowEmpty && (value == null || value.toString().length() == 0)){
+			return true;
+		}
 		try {  
 			if(this.requireInteger){
 				Integer.parseInt((String)value);  

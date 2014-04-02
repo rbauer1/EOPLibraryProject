@@ -32,6 +32,9 @@ public class DateValidation extends Validation {
 	/** Error message displayed when invalid format */
 	private String message;
 
+	/** allows field to be empty */
+	private boolean allowEmpty = false;
+	
 	/**
 	 * Constructs date validation for fieldKey.
 	 * @param fieldKey
@@ -52,6 +55,18 @@ public class DateValidation extends Validation {
 	public DateValidation(String fieldKey, String fieldName) {
 		this(fieldKey, fieldName, "must be a valid date (yyyy-mm-dd)");
 	}
+	
+	/**
+	 * Constructs date validation for fieldKey.
+	 * Default message is "fieldName must be a valid date (yyyy-mm-dd)"
+	 * @param fieldKey
+	 * @param fieldName
+	 * @param allowEmpty
+	 */
+	public DateValidation(String fieldKey, String fieldName, boolean allowEmpty) {
+		this(fieldKey, fieldName, "must be a valid date (yyyy-mm-dd)");
+		this.allowEmpty = allowEmpty;
+	}
 
 	/**
 	 * Sets error message
@@ -63,6 +78,9 @@ public class DateValidation extends Validation {
 
 	@Override
 	public boolean execute(Object val, ModelValidator validator) {
+		if(allowEmpty && (val == null || val.toString().length() == 0)){
+			return true;
+		}
 		String value = ((String)val).replace(" ", "");
 		Date date = null;
 		try {

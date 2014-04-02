@@ -15,6 +15,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Properties;
 
+import model.validation.BannerIdValidation;
+import model.validation.DateValidation;
+import model.validation.InclusionValidation;
+import model.validation.PhoneValidation;
+import model.validation.PresenceValidation;
 import utilities.Key;
 import exception.InvalidPrimaryKeyException;
 
@@ -67,7 +72,35 @@ public class Worker extends Model {
 	
 	@Override
 	protected void setupValidations(){
-		//validator.addValidation(new AlphaNumericValidation("Barcode", "Barcode"));
+		validator.addValidation(new PresenceValidation("BannerID", "Banner Id"));
+		validator.addValidation(new BannerIdValidation("BannerID", "Banner Id"));
+		
+		validator.addValidation(new PresenceValidation("Password", "Password"));
+		
+		validator.addValidation(new PresenceValidation("FirstName", "First Name"));
+		validator.addValidation(new BannerIdValidation("FirstName", "First Name"));
+		
+		validator.addValidation(new PresenceValidation("LastName", "Last Name"));
+		validator.addValidation(new BannerIdValidation("LastName", "Last Name"));
+		
+		validator.addValidation(new PresenceValidation("ContactPhone", "Phone"));
+		validator.addValidation(new PhoneValidation("ContactPhone", "Phone"));
+		
+		validator.addValidation(new PresenceValidation("Email", "Email"));
+		validator.addValidation(new PhoneValidation("Email", "Email"));
+		
+		validator.addValidation(new InclusionValidation("Credentials", "Credentials", new String[] {"Ordinary", "Administrator"}));
+
+		validator.addValidation(new PresenceValidation("DateOfLatestCredentialsStatus", "Date Credentials Updated"));
+		validator.addValidation(new DateValidation("DateOfLatestCredentialsStatus", "Date Credentials Updated"));
+		
+		validator.addValidation(new PresenceValidation("DateOfHire", "Date Registered"));
+		validator.addValidation(new DateValidation("DateOfHire", "Date Registered"));
+		
+		validator.addValidation(new InclusionValidation("ActiveStatus", "Status", new String[] {"Active", "Inactive"}));
+
+		validator.addValidation(new PresenceValidation("DateOfLastUpdate", "Date Updated"));
+		validator.addValidation(new DateValidation("DateOfLastUpdate", "Date Updated"));	
 	}
 
 	@Override

@@ -11,6 +11,10 @@ package model;
 
 import java.util.Properties;
 
+import model.validation.BannerIdValidation;
+import model.validation.DateValidation;
+import model.validation.LengthValidation;
+import model.validation.PresenceValidation;
 import exception.InvalidPrimaryKeyException;
 
 /**
@@ -53,7 +57,24 @@ public class Rental extends Model {
 
 	@Override
 	protected void setupValidations(){
-		//validator.addValidation(new AlphaNumericValidation("Barcode", "Barcode"));
+		validator.addValidation(new PresenceValidation("BorrowerID", "Borrower Banner Id"));
+		validator.addValidation(new BannerIdValidation("BorrowerID", "Borrower Banner Id"));
+		
+		validator.addValidation(new PresenceValidation("BookID", "Book Barcode"));
+		validator.addValidation(new LengthValidation("BookID", "Book Barcode", 4, 10));
+		
+		validator.addValidation(new PresenceValidation("CheckoutDate", "Checkout Date"));
+		validator.addValidation(new DateValidation("CheckoutDate", "Checkout Date"));
+		
+		validator.addValidation(new PresenceValidation("CheckoutWorkerID", "Checkout Worker Banner Id"));
+		validator.addValidation(new BannerIdValidation("CheckoutWorkerID", "Checkout Worker Banner Id"));
+		
+		validator.addValidation(new PresenceValidation("DueDate", "Due Date"));
+		validator.addValidation(new DateValidation("DueDate", "Due Date"));
+		
+		validator.addValidation(new DateValidation("CheckinDate", "Checkin Date", true));
+		
+		validator.addValidation(new BannerIdValidation("CheckinWorkerID", "Checkin Worker Banner Id", true));
 	}
 	
 	@Override

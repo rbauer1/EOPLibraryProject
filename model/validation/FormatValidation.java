@@ -16,6 +16,9 @@ public class FormatValidation extends Validation {
 	
 	/** Regular Expression matcher */
 	private  Matcher matcher;
+	
+	/** Allow field to be empty */
+	private  boolean allowEmpty;
 
 	/**
 	 * Constructs a validation that ensures the field is of the provided format.
@@ -48,9 +51,22 @@ public class FormatValidation extends Validation {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+	
+	/**
+	 * Allow field to be empty
+	 */
+	public void allowEmpty() {
+		this.allowEmpty = true;
+	}
 
 	@Override
 	public boolean execute(Object value, ModelValidator validator) {
+		if(value == null){
+			value = "";
+		}
+		if(allowEmpty && value.toString().length() == 0){
+			return true;
+		}
 		this.matcher = this.format.matcher((String)value);
 		if(!this.matcher.matches()){
 			validator.addError(getFieldKey(), getFieldName() + " " + this.message);

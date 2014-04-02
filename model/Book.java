@@ -10,8 +10,14 @@
 package model;
 
 import java.util.Properties;
-import utilities.Key;
+
+import model.validation.DateValidation;
+import model.validation.InclusionValidation;
+import model.validation.LengthValidation;
+import model.validation.NumericValidation;
+import model.validation.PresenceValidation;
 import utilities.DateUtil;
+import utilities.Key;
 import exception.InvalidPrimaryKeyException;
 
 /**
@@ -54,7 +60,42 @@ public class Book extends Model {
 	
 	@Override
 	protected void setupValidations(){
-		//validator.addValidation(new AlphaNumericValidation("Barcode", "Barcode"));
+		validator.addValidation(new PresenceValidation("Barcode", "Barcode"));
+		validator.addValidation(new LengthValidation("Barcode", "Barcode", 4, 10));
+		
+		validator.addValidation(new PresenceValidation("Title", "Title"));
+		validator.addValidation(new LengthValidation("Title", "Title", 1, 50));
+		
+		validator.addValidation(new PresenceValidation("Discipline", "Discipline"));
+		validator.addValidation(new LengthValidation("Discipline", "Discipline", 1, 15));
+		
+		validator.addValidation(new PresenceValidation("Author1", "Author 1"));
+		validator.addValidation(new LengthValidation("Author1", "Author 1", 1, 30));
+		
+		validator.addValidation(new LengthValidation("Author2", "Author 2", 0, 30));
+		validator.addValidation(new LengthValidation("Author3", "Author 3", 0, 30));
+		validator.addValidation(new LengthValidation("Author4", "Author 4", 0, 30));
+		
+		validator.addValidation(new PresenceValidation("Publisher", "Publisher"));
+		validator.addValidation(new LengthValidation("Publisher", "Publisher", 1, 30));
+		
+		validator.addValidation(new NumericValidation("YearOfPublication", "Publication Year", true));
+		
+		validator.addValidation(new LengthValidation("ISBN", "ISBN", 0, 15));
+
+		validator.addValidation(new InclusionValidation("BookCondition", "Condition", new String[] {"Good", "Damaged"}));
+	
+		validator.addValidation(new PresenceValidation("SuggestedPrice", "Suggested Price"));
+		NumericValidation priceValidation = new NumericValidation("SuggestedPrice", "Suggested Price");
+		priceValidation.requireGreaterThanOrEqualTo(0);
+		validator.addValidation(priceValidation);
+		
+		validator.addValidation(new LengthValidation("Notes", "Notes", 0, 300));
+		
+		validator.addValidation(new InclusionValidation("BookStatus", "Status", new String[] {"Active", "Lost", "Inactive"}));
+
+		validator.addValidation(new PresenceValidation("DateOfLastUpdate", "Date of Last Update"));
+		validator.addValidation(new DateValidation("DateOfLastUpdate", "Date of Last Update"));
 	}
 	
 	@Override

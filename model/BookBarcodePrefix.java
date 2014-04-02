@@ -11,6 +11,8 @@ package model;
 
 import java.util.Properties;
 
+import model.validation.LengthValidation;
+import model.validation.PresenceValidation;
 import exception.InvalidPrimaryKeyException;
 
 /**
@@ -53,7 +55,11 @@ public class BookBarcodePrefix extends Model {
 
 	@Override
 	protected void setupValidations(){
-		//validator.addValidation(new AlphaNumericValidation("Barcode", "Barcode"));
+		validator.addValidation(new PresenceValidation("PrefixValue", "Prefix"));
+		validator.addValidation(new LengthValidation("PrefixValue", "Prefix", 3));
+		
+		validator.addValidation(new PresenceValidation("Discipline", "Discipline"));
+		validator.addValidation(new LengthValidation("Discipline", "Discipline", 1, 15));
 	}
 	
 	@Override

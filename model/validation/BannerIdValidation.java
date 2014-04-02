@@ -26,5 +26,19 @@ public class BannerIdValidation extends FormatValidation {
 	public BannerIdValidation(String fieldKey, String fieldName) {
 		this(fieldKey, fieldName, "must be a valid Banner Id");
 	}
+	
+	/**
+	 * Constructs a validation that ensures the field is a banner id.
+	 * Default message is "fieldName must be a valid Banner Id"
+	 * @param fieldKey
+	 * @param fieldName
+	 * @param allowEmpty
+	 */
+	public BannerIdValidation(String fieldKey, String fieldName, boolean allowEmpty) {
+		this(fieldKey, fieldName, "must be a valid Banner Id");
+		if(allowEmpty){
+			allowEmpty();
+		}
+	}
 
 }
