@@ -9,34 +9,34 @@
  */
 package model.transaction;
 
+
 import java.util.Properties;
 
-import model.Book;
 import userinterface.View;
 import utilities.Key;
+import model.Book;
 
 public class ModifyBooksTransaction extends Transaction {
-	private Book book;
-
+	private Transaction listBooksTransaction;
 	public ModifyBooksTransaction() {
 		super();
 	}
 
 	@Override
 	public Object getState(String key) {
-		
 		return null;
 	}
 	
 	@Override
 	public void execute(){
-		TransactionFactory.executeTransaction(this, "ListBooksTransaction");
+		listBooksTransaction = 
+				TransactionFactory.executeTransaction(this, "ListBooksTransaction", 
+						Key.BACK_TO_BOOK_MENU, Key.SELECT_BOOK);
 	}
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.SUBMIT_NEW_BOOK)){
-			submitNewBook((Properties) value);
+		if(key.equals(Key.SELECT_BOOK)){
 		}
 		registry.updateSubscribers(key, this);
 	}
@@ -49,16 +49,11 @@ public class ModifyBooksTransaction extends Transaction {
 
 	@Override
 	protected View createView() {
-		return getView("ListBooksView");
+		return null;
 	}
 
 	private void submitNewBook(Properties bookData){
-		book = new Book(bookData);
-		if(book.save()){
-			stateChangeRequest(Key.ADD_BOOK_SUCCESS, null);
-		}else{
-			stateChangeRequest(Key.INPUT_ERROR, null);
-		}
+		
 	}
 	
 }

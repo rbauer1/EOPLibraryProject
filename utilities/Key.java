@@ -12,6 +12,7 @@ public class Key {
 	
 	public static final String SUBMIT_NEW_BOOK = "SubmitNewBook";
 	public static final String SELECT_BOOK = "SelectBook";
+	public static final String MODIFY_OR_DELETE = "ModifyOrDelete";
 	
 	public static final String BACK_TO_MAIN_MENU = "BackToMainMenu";
 	public static final String BACK_TO_BOOK_MENU = "BackToBookMenu";

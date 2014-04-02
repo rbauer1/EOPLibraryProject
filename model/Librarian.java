@@ -103,7 +103,7 @@ public class Librarian implements IView, IModel, ISlideShow {
 		} else if (key.equals(Key.EXECUTE_MODIFY_BOOK)) {	
 			TransactionFactory.executeTransaction(this, key, Key.BACK_TO_BOOK_MENU);
 		} else if (key.equals(Key.EXECUTE_DELETE_BOOK)) {	
-			TransactionFactory.executeTransaction(this, key, Key.BACK_TO_BOOK_MENU);
+			TransactionFactory.executeTransaction(this, key, Key.BACK_TO_BOOK_MENU, Key.MODIFY_OR_DELETE);
 		} else if (key.equals(Key.EXECUTE_RECOVER_PW)){		
 			TransactionFactory.executeTransaction(this, key, Key.RECOVER_PW_COMPLETED);
 		} else if (key.equals(Key.RECOVER_PW_COMPLETED)){	

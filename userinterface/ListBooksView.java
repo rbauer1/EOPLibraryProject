@@ -26,6 +26,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -80,7 +81,7 @@ public class ListBooksView extends View
 	public ListBooksView(IModel transaction)
 	{
 		super(transaction, "ListBooksView");
-
+		
 		// Set everything for initial use
 		books = new ArrayList<Book>();
 
@@ -109,6 +110,7 @@ public class ListBooksView extends View
 //			statusList.setEnabled(false);
 
 		myModel.subscribe(Key.GET_BOOK_COLLECTION, this);
+		myModel.subscribe(Key.MODIFY_OR_DELETE, this);
 	}
 
 	// Override the paint method to ensure we can set the focus when made visible
@@ -117,19 +119,10 @@ public class ListBooksView extends View
 	{
 		super.paint(g);
 
-		// If something's already selected, clear the selection
-		if(bookTable != null)
-		{
-			//scoutTable.getSelectionModel().clearSelection();
-		}
-
 		// Disable the submit button
-		if(selectedRowIndex < 0)
-		{
+		if(selectedRowIndex < 0){
 			submitButton.setEnabled(false);
-		}
-		else
-		{
+		}else{
 			submitButton.setEnabled(true);
 		}
 	}
@@ -142,8 +135,7 @@ public class ListBooksView extends View
 	// Create the actual form that allows the user to input the new data
 	// regarding a new tree
 	//---------------------------------------------------------------------
-	private JPanel createForm()
-	{
+	private JPanel createForm(){
 		JPanel formPanel = new JPanel ();
 		formPanel.setLayout( new BoxLayout ( formPanel, BoxLayout.Y_AXIS ));
 		formPanel.setBackground ( blue );
@@ -162,10 +154,8 @@ public class ListBooksView extends View
 		return formPanel;
 	}
 
-	// This method creates the initial empty search result table
-	//-----------------------------------------------------------------
-	private JPanel createBookTable()
-	{
+	/** This method creates the initial empty search result table **/
+	private JPanel createBookTable(){
 		entries = new JPanel();
 		entries.addHierarchyListener(getHierarchyListener());
 		entries.setLayout(new BoxLayout(entries, BoxLayout.Y_AXIS));
@@ -192,20 +182,14 @@ public class ListBooksView extends View
 
 		/* Add a mouse listener to detect double-clicks if it's an
 		/* update or a delete operation */
-		bookTable.addMouseListener(new MouseAdapter()
-		{
-			public void mouseClicked(MouseEvent e)
-			{
-				if(e.getSource() == bookTable && e.getClickCount() == 2)
-				{
+		bookTable.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent e){
+				if(e.getSource() == bookTable && e.getClickCount() == 2){
 					int selectedRow = -1;
-					try
-					{
+					try{
 						bookTable.convertRowIndexToModel(
 								bookTable.getSelectedRow());
-					}
-					catch(Exception ex)
-					{
+					}catch(Exception ex){
 						selectedRow = -1;
 					}
 
@@ -226,8 +210,7 @@ public class ListBooksView extends View
 
 	//-----------------------------------------------------------------
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private JPanel createDataEntryFields()
-	{
+	private JPanel createDataEntryFields(){
 		JPanel entryFieldsPanel = new BluePanel();
 		entryFieldsPanel.setLayout( new BoxLayout ( entryFieldsPanel, BoxLayout.Y_AXIS));
 
@@ -290,13 +273,12 @@ public class ListBooksView extends View
 
 	// Create the navigation buttons
 	//-------------------------------------------------------------
-	private JPanel createNavigationButtons()
-	{
+	private JPanel createNavigationButtons(){
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setBackground( blue );
 
 		//TODO this should read either Update or Delete depending on the intended user action
-		submitButton = new JButton( "Submit" ); 
+		submitButton = new JButton( "" ); 
 		buttonsPanel.add( formatButtonSmall ( submitButton ));
 
 		cancelButton = new JButton( "Cancel" );
@@ -307,20 +289,16 @@ public class ListBooksView extends View
 
 	// Gets the TableModel values
 	//-------------------------------------------------------------
-	protected void getEntryTableModelValues()
-	{
+	protected void getEntryTableModelValues(){
 		books.clear();
 
-		try
-		{
+		try{
 			myModel.stateChangeRequest(Key.GET_BOOK_COLLECTION, getInfoFromFields());
 			// Get and set the table model
 			TableModel tableModel = new BookTableModel(books);
 			bookTable.setModel(tableModel);
 			bookTable.repaint();
-		}
-		catch (Exception e)
-		{
+		}catch (Exception e){
 			//TODO figure out what to do here / if this is necessary.
 			e.printStackTrace();
 		}
@@ -328,16 +306,13 @@ public class ListBooksView extends View
 
 	// Create the status log field
 	//-------------------------------------------------------------
-	private JPanel createStatusLog(String initialMessage)
-	{
+	private JPanel createStatusLog(String initialMessage){
 		statusLog = new MessageView(initialMessage);
-
 		return statusLog;
 	}
 
 	//-------------------------------------------------------------
-	private Properties getInfoFromFields()
-	{
+	private Properties getInfoFromFields(){
 		Properties bookInfo = new Properties();
 		bookInfo.setProperty("Barcode", barcodeField.getText());
 		bookInfo.setProperty("Author1", author1Field.getText());
@@ -350,71 +325,53 @@ public class ListBooksView extends View
 
 
 	// This method gets the selected row index
-	//-------------------------------------------------------------
-	private int isRowSelected()
-	{
-		try
-		{
+	private int isRowSelected(){
+		try{
 			return bookTable.convertRowIndexToModel(bookTable.getSelectedRow());
+		}catch(Exception ex){
+			System.err.println("BAD BAD THING HAPPENING IN ListBookView's isRowSelected() method");
+//			ex.printStackTrace(); //TODO is this method needed at all?
 		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace(); //TODO is this method needed at all?
-		}
-
 		return -1;
 	}
 
 	// This method sends the selected scout to our model for the update screen
-	//-------------------------------------------------------------
-	private void proceed(int selectedRowIndex)
+	private void proceed(int selectedRowIndex){
+		if(operationType.equals("Delete")){
+			if(deleteConfirmationPopup() == JOptionPane.YES_OPTION){
+				myModel.stateChangeRequest(Key.SELECT_BOOK, books.get(selectedRowIndex));
+				selectedRowIndex = -1;
+				bookTable.setModel(emptyTable);
+				bookTable.repaint();
+				getEntryTableModelValues();
+			}
+		}else{
+			myModel.stateChangeRequest(Key.SELECT_BOOK, books.get(selectedRowIndex));
+		}
+	}
+	
+	private int deleteConfirmationPopup()
 	{
-		System.out.println(books);
-		myModel.stateChangeRequest(Key.SELECT_BOOK, books.get(selectedRowIndex));
-		
-//		// OperationType = Update
-//		if(operationType.contains("Update"))
-//		{
-//			myRegistry.updateSubscribers("UpdateScout", prps);
-//		}
-//		// OperationType = Delete
-//		else
-//		if(operationType.contains("Delete"))
-//		{
-//			// selectedPullDownIndex = 0; // Reset the scout selection
-//
-//			myRegistry.updateSubscribers("DeleteScout", prps);
-//		}
-//		else
-//		if(operationType.contains("Hours"))
-//		{
-//			myRegistry.updateSubscribers("HoursWorkedScout", prps);
-//		}
+		String message =
+			"ATTENTION: You are about to delete a book from the system.\n" +
+			"Are you sure you have selected the correct book and want to proceed?";
+		return JOptionPane.showConfirmDialog(this, message, "Book will be deleted", JOptionPane.YES_NO_OPTION);
+
 	}
 
-	//-------------------------------------------------------------
-	public void processAction(EventObject evt)
-	{
+	public void processAction(EventObject evt){
 		clearErrorMessage();
 
-		if(evt.getSource() == searchButton)
-		{
+		if(evt.getSource() == searchButton){
 			//TODO Use validation here
 //			if(getAndValidateData())
 //			{
+				myModel.stateChangeRequest(Key.MODIFY_OR_DELETE, null);
+				submitButton.setText(operationType);
 				// Empty the table
 				bookTable.setModel(emptyTable);
 				bookTable.repaint();
 				getEntryTableModelValues();
-				
-				
-//			}
-//			else
-//			{
-				// Empty the table
-//				bookTable.setModel(emptyTable);
-//				bookTable.repaint();
-//			}
 		}else if (evt.getSource() == cancelButton){
 			myModel.stateChangeRequest(Key.BACK_TO_BOOK_MENU, null);
 		}else if(evt.getSource() == submitButton){
@@ -428,47 +385,37 @@ public class ListBooksView extends View
 	}
 
 	//-------------------------------------------------------------
-	private void processDoubleClick(int selectedRow)
-	{
+	private void processDoubleClick(int selectedRow){
 		proceed(selectedRowIndex);
 	}
 
 	//-------------------------------------------------------------
-	public void processListSelection(EventObject evt)
-	{
+	public void processListSelection(EventObject evt){
 		selectedRowIndex = isRowSelected();
 
 		// If we have a selected row, enable the submit button; disable otherwise
-		if(selectedRowIndex < 0)
-		{
+		if(selectedRowIndex < 0){
 			submitButton.setEnabled(false);
-		}
-		else
-		{
+		}else{
 			//clearErrorMessage();
 			submitButton.setEnabled(true);
 		}
 	}
 
 	//-------------------------------------------------------------
-	private HierarchyListener getHierarchyListener()
-	{
-		HierarchyListener hierarchyListener = new HierarchyListener()
-		{
+	private HierarchyListener getHierarchyListener(){
+		HierarchyListener hierarchyListener = new HierarchyListener(){
 			/* This implementation of @HierarchyListener lets us trigger some
 			 * methods when a displayability of a component is changed.
 			 * For example: When turning back from some subview of a scout
 			 * search screen, this method helps us to update our table and
 			 * scout list. */
 			//-------------------------------------------------------------
-            public void hierarchyChanged(HierarchyEvent evt)
-            {
+            public void hierarchyChanged(HierarchyEvent evt){
             	// If the displayability of a component is changed
-        		if ((evt.getChangeFlags() & HierarchyEvent.DISPLAYABILITY_CHANGED) != 0)
-        		{
+        		if ((evt.getChangeFlags() & HierarchyEvent.DISPLAYABILITY_CHANGED) != 0){
         			// If the component is -somehow- made displayable
-        			if (evt.getComponent().isDisplayable())
-        			{
+        			if (evt.getComponent().isDisplayable()){
         				processHierarchyChanged(evt);
         			}
         		}
@@ -479,10 +426,8 @@ public class ListBooksView extends View
 	}
 
 	//-------------------------------------------------------------
-	public void processHierarchyChanged(HierarchyEvent evt)
-	{
-		if(evt.getSource() == entries)
-		{
+	public void processHierarchyChanged(HierarchyEvent evt){
+		if(evt.getSource() == entries){
 			/*if(scoutTable != null && isRowSelected() > 0)
 			{
 				scoutTable.clearSelection();
@@ -490,8 +435,7 @@ public class ListBooksView extends View
 
 			/* First update the search result table, because we need scoutVector
 			 * updated to process the if statement after this one correctly. */
-			if(! emptySearchResult)
-			{
+			if(! emptySearchResult){
 				getEntryTableModelValues();
 				displayMessage("Number of Books Found: " + books.size());
 			}
@@ -501,35 +445,29 @@ public class ListBooksView extends View
 	/**
 	 * Display message
 	 */
-	//----------------------------------------------------------
-	public void displayMessage(String message)
-	{
+	public void displayMessage(String message){
 		statusLog.displayMessage(message);
 	}
 
 	/**
 	 * Display error message
 	 */
-	//----------------------------------------------------------
-	public void displayErrorMessage(String message)
-	{
+	public void displayErrorMessage(String message){
 		statusLog.displayErrorMessage(message);
 	}
 
 	/**
 	 * Clear error message
 	 */
-	//----------------------------------------------------------
-	public void clearErrorMessage()
-	{
+	public void clearErrorMessage(){
 		statusLog.clearErrorMessage();
 	}
 
-	//----------------------------------------------------------
-	public void updateState(String key, Object value)
-	{
+	public void updateState(String key, Object value){
 		if(key.equals(Key.GET_BOOK_COLLECTION)){
 			books = (ArrayList<Book>)value;
+		}else if(key.equals(Key.MODIFY_OR_DELETE)){
+			operationType = (String)value;
 		}
 	}
 

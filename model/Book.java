@@ -69,7 +69,7 @@ public class Book extends Model {
 		if(key.equals(Key.GET_PERSISTENT_STATE)){
 			return persistentState;
 		}
-		return null;
+		return persistentState.getProperty(key);
 	}
 	
 	public boolean setInactive(){

@@ -21,6 +21,7 @@ public class ListBooksTransaction extends Transaction {
 	private BookCollection bookCollection;
 	private List<Book> books;
 	private Book selectedBook;
+	private String operationType;
 
 	public ListBooksTransaction() {
 		super();
@@ -33,6 +34,8 @@ public class ListBooksTransaction extends Transaction {
 			return books;
 		}else if(key.equals(Key.SELECT_BOOK)){
 			return selectedBook;
+		}else if(key.equals(Key.MODIFY_OR_DELETE)){
+			return operationType;
 		}
 		return null;
 	}
@@ -63,6 +66,15 @@ public class ListBooksTransaction extends Transaction {
 		bookCollection = new BookCollection();
 		bookCollection.find(props);
 		books = bookCollection.getEntities();
+	}
+	
+	/**
+	 * Either modify or delete
+	 * @param operation
+	 */
+	protected void setOpertationType(String operation){
+		System.out.println("Reached");
+		operationType = operation;
 	}
 	
 }
