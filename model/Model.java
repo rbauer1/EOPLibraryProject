@@ -190,7 +190,13 @@ public abstract class Model extends EntityBase {
 	public boolean remove(){
 		Object key = this.getState(getPrimaryKey());
 		if(this.persisted && key != null && (String)key != ""){
-			deletePersistentState(getSchema(), persistentState);
+			try {
+				deletePersistentState(getSchema(), persistentState);
+			} catch (SQLException e) {
+				new Event(Event.getLeafLevelClassName(this), "remove",
+						"SQL error while removing: " + e.toString(), Event.ERROR);
+				return false;
+			}
 		}
 		this.persisted = false;
 		return true;

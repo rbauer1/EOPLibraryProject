@@ -194,8 +194,9 @@ abstract public class Persistable {
 	 * @param values
 	 * @param whereClause
 	 * @return number of rows affected
+	 * @throws SQLException 
 	 */
-	protected Integer updatePersistentState(Properties schema, Properties values, Properties whereClause){
+	protected Integer updatePersistentState(Properties schema, Properties values, Properties whereClause) throws SQLException{
 		return executeUpdateQuery(new SQLUpdateStatement(schema, values, whereClause).toString());
 	}
 
@@ -203,8 +204,9 @@ abstract public class Persistable {
 	 * Executes a generic Insert/Update/Delete query that is provided.
 	 * @param sqlStatement
 	 * @return number of rows affected
+	 * @throws SQLException 
 	 */
-	protected Integer executeUpdateQuery(String sqlStatement){
+	protected Integer executeUpdateQuery(String sqlStatement) throws SQLException{
 		try {
 			openConnection();
 			
@@ -220,7 +222,7 @@ abstract public class Persistable {
 		} catch (SQLException sqle) {
 			new Event(Event.getLeafLevelClassName(this), "executeUpdateQuery",
 					"SQL Exception: " + sqle.getErrorCode() + ": " + sqle.getMessage(), Event.ERROR);
-			return null;
+			throw sqle;
 		} finally {
 			closeStatement();
 		}
@@ -231,8 +233,9 @@ abstract public class Persistable {
 	 * @param schema
 	 * @param values
 	 * @return the auto generated primary key value
+	 * @throws SQLException 
 	 */
-	protected Integer insertAutoIncrementalPersistentState(Properties schema, Properties values){
+	protected Integer insertAutoIncrementalPersistentState(Properties schema, Properties values) throws SQLException{
 		try {
 			openConnection();
 			
@@ -255,7 +258,7 @@ abstract public class Persistable {
 		} catch (SQLException sqle) {
 			new Event(Event.getLeafLevelClassName(this), "insertAutoIncrementalPersistentState",
 					"SQL Exception: " + sqle.getErrorCode() + ": " + sqle.getMessage(), Event.ERROR);
-			return null;
+			throw sqle;
 		} finally {
 			closeStatement();
 		}
@@ -266,8 +269,9 @@ abstract public class Persistable {
 	 * @param schema
 	 * @param values
 	 * @return number of rows affected
+	 * @throws SQLException 
 	 */
-	protected Integer insertPersistentState(Properties schema, Properties values){
+	protected Integer insertPersistentState(Properties schema, Properties values) throws SQLException{
 		return executeUpdateQuery(new SQLInsertStatement(schema, values).toString());
 	}
 
@@ -277,8 +281,9 @@ abstract public class Persistable {
 	 * @param schema
 	 * @param whereClause
 	 * @return number of rows affected
+	 * @throws SQLException 
 	 */
-	protected Integer deletePersistentState(Properties schema, Properties whereClause){
+	protected Integer deletePersistentState(Properties schema, Properties whereClause) throws SQLException{
 		return executeUpdateQuery(new SQLDeleteStatement(schema, whereClause).toString());
 	}
 	
