@@ -60,8 +60,7 @@ public class ListBooksView extends View
 	private String[] status = {"Active", "Lost", "Any"};
 
 	// Collection to keep search result
-	private ArrayList<Book> books;
-	private List<Book> allBooks;
+	private List<Book> books;
 
 	// Selected row index to check if any row is selected
 	private int selectedRowIndex;
@@ -465,7 +464,7 @@ public class ListBooksView extends View
 
 	public void updateState(String key, Object value){
 		if(key.equals(Key.GET_BOOK_COLLECTION)){
-			books = (ArrayList<Book>)value;
+			books = (List<Book>)value;
 		}else if(key.equals(Key.MODIFY_OR_DELETE)){
 			operationType = (String)value;
 		}

@@ -34,8 +34,11 @@ public class AddWorkerView extends View {
 	private JTextField phoneField;
 	@SuppressWarnings("rawtypes")
 	private JComboBox credentialsBox;
+	@SuppressWarnings("rawtypes")
 	private JComboBox yearBox;
+	@SuppressWarnings("rawtypes")
 	private JComboBox monthBox;
+	@SuppressWarnings("rawtypes")
 	private JComboBox dayBox;
 	private JButton submitButton;
 	private JButton clearButton;
@@ -72,7 +75,7 @@ public class AddWorkerView extends View {
 			Properties newWorkerProps = new Properties();
 			newWorkerProps.put("BannerID", bannerField.getText().trim());
 			newWorkerProps.put("FirstName", firstNameField.getText().trim());
-			newWorkerProps.put("Password", passwordField.getText().trim());
+			newWorkerProps.put("Password", new String(passwordField.getPassword()));
 			newWorkerProps.put("LastName", lastNameField.getText().trim());
 			newWorkerProps.put("Email", emailField.getText().trim());
 			newWorkerProps.put("ContactPhone", phoneField.getText().trim());
@@ -252,6 +255,7 @@ public class AddWorkerView extends View {
 	}
 	// Create the date dropdowns
 	// -------------------------------------------------------------
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void updateDate() {
 		//TODO parse current date and set the dropboxes
 		String currentDate = DateUtil.getDate();

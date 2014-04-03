@@ -3,6 +3,7 @@ package userinterface;
 // System imports
 import java.awt.Toolkit;
 import java.util.regex.Pattern;
+
 import javax.swing.JTextField;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;

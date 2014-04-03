@@ -1,20 +1,20 @@
 package userinterface;
 
 //system imports
+// project imports
+import impresario.IModel;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
-import javax.swing.BoxLayout;
-import javax.swing.Box;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-
-import utilities.Key;
-
 import java.util.EventObject;
 
-// project imports
-import impresario.IModel;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+import utilities.Key;
 
 public class BookMenuView extends View
 {

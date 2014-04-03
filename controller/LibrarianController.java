@@ -11,9 +11,9 @@ package controller;
 
 import java.util.Properties;
 
-import controller.transaction.TransactionFactory;
 import model.Worker;
 import utilities.Key;
+import controller.transaction.TransactionFactory;
 import exception.InvalidPrimaryKeyException;
 
 /**
