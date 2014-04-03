@@ -260,7 +260,7 @@ public class ListBooksView extends View
 
 		JPanel searchButtonPanel = new ColorPanel();
 
-		searchButton = new JButton( "Search" );
+		searchButton = new CustomButton( "Search" );
 		searchButtonPanel.add(formatButtonSmall(searchButton));
 		entryFieldsPanel.add(searchButtonPanel);
 
@@ -275,11 +275,11 @@ public class ListBooksView extends View
 		buttonsPanel.setBackground( BACKGROUND_COLOR );
 
 		//TODO this should read either Update or Delete depending on the intended user action
-		submitButton = new JButton( "" ); 
+		submitButton = new CustomButton( "" ); 
 		buttonsPanel.add( formatButtonSmall ( submitButton ));
 		submitButton.setVisible(false);
 
-		cancelButton = new JButton( "Cancel" );
+		cancelButton = new CustomButton( "Cancel" );
 		buttonsPanel.add( formatButtonSmall ( cancelButton ));
 
 		return buttonsPanel;

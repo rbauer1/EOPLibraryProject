@@ -80,33 +80,33 @@ public class BookMenuView extends View
 
 		// create "raw" JButtons and call superclass View to format 
 		// the button to the program's standard, add them to the panel
-		btnAdd = new JButton( "Add Book" );
-		navigationPanel.add( formatComponent ( btnAdd ));
+		btnAdd = new CustomButton( "Add Book" );
+		navigationPanel.add( formatButton ( btnAdd ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 
-		btnModify = new JButton( "Modify Book" );
-		navigationPanel.add( formatComponent ( btnModify ));
+		btnModify = new CustomButton( "Modify Book" );
+		navigationPanel.add( formatButton ( btnModify ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 
-		btnDelete = new JButton( "Delete Book" );
-		navigationPanel.add( formatComponent ( btnDelete ));
+		btnDelete = new CustomButton( "Delete Book" );
+		navigationPanel.add( formatButton ( btnDelete ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 
-		btnProcessLostBook = new JButton( "Process Lost Book" );
-		navigationPanel.add( formatComponent ( btnProcessLostBook ));
+		btnProcessLostBook = new CustomButton( "Process Lost Book" );
+		navigationPanel.add( formatButton ( btnProcessLostBook ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 		
-		btnListAvailable = new JButton( "List Available Books" );
-		navigationPanel.add( formatComponent ( btnListAvailable ));
+		btnListAvailable = new CustomButton( "List Available Books" );
+		navigationPanel.add( formatButton ( btnListAvailable ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 		
-		btnListUnavailable = new JButton( "List Unavailable Books" );
-		navigationPanel.add( formatComponent ( btnListUnavailable ));
+		btnListUnavailable = new CustomButton( "List Unavailable Books" );
+		navigationPanel.add( formatButton ( btnListUnavailable ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 		
-		btnBack = new JButton( "Back" );
+		btnBack = new CustomButton( "Back" );
 		btnBack.setForeground( Color.red.darker().darker() );
-		navigationPanel.add( formatComponent ( btnBack ));
+		navigationPanel.add( formatButton ( btnBack ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 
 		return navigationPanel;

@@ -79,29 +79,29 @@ public class MainMenuView extends View
 
 		// create "raw" JButtons and call superclass View to format 
 		// the button to the program's standard, add them to the panel
-		btnBookActions = new JButton( "Book Actions" );
-		navigationPanel.add( formatComponent ( btnBookActions ));
+		btnBookActions = new CustomButton( "Book Actions" );
+		navigationPanel.add( formatButton ( btnBookActions ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 
-		btnBorrowerActions = new JButton( "Student Borrower Actions" );
-		navigationPanel.add( formatComponent ( btnBorrowerActions ));
+		btnBorrowerActions = new CustomButton( "Student Borrower Actions" );
+		navigationPanel.add( formatButton ( btnBorrowerActions ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 
-		btnWorkerActions = new JButton( "Workers Actions" );
-		navigationPanel.add( formatComponent ( btnWorkerActions ));
+		btnWorkerActions = new CustomButton( "Workers Actions" );
+		navigationPanel.add( formatButton ( btnWorkerActions ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 
-		btnCheckinBook = new JButton( "Check in a Book" );
-		navigationPanel.add( formatComponent ( btnCheckinBook ));
+		btnCheckinBook = new CustomButton( "Check in a Book" );
+		navigationPanel.add( formatButton ( btnCheckinBook ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 		
-		btnCheckoutBook = new JButton( "Check out a Book" );
-		navigationPanel.add( formatComponent ( btnCheckoutBook ));
+		btnCheckoutBook = new CustomButton( "Check out a Book" );
+		navigationPanel.add( formatButton ( btnCheckoutBook ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 		
-		btnLogout = new JButton( "Logout" );
+		btnLogout = new CustomButton( "Logout" );
 		btnLogout.setForeground( Color.red.darker().darker() );
-		navigationPanel.add( formatComponent ( btnLogout ));
+		navigationPanel.add( formatButton ( btnLogout ));
 		navigationPanel.add( Box.createRigidArea( SIZE ));
 
 		return navigationPanel;

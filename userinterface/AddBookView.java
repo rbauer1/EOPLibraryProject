@@ -244,15 +244,15 @@ public class AddBookView extends View {
 
 		// create "raw" JButtons and call superclass View to format
 		// the buttons to the program's standard, add them to the panel
-		submitButton = new JButton("Add");
+		submitButton = new CustomButton("Add");
 		buttonsPanel.add(formatButtonSmall(submitButton));
 		buttonsPanel.add(new JLabel("     "));
 		
-		clearButton = new JButton("Clear Form");
+		clearButton = new CustomButton("Clear");
 		buttonsPanel.add(formatButtonSmall(clearButton));
 		buttonsPanel.add(new JLabel("     "));
 
-		cancelButton = new JButton("Back");
+		cancelButton = new CustomButton("Back");
 		buttonsPanel.add(formatButtonSmall(cancelButton));
 		buttonsPanel.setAlignmentX(CENTER_ALIGNMENT);
 

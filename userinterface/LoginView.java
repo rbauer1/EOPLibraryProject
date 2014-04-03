@@ -35,7 +35,7 @@ public class LoginView extends View {
 	private static final long serialVersionUID = 5785171554484853130L;
 
 	/** Buttons */
-	private JButton loginButton;
+	private CustomButton loginButton;
 	private JButton forgotPasswordButton;
 	private JButton exitButton;
 
@@ -102,9 +102,8 @@ public class LoginView extends View {
 	 * @return data entry panel
 	 */
 	private JPanel createDataEntryFields() {
-		JPanel dataEntryPanel = new JPanel();
+		JPanel dataEntryPanel = new ColorPanel();
 		dataEntryPanel.setLayout(new BoxLayout(dataEntryPanel, BoxLayout.Y_AXIS));
-		dataEntryPanel.setBackground(BACKGROUND_COLOR);
 
 		bannerIdField = new JTextField(25);
 		dataEntryPanel.add(formatCurrentPanelCenter("Username", bannerIdField));
@@ -124,21 +123,21 @@ public class LoginView extends View {
 	 * @return button panel
 	 */
 	private JPanel createButtons() {
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		buttonPanel.setBackground(BACKGROUND_COLOR);
+		JPanel buttonPanel = new ColorPanel(new FlowLayout(FlowLayout.CENTER));
 
 		// create the buttons, listen for events, add them to the panel
-		loginButton = new JButton("Login");
+		loginButton = new CustomButton("Login");
 		buttonPanel.add(formatButton(loginButton));
+//		buttonPanel.add(loginButton);
 
 		buttonPanel.add(new JLabel("     "));
 		
-		forgotPasswordButton = new JButton("Forgot Password");
+		forgotPasswordButton = new CustomButton("Forgot Password");
 		buttonPanel.add(formatButton(forgotPasswordButton));
 
 		buttonPanel.add(new JLabel("     "));
 
-		exitButton = new JButton("Exit Application");
+		exitButton = new CustomButton("Exit Application");
 		buttonPanel.add(formatButton(exitButton));
 
 		return buttonPanel;

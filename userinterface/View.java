@@ -71,18 +71,20 @@ public abstract class View extends JPanel implements IView, IControl,
 	protected static final Color SEPARATOR_COLOR = new Color (0x668D3C);
 	protected static final Color TITLE_COLOR = new Color(0x668D3C).darker();
 	protected static final String FONT_NAME = "Garamond";
+	protected static final int GENERAL_FONT_SIZE = 16;
+	protected static final int TITLE_FONT_SIZE = GENERAL_FONT_SIZE+2;
 	
 	/** indicate the font for all components that will be used in the program views, i.e. JButtons, JTextFields, JLabels and etc. **/
-	protected static final Font GENERAL_FONT = new Font(FONT_NAME, Font.TYPE1_FONT, 12 );
+	protected static final Font GENERAL_FONT = new Font(FONT_NAME, Font.TYPE1_FONT, GENERAL_FONT_SIZE );
 	
 	/** indicate the font for a View's Title, will be used to format all Views Titles **/
-	protected static final Font TITLE_FONT = new Font(FONT_NAME, Font.BOLD, 13 );
+	protected static final Font TITLE_FONT = new Font(FONT_NAME, Font.BOLD, TITLE_FONT_SIZE );
 
 	/** preferred empty box size, used to position components **/
 	protected static final Dimension SIZE = new Dimension( 200, 15 );
 
 	/** indicate preferred size of a Button  **/
-	protected static final Dimension SIZE_BUTTON = new Dimension( 175, 25 );
+	protected static final Dimension SIZE_BUTTON = new Dimension( 185, 25 );
 	
 	/** indicate preferred size of a Combo Box  **/
 	protected static final Dimension SMALL_DROP_DOWN = new Dimension( 85, 25 );
@@ -181,7 +183,6 @@ public abstract class View extends JPanel implements IView, IControl,
 	protected JButton formatButton ( JButton buttonToFormat )
 	{
 
-		buttonToFormat.setBorder ( new LineBorder ( Color.black, 1 ) );
 		buttonToFormat.setFont( GENERAL_FONT );  
 		buttonToFormat.setPreferredSize( SIZE_BUTTON );
 		buttonToFormat.setMaximumSize(  SIZE_BUTTON );
@@ -195,7 +196,7 @@ public abstract class View extends JPanel implements IView, IControl,
 	
 	/**
 	* JOSH ADDED FOR SMALL BUTTONS
-	* This method receives a "raw" // ?\-+\n\t?\n?((?:\t+//(?: ?.*)\n\n?)*)\t// ?\-+JButton and formats it to the 
+	* This method receives a "raw" JButton and formats it to the 
 	* format, that will be used for all the buttons that appear in
 	* the program. Returns the formatted button to the caller.
 	* The method may be called by any of the class, that 
@@ -204,7 +205,6 @@ public abstract class View extends JPanel implements IView, IControl,
 	protected JButton formatButtonSmall ( JButton buttonToFormat )
 	{
 
-		buttonToFormat.setBorder ( new LineBorder ( Color.black, 1 ) );
 		buttonToFormat.setFont( GENERAL_FONT );  
 		buttonToFormat.setPreferredSize( SIZE_BUTTON_SMALL );
 		buttonToFormat.setMaximumSize(  SIZE_BUTTON_SMALL );
@@ -224,8 +224,7 @@ public abstract class View extends JPanel implements IView, IControl,
 	**/
 	protected JPanel formatViewTitle ( String viewTitle )
 	{
-		JPanel container = new JPanel( );
-		container.setBackground ( BACKGROUND_COLOR );
+		JPanel container = new ColorPanel( );
 
 		JLabel viewTitleLabel = new JLabel( viewTitle );	
 		viewTitleLabel.setFont( TITLE_FONT );

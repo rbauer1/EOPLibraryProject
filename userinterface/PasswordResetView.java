@@ -130,12 +130,12 @@ public class PasswordResetView extends View {
 		buttonPanel.setBackground(BACKGROUND_COLOR);
 
 		// create the buttons, listen for events, add them to the panel
-		submitButton = new JButton("Submit");
+		submitButton = new CustomButton("Submit");
 		buttonPanel.add(formatButton(submitButton));
 
 		buttonPanel.add(new JLabel("     "));
 
-		cancelButton = new JButton("Cancel");
+		cancelButton = new CustomButton("Cancel");
 		buttonPanel.add(formatButton(cancelButton));
 
 		return buttonPanel;

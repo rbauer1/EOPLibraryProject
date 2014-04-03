@@ -56,7 +56,7 @@ public class LogoPanel extends JPanel
 		titleLabel.setForeground(new Color(0x00553D));
 
 		// Format the font of the Upper Title
-		titleLabel.setFont( new Font(View.FONT_NAME, Font.BOLD, 16 ) );
+		titleLabel.setFont( new Font(View.FONT_NAME, Font.BOLD, View.GENERAL_FONT_SIZE+6 ) );
 
 		// install the label into the title panel
 		panel.add(iconLabel);
