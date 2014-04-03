@@ -7,23 +7,39 @@
  * be reproduced, copied, or used in any shape or form without
  * he express written consent of The College at Brockport. * 
  */
-package model.transaction;
+package controller.transaction;
 
 import java.util.Properties;
 
 import model.Worker;
-import userinterface.View;
 import utilities.Key;
+
 import common.Mailer;
+
+import controller.Controller;
 import exception.InvalidPrimaryKeyException;
 
 public class RecoverPasswordTransaction extends Transaction {
+	
+	/** Worker Model this transaction is reseting the password for */
 	private Worker worker;
+	
+	/** Reset Code generated for the worker */
 	private String resetCode;
-
-	public RecoverPasswordTransaction() {
-		super();
+	
+	/**
+	 * Constructs Recover Password Transaction
+	 * @param parentController
+	 */
+	public RecoverPasswordTransaction(Controller parentController) {
+		super(parentController);
 	}
+	
+	@Override
+	public void execute() {
+		showView("ForgotPasswordView");
+	}
+	
 
 	@Override
 	public Object getState(String key) {
@@ -38,17 +54,6 @@ public class RecoverPasswordTransaction extends Transaction {
 			resetPassword((Properties) value);
 		}
 		registry.updateSubscribers(key, this);
-	}
-
-	@Override
-	protected void setDependencies() {
-		Properties dependencies = new Properties();
-		registry.setDependencies(dependencies);
-	}
-
-	@Override
-	protected View createView() {
-		return getView("ForgotPasswordView");
 	}
 
 	private void sendPasswordResetToken(Properties workerData){

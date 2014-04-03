@@ -7,56 +7,25 @@
  * be reproduced, copied, or used in any shape or form without
  * he express written consent of The College at Brockport. * 
  */
-package model;
+package controller;
 
-import impresario.IModel;
-import impresario.IView;
-import impresario.ModelRegistry;
-
-import java.util.HashMap;
 import java.util.Properties;
 
-import model.transaction.TransactionFactory;
-import userinterface.MainFrame;
-import userinterface.View;
-import userinterface.ViewFactory;
+import controller.transaction.TransactionFactory;
+import model.Worker;
 import utilities.Key;
 import exception.InvalidPrimaryKeyException;
 
 /**
- * Overall class Librarian represents the System controller or Main Interface Agent
+ * Librarian represents the System controller or Main Interface Agent
  */
-public class Librarian implements IView, IModel {
-
-	/** The registry of observers to this object */
-	private ModelRegistry registry;
-
-	/** Holds Views this manages */
-	protected HashMap<String, View> views;
-	
-	/** The main display frame */
-	protected MainFrame frame;
+public class LibrarianController extends Controller {
 
 	protected String loginErrorMessage = "";
 	
-	public Librarian(MainFrame frame) {
-		this.frame = frame;
-		this.views = new HashMap<String, View>();
-		this.registry = new ModelRegistry("Librarian");
-
-		setDependencies();
-
-		// Show the initial view
+	public LibrarianController() {
+		super();
 		showView("LoginView");
-	}
-	
-	/**
-	 * Sets the dependencies for the observer registry
-	 */
-	private void setDependencies() {
-		Properties dependencies = new Properties();
-		//dependencies.setProperty("Login", "LoginError");
-		registry.setDependencies(dependencies);
 	}
 	
 	/**
@@ -129,34 +98,4 @@ public class Librarian implements IView, IModel {
 		}		
 	}
 	
-	/** 
-	 * Register objects to receive state updates. 
-	 */
-	public void subscribe(String key, IView subscriber) {
-		registry.subscribe(key, subscriber);
-	}
-	
-	/** 
-	 * Unregister objects from state updates. 
-	 */
-	public void unSubscribe(String key, IView subscriber) {
-		registry.unSubscribe(key, subscriber);
-	}
-	
-	/**
-	 * Called when update occurs in entity this is subscribed to.
-	 */
-	public void updateState(String key, Object value) {
-		// Every update will be handled in stateChangeRequest
-		stateChangeRequest(key, value);
-	}
-
-	private void showView(String s){
-		View view = views.get(s);
-		if(view == null){
-			view = ViewFactory.createView(s,this);
-			views.put(s, view);
-		}
-		frame.swapToView(view);
-	}
 }

@@ -7,20 +7,32 @@
  * be reproduced, copied, or used in any shape or form without
  * he express written consent of The College at Brockport. * 
  */
-package model.transaction;
+package controller.transaction;
 
 
 import java.util.Properties;
 
 import model.Book;
-import userinterface.View;
 import utilities.Key;
+import controller.Controller;
 
 public class ModifyBooksTransaction extends Transaction {
-	private ListBooksTransaction listBooksTransaction;
+	
+	/** Book Model this transaction is updating */
 	private Book book;
-	public ModifyBooksTransaction() {
-		super();
+	
+	/**
+	 * Constructs Modify Books Transaction
+	 * @param parentController
+	 */
+	public ModifyBooksTransaction(Controller parentController) {
+		super(parentController);
+	}
+	
+	@Override
+	public void execute(){
+		TransactionFactory.executeTransaction(this, "ListBooksTransaction", 
+						Key.BACK_TO_BOOK_MENU, Key.SELECT_BOOK, Key.MODIFY_OR_DELETE);
 	}
 
 	@Override
@@ -30,13 +42,6 @@ public class ModifyBooksTransaction extends Transaction {
 		}
 		return null;
 	}
-	
-	@Override
-	public void execute(){
-		listBooksTransaction = (ListBooksTransaction) TransactionFactory.executeTransaction(this, "ListBooksTransaction", 
-						Key.BACK_TO_BOOK_MENU, Key.SELECT_BOOK, Key.MODIFY_OR_DELETE);
-		listBooksTransaction.setOpertationType("Modify");
-	}
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
@@ -44,21 +49,16 @@ public class ModifyBooksTransaction extends Transaction {
 			book = (Book)value;
 			showView("AddBookView");
 		}else if(key.equals(Key.SUBMIT_BOOK)){
-			submitModifiedBook((Properties)value);
+			updateBook((Properties)value);
 		}
 		registry.updateSubscribers(key, this);
 	}
-
-	@Override
-	protected void setDependencies() {
-	}
-
-	@Override
-	protected View createView() {
-		return null;
-	}
 	
-	private void submitModifiedBook(Properties bookData){
+	/**
+	 * Updates selected book with provided data
+	 * @param bookData
+	 */
+	private void updateBook(Properties bookData){
 		book.stateChangeRequest(bookData);
 		if(book.save()){
 			stateChangeRequest(Key.BOOK_SUBMIT_SUCCESS, null);

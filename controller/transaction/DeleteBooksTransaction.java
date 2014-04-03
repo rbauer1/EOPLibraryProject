@@ -7,21 +7,23 @@
  * be reproduced, copied, or used in any shape or form without
  * he express written consent of The College at Brockport. * 
  */
-package model.transaction;
+package controller.transaction;
 
 
-import java.util.Properties;
-
-import userinterface.View;
-import utilities.Key;
 import model.Book;
+import utilities.Key;
+import controller.Controller;
 
 public class DeleteBooksTransaction extends Transaction {
-	private ListBooksTransaction listBooksTransaction;
-	public DeleteBooksTransaction() {
-		super();
-	}
 
+	/**
+	 * Constructs Delete Books Transaction
+	 * @param parentController
+	 */
+	public DeleteBooksTransaction(Controller parentController) {
+		super(parentController);
+	}
+	
 	@Override
 	public Object getState(String key) {
 		return null;
@@ -29,29 +31,14 @@ public class DeleteBooksTransaction extends Transaction {
 	
 	@Override
 	public void execute(){
-		listBooksTransaction = 
-				(ListBooksTransaction) TransactionFactory.executeTransaction(this, "ListBooksTransaction", 
-						Key.BACK_TO_BOOK_MENU, Key.SELECT_BOOK);
-		listBooksTransaction.setOpertationType("Delete");
+		TransactionFactory.executeTransaction(this, "ListBooksTransaction", Key.BACK_TO_BOOK_MENU, Key.SELECT_BOOK);
 	}
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
 		if(key.equals(Key.SELECT_BOOK)){
-			((Book)value).setInactive();
+			((Book)value).setInactive(); //TODO handle error if save fails here!
 		}
 		registry.updateSubscribers(key, this);
 	}
-
-	@Override
-	protected void setDependencies() {
-		Properties dependencies = new Properties();
-		registry.setDependencies(dependencies);
-	}
-
-	@Override
-	protected View createView() {
-		return null;
-	}
-
 }

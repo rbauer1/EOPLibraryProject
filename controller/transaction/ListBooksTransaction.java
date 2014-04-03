@@ -7,15 +7,15 @@
  * be reproduced, copied, or used in any shape or form without
  * he express written consent of The College at Brockport. * 
  */
-package model.transaction;
+package controller.transaction;
 
 import java.util.List;
 import java.util.Properties;
 
 import model.Book;
 import model.BookCollection;
-import userinterface.View;
 import utilities.Key;
+import controller.Controller;
 
 public class ListBooksTransaction extends Transaction {
 	private BookCollection bookCollection;
@@ -23,14 +23,28 @@ public class ListBooksTransaction extends Transaction {
 	private Book selectedBook;
 	private String operationType;
 
-	public ListBooksTransaction() {
-		super();
+	/**
+	 * Constructs List Books Transaction
+	 * @param parentController
+	 */
+	public ListBooksTransaction(Controller parentController) {
+		super(parentController);
+		if(parentController instanceof DeleteBooksTransaction){
+			operationType = "Delete";
+		}
+		else if(parentController instanceof ModifyBooksTransaction){
+			operationType = "Modify";
+		}
 	}
 
 	@Override
-	public Object getState(String key) 
-	{
-		if(key.equals(Key.GET_BOOK_COLLECTION)){
+	public void execute() {
+		showView("ListBooksView");
+	}
+
+	@Override
+	public Object getState(String key) {
+		if (key.equals(Key.GET_BOOK_COLLECTION)) {
 			return books;
 		}else if(key.equals(Key.SELECT_BOOK)){
 			return selectedBook;
@@ -49,30 +63,11 @@ public class ListBooksTransaction extends Transaction {
 		}
 		registry.updateSubscribers(key, this);
 	}
-
-	@Override
-	protected void setDependencies() {
-		Properties dependencies = new Properties();
-		registry.setDependencies(dependencies);
-	}
-
-	@Override
-	protected View createView() {
-		return getView("ListBooksView");
-	}
 	
 	private void getBooks(Properties props){
 		bookCollection = new BookCollection();
 		bookCollection.findLike(props);
 		books = bookCollection.getEntities();
 	}
-	
-	/**
-	 * Either modify or delete
-	 * @param operation
-	 */
-	protected void setOpertationType(String operation){
-		operationType = operation;
-	}
-	
+		
 }

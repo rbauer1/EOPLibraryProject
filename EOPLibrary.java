@@ -13,7 +13,7 @@ import java.io.File;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
-import model.Librarian;
+import controller.LibrarianController;
 import userinterface.MainFrame;
 import userinterface.WindowPosition;
 import event.Event;
@@ -59,7 +59,7 @@ public class EOPLibrary {
 		mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 		try{
-			new Librarian(mainFrame);
+			new LibrarianController();
 		}
 		catch(Exception e){
 			System.err.println("EOPLibrary.<init> - could not create Librarian!");
