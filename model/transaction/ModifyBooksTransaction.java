@@ -33,8 +33,7 @@ public class ModifyBooksTransaction extends Transaction {
 	
 	@Override
 	public void execute(){
-		listBooksTransaction = 
-				(ListBooksTransaction) TransactionFactory.executeTransaction(this, "ListBooksTransaction", 
+		listBooksTransaction = (ListBooksTransaction) TransactionFactory.executeTransaction(this, "ListBooksTransaction", 
 						Key.BACK_TO_BOOK_MENU, Key.SELECT_BOOK, Key.MODIFY_OR_DELETE);
 		listBooksTransaction.setOpertationType("Modify");
 	}
@@ -52,8 +51,6 @@ public class ModifyBooksTransaction extends Transaction {
 
 	@Override
 	protected void setDependencies() {
-		Properties dependencies = new Properties();
-		registry.setDependencies(dependencies);
 	}
 
 	@Override
@@ -62,7 +59,7 @@ public class ModifyBooksTransaction extends Transaction {
 	}
 	
 	private void submitModifiedBook(Properties bookData){
-		book = new Book(bookData,true);
+		book.stateChangeRequest(bookData);
 		if(book.save()){
 			stateChangeRequest(Key.BOOK_SUBMIT_SUCCESS, null);
 		}else{

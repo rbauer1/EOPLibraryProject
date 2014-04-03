@@ -10,7 +10,6 @@
 package model;
 
 import java.sql.SQLException;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -134,10 +133,20 @@ public abstract class Model extends EntityBase {
 	 * Changes value of column for provided key in persistent state.
 	 * This method can be overridden in subclasses to implement specific functionality.
 	 * @param key - column name
-	 * @value value - value of column
+	 * @param value - value of column
 	 */
 	public void stateChangeRequest(String key, Object value) {
 		this.persistentState.setProperty(key, (String) value);
+	}
+	
+	/**
+	 * Calls stateChangeRequest for each key-value pair
+	 * @param state 
+	 */
+	public void stateChangeRequest(Properties state) {
+		for (String key : state.stringPropertyNames()) {
+			stateChangeRequest(key, state.getProperty(key));
+		}
 	}
 	
 	/**
@@ -176,9 +185,10 @@ public abstract class Model extends EntityBase {
 	 * Can be used to perform pre-save logic.
 	 * Hook method that is called before save. Should be overridden in subclass.
 	 * Must return true for save to continue. Returning false will cancel save.
+	 * @param isCreate - true if this is insert operation
 	 * @return continue save or not
 	 */
-	public boolean beforeSave() {
+	public boolean beforeSave(boolean isCreate) {
 		return true;
 	}
 	
@@ -187,8 +197,9 @@ public abstract class Model extends EntityBase {
 	 * Hook method that is called after save.
 	 * Called after successful save. Should be overridden by subclasses to 
 	 * implement specific functionality.
+	 * @param isCreate - true if this is insert operation
 	 */
-	public void afterSave() {
+	public void afterSave(boolean isCreate) {
 
 	}
 	
@@ -216,17 +227,16 @@ public abstract class Model extends EntityBase {
 	 * @return true if save succeeds
 	 */
 	public boolean save() {
-		if(!beforeSave() || !validate()){
+		String keyValue = (String) this.getState(getPrimaryKey());
+		boolean isCreate = !this.persisted || keyValue == null || keyValue.length() == 0;
+		if(!beforeSave(isCreate) || !validate()){
 			return false;
-		}
+		}		
 		try {
-			String keyValue = (String) this.getState(getPrimaryKey());
-			System.out.println(persisted);
-			System.out.println(keyValue);
-			if (this.persisted && keyValue != null && keyValue != "") {
-				update();
-			} else {
+			if (isCreate) {
 				insert();
+			} else {
+				update();
 			}
 		} catch (SQLException e) {
 			new Event(Event.getLeafLevelClassName(this), "save",
@@ -234,7 +244,7 @@ public abstract class Model extends EntityBase {
 			return false;
 		}
 		this.persisted = true;
-		this.afterSave();
+		this.afterSave(isCreate);
 		return true;
 	}
 
@@ -316,14 +326,12 @@ public abstract class Model extends EntityBase {
 	 */
 	protected void setPersistentState(Properties state) {
 		this.persistentState = new Properties();
-		Enumeration<?> keys = state.propertyNames();
-		while (keys.hasMoreElements()) {
-			String key = (String) keys.nextElement();
+		for (String key : state.stringPropertyNames()) {
 			String value = state.getProperty(key);
 
 			if (value != null && key != null) {
 				this.persistentState.setProperty(key, value);
-			}
+			}		
 		}
 	}
 	

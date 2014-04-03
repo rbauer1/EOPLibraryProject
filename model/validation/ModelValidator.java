@@ -27,7 +27,7 @@ public class ModelValidator {
 	 */
 	public ModelValidator(Model model){
 		this.model = model;
-		this.errors = null;
+		this.errors = new HashMap<String, List<String>>();;
 		this.validations = new HashMap<String, List<Validation>>();		
 	}
 	
@@ -41,6 +41,7 @@ public class ModelValidator {
 		for(String key : this.validations.keySet()){
 			valid &= validate(key);
 		}
+		System.out.println(getErrors());
 		return valid;
 	}
 	
@@ -89,9 +90,6 @@ public class ModelValidator {
 	 * @return map of errors
 	 */
 	public Map<String, List<String>> getErrors(){
-		if(errors == null){
-			errors = new HashMap<String, List<String>>();
-		}
 		return errors;
 	}
 	
