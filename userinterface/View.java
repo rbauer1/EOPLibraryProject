@@ -70,12 +70,13 @@ public abstract class View extends JPanel implements IView, IControl,
 	protected static final Color BANNER_COLOR = new Color(0xE2E2D4);
 	protected static final Color SEPARATOR_COLOR = new Color (0x668D3C);
 	protected static final Color TITLE_COLOR = new Color(0x668D3C).darker();
+	protected static final String FONT_NAME = "Garamond";
 	
 	/** indicate the font for all components that will be used in the program views, i.e. JButtons, JTextFields, JLabels and etc. **/
-	protected static final Font GENERAL_FONT = new Font( "Arial", Font.TYPE1_FONT, 12 );
+	protected static final Font GENERAL_FONT = new Font(FONT_NAME, Font.TYPE1_FONT, 12 );
 	
 	/** indicate the font for a View's Title, will be used to format all Views Titles **/
-	protected static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 13 );
+	protected static final Font TITLE_FONT = new Font(FONT_NAME, Font.BOLD, 13 );
 
 	/** preferred empty box size, used to position components **/
 	protected static final Dimension SIZE = new Dimension( 200, 15 );

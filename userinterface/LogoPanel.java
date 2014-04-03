@@ -13,6 +13,7 @@
 package userinterface;
 
 // system imports
+import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
@@ -52,9 +53,10 @@ public class LogoPanel extends JPanel
 		JLabel iconLabel = new JLabel("",new ImageIcon ( "EOP.png" ),SwingConstants.LEFT);
 		JLabel titleLabel = new JLabel( "        EOP Library System        ",
                 					  SwingConstants.CENTER );
+		titleLabel.setForeground(new Color(0x00553D));
 
 		// Format the font of the Upper Title
-		titleLabel.setFont( new Font( "Arial", Font.BOLD, 16 ) );
+		titleLabel.setFont( new Font(View.FONT_NAME, Font.BOLD, 16 ) );
 
 		// install the label into the title panel
 		panel.add(iconLabel);
