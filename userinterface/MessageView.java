@@ -35,7 +35,6 @@ public class MessageView extends JPanel
 	private final int statusLogHeight = 30;
 	private final int statusLogWidth = 60;
 	
-	private Color blue = new Color ( 133, 195, 230 );
 		
 	// Class constructor
 	//----------------------------------------------------------
@@ -43,7 +42,7 @@ public class MessageView extends JPanel
 	{
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		
-		setBackground (blue);
+		setBackground (View.BACKGROUND_COLOR);
 		
 		add(createStatusLog(initialMessage));
 		
@@ -65,7 +64,7 @@ public class MessageView extends JPanel
 	{
 		JPanel temp = new JPanel();		// default FlowLayout is fine
 		
-		temp.setBackground( blue );
+		temp.setBackground( View.BACKGROUND_COLOR );
 		temp.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
 		statusLog = new JLabel(initialMessage);

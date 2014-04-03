@@ -36,7 +36,7 @@ public class BookMenuView extends View
 	{
 		super(clerk);
 
-		setBackground ( blue );
+		setBackground ( BACKGROUND_COLOR );
 
 		// set the layout for this panel
 		setLayout( new BorderLayout () );
@@ -72,42 +72,42 @@ public class BookMenuView extends View
 	//-------------------------------------------------------------
 	private JPanel createNavigationButtons()
 	{
-		JPanel navigationPanel = new BluePanel();	
+		JPanel navigationPanel = new ColorPanel();	
 
 		navigationPanel.setLayout( new BoxLayout ( navigationPanel, BoxLayout.Y_AXIS ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 
 
 		// create "raw" JButtons and call superclass View to format 
 		// the button to the program's standard, add them to the panel
 		btnAdd = new JButton( "Add Book" );
 		navigationPanel.add( formatComponent ( btnAdd ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 
 		btnModify = new JButton( "Modify Book" );
 		navigationPanel.add( formatComponent ( btnModify ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 
 		btnDelete = new JButton( "Delete Book" );
 		navigationPanel.add( formatComponent ( btnDelete ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 
 		btnProcessLostBook = new JButton( "Process Lost Book" );
 		navigationPanel.add( formatComponent ( btnProcessLostBook ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 		
 		btnListAvailable = new JButton( "List Available Books" );
 		navigationPanel.add( formatComponent ( btnListAvailable ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 		
 		btnListUnavailable = new JButton( "List Unavailable Books" );
 		navigationPanel.add( formatComponent ( btnListUnavailable ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 		
 		btnBack = new JButton( "Back" );
 		btnBack.setForeground( Color.red.darker().darker() );
 		navigationPanel.add( formatComponent ( btnBack ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 
 		return navigationPanel;
 	}

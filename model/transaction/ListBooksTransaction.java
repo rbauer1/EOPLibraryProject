@@ -63,7 +63,7 @@ public class ListBooksTransaction extends Transaction {
 	
 	private void getBooks(Properties props){
 		bookCollection = new BookCollection();
-		bookCollection.find(props);
+		bookCollection.findLike(props);
 		books = bookCollection.getEntities();
 	}
 	

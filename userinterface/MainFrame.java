@@ -64,7 +64,7 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		 * This is Frame Component at position (1)
 		 */
 		JPanel copyRightPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		copyRightPanel.setBackground(new Color(133, 195, 230));
+		copyRightPanel.setBackground(View.BACKGROUND_COLOR);
 		copyRightPanel.add(new JLabel(COPYRIGHT));
 		super.add(copyRightPanel, BorderLayout.SOUTH);
 

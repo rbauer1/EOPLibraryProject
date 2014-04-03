@@ -53,7 +53,7 @@ public class ForgotPasswordView extends View {
 	public ForgotPasswordView(IModel model) {
 		super(model, "ForgotPasswordView");
 
-		setBackground(blue);
+		setBackground(BACKGROUND_COLOR);
 
 		// Set the layout for this panel
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -99,7 +99,7 @@ public class ForgotPasswordView extends View {
 	private JPanel createDataEntryFields() {
 		JPanel dataEntryPanel = new JPanel();
 		dataEntryPanel.setLayout(new BoxLayout(dataEntryPanel, BoxLayout.Y_AXIS));
-		dataEntryPanel.setBackground(blue);
+		dataEntryPanel.setBackground(BACKGROUND_COLOR);
 
 		bannerId = new JTextField(25);
 		dataEntryPanel.add(formatCurrentPanelCenter("Username", bannerId));
@@ -117,7 +117,7 @@ public class ForgotPasswordView extends View {
 	 */
 	private JPanel createButtons() {
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		buttonPanel.setBackground(blue);
+		buttonPanel.setBackground(BACKGROUND_COLOR);
 
 		// create the buttons, listen for events, add them to the panel
 		submitButton = new JButton("Submit");

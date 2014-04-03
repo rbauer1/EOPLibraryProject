@@ -144,24 +144,24 @@ public class AddBookView extends View {
 	* regarding a new tree
 	**/
 	private JPanel createForm() {
-		JPanel formPanel = new BluePanel();
+		JPanel formPanel = new ColorPanel();
 		formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
 
 		formPanel.add(createFieldPanel());
-		formPanel.add(Box.createRigidArea(size));
+		formPanel.add(Box.createRigidArea(SIZE));
 
 		formPanel.add(createButtonsPanel());
 
-		formPanel.setBorder(formBorder);
+		formPanel.setBorder(FORM_BORDER);
 		return formPanel;
 
 	}
 
 	// ----------------------------------------------------------------------------------
 	private JPanel createFieldPanel() {
-		JPanel fieldPanel = new BluePanel();
+		JPanel fieldPanel = new ColorPanel();
 		fieldPanel.setLayout(new BoxLayout(fieldPanel, BoxLayout.Y_AXIS));
-		JPanel fieldSubPanel = new BluePanel();
+		JPanel fieldSubPanel = new ColorPanel();
 		fieldSubPanel.setLayout(new BoxLayout(fieldSubPanel, BoxLayout.X_AXIS));
 		
 		
@@ -188,7 +188,7 @@ public class AddBookView extends View {
 		String[] choices = { "Good", "Damaged" };
 		bookConditionBox = new JComboBox<String>(choices);
 		
-		JPanel col1 = new BluePanel();
+		JPanel col1 = new ColorPanel();
 		col1.setLayout(new BoxLayout(col1, BoxLayout.Y_AXIS));
 		col1.add(formatLargeLabel(requiredValues));
 		col1.add(formatCurrentPanel("* Barcode:", barcodeField));
@@ -215,7 +215,7 @@ public class AddBookView extends View {
 		
 		
 		
-		JPanel col2 = new BluePanel();
+		JPanel col2 = new ColorPanel();
 		col2.setLayout(new BoxLayout(col2, BoxLayout.Y_AXIS));
 		col2.add(formatComponentLarge(new JLabel("")));
 		col2.add(formatCurrentPanelLarge("* Title:", titleField));
@@ -240,7 +240,7 @@ public class AddBookView extends View {
 	// -------------------------------------------------------------
 	private JPanel createButtonsPanel() {
 		JPanel buttonsPanel = new JPanel();
-		buttonsPanel.setBackground(blue);
+		buttonsPanel.setBackground(BACKGROUND_COLOR);
 
 		// create "raw" JButtons and call superclass View to format
 		// the buttons to the program's standard, add them to the panel

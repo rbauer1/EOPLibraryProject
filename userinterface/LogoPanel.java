@@ -13,7 +13,6 @@
 package userinterface;
 
 // system imports
-import java.awt.Color;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
@@ -35,51 +34,38 @@ public class LogoPanel extends JPanel
 	public LogoPanel()
 	{
 		// custom color of the program
-		Color blue = new Color ( 133, 195, 230 );
 
+		
 		setLayout( new BoxLayout( this, BoxLayout.Y_AXIS ));
 
-		setBackground( blue );
+		setBackground( View.BANNER_COLOR );
 
-		setBorder (BorderFactory.createEmptyBorder( 5, 5, 0, 5 ));
+		setBorder (BorderFactory.createEmptyBorder( 5, 0, 0, 0 ));
 
 		// This is top panel of the Logo Panel
-		JPanel titleTop = new JPanel();
-		titleTop.setBackground( blue );
-		titleTop.setLayout( new BoxLayout( titleTop, BoxLayout.X_AXIS ));
+		JPanel panel = new JPanel();
+		panel.setBackground( View.BANNER_COLOR );
+		panel.setBorder(BorderFactory.createEmptyBorder( 0, 0, 5, 0 ));
+		panel.setLayout( new BoxLayout( panel, BoxLayout.X_AXIS ));
 
 		// Create the Upper Title of the program with the Boy Scout Troop image
-		JLabel leftLabel = new JLabel( "        EOP LIBRARY SYSTEM        ",
-									  new ImageIcon ( "EOP.png" ),
-                					  SwingConstants.LEADING );
+		JLabel iconLabel = new JLabel("",new ImageIcon ( "EOP.png" ),SwingConstants.LEFT);
+		JLabel titleLabel = new JLabel( "        EOP Library System        ",
+                					  SwingConstants.CENTER );
 
 		// Format the font of the Upper Title
-		leftLabel.setFont( new Font( "Arial", Font.BOLD, 16 ) );
+		titleLabel.setFont( new Font( "Arial", Font.BOLD, 16 ) );
 
 		// install the label into the title panel
-		titleTop.add( leftLabel );
+		panel.add(iconLabel);
+		panel.add( titleLabel );
+		JPanel separator = new JPanel();
+		
+		separator.setBackground( View.SEPARATOR_COLOR );
 
-		// Add to the Upper Title the Boy Scout Troop image
-		JLabel rightLabel = new JLabel( "", new ImageIcon ( "EOP.png" ),
-									    	SwingConstants.RIGHT );
-		// install the label into the title panel
-		titleTop.add( rightLabel );
+		add ( panel );
 
-		// This panel holds the sub title of the program
-		JPanel titleLower = new JPanel();
-		titleLower.setBackground( blue );
-
-		JLabel lowerLabel = new JLabel( "                          " );
-
-		// format the sub title
-		lowerLabel.setFont( new Font( "Arial", Font.BOLD, 14 ) );
-
-		// install the label into the lower panel
-		titleLower.add( lowerLabel );
-
-		add ( titleTop );
-
-		add( titleLower );
+		add( separator );
 	}
 
 }

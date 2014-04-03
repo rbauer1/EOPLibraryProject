@@ -64,44 +64,48 @@ public abstract class View extends JPanel implements IView, IControl,
 	protected abstract void processListSelection(EventObject evt);
 
 	/** GUI components **/
-	protected final Color blue = new Color ( 133, 195, 230 );
-	//protected final Color blue =  Color.white;
+//	protected final Color blue = new Color ( 133, 195, 230 );
+//	protected static final Color BACKGROUNG_COLOR = new Color (0x577080);
+	protected static final Color BACKGROUND_COLOR = new Color (0xF0F0E8);
+	protected static final Color BANNER_COLOR = new Color(0xE2E2D4);
+	protected static final Color SEPARATOR_COLOR = new Color (0x668D3C);
+	protected static final Color TITLE_COLOR = new Color(0x668D3C).darker();
+	
+	/** indicate the font for all components that will be used in the program views, i.e. JButtons, JTextFields, JLabels and etc. **/
+	protected static final Font GENERAL_FONT = new Font( "Arial", Font.TYPE1_FONT, 12 );
+	
+	/** indicate the font for a View's Title, will be used to format all Views Titles **/
+	protected static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 13 );
 
 	/** preferred empty box size, used to position components **/
-	final Dimension size = new Dimension( 200, 15 );
+	protected static final Dimension SIZE = new Dimension( 200, 15 );
 
 	/** indicate preferred size of a Button  **/
-	final Dimension sizeButton = new Dimension( 175, 25 );
+	protected static final Dimension SIZE_BUTTON = new Dimension( 175, 25 );
 	
 	/** indicate preferred size of a Combo Box  **/
-	final Dimension smallDropDown = new Dimension( 85, 25 );
+	protected static final Dimension SMALL_DROP_DOWN = new Dimension( 85, 25 );
 	
 	/** indicate preferred size of a Button  **/
-	final Dimension sizeButtonSmall = new Dimension( 100, 25 );
+	protected static final Dimension SIZE_BUTTON_SMALL = new Dimension( 100, 25 );
 
 	/** indicates preferred size of a Text Area  **/
-	final Dimension sizeArea = new Dimension( 300, 70 );
+	protected static final Dimension SIZE_AREA = new Dimension( 300, 70 );
 
 	/** indicates preferred size of a Label   **/
-	final Dimension sizeLabel = new Dimension( 102, 30 );
+	protected static final Dimension SIZE_LABEL = new Dimension( 102, 30 );
 	
 	/** indicates preferred size of a Large Label   **/
-	final Dimension sizeMidLabel = new Dimension( 153, 30 );
+	protected static final Dimension SIZE_MID_LABEL = new Dimension( 153, 30 );
 		
 	/** indicates preferred size of a Large Label   **/
-	final Dimension sizeLargeLabel = new Dimension( 204, 30 );
+	protected static final Dimension SIZE_LARGE_LABEL = new Dimension( 204, 30 );
 
 	/** indicates preferred size for a form **/
-	final Dimension sizeFormSpace = new Dimension( 100, 5 );
+	protected static final Dimension SIZE_FORM_SPACE = new Dimension( 100, 5 );
 
-	/** indicate the font for a View's Title, will be used to format all Views Titles **/
-	final Font myTitleFont = new Font("Arial", Font.BOLD, 13 );
-
-
-	/** indicate the font for all components that will be used in the program views, i.e. JButtons, JTextFields, JLabels and etc. **/
-	final Font myComponentsFont = new Font( "Arial", Font.TYPE1_FONT, 12 );
 	
-	final Border formBorder = BorderFactory.createEmptyBorder( 20, 50, 20, 20 );
+	protected static final Border FORM_BORDER = BorderFactory.createEmptyBorder( 20, 50, 20, 20 );
 	
 	/** Class constructor **/
 	public View(IModel model, String classname)
@@ -177,9 +181,9 @@ public abstract class View extends JPanel implements IView, IControl,
 	{
 
 		buttonToFormat.setBorder ( new LineBorder ( Color.black, 1 ) );
-		buttonToFormat.setFont( myComponentsFont );  
-		buttonToFormat.setPreferredSize( sizeButton );
-		buttonToFormat.setMaximumSize(  sizeButton );
+		buttonToFormat.setFont( GENERAL_FONT );  
+		buttonToFormat.setPreferredSize( SIZE_BUTTON );
+		buttonToFormat.setMaximumSize(  SIZE_BUTTON );
 		buttonToFormat.setAlignmentX( CENTER_ALIGNMENT );
 
 		buttonToFormat.addActionListener( this );
@@ -200,9 +204,9 @@ public abstract class View extends JPanel implements IView, IControl,
 	{
 
 		buttonToFormat.setBorder ( new LineBorder ( Color.black, 1 ) );
-		buttonToFormat.setFont( myComponentsFont );  
-		buttonToFormat.setPreferredSize( sizeButtonSmall );
-		buttonToFormat.setMaximumSize(  sizeButtonSmall );
+		buttonToFormat.setFont( GENERAL_FONT );  
+		buttonToFormat.setPreferredSize( SIZE_BUTTON_SMALL );
+		buttonToFormat.setMaximumSize(  SIZE_BUTTON_SMALL );
 		buttonToFormat.setAlignmentX( CENTER_ALIGNMENT );
 
 		buttonToFormat.addActionListener( this );
@@ -220,18 +224,18 @@ public abstract class View extends JPanel implements IView, IControl,
 	protected JPanel formatViewTitle ( String viewTitle )
 	{
 		JPanel container = new JPanel( );
-		container.setBackground ( blue );
+		container.setBackground ( BACKGROUND_COLOR );
 
 		JLabel viewTitleLabel = new JLabel( viewTitle );	
-		viewTitleLabel.setFont( myTitleFont );
-		viewTitleLabel.setForeground( Color.red.darker().darker() );
+		viewTitleLabel.setFont( TITLE_FONT );
+		viewTitleLabel.setForeground( TITLE_COLOR);
 		viewTitleLabel.setAlignmentX( CENTER_ALIGNMENT );	
 
-		container.add( Box.createRigidArea( size ));
+		container.add( Box.createRigidArea( SIZE ));
 
 		container.add( viewTitleLabel );
 
-		container.add( Box.createRigidArea( size ));	
+		container.add( Box.createRigidArea( SIZE ));	
 
 		return container;
 	}
@@ -250,7 +254,7 @@ public abstract class View extends JPanel implements IView, IControl,
 	protected JComponent formatComponent ( JComponent componentToFormat )
 	{
 		// all the components will be of uniform Font and Alignment
-		componentToFormat.setFont( myComponentsFont );
+		componentToFormat.setFont( GENERAL_FONT );
 		componentToFormat.setAlignmentX( CENTER_ALIGNMENT );
 
 		// if the component is JLabel call the method 
@@ -266,8 +270,8 @@ public abstract class View extends JPanel implements IView, IControl,
 			!( componentToFormat instanceof JRadioButton ))
 		{
 			componentToFormat.setBorder ( new LineBorder ( Color.black, 1 ) );
-			componentToFormat.setPreferredSize( componentToFormat instanceof JScrollPane ? sizeArea : sizeButton );
-			componentToFormat.setMaximumSize(  componentToFormat instanceof JScrollPane ? sizeArea : sizeButton );
+			componentToFormat.setPreferredSize( componentToFormat instanceof JScrollPane ? SIZE_AREA : SIZE_BUTTON );
+			componentToFormat.setMaximumSize(  componentToFormat instanceof JScrollPane ? SIZE_AREA : SIZE_BUTTON );
 		}
 
 		
@@ -293,7 +297,7 @@ public abstract class View extends JPanel implements IView, IControl,
 	protected JComponent formatComponentLarge ( JComponent componentToFormat )
 	{
 		// all the components will be of uniform Font and Alignment
-		componentToFormat.setFont( myComponentsFont );
+		componentToFormat.setFont( GENERAL_FONT );
 		componentToFormat.setAlignmentX( CENTER_ALIGNMENT );
 
 		// if the component is JLabel call the method 
@@ -309,8 +313,8 @@ public abstract class View extends JPanel implements IView, IControl,
 			!( componentToFormat instanceof JRadioButton ))
 		{
 			componentToFormat.setBorder ( new LineBorder ( Color.black, 1 ) );
-			componentToFormat.setPreferredSize( componentToFormat instanceof JScrollPane ? sizeArea : sizeButton );
-			componentToFormat.setMaximumSize(  componentToFormat instanceof JScrollPane ? sizeArea : sizeButton );
+			componentToFormat.setPreferredSize( componentToFormat instanceof JScrollPane ? SIZE_AREA : SIZE_BUTTON );
+			componentToFormat.setMaximumSize(  componentToFormat instanceof JScrollPane ? SIZE_AREA : SIZE_BUTTON );
 		}
 
 		
@@ -327,8 +331,8 @@ public abstract class View extends JPanel implements IView, IControl,
 
 	protected JLabel formatLabel ( JLabel labelToFormat )
 	{
-		labelToFormat.setPreferredSize( sizeLabel );
-		labelToFormat.setMaximumSize(  sizeLabel );
+		labelToFormat.setPreferredSize( SIZE_LABEL );
+		labelToFormat.setMaximumSize(  SIZE_LABEL );
 
 		return labelToFormat;
 
@@ -337,8 +341,8 @@ public abstract class View extends JPanel implements IView, IControl,
 
 	protected JLabel formatLargeLabel ( JLabel labelToFormat )
 	{
-		labelToFormat.setPreferredSize( sizeMidLabel );
-		labelToFormat.setMaximumSize(  sizeLargeLabel );
+		labelToFormat.setPreferredSize( SIZE_MID_LABEL );
+		labelToFormat.setMaximumSize(  SIZE_LARGE_LABEL );
 
 		return labelToFormat;
 
@@ -347,11 +351,11 @@ public abstract class View extends JPanel implements IView, IControl,
 
 	protected JComboBox formatDropDown ( JComboBox dropDown )
 	{
-			dropDown.setPreferredSize( smallDropDown );
-			dropDown.setMaximumSize(  smallDropDown );		
+			dropDown.setPreferredSize( SMALL_DROP_DOWN );
+			dropDown.setMaximumSize(  SMALL_DROP_DOWN );		
 			
 			dropDown.setBorder ( new LineBorder ( Color.black, 1 ) );
-			dropDown.setFont( myComponentsFont ); 
+			dropDown.setFont( GENERAL_FONT ); 
 			dropDown.setAlignmentX( CENTER_ALIGNMENT );		
 
 			return dropDown;
@@ -367,10 +371,10 @@ public abstract class View extends JPanel implements IView, IControl,
 		JPanel currentPanel = new JPanel ( );
 		currentPanel.setLayout(new FlowLayout( FlowLayout.LEFT ));
 
-		currentPanel.setBackground ( blue );
+		currentPanel.setBackground ( BACKGROUND_COLOR );
 		JLabel currentLabel = new JLabel ( labelName );
 
-		currentLabel.setFont( myComponentsFont );
+		currentLabel.setFont( GENERAL_FONT );
 		currentPanel.add( formatComponent ( currentLabel ) );
 		
 		currentPanel.add( formatComponent ( component ) );
@@ -387,10 +391,10 @@ public abstract class View extends JPanel implements IView, IControl,
 		JPanel currentPanel = new JPanel ( );
 		currentPanel.setLayout(new FlowLayout( FlowLayout.LEFT ));
 
-		currentPanel.setBackground ( blue );
+		currentPanel.setBackground ( BACKGROUND_COLOR );
 		JLabel currentLabel = new JLabel ( labelName );
 
-		currentLabel.setFont( myComponentsFont );
+		currentLabel.setFont( GENERAL_FONT );
 		currentPanel.add( formatComponentLarge ( currentLabel ) );
 		
 		currentPanel.add( formatComponent ( component ) );
@@ -408,10 +412,10 @@ public abstract class View extends JPanel implements IView, IControl,
 		JPanel currentPanel = new JPanel ( );
 		currentPanel.setLayout(new FlowLayout( FlowLayout.CENTER ));
 
-		currentPanel.setBackground ( blue );
+		currentPanel.setBackground ( BACKGROUND_COLOR );
 		JLabel currentLabel = new JLabel ( labelName );
 
-		currentLabel.setFont( myComponentsFont );
+		currentLabel.setFont( GENERAL_FONT );
 		currentPanel.add( formatComponent ( currentLabel ) );
 		
 		currentPanel.add( formatComponent ( component ) );
@@ -430,9 +434,9 @@ public abstract class View extends JPanel implements IView, IControl,
 		JPanel currentPanel = new JPanel ( );
 		currentPanel.setLayout(new FlowLayout( FlowLayout.LEFT ));
 
-		currentPanel.setBackground ( blue );
+		currentPanel.setBackground ( BACKGROUND_COLOR );
 		
-		lbl.setFont( myComponentsFont );
+		lbl.setFont( GENERAL_FONT );
 		currentPanel.add( formatComponent ( lbl) );
 		
 		currentPanel.add( formatComponent ( component ) );
@@ -451,9 +455,9 @@ public abstract class View extends JPanel implements IView, IControl,
 		JPanel currentPanel = new JPanel ( );
 		currentPanel.setLayout(new FlowLayout( FlowLayout.LEFT ));
 
-		currentPanel.setBackground ( blue );
+		currentPanel.setBackground ( BACKGROUND_COLOR );
 		
-		lbl.setFont( myComponentsFont );
+		lbl.setFont( GENERAL_FONT );
 		currentPanel.add( formatComponentLarge ( lbl) );
 		
 		currentPanel.add( formatComponent ( component ) );
@@ -473,12 +477,12 @@ public abstract class View extends JPanel implements IView, IControl,
 		JPanel currentPanel = new JPanel ( );
 		currentPanel.setLayout(new FlowLayout( FlowLayout.LEFT ));
 
-		currentPanel.setBackground ( blue );
+		currentPanel.setBackground ( BACKGROUND_COLOR );
 		JLabel currentLabel = new JLabel ( labelName );
 		JLabel dollarLabel = new JLabel("$");
 
-		currentLabel.setFont( myComponentsFont );
-		dollarLabel.setFont( myComponentsFont );
+		currentLabel.setFont( GENERAL_FONT );
+		dollarLabel.setFont( GENERAL_FONT );
 			
 		currentLabel.setPreferredSize( shortLabel );
 		currentLabel.setMaximumSize( shortLabel );
@@ -503,12 +507,12 @@ public abstract class View extends JPanel implements IView, IControl,
 		JPanel currentPanel = new JPanel ( );
 		currentPanel.setLayout(new FlowLayout( FlowLayout.LEFT ));
 
-		currentPanel.setBackground ( blue );
+		currentPanel.setBackground ( BACKGROUND_COLOR );
 		JLabel currentLabel = new JLabel ( labelName );
 		JLabel dollarLabel = new JLabel("$");
 
-		currentLabel.setFont( myComponentsFont );
-		dollarLabel.setFont( myComponentsFont );
+		currentLabel.setFont( GENERAL_FONT );
+		dollarLabel.setFont( GENERAL_FONT );
 			
 		currentLabel.setPreferredSize( longLabel );
 		currentLabel.setMaximumSize( longLabel );
@@ -532,10 +536,10 @@ public abstract class View extends JPanel implements IView, IControl,
 										  JComponent comp_2, JComponent comp_3 )
 	{
 		JPanel currentPanel = new JPanel ();
-		currentPanel.setBackground ( blue );
+		currentPanel.setBackground ( BACKGROUND_COLOR );
 		JLabel currentLabel = new JLabel ( labelName );
 
-		currentLabel.setFont( myComponentsFont );
+		currentLabel.setFont( GENERAL_FONT );
 		currentPanel.add( formatComponent ( currentLabel ));
 
 		if ( comp_1 instanceof JTextField )
@@ -562,10 +566,10 @@ public abstract class View extends JPanel implements IView, IControl,
 										  JComponent comp_2, JComponent comp_3 )
 	{
 		JPanel currentPanel = new JPanel ();
-		currentPanel.setBackground ( blue );
+		currentPanel.setBackground ( BACKGROUND_COLOR );
 		JLabel currentLabel = new JLabel ( labelName );
 
-		currentLabel.setFont( myComponentsFont );
+		currentLabel.setFont( GENERAL_FONT );
 		currentPanel.add( formatComponentLarge ( currentLabel ));
 
 		if ( comp_1 instanceof JTextField )
@@ -585,11 +589,11 @@ public abstract class View extends JPanel implements IView, IControl,
 											  JComponent comp_2, JComponent comp_3 )
 	{
 		JPanel currentPanel = new JPanel ();
-		currentPanel.setBackground ( blue );
+		currentPanel.setBackground ( BACKGROUND_COLOR );
 		currentPanel.setLayout(new FlowLayout( FlowLayout.LEFT ));
 		JLabel currentLabel = new JLabel ( labelName );
 
-		currentLabel.setFont( myComponentsFont );
+		currentLabel.setFont( GENERAL_FONT );
 		currentPanel.add( formatComponent ( currentLabel ));
 
 		if ( comp_1 instanceof JTextField )
@@ -615,10 +619,10 @@ public abstract class View extends JPanel implements IView, IControl,
 	**/
 	protected JPanel formatMiddleLabel( String label )
 	{
-		JPanel currentPanel = new BluePanel();
+		JPanel currentPanel = new ColorPanel();
 		JLabel newLabel = new JLabel( label );
 		
-		newLabel.setFont( myComponentsFont );
+		newLabel.setFont( GENERAL_FONT );
 		newLabel.setForeground( Color.red.darker() );
 		//currentPanel.add(formatComponent(newLabel));
 		currentPanel.add( newLabel );

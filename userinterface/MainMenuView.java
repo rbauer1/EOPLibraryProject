@@ -35,7 +35,7 @@ public class MainMenuView extends View
 	{
 		super(clerk);
 
-		setBackground ( blue );
+		setBackground ( BACKGROUND_COLOR );
 
 		// set the layout for this panel
 		setLayout( new BorderLayout () );
@@ -71,38 +71,38 @@ public class MainMenuView extends View
 	//-------------------------------------------------------------
 	private JPanel createNavigationButtons()
 	{
-		JPanel navigationPanel = new BluePanel();	
+		JPanel navigationPanel = new ColorPanel();	
 
 		navigationPanel.setLayout( new BoxLayout ( navigationPanel, BoxLayout.Y_AXIS ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 
 
 		// create "raw" JButtons and call superclass View to format 
 		// the button to the program's standard, add them to the panel
 		btnBookActions = new JButton( "Book Actions" );
 		navigationPanel.add( formatComponent ( btnBookActions ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 
 		btnBorrowerActions = new JButton( "Student Borrower Actions" );
 		navigationPanel.add( formatComponent ( btnBorrowerActions ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 
 		btnWorkerActions = new JButton( "Workers Actions" );
 		navigationPanel.add( formatComponent ( btnWorkerActions ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 
 		btnCheckinBook = new JButton( "Check in a Book" );
 		navigationPanel.add( formatComponent ( btnCheckinBook ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 		
 		btnCheckoutBook = new JButton( "Check out a Book" );
 		navigationPanel.add( formatComponent ( btnCheckoutBook ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 		
 		btnLogout = new JButton( "Logout" );
 		btnLogout.setForeground( Color.red.darker().darker() );
 		navigationPanel.add( formatComponent ( btnLogout ));
-		navigationPanel.add( Box.createRigidArea( size ));
+		navigationPanel.add( Box.createRigidArea( SIZE ));
 
 		return navigationPanel;
 	}

@@ -136,14 +136,14 @@ public class ListBooksView extends View
 	private JPanel createForm(){
 		JPanel formPanel = new JPanel ();
 		formPanel.setLayout( new BoxLayout ( formPanel, BoxLayout.Y_AXIS ));
-		formPanel.setBackground ( blue );
+		formPanel.setBackground ( BACKGROUND_COLOR );
 
 		formPanel.add(createDataEntryFields());
 
-		formPanel.add(Box.createRigidArea( size ));
+		formPanel.add(Box.createRigidArea( SIZE ));
 		formPanel.add(createBookTable());
 
-		formPanel.add(Box.createRigidArea( size ));
+		formPanel.add(Box.createRigidArea( SIZE ));
 		formPanel.add(createNavigationButtons());
 
 
@@ -209,10 +209,10 @@ public class ListBooksView extends View
 	//-----------------------------------------------------------------
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private JPanel createDataEntryFields(){
-		JPanel entryFieldsPanel = new BluePanel();
+		JPanel entryFieldsPanel = new ColorPanel();
 		entryFieldsPanel.setLayout( new BoxLayout ( entryFieldsPanel, BoxLayout.Y_AXIS));
 
-		JPanel searchInfoPanel = new BluePanel(new FlowLayout( FlowLayout.LEFT));
+		JPanel searchInfoPanel = new ColorPanel(new FlowLayout( FlowLayout.LEFT));
 
 		JLabel searchInfo =	new JLabel("Leave all the fields empty to list all books");
 		searchInfo.setFont(new Font("Arial", Font.BOLD, 16));
@@ -221,16 +221,16 @@ public class ListBooksView extends View
 		searchInfoPanel.setAlignmentY(LEFT_ALIGNMENT);
 		entryFieldsPanel.add(searchInfoPanel);
 
-		idPanel = new BluePanel(new FlowLayout( FlowLayout.LEFT ));
+		idPanel = new ColorPanel(new FlowLayout( FlowLayout.LEFT ));
 
 		entryFieldsPanel.add(idPanel);
 
 		entryFieldsPanel.add(formatMiddleLabel("----- OR -----"));
 
-		JPanel bookInfoPanel = new BluePanel();
+		JPanel bookInfoPanel = new ColorPanel();
 		bookInfoPanel.setLayout( new BoxLayout ( bookInfoPanel, BoxLayout.X_AXIS));
 
-		JPanel leftPanel = new BluePanel();
+		JPanel leftPanel = new ColorPanel();
 		leftPanel.setLayout( new BoxLayout ( leftPanel, BoxLayout.Y_AXIS));
 		
 		barcodeField = new JTextField(16);
@@ -240,7 +240,7 @@ public class ListBooksView extends View
 		leftPanel.add(formatCurrentPanel("Author:", author1Field));
 		
 		
-		JPanel rightPanel = new BluePanel();
+		JPanel rightPanel = new ColorPanel();
 		rightPanel.setLayout( new BoxLayout ( rightPanel, BoxLayout.Y_AXIS));
 		
 		titleField = new JTextField(16);
@@ -259,7 +259,7 @@ public class ListBooksView extends View
 		
 		entryFieldsPanel.add(bookInfoPanel);
 
-		JPanel searchButtonPanel = new BluePanel();
+		JPanel searchButtonPanel = new ColorPanel();
 
 		searchButton = new JButton( "Search" );
 		searchButtonPanel.add(formatButtonSmall(searchButton));
@@ -273,7 +273,7 @@ public class ListBooksView extends View
 	//-------------------------------------------------------------
 	private JPanel createNavigationButtons(){
 		JPanel buttonsPanel = new JPanel();
-		buttonsPanel.setBackground( blue );
+		buttonsPanel.setBackground( BACKGROUND_COLOR );
 
 		//TODO this should read either Update or Delete depending on the intended user action
 		submitButton = new JButton( "" ); 
