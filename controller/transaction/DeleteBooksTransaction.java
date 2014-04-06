@@ -31,7 +31,7 @@ public class DeleteBooksTransaction extends Transaction {
 	
 	@Override
 	public void execute(){
-		TransactionFactory.executeTransaction(this, "ListBooksTransaction", Key.BACK_TO_BOOK_MENU, Key.SELECT_BOOK);
+		TransactionFactory.executeTransaction(this, "ListBooksTransaction", Key.DISPLAY_BOOK_MENU, Key.SELECT_BOOK);
 	}
 
 	@Override

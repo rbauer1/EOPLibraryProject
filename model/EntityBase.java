@@ -20,7 +20,7 @@ import java.util.Properties;
 import javax.swing.JFrame;
 
 import userinterface.MainFrame;
-import userinterface.View;
+import userinterface.view.View;
 import database.Persistable;
 
 /**

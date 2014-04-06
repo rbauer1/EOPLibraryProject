@@ -7,7 +7,7 @@
  * be reproduced, copied, or used in any shape or form without
  * he express written consent of The College at Brockport. * 
  */
-package userinterface;
+package userinterface.view;
 
 import impresario.IModel;
 
@@ -22,40 +22,37 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import userinterface.message.MessagePanel;
 import utilities.Key;
 
 /**
- * The Password Reset View for the EOP Library application. Provides the
- * interface for the workers to reset their password with the reset token emailed to them.
+ * The Forgot Password View for the EOP Library application. Provides the
+ * interface for the workers to recover their password to the system.
  */
-public class PasswordResetView extends View {
-	private static final long serialVersionUID = -7309149910050009529L;
-	
+public class ForgotPasswordView extends View {
+	private static final long serialVersionUID = 1169974525395804659L;
+
 	/** Buttons */
 	private JButton submitButton;
 	private JButton cancelButton;
 
 	/** Data entry fields */
-	private JTextField resetCode;
-	private JPasswordField password;
-	private JPasswordField passwordConfirmation;
+	private JTextField bannerId;
 
 	/** Shows messages for view */
-	private MessageView statusMessage;
+	private MessagePanel statusMessage;
 
 	// ---------------------------------------------------------------------
 
 	/**
-	 * Constructs Reset Password view object and subscribes 
+	 * Constructs Forgot Password view object and subscribes 
 	 * to the Recover Password Transaction model.
 	 * @param model The Recover Password Transaction
 	 */
-	public PasswordResetView(IModel model) {
-		super(model, "PasswordResetView");
-		System.out.println("PasswordResetView");
+	public ForgotPasswordView(IModel model) {
+		super(model, "ForgotPasswordView");
 
 		setBackground(BACKGROUND_COLOR);
 
@@ -71,7 +68,7 @@ public class PasswordResetView extends View {
 		add(createStatusMessage(" "));
 
 		// Subscribe the to model events
-		myModel.subscribe(Key.INPUT_ERROR, this);
+		controller.subscribe(Key.INPUT_ERROR, this);
 	}
 
 	// ---------------------------------------------------------------------
@@ -81,7 +78,7 @@ public class PasswordResetView extends View {
 	 */
 	public void paint(Graphics g) {
 		super.paint(g);
-		resetCode.requestFocus();
+		bannerId.requestFocus();
 	}
 
 	// ---------------------------------------------------------------------
@@ -91,7 +88,7 @@ public class PasswordResetView extends View {
 	 * @return title panel
 	 */
 	protected JPanel createTitle() {
-		return formatViewTitle("Reset Password");
+		return formatViewTitle("Forgot Password");
 	}
 
 	// ---------------------------------------------------------------------
@@ -105,14 +102,8 @@ public class PasswordResetView extends View {
 		dataEntryPanel.setLayout(new BoxLayout(dataEntryPanel, BoxLayout.Y_AXIS));
 		dataEntryPanel.setBackground(BACKGROUND_COLOR);
 
-		resetCode = new JTextField(25);
-		dataEntryPanel.add(formatCurrentPanelCenter("Reset Code", resetCode));
-		
-		password = new JPasswordField(25);
-		dataEntryPanel.add(formatCurrentPanelCenter("Password", password));
-		
-		passwordConfirmation = new JPasswordField(25);
-		dataEntryPanel.add(formatCurrentPanelCenter("Password Confirmation", passwordConfirmation));
+		bannerId = new JTextField(25);
+		dataEntryPanel.add(formatCurrentPanelCenter("Username", bannerId));
 
 		dataEntryPanel.add(Box.createRigidArea(new Dimension(200, 50)));
 
@@ -130,12 +121,12 @@ public class PasswordResetView extends View {
 		buttonPanel.setBackground(BACKGROUND_COLOR);
 
 		// create the buttons, listen for events, add them to the panel
-		submitButton = new CustomButton("Submit");
+		submitButton = new JButton("Submit");
 		buttonPanel.add(formatButton(submitButton));
 
 		buttonPanel.add(new JLabel("     "));
 
-		cancelButton = new CustomButton("Cancel");
+		cancelButton = new JButton("Cancel");
 		buttonPanel.add(formatButton(cancelButton));
 
 		return buttonPanel;
@@ -149,29 +140,21 @@ public class PasswordResetView extends View {
 	 * @return status message panel
 	 */
 	private JPanel createStatusMessage(String initialMessage) {
-		statusMessage = new MessageView(initialMessage);
+		statusMessage = new MessagePanel(initialMessage);
 		return statusMessage;
 	}
 
 	// ---------------------------------------------------------------------
 
 	/**
-	 * Verifies data inputted is valid.
+	 * Verifies the banner Id is not empty.
 	 * 
 	 * @param bannerId
 	 * @return true if input is valid
 	 */
-	private boolean validate(String resetCode, String password, String passwordConfirm) {
-		if ((resetCode == null) || (resetCode.length() == 0)) {
-			statusMessage.displayErrorMessage("Enter the reset code emailed to you!");
-			return false;
-		}
-		if ((password == null) || (password.length() < 6)) {
-			statusMessage.displayErrorMessage("Password must be greater than 5 characters long!");
-			return false;
-		}
-		if (!password.equals(passwordConfirm)) {
-			statusMessage.displayErrorMessage("Password must match confirmation password!");
+	private boolean validate(String bannerId) {
+		if ((bannerId == null) || (bannerId.length() == 0)) {
+			statusMessage.displayErrorMessage("Please enter a valid user name1!");
 			return false;
 		}
 		return true;
@@ -184,25 +167,18 @@ public class PasswordResetView extends View {
 	 * handle button clicks to submit forms or to handle navigation.
 	 */
 	public void processAction(EventObject evt) {
-		statusMessage.clearErrorMessage();
+		statusMessage.clear();
 
 		if (evt.getSource() == cancelButton) {
-			myModel.stateChangeRequest(Key.RECOVER_PW_COMPLETED, null);
+			controller.stateChangeRequest(Key.RECOVER_PW_COMPLETED, null);
 		} else if (evt.getSource() == submitButton) {
-			String resetCode = this.resetCode.getText();
-			String password = new String(this.password.getPassword());
-			String passwordConfirmation = new String(this.passwordConfirmation.getPassword());
-			
-			if (validate(resetCode, password, passwordConfirmation)) {
-				Properties passwordData = new Properties();
-				passwordData.setProperty("ResetCode", resetCode);
-				passwordData.setProperty("Password", password);
-				passwordData.setProperty("PasswordConfirmation", passwordConfirmation);
-				myModel.stateChangeRequest(Key.RESET_PW, passwordData);
+			String bannerId = this.bannerId.getText();
+			if (validate(bannerId)) {
+				Properties workerData = new Properties();
+				workerData.setProperty("BannerID", bannerId);
+				controller.stateChangeRequest(Key.REQUEST_RESET_TOKEN, workerData);
 			}
-
 		}
-
 	}
 
 	// ---------------------------------------------------------------------

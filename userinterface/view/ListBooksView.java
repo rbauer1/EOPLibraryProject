@@ -1,4 +1,4 @@
-package userinterface;
+package userinterface.view;
 
 import impresario.IModel;
 
@@ -34,6 +34,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import model.Book;
+import userinterface.component.Panel;
+import userinterface.component.Button;
+import userinterface.message.MessagePanel;
 import utilities.Key;
 
 //==============================================================
@@ -72,7 +75,7 @@ public class ListBooksView extends View
 	private String operationType;
 
 	// For showing error message
-	private MessageView statusLog;
+	private MessagePanel statusLog;
 
 	//----------------------------------------------------------
 	public ListBooksView(IModel transaction)
@@ -83,7 +86,7 @@ public class ListBooksView extends View
 		books = new ArrayList<Book>();
 
 		// Get the operation type
-		operationType = (String) myModel.getState("OperationType");
+		operationType = (String) controller.getState("OperationType");
 
 		// For now, we have nothing and nothing is selected
 		emptySearchResult = true;
@@ -106,8 +109,8 @@ public class ListBooksView extends View
 //		if ((operationType.contains("Delete")) || (operationType.contains("Hours")))//TODO
 //			statusList.setEnabled(false);
 
-		myModel.subscribe(Key.GET_BOOK_COLLECTION, this);
-		myModel.subscribe(Key.MODIFY_OR_DELETE, this);
+		controller.subscribe(Key.GET_BOOK_COLLECTION, this);
+		controller.subscribe(Key.MODIFY_OR_DELETE, this);
 	}
 
 	// Override the paint method to ensure we can set the focus when made visible
@@ -208,10 +211,10 @@ public class ListBooksView extends View
 	//-----------------------------------------------------------------
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private JPanel createDataEntryFields(){
-		JPanel entryFieldsPanel = new ColorPanel();
+		JPanel entryFieldsPanel = new Panel();
 		entryFieldsPanel.setLayout( new BoxLayout ( entryFieldsPanel, BoxLayout.Y_AXIS));
 
-		JPanel searchInfoPanel = new ColorPanel(new FlowLayout( FlowLayout.LEFT));
+		JPanel searchInfoPanel = new Panel(new FlowLayout( FlowLayout.LEFT));
 
 		JLabel searchInfo =	new JLabel("Leave all the fields empty to list all books");
 		searchInfo.setFont(new Font("Arial", Font.BOLD, 16));
@@ -220,16 +223,16 @@ public class ListBooksView extends View
 		searchInfoPanel.setAlignmentY(LEFT_ALIGNMENT);
 		entryFieldsPanel.add(searchInfoPanel);
 
-		idPanel = new ColorPanel(new FlowLayout( FlowLayout.LEFT ));
+		idPanel = new Panel(new FlowLayout( FlowLayout.LEFT ));
 
 		entryFieldsPanel.add(idPanel);
 
 		entryFieldsPanel.add(formatMiddleLabel("----- OR -----"));
 
-		JPanel bookInfoPanel = new ColorPanel();
+		JPanel bookInfoPanel = new Panel();
 		bookInfoPanel.setLayout( new BoxLayout ( bookInfoPanel, BoxLayout.X_AXIS));
 
-		JPanel leftPanel = new ColorPanel();
+		JPanel leftPanel = new Panel();
 		leftPanel.setLayout( new BoxLayout ( leftPanel, BoxLayout.Y_AXIS));
 		
 		barcodeField = new JTextField(16);
@@ -239,7 +242,7 @@ public class ListBooksView extends View
 		leftPanel.add(formatCurrentPanel("Author:", author1Field));
 		
 		
-		JPanel rightPanel = new ColorPanel();
+		JPanel rightPanel = new Panel();
 		rightPanel.setLayout( new BoxLayout ( rightPanel, BoxLayout.Y_AXIS));
 		
 		titleField = new JTextField(16);
@@ -258,9 +261,9 @@ public class ListBooksView extends View
 		
 		entryFieldsPanel.add(bookInfoPanel);
 
-		JPanel searchButtonPanel = new ColorPanel();
+		JPanel searchButtonPanel = new Panel();
 
-		searchButton = new CustomButton( "Search" );
+		searchButton = new Button( "Search" );
 		searchButtonPanel.add(formatButtonSmall(searchButton));
 		entryFieldsPanel.add(searchButtonPanel);
 
@@ -275,11 +278,11 @@ public class ListBooksView extends View
 		buttonsPanel.setBackground( BACKGROUND_COLOR );
 
 		//TODO this should read either Update or Delete depending on the intended user action
-		submitButton = new CustomButton( "" ); 
+		submitButton = new Button( "" ); 
 		buttonsPanel.add( formatButtonSmall ( submitButton ));
 		submitButton.setVisible(false);
 
-		cancelButton = new CustomButton( "Cancel" );
+		cancelButton = new Button( "Cancel" );
 		buttonsPanel.add( formatButtonSmall ( cancelButton ));
 
 		return buttonsPanel;
@@ -291,7 +294,7 @@ public class ListBooksView extends View
 		books.clear();
 
 		try{
-			myModel.stateChangeRequest(Key.GET_BOOK_COLLECTION, getInfoFromFields());
+			controller.stateChangeRequest(Key.GET_BOOK_COLLECTION, getInfoFromFields());
 			// Get and set the table model
 			TableModel tableModel = new BookTableModel(books);
 			bookTable.setModel(tableModel);
@@ -305,7 +308,7 @@ public class ListBooksView extends View
 	// Create the status log field
 	//-------------------------------------------------------------
 	private JPanel createStatusLog(String initialMessage){
-		statusLog = new MessageView(initialMessage);
+		statusLog = new MessagePanel(initialMessage);
 		return statusLog;
 	}
 
@@ -337,14 +340,14 @@ public class ListBooksView extends View
 	private void proceed(int selectedRowIndex){
 		if(operationType.equals("Delete")){
 			if(deleteConfirmationPopup() == JOptionPane.YES_OPTION){
-				myModel.stateChangeRequest(Key.SELECT_BOOK, books.get(selectedRowIndex));
+				controller.stateChangeRequest(Key.SELECT_BOOK, books.get(selectedRowIndex));
 				selectedRowIndex = -1;
 				bookTable.setModel(emptyTable);
 				bookTable.repaint();
 				getEntryTableModelValues();
 			}
 		}else{
-			myModel.stateChangeRequest(Key.SELECT_BOOK, books.get(selectedRowIndex));
+			controller.stateChangeRequest(Key.SELECT_BOOK, books.get(selectedRowIndex));
 		}
 	}
 	
@@ -364,7 +367,7 @@ public class ListBooksView extends View
 			//TODO Use validation here
 //			if(getAndValidateData())
 //			{
-				myModel.stateChangeRequest(Key.MODIFY_OR_DELETE, null);
+				controller.stateChangeRequest(Key.MODIFY_OR_DELETE, null);
 				submitButton.setText(operationType);
 				submitButton.setVisible(true);
 				// Empty the table
@@ -372,7 +375,7 @@ public class ListBooksView extends View
 				bookTable.repaint();
 				getEntryTableModelValues();
 		}else if (evt.getSource() == cancelButton){
-			myModel.stateChangeRequest(Key.BACK_TO_BOOK_MENU, null);
+			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
 		}else if(evt.getSource() == submitButton){
 			selectedRowIndex = isRowSelected();
 			if(isRowSelected() > -1){
@@ -436,16 +439,9 @@ public class ListBooksView extends View
 			 * updated to process the if statement after this one correctly. */
 			if(! emptySearchResult){
 				getEntryTableModelValues();
-				displayMessage("Number of Books Found: " + books.size());
+				statusLog.displayMessage("Info", "Number of Books Found: " + books.size());
 			}
 		}
-	}
-
-	/**
-	 * Display message
-	 */
-	public void displayMessage(String message){
-		statusLog.displayMessage(message);
 	}
 
 	/**
@@ -459,7 +455,7 @@ public class ListBooksView extends View
 	 * Clear error message
 	 */
 	public void clearErrorMessage(){
-		statusLog.clearErrorMessage();
+		statusLog.clear();
 	}
 
 	public void updateState(String key, Object value){

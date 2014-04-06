@@ -29,7 +29,7 @@ public class EOPLibrary {
 	private MainFrame mainFrame;
 
 	public EOPLibrary(){
-		System.out.println("EOP Library System Version 1.0");
+		System.out.println("EOP Library System");
 		// See if you can set the look and feel requested, if not indicate error
 		try{
 			UIManager.setLookAndFeel(PREFERRED_UI_STYLE);
@@ -45,8 +45,9 @@ public class EOPLibrary {
 		}
 
 		// Create the top-level container (main frame) and add contents to it.
-		mainFrame = MainFrame.getInstance("EOP Library System v1.0");
-
+		mainFrame = MainFrame.getInstance("EOP Library System");
+		WindowPosition.placeCenter(mainFrame);
+		
 		// Put in icon for window border and toolbar
 		Toolkit toolKit = Toolkit.getDefaultToolkit();
 
@@ -69,7 +70,7 @@ public class EOPLibrary {
 		}
 
 		mainFrame.pack();
-		WindowPosition.placeCenter(mainFrame);
+		
 		mainFrame.setVisible(true);
 	}
 

@@ -1,4 +1,4 @@
-package userinterface;
+package userinterface.view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,6 @@ import javax.swing.table.TableModel;
 
 import model.Book;
 
-//==============================================================================
 public class BookTableModel extends AbstractTableModel implements TableModel {
 	private static final long serialVersionUID = 4213802193658338074L;
 	private List<Properties> state;

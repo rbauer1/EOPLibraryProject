@@ -28,6 +28,12 @@ public class TransactionFactory {
 	 */
 	private TransactionFactory(){}
 	
+	/**
+	 * Create a transaction
+	 * @param transactionName - class name
+	 * @param controller
+	 * @return transaction
+	 */
 	public static Transaction createTransaction(String transactionName, Controller controller){
 		try {
 			Class<?> clazz = Class.forName(TRANSACTION_PACKAGE + "." + transactionName);
@@ -43,13 +49,10 @@ public class TransactionFactory {
 			new Event("TransactionFactory", "createTransaction", "Constructor does not exist in provided transaction.", Event.FATAL);
 		} catch (SecurityException e) {
 			new Event("TransactionFactory", "createTransaction", "Invalid security for constructor in transaction. ", Event.FATAL);
-			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			new Event("TransactionFactory", "createTransaction", "Illegal argument pass to transaction constructor.", Event.FATAL);
-			e.printStackTrace();
 		} catch (InvocationTargetException e) {
 			new Event("TransactionFactory", "createTransaction", "Exception thrown by transcation constructor.", Event.FATAL);
-			e.printStackTrace();
 		}
 		throw new IllegalArgumentException("Invalid transaction name provided");
 	}

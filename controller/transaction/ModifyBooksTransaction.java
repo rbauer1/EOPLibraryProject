@@ -32,7 +32,7 @@ public class ModifyBooksTransaction extends Transaction {
 	@Override
 	public void execute(){
 		TransactionFactory.executeTransaction(this, "ListBooksTransaction", 
-						Key.BACK_TO_BOOK_MENU, Key.SELECT_BOOK, Key.MODIFY_OR_DELETE);
+						Key.DISPLAY_BOOK_MENU, Key.SELECT_BOOK, Key.MODIFY_OR_DELETE);
 	}
 
 	@Override

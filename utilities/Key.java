@@ -17,23 +17,31 @@ public class Key {
 	
 	public static final String SUBMIT_NEW_WORKER = "SubmitNewWorker";
 	
-	public static final String BACK_TO_MAIN_MENU = "BackToMainMenu";
-	public static final String BACK_TO_BOOK_MENU = "BackToBookMenu";
-	public static final String BACK_TO_WORKER_MENU = "BackToWorkerMenu";
+	public static final String DISPLAY_MAIN_MENU = "DisplayMainMenu";
+	public static final String DISPLAY_BOOK_MENU = "DisplayBookMenu";
+	public static final String DISPLAY_WORKER_MENU = "DisplayWorkerMenu";
+	public static final String DISPLAY_BORROWER_MENU = "DisplayBorrowerMenu";
 	
 	public static final String GET_BOOK_COLLECTION = "GetBookCollection";
 	
 	public static final String BOOK_SUBMIT_SUCCESS = "BookAddedOrModifiedSuccessfully";
 	public static final String WORKER_SUBMIT_SUCCESS = "WorkerAddedOrModifiedSuccessfully";
 	
-	/**
-	 * 
-	 */
+	/* Book Transactions */
 	public static final String EXECUTE_ADD_BOOK 	= "AddBookTransaction";
-	public static final String EXECUTE_ADD_WORKER 	= "AddWorkerTransaction";
 	public static final String EXECUTE_MODIFY_BOOK 	= "ModifyBooksTransaction";
 	public static final String EXECUTE_DELETE_BOOK 	= "DeleteBooksTransaction";
-	public static final String EXECUTE_RECOVER_PW 	= "RecoverPasswordTransaction";
+	
+	/* Borrower Transactions */
+	public static final String EXECUTE_ADD_BORROWER 	= "AddBorrowerTransaction";
+	public static final String EXECUTE_MODIFY_BORROWER 	= "ModifyBorrowersTransaction";
+	public static final String EXECUTE_DELETE_BORROWER 	= "DeleteBorrowersTransaction";
+	
+	/* Worker Transactions */
+	public static final String EXECUTE_ADD_WORKER 		= "AddWorkerTransaction";
+	public static final String EXECUTE_MODIFY_WORKER 	= "ModifyWorkersTransaction";
+	public static final String EXECUTE_DELETE_WORKER 	= "DeleteWorkersTransaction";
+	public static final String EXECUTE_RECOVER_PW 		= "RecoverPasswordTransaction";
 	
 	public static final String RECOVER_PW_COMPLETED = "RecoverPasswordTransactionCompleted";
 	

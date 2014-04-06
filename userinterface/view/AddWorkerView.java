@@ -1,4 +1,4 @@
-package userinterface;
+package userinterface.view;
 
 import impresario.IModel;
 
@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import userinterface.message.MessagePanel;
 import utilities.DateUtil;
 import utilities.Key;
 
@@ -24,7 +25,7 @@ import utilities.Key;
 public class AddWorkerView extends View {
 	private static final long serialVersionUID = -6030753682831962753L;
 
-	private MessageView statusLog;
+	private MessagePanel statusLog;
 
 	private JTextField bannerField;
 	private JTextField firstNameField;
@@ -56,10 +57,10 @@ public class AddWorkerView extends View {
 		add(createTitle(), BorderLayout.NORTH);
 		add(createForm(), BorderLayout.CENTER);
 		// message area
-		statusLog = new MessageView("");
+		statusLog = new MessagePanel("");
 		add(createStatusLog("                          "), BorderLayout.SOUTH);
-		myModel.subscribe(Key.INPUT_ERROR, this);
-		myModel.subscribe(Key.WORKER_SUBMIT_SUCCESS, this);
+		controller.subscribe(Key.INPUT_ERROR, this);
+		controller.subscribe(Key.WORKER_SUBMIT_SUCCESS, this);
 
 	}
 
@@ -68,7 +69,7 @@ public class AddWorkerView extends View {
 		clearErrorMessage();
 
 		if (evt.getSource() == cancelButton) {
-			myModel.stateChangeRequest(Key.BACK_TO_WORKER_MENU, null);
+			controller.stateChangeRequest(Key.DISPLAY_WORKER_MENU, null);
 		}else if (evt.getSource() == clearButton){
 			resetForm();
 		}else if (evt.getSource() == submitButton) {
@@ -85,7 +86,7 @@ public class AddWorkerView extends View {
 			newWorkerProps.put("DateOfLastUpdate", DateUtil.getDate());
 			newWorkerProps.put("ActiveStatus", "Active");
 
-			myModel.stateChangeRequest(Key.SUBMIT_WORKER, newWorkerProps);
+			controller.stateChangeRequest(Key.SUBMIT_WORKER, newWorkerProps);
 		}
 	}
 
@@ -93,7 +94,7 @@ public class AddWorkerView extends View {
 		if (key.equals(Key.INPUT_ERROR)) {
 			statusLog.displayErrorMessage("There was an error");
 		}else if(key.equals(Key.WORKER_SUBMIT_SUCCESS)){
-			statusLog.displayMessage("Book added successfully"); 
+			statusLog.displayMessage("Success", "Book added successfully"); 
 		}
 	}
 
@@ -304,7 +305,7 @@ public class AddWorkerView extends View {
 	// Create the status log field
 	// -------------------------------------------------------------
 	private JPanel createStatusLog(String initialMessage) {
-		statusLog = new MessageView(initialMessage);
+		statusLog = new MessagePanel(initialMessage);
 		return statusLog;
 	}
 
@@ -314,7 +315,7 @@ public class AddWorkerView extends View {
 
 	// ----------------------------------------------------------
 	public void clearErrorMessage() {
-		statusLog.clearErrorMessage();
+		statusLog.clear();
 	}
 
 	// There is no need for this b/c we don't have any tables here.

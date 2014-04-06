@@ -16,8 +16,8 @@ import impresario.ModelRegistry;
 import java.util.HashMap;
 
 import userinterface.MainFrame;
-import userinterface.View;
-import userinterface.ViewFactory;
+import userinterface.view.View;
+import userinterface.view.ViewFactory;
 
 public abstract class Controller implements IView, IModel {
 
