@@ -14,7 +14,6 @@ import impresario.IView;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.EventObject;
@@ -109,17 +108,11 @@ public abstract class View extends Panel implements IView, ActionListener {
 		add(messagePanel);
 	}
 	
-	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-		afterShown();		
-	}
-	
 	/**
 	 * Hook method called after view is shown.
 	 * Can be used to request focus on fields.
 	 */
-	protected void afterShown() {
+	public void afterShown() {
 		
 	}	
 

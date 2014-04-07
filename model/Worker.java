@@ -164,6 +164,7 @@ public class Worker extends Model {
 		String currentDate =  DateUtil.getDate();
 		if(isCreate){
 			persistentState.setProperty("DateOfHire", currentDate);
+			persistentState.setProperty("ActiveStatus", "Active");
 		}
 		persistentState.setProperty("DateOfLatestCredentialsStatus", currentDate);
 		persistentState.setProperty("DateOfLastUpdate", currentDate);

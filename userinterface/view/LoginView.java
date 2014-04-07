@@ -57,6 +57,7 @@ public class LoginView extends View {
 		
 		// Subscribe the to model events
 		controller.subscribe(Key.LOGIN_ERROR, this);
+		controller.subscribe(Key.RECOVER_PW_COMPLETED, this);
 		//TODO figure out a way to give the BannerID field focus automatically
 	}	
 
@@ -107,12 +108,14 @@ public class LoginView extends View {
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.LOGIN_ERROR)) {
 			messagePanel.displayErrorMessage(value.toString());
+		}else if(key.equals(Key.RECOVER_PW_COMPLETED) && (boolean)value){
+			messagePanel.displayMessage("Success", "Password successfully changed");
 		}
 
 	}
 	
 	@Override
-	protected void afterShown(){
+	public void afterShown(){
 		form.requestFocusForDefaultField();
 	}
 	
@@ -134,7 +137,7 @@ public class LoginView extends View {
 			TextField bannerIdField = new TextField(15);
 			bannerIdField.addActionListener(this);
 			addField("BannerID", bannerIdField);
-			add(ViewHelper.formatFieldCenter("Username", bannerIdField));
+			add(ViewHelper.formatFieldCenter("Banner ID", bannerIdField));
 			
 			PasswordField passwordField = new PasswordField(15);
 			passwordField.addActionListener(this);

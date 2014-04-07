@@ -10,6 +10,7 @@
 package userinterface;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
@@ -18,6 +19,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
+import userinterface.component.Panel;
 
 /**
  * Header Panel for the main frame. Holds the eop logo and application title.
@@ -44,6 +47,9 @@ public class HeaderPanel extends JPanel {
 	/** Icon Path */
 	private static final String ICON_LOCATION = "EOP.png";
 	
+	private static final int ICON_WIDTH_PADDING = 40;
+	private static final int ICON_HEIGHT_PADDING = 9;
+	
 	/**
 	 * Constructs a new HeaderPanel.
 	 * Created by the main frame.
@@ -53,23 +59,35 @@ public class HeaderPanel extends JPanel {
 		setBackground(BACKGROUND_COLOR);
 		setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-		JPanel panel = new JPanel();
-		panel.setBackground(BACKGROUND_COLOR);
+		JPanel panel = new Panel(BACKGROUND_COLOR);
 		panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		add(panel);
 
-		JLabel iconLabel = new JLabel("", new ImageIcon(ICON_LOCATION), SwingConstants.LEFT);
-		panel.add(iconLabel);
+		JPanel iconPanel = new Panel(BACKGROUND_COLOR);
+		ImageIcon icon = new ImageIcon (ICON_LOCATION);
+		int iconWidth = icon.getIconWidth();
+		int iconHeight = icon.getIconHeight();
+		Dimension imageAndPad = new Dimension(iconWidth+ICON_WIDTH_PADDING,iconHeight+ICON_HEIGHT_PADDING);
+		
+		iconPanel.add(new JLabel("", icon, SwingConstants.LEFT));
+		
+		iconPanel.setPreferredSize(imageAndPad);
+		iconPanel.setMaximumSize(imageAndPad);
+
+		JPanel counterWeightPanel = new Panel(BACKGROUND_COLOR, SwingConstants.RIGHT);
+		counterWeightPanel.setPreferredSize(imageAndPad);
+		counterWeightPanel.setMaximumSize(imageAndPad);
 		
 		JLabel titleLabel = new JLabel(TITLE, SwingConstants.CENTER);
 		titleLabel.setForeground(TITLE_FONT_COLOR);
 		titleLabel.setFont(TITLE_FONT);
-		panel.add(titleLabel);
 		
-		JPanel separator = new JPanel();
-		separator.setBackground(SEPARATOR_COLOR);
-		add(separator);
+		panel.add(iconPanel);
+		panel.add(titleLabel);
+		panel.add(counterWeightPanel);
+		
+		add(panel);
+		add(new Panel(SEPARATOR_COLOR));
 	}
 
 }

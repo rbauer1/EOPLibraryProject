@@ -46,7 +46,6 @@ public class EOPLibrary {
 
 		// Create the top-level container (main frame) and add contents to it.
 		mainFrame = MainFrame.getInstance("EOP Library System");
-		WindowPosition.placeCenter(mainFrame);
 		
 		// Put in icon for window border and toolbar
 		Toolkit toolKit = Toolkit.getDefaultToolkit();
@@ -57,7 +56,7 @@ public class EOPLibrary {
 			mainFrame.setIconImage(toolKit.getImage("EOP.jpg"));
 		}
 
-		mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE); //TODO MAKE SURE THE DATABASE CAN HANDLE THIS
 
 		try{
 			new LibrarianController();
@@ -70,7 +69,7 @@ public class EOPLibrary {
 		}
 
 		mainFrame.pack();
-		
+		WindowPosition.placeCenter(mainFrame);
 		mainFrame.setVisible(true);
 	}
 

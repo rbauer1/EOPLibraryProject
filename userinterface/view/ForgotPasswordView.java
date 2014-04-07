@@ -9,8 +9,6 @@
  */
 package userinterface.view;
 
-import impresario.IModel;
-
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -24,8 +22,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import userinterface.message.MessagePanel;
+import userinterface.ViewHelper;
+import userinterface.component.Button;
+import userinterface.component.Panel;
+import userinterface.component.TextField;
 import utilities.Key;
+import controller.Controller;
 
 /**
  * The Forgot Password View for the EOP Library application. Provides the
@@ -39,10 +41,7 @@ public class ForgotPasswordView extends View {
 	private JButton cancelButton;
 
 	/** Data entry fields */
-	private JTextField bannerId;
-
-	/** Shows messages for view */
-	private MessagePanel statusMessage;
+	private JTextField bannerIdField;
 
 	// ---------------------------------------------------------------------
 
@@ -51,8 +50,8 @@ public class ForgotPasswordView extends View {
 	 * to the Recover Password Transaction model.
 	 * @param model The Recover Password Transaction
 	 */
-	public ForgotPasswordView(IModel model) {
-		super(model, "ForgotPasswordView");
+	public ForgotPasswordView(Controller controller) {
+		super(controller, "Reset Password");
 
 		setBackground(BACKGROUND_COLOR);
 
@@ -60,12 +59,8 @@ public class ForgotPasswordView extends View {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		// Create our GUI components, add them to this panel
-		add(createTitle());
 		add(createDataEntryFields());
 		add(createButtons());
-
-		// Error message area
-		add(createStatusMessage(" "));
 
 		// Subscribe the to model events
 		controller.subscribe(Key.INPUT_ERROR, this);
@@ -78,17 +73,7 @@ public class ForgotPasswordView extends View {
 	 */
 	public void paint(Graphics g) {
 		super.paint(g);
-		bannerId.requestFocus();
-	}
-
-	// ---------------------------------------------------------------------
-
-	/**
-	 * Create title panel for this view.
-	 * @return title panel
-	 */
-	protected JPanel createTitle() {
-		return formatViewTitle("Forgot Password");
+		bannerIdField.requestFocus();
 	}
 
 	// ---------------------------------------------------------------------
@@ -98,12 +83,11 @@ public class ForgotPasswordView extends View {
 	 * @return data entry panel
 	 */
 	private JPanel createDataEntryFields() {
-		JPanel dataEntryPanel = new JPanel();
+		JPanel dataEntryPanel = new Panel();
 		dataEntryPanel.setLayout(new BoxLayout(dataEntryPanel, BoxLayout.Y_AXIS));
-		dataEntryPanel.setBackground(BACKGROUND_COLOR);
 
-		bannerId = new JTextField(25);
-		dataEntryPanel.add(formatCurrentPanelCenter("Username", bannerId));
+		bannerIdField = new TextField(25);
+		dataEntryPanel.add(ViewHelper.formatFieldLeft("Banner ID", bannerIdField));
 
 		dataEntryPanel.add(Box.createRigidArea(new Dimension(200, 50)));
 
@@ -121,28 +105,19 @@ public class ForgotPasswordView extends View {
 		buttonPanel.setBackground(BACKGROUND_COLOR);
 
 		// create the buttons, listen for events, add them to the panel
-		submitButton = new JButton("Submit");
-		buttonPanel.add(formatButton(submitButton));
+		submitButton = new Button("Submit");
+		submitButton.addActionListener(this);
+		buttonPanel.add(submitButton);
 
 		buttonPanel.add(new JLabel("     "));
 
-		cancelButton = new JButton("Cancel");
-		buttonPanel.add(formatButton(cancelButton));
-
-		return buttonPanel;
+		cancelButton = new Button("Cancel");
+		cancelButton.addActionListener(this);
+		buttonPanel.add(cancelButton);
+		
+		return ViewHelper.formatCenter(buttonPanel);
 	}
 
-	// ---------------------------------------------------------------------
-
-	/**
-	 * Creates status message panel with the provided message.
-	 * @param initialMessage
-	 * @return status message panel
-	 */
-	private JPanel createStatusMessage(String initialMessage) {
-		statusMessage = new MessagePanel(initialMessage);
-		return statusMessage;
-	}
 
 	// ---------------------------------------------------------------------
 
@@ -154,7 +129,7 @@ public class ForgotPasswordView extends View {
 	 */
 	private boolean validate(String bannerId) {
 		if ((bannerId == null) || (bannerId.length() == 0)) {
-			statusMessage.displayErrorMessage("Please enter a valid user name1!");
+			messagePanel.displayErrorMessage("Please enter a valid Banner ID!");
 			return false;
 		}
 		return true;
@@ -167,12 +142,12 @@ public class ForgotPasswordView extends View {
 	 * handle button clicks to submit forms or to handle navigation.
 	 */
 	public void processAction(EventObject evt) {
-		statusMessage.clear();
+		messagePanel.clear();
 
 		if (evt.getSource() == cancelButton) {
 			controller.stateChangeRequest(Key.RECOVER_PW_COMPLETED, null);
 		} else if (evt.getSource() == submitButton) {
-			String bannerId = this.bannerId.getText();
+			String bannerId = bannerIdField.getText();
 			if (validate(bannerId)) {
 				Properties workerData = new Properties();
 				workerData.setProperty("BannerID", bannerId);
@@ -189,7 +164,7 @@ public class ForgotPasswordView extends View {
 	 */
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.INPUT_ERROR)) {
-			statusMessage.displayErrorMessage(value.toString());
+			messagePanel.displayErrorMessage(value.toString());
 		}
 
 	}

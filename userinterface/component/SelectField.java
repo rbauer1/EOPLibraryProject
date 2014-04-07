@@ -18,7 +18,7 @@ public class SelectField extends JComboBox implements FormField {
 	private static final long serialVersionUID = 5022158642069326654L;
 	
 	/** Size of a Select Box **/
-	private static final Dimension SIZE = new Dimension(85, 25);
+	private static final Dimension SIZE = new Dimension(105, 25);
 	
 	/** Border Color of a Select Box **/
 	private static final Color BORDER_COLOR = Form.FIELD_BORDER_COLOR;

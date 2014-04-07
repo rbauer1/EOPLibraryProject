@@ -27,6 +27,10 @@ public class RecoverPasswordTransaction extends Transaction {
 	/** Reset Code generated for the worker */
 	private String resetCode;
 	
+	private String errorMessage;
+	
+	private boolean passwordResetSuccess = false;
+	
 	/**
 	 * Constructs Recover Password Transaction
 	 * @param parentController
@@ -43,6 +47,11 @@ public class RecoverPasswordTransaction extends Transaction {
 
 	@Override
 	public Object getState(String key) {
+		if(key.equals(Key.RECOVER_PW_COMPLETED)){
+			return passwordResetSuccess;
+		}else if(key.equals(Key.INPUT_ERROR)){
+			return errorMessage;
+		}
 		return null;
 	}
 
@@ -52,6 +61,10 @@ public class RecoverPasswordTransaction extends Transaction {
 			sendPasswordResetToken((Properties) value);
 		}else if(key.equals(Key.RESET_PW)){
 			resetPassword((Properties) value);
+		}else if(key.equals(Key.RECOVER_PW_COMPLETED)){
+			passwordResetSuccess = (boolean)value;
+		}else if(key.equals(Key.INPUT_ERROR)){
+			errorMessage = (String)value;
 		}
 		registry.updateSubscribers(key, this);
 	}
@@ -80,15 +93,14 @@ public class RecoverPasswordTransaction extends Transaction {
 		String password = passwordData.getProperty("Password");
 		if(!resetCode.equals(passwordData.getProperty("ResetCode"))){
 			stateChangeRequest(Key.INPUT_ERROR, "Invalid reset code.");
-		}
-		if(password.length() < 6){
+		}else if(password.length() < 6){
 			stateChangeRequest(Key.INPUT_ERROR, "Password must be greater than 5 characters long!");
-		}
-		if(!password.equals(passwordData.getProperty("PasswordConfirmation"))){
+		}else if(!password.equals(passwordData.getProperty("PasswordConfirmation"))){
 			stateChangeRequest(Key.INPUT_ERROR, "Password and password confirmation must match.");
+		}else{
+			worker.stateChangeRequest(Key.PW, password);
+			worker.save();
+			stateChangeRequest(Key.RECOVER_PW_COMPLETED, true);
 		}
-		worker.stateChangeRequest(Key.PW, password);
-		worker.save();
-		stateChangeRequest(Key.RECOVER_PW_COMPLETED, null);
 	}
 }

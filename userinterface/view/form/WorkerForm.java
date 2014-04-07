@@ -59,23 +59,31 @@ public class WorkerForm extends Form {
 		
 		PasswordField confirmPasswordField = new PasswordField(16);
 		confirmPasswordField.addActionListener(this);
-		addField("PasswordConfirmation", confirmPasswordField);
+//		addField("PasswordConfirmation", confirmPasswordField); //TODO Handle confirmation
 		leftColumn.add(ViewHelper.formatFieldLeft("Confirm Password", confirmPasswordField));
 
-		TextField firstNameField = new TextField(16);
-		firstNameField.addActionListener(this);
-		addField("FirstName", firstNameField);
-		leftColumn.add(ViewHelper.formatFieldLeft("First Name", firstNameField));
-		
-		TextField lastNameField = new TextField(16);
-		lastNameField.addActionListener(this);
-		addField("LastName", lastNameField);
-		leftColumn.add(ViewHelper.formatFieldLeft("Last Name", lastNameField));
+		SelectField credentialsField = new SelectField(new String[] { "Ordinary", ""
+				+ "" });
+		credentialsField.addActionListener(this);
+		credentialsField.setPreferredSize(new Dimension(120,25));
+		addField("Credentials", credentialsField);
+		leftColumn.add(ViewHelper.formatFieldLeft("Credentials", credentialsField));
 		
 		add(fieldColumnsPanel);
 		
 		Panel rightColumn = new Panel();
+
 		rightColumn.setLayout(new BoxLayout(rightColumn, BoxLayout.Y_AXIS));
+		
+		TextField firstNameField = new TextField(16);
+		firstNameField.addActionListener(this);
+		addField("FirstName", firstNameField);
+		rightColumn.add(ViewHelper.formatFieldLeft("First Name", firstNameField));
+		
+		TextField lastNameField = new TextField(16);
+		lastNameField.addActionListener(this);
+		addField("LastName", lastNameField);
+		rightColumn.add(ViewHelper.formatFieldLeft("Last Name", lastNameField));
 		
 		PhoneField phoneField = new PhoneField();
 //		phoneField.addActionListener(this); //TODO figure out about this
@@ -87,19 +95,6 @@ public class WorkerForm extends Form {
 		addField("Email", emailField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Email", emailField));
 
-		SelectField credentialsField = new SelectField(new String[] { "Ordinary", "Administrator" });
-		credentialsField.addActionListener(this);
-		credentialsField.setPreferredSize(new Dimension(120,25));
-		addField("Credentials", credentialsField);
-		rightColumn.add(ViewHelper.formatFieldLeft("Credentials", credentialsField));
-		
-		SelectField statusField = new SelectField(new String[] { "Active", "Inactive" });
-		statusField.addActionListener(this);
-		addField("ActiveStatus", statusField);
-		rightColumn.add(ViewHelper.formatFieldLeft("Status", statusField));
-		
-		rightColumn.add(ViewHelper.createPlaceHolder());	
-		
 		fieldColumnsPanel.add(rightColumn);
 	}
 	

@@ -22,6 +22,7 @@ import exception.InvalidPrimaryKeyException;
 public class LibrarianController extends Controller {
 
 	protected String loginErrorMessage = "";
+	private boolean passwordResetSuccess = false;
 	
 	public LibrarianController() {
 		super();
@@ -36,6 +37,8 @@ public class LibrarianController extends Controller {
 	public Object getState(String key) {
 		if (key.equals(Key.LOGIN_ERROR)) {
 			return loginErrorMessage;
+		}else if(key.equals(Key.RECOVER_PW_COMPLETED)){
+			return passwordResetSuccess;
 		}
 		throw new IllegalArgumentException("Unknown key: " + key);
 	}
@@ -68,8 +71,9 @@ public class LibrarianController extends Controller {
 				TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
 		} else if (key.equals(Key.EXECUTE_RECOVER_PW)){		
 			TransactionFactory.executeTransaction(this, key, Key.RECOVER_PW_COMPLETED);
-		} else if (key.equals(Key.RECOVER_PW_COMPLETED)){	
+		} else if (key.equals(Key.RECOVER_PW_COMPLETED)){
 			showView("LoginView");
+			passwordResetSuccess = (boolean)value;
 		} else if (key.endsWith("Transaction")){			
 			TransactionFactory.executeTransaction(this, key);
 		} else if (key.equals(Key.LOGOUT)) {				
@@ -94,8 +98,8 @@ public class LibrarianController extends Controller {
 	 */
 	protected void loginWorker(Properties workerData) {
 		try {
-			Worker worker = new Worker(workerData.getProperty("BannerID"));
-			if(!worker.validPassword(workerData.getProperty("Password"))){
+			Worker worker = new Worker(workerData.getProperty("BannerID",""));
+			if(!worker.validPassword(workerData.getProperty("Password",""))){
 				stateChangeRequest(Key.LOGIN_ERROR, "Invalid Banner Id or Password.");
 			}else{
 				System.out.println("login success");
@@ -103,7 +107,7 @@ public class LibrarianController extends Controller {
 			}
 		} catch (InvalidPrimaryKeyException e) {
 			stateChangeRequest(Key.LOGIN_ERROR, "Invalid Banner Id or Password.");
-		}		
+		}
 	}
 	
 }

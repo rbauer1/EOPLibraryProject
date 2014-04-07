@@ -73,8 +73,10 @@ public class ViewHelper {
 		final Dimension size = new Dimension(140, 30);
 		label.setPreferredSize(size);
 		panel.add(label);
+		JLabel dollarLabel = new JLabel("$");
+		dollarLabel.setFont(Form.NORMAL_FONT);
+		panel.add(dollarLabel);
 		
-		panel.add(new JLabel("$"));
 
 		panel.add(component);
 		return panel;

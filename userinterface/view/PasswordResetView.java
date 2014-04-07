@@ -23,7 +23,10 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import userinterface.ViewHelper;
 import userinterface.component.Button;
+import userinterface.component.PasswordField;
+import userinterface.component.TextField;
 import userinterface.message.MessagePanel;
 import utilities.Key;
 import controller.Controller;
@@ -44,19 +47,13 @@ public class PasswordResetView extends View {
 	private JPasswordField password;
 	private JPasswordField passwordConfirmation;
 
-	/** Shows messages for view */
-	private MessagePanel statusMessage;
-
-	// ---------------------------------------------------------------------
-
 	/**
 	 * Constructs Reset Password view object and subscribes 
 	 * to the Recover Password Transaction model.
 	 * @param model The Recover Password Transaction
 	 */
 	public PasswordResetView(Controller controller) {
-		super(controller, "PasswordResetView");
-		System.out.println("PasswordResetView");
+		super(controller, "Set Password");
 
 		setBackground(BACKGROUND_COLOR);
 
@@ -64,12 +61,10 @@ public class PasswordResetView extends View {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		// Create our GUI components, add them to this panel
-		add(createTitle());
 		add(createDataEntryFields());
 		add(createButtons());
 
 		// Error message area
-		add(createStatusMessage(" "));
 
 		// Subscribe the to model events
 		controller.subscribe(Key.INPUT_ERROR, this);
@@ -88,16 +83,6 @@ public class PasswordResetView extends View {
 	// ---------------------------------------------------------------------
 
 	/**
-	 * Create title panel for this view.
-	 * @return title panel
-	 */
-	protected JPanel createTitle() {
-		return formatViewTitle("Reset Password");
-	}
-
-	// ---------------------------------------------------------------------
-
-	/**
 	 * Create data entry panel for this view.
 	 * @return data entry panel
 	 */
@@ -106,14 +91,14 @@ public class PasswordResetView extends View {
 		dataEntryPanel.setLayout(new BoxLayout(dataEntryPanel, BoxLayout.Y_AXIS));
 		dataEntryPanel.setBackground(BACKGROUND_COLOR);
 
-		resetCode = new JTextField(25);
-		dataEntryPanel.add(formatCurrentPanelCenter("Reset Code", resetCode));
+		resetCode = new TextField(25);
+		dataEntryPanel.add(ViewHelper.formatFieldCenter("Reset Code", resetCode));
 		
-		password = new JPasswordField(25);
-		dataEntryPanel.add(formatCurrentPanelCenter("Password", password));
+		password = new PasswordField(25);
+		dataEntryPanel.add(ViewHelper.formatFieldCenter("New Password", password));
 		
-		passwordConfirmation = new JPasswordField(25);
-		dataEntryPanel.add(formatCurrentPanelCenter("Password Confirmation", passwordConfirmation));
+		passwordConfirmation = new PasswordField(25);
+		dataEntryPanel.add(ViewHelper.formatFieldCenter("Confirm Password", passwordConfirmation));
 
 		dataEntryPanel.add(Box.createRigidArea(new Dimension(200, 50)));
 
@@ -132,26 +117,16 @@ public class PasswordResetView extends View {
 
 		// create the buttons, listen for events, add them to the panel
 		submitButton = new Button("Submit");
-		buttonPanel.add(formatButton(submitButton));
+		submitButton.addActionListener(this);
+		buttonPanel.add(submitButton);
 
 		buttonPanel.add(new JLabel("     "));
-
+		
 		cancelButton = new Button("Cancel");
-		buttonPanel.add(formatButton(cancelButton));
+		cancelButton.addActionListener(this);
+		buttonPanel.add(cancelButton);
 
 		return buttonPanel;
-	}
-
-	// ---------------------------------------------------------------------
-
-	/**
-	 * Creates status message panel with the provided message.
-	 * @param initialMessage
-	 * @return status message panel
-	 */
-	private JPanel createStatusMessage(String initialMessage) {
-		statusMessage = new MessagePanel(initialMessage);
-		return statusMessage;
 	}
 
 	// ---------------------------------------------------------------------
@@ -164,15 +139,15 @@ public class PasswordResetView extends View {
 	 */
 	private boolean validate(String resetCode, String password, String passwordConfirm) {
 		if ((resetCode == null) || (resetCode.length() == 0)) {
-			statusMessage.displayErrorMessage("Enter the reset code emailed to you!");
+			messagePanel.displayErrorMessage("Enter the reset code emailed to you!");
 			return false;
 		}
 		if ((password == null) || (password.length() < 6)) {
-			statusMessage.displayErrorMessage("Password must be greater than 5 characters long!");
+			messagePanel.displayErrorMessage("Password must be greater than 5 characters long!");
 			return false;
 		}
 		if (!password.equals(passwordConfirm)) {
-			statusMessage.displayErrorMessage("Password must match confirmation password!");
+			messagePanel.displayErrorMessage("Password must match confirmation password!");
 			return false;
 		}
 		return true;
@@ -185,7 +160,7 @@ public class PasswordResetView extends View {
 	 * handle button clicks to submit forms or to handle navigation.
 	 */
 	public void processAction(EventObject evt) {
-		statusMessage.clear();
+		messagePanel.clear();
 
 		if (evt.getSource() == cancelButton) {
 			controller.stateChangeRequest(Key.RECOVER_PW_COMPLETED, null);
@@ -214,7 +189,7 @@ public class PasswordResetView extends View {
 	 */
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.INPUT_ERROR)) {
-			statusMessage.displayErrorMessage(value.toString());
+			messagePanel.displayErrorMessage(value.toString());
 		}
 
 	}

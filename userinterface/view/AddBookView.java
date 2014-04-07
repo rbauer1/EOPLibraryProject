@@ -83,7 +83,7 @@ public class AddBookView extends View {
 	}
 	
 	@Override
-	protected void afterShown(){
+	public void afterShown(){
 		form.requestFocusForDefaultField();
 	}
 	

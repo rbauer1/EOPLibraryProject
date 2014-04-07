@@ -28,8 +28,22 @@ public class Panel extends JPanel {
 		setBackground(BACKGROUND_COLOR);
 	}
 	
+	public Panel(Color color) {
+		setBackground(color);
+	}
+	
+	public Panel(Color color, int horizontalAlignment) {
+		setBackground(color);
+		setAlignmentX(horizontalAlignment);
+	}
+	
 	public Panel(LayoutManager lm){
 		super(lm);
 		setBackground(BACKGROUND_COLOR);
+	}
+	
+	public Panel(Color color, LayoutManager lm){
+		super(lm);
+		setBackground(color);
 	}
 }
