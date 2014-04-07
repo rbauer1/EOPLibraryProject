@@ -9,6 +9,7 @@
  */
 package controller.transaction;
 
+import java.util.List;
 import java.util.Properties;
 
 import model.Worker;
@@ -19,6 +20,8 @@ public class AddWorkerTransaction extends Transaction {
 	
 	/** Worker Model this transaction is adding */
 	private Worker worker;
+	
+	private List<String> inputErrors;
 
 	/**
 	 * Constructs Add Worker Transaction
@@ -36,6 +39,9 @@ public class AddWorkerTransaction extends Transaction {
 
 	@Override
 	public Object getState(String key) {
+		if(key.equals(Key.INPUT_ERROR)){
+			return inputErrors;
+		}
 		return null;
 	}
 
@@ -56,11 +62,15 @@ public class AddWorkerTransaction extends Transaction {
 		worker = new Worker(workerData);
 		//TODO handle encrypting password more gracefully in model
 		worker.stateChangeRequest(Key.PW, workerData.getProperty("Password"));
-		worker.beforeSave(true);
 		if(worker.save()){
-			stateChangeRequest(Key.WORKER_SUBMIT_SUCCESS, null);
+			stateChangeRequest(Key.SAVE_SUCCESS, null);
 		}else{
-			stateChangeRequest(Key.INPUT_ERROR, null);
+			inputErrors = worker.getErrors();
+			if(inputErrors.size() > 0){
+				stateChangeRequest(Key.INPUT_ERROR, null);
+			}else{
+				stateChangeRequest(Key.SAVE_ERROR, null);
+			}
 		}
 	}
 	

@@ -162,6 +162,9 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 
 			// pack the frame and show it
 			this.pack();
+			
+			WindowPosition.placeCenter(this);
+			
 			((View) newView).afterShown();
 		} else {
 			new Event("MainFrame", "swapToView", "Non-displayable view object sent ", Event.ERROR);

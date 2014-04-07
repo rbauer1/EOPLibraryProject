@@ -62,7 +62,9 @@ public class RecoverPasswordTransaction extends Transaction {
 		}else if(key.equals(Key.RESET_PW)){
 			resetPassword((Properties) value);
 		}else if(key.equals(Key.RECOVER_PW_COMPLETED)){
-			passwordResetSuccess = (boolean)value;
+			if(value!=null){ //TODO why null check?
+				passwordResetSuccess = (Boolean)value;
+			}			
 		}else if(key.equals(Key.INPUT_ERROR)){
 			errorMessage = (String)value;
 		}

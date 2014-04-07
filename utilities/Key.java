@@ -16,23 +16,25 @@ public class Key {
 	public static final String SUBMIT_BOOK = "SubmitNewOrModifiedBook";
 	public static final String SUBMIT_BORROWER = "SubmitNewOrModifiedBorrower";
 	public static final String SUBMIT_WORKER = "SubmitNewOrModifiedWorker";
+	
 	public static final String SELECT_BOOK = "SelectBook";
 	public static final String SELECT_BORROWER = "SelectBorrower";
+	public static final String SELECT_WORKER = "SelectWorkerer";
+	
+	public static final String GET_BOOK_COLLECTION = "GetBookCollection";
+	public static final String GET_BORROWER_COLLECTION = "GetBorrowerCollection";
+	public static final String GET_WORKER_COLLECTION = "GetWorkerCollection";
+	
+	
 	public static final String MODIFY_OR_DELETE = "ModifyOrDelete";
 	
-	public static final String SUBMIT_NEW_WORKER = "SubmitNewWorker";
-	
+	/* Menus  */
 	public static final String DISPLAY_MAIN_MENU = "DisplayMainMenu";
 	public static final String DISPLAY_BOOK_MENU = "DisplayBookMenu";
 	public static final String DISPLAY_WORKER_MENU = "DisplayWorkerMenu";
 	public static final String DISPLAY_BORROWER_MENU = "DisplayBorrowerMenu";
 	
-	public static final String GET_BOOK_COLLECTION = "GetBookCollection";
-	public static final String GET_BORROWER_COLLECTION = "GetBorrowerCollection";
-	
-	public static final String BORROWER_SUBMIT_SUCCESS = "BorrowerAddedOrModifiedSuccessfully";
-	public static final String WORKER_SUBMIT_SUCCESS = "WorkerAddedOrModifiedSuccessfully";
-	
+
 	/* Book Transactions */
 	public static final String EXECUTE_ADD_BOOK 	= "AddBookTransaction";
 	public static final String EXECUTE_MODIFY_BOOK 	= "ModifyBooksTransaction";
@@ -60,6 +62,7 @@ public class Key {
 	
 	public static final String OPERATION_TYPE = "OperationType";
 	public static final String REFRESH_LIST = "RefreshList";
+	
 	
 	
 	private Key(){};

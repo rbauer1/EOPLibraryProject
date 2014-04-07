@@ -36,9 +36,15 @@ public class PhoneField extends Panel implements FormField {
 	@Override
 	public void setValue(String value) {
 		value = value.replaceAll("[^\\d]", "");
-		phone1.setValue(value.substring(0, 3));
-		phone2.setValue(value.substring(3, 6));
-		phone3.setValue(value.substring(6, 10));
+		if(value.length() == 10){
+			phone1.setValue(value.substring(0, 3));
+			phone2.setValue(value.substring(3, 6));
+			phone3.setValue(value.substring(6, 10));
+		}else{
+			phone1.reset();
+			phone2.reset();
+			phone3.reset();
+		}
 	}
 
 	@Override

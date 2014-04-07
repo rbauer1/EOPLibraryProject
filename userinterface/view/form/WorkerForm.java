@@ -22,14 +22,14 @@ import userinterface.component.TextField;
 import userinterface.view.View;
 
 /**
- * Form that takes the input for a Book model.
- * Can be used for adding of modifying a Book.
+ * Form that takes the input for a Worker model.
+ * Can be used for adding of modifying a Worker.
  */
 public class WorkerForm extends Form {
 	private static final long serialVersionUID = 6701251230827206294L;
 
 	/**
-	 * Constructs new Book Form
+	 * Constructs new Worker Form
 	 * @param view
 	 */
 	public WorkerForm(View view) {

@@ -10,6 +10,7 @@
 package controller.transaction;
 
 
+import java.util.List;
 import java.util.Properties;
 
 import model.Book;
@@ -20,6 +21,8 @@ public class ModifyBooksTransaction extends Transaction {
 	
 	/** Book Model this transaction is updating */
 	private Book book;
+	
+	private List<String> inputErrors;
 	
 	/**
 	 * Constructs Modify Books Transaction
@@ -32,13 +35,16 @@ public class ModifyBooksTransaction extends Transaction {
 	@Override
 	public void execute(){
 		TransactionFactory.executeTransaction(this, "ListBooksTransaction", 
-						Key.DISPLAY_BOOK_MENU, Key.SELECT_BOOK, Key.MODIFY_OR_DELETE);
+						Key.DISPLAY_BOOK_MENU, Key.SELECT_BOOK);
 	}
 
 	@Override
 	public Object getState(String key) {
 		if(key.equals(Key.SELECT_BOOK)){
 			return book;
+		}
+		if(key.equals(Key.INPUT_ERROR)){
+			return inputErrors;
 		}
 		return null;
 	}
@@ -63,7 +69,13 @@ public class ModifyBooksTransaction extends Transaction {
 		if(book.save()){
 			stateChangeRequest(Key.SAVE_SUCCESS, null);
 		}else{
-			stateChangeRequest(Key.INPUT_ERROR, null);
+			inputErrors = book.getErrors();
+			if(inputErrors.size() > 0){
+				stateChangeRequest(Key.INPUT_ERROR, null);
+			}else{
+				stateChangeRequest(Key.SAVE_ERROR, null);
+			}
 		}
 	}
+	
 }	

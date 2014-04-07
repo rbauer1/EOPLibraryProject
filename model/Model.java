@@ -154,7 +154,14 @@ public abstract class Model extends EntityBase {
 	 * @return true if model is valid
 	 */
 	public boolean validate() {
-		return validator.validate();
+		boolean isCreate = isCreateOperation();
+		boolean valid = true;
+		if(!beforeValidate(isCreate)){
+			valid = false;
+		}	
+		valid &= validator.validate();
+		afterValidate(isCreate);
+		return valid;
 	}
 	
 	/**
@@ -235,19 +242,19 @@ public abstract class Model extends EntityBase {
 		this.persisted = false;
 		return true;
 	}
+	
+	private boolean isCreateOperation(){
+		String keyValue = (String) this.getState(getPrimaryKey());
+		return !this.persisted || keyValue == null || keyValue.length() == 0;
+	}
 
 	/**
 	 * Saves this model to the db. Handles differences in updating and inserting.
 	 * @return true if save succeeds
 	 */
 	public boolean save() {
-		String keyValue = (String) this.getState(getPrimaryKey());
-		boolean isCreate = !this.persisted || keyValue == null || keyValue.length() == 0;
-		if(!beforeValidate(isCreate) || !validate()){
-			return false;
-		}		
-		afterValidate(isCreate);
-		if(!beforeSave(isCreate)){
+		boolean isCreate = isCreateOperation();
+		if(!validate() || !beforeSave(isCreate)){
 			return false;
 		}		
 		try {

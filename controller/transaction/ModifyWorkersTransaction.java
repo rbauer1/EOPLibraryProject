@@ -13,35 +13,35 @@ package controller.transaction;
 import java.util.List;
 import java.util.Properties;
 
-import model.Borrower;
+import model.Worker;
 import utilities.Key;
 import controller.Controller;
 
-public class ModifyBorrowersTransaction extends Transaction {
+public class ModifyWorkersTransaction extends Transaction {
 	
-	/** Book Model this transaction is updating */
-	private Borrower borrower;
+	/** Worker Model this transaction is updating */
+	private Worker worker;
 	
 	private List<String> inputErrors;
 	
 	/**
-	 * Constructs Modify Borrower Transaction
+	 * Constructs Modify Worker Transaction
 	 * @param parentController
 	 */
-	public ModifyBorrowersTransaction(Controller parentController) {
+	public ModifyWorkersTransaction(Controller parentController) {
 		super(parentController);
 	}
 	
 	@Override
 	public void execute(){
-		TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", 
-						Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
+		TransactionFactory.executeTransaction(this, "ListWorkersTransaction", 
+						Key.DISPLAY_WORKER_MENU, Key.SELECT_WORKER, Key.MODIFY_OR_DELETE);
 	}
 
 	@Override
 	public Object getState(String key) {
-		if(key.equals(Key.SELECT_BORROWER)){
-			return borrower;
+		if(key.equals(Key.SELECT_WORKER)){
+			return worker;
 		}
 		if(key.equals(Key.INPUT_ERROR)){
 			return inputErrors;
@@ -51,25 +51,25 @@ public class ModifyBorrowersTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.SELECT_BORROWER)){
-			borrower = (Borrower)value;
-			showView("ModifyBorrowerView");
-		}else if(key.equals(Key.SUBMIT_BORROWER)){
+		if(key.equals(Key.SELECT_WORKER)){
+			worker = (Worker)value;
+			showView("ModifyWorkerView");
+		}else if(key.equals(Key.SUBMIT_WORKER)){
 			updateBorrower((Properties)value);
 		}
 		registry.updateSubscribers(key, this);
 	}
 	
 	/**
-	 * Updates selected borrower with provided data
-	 * @param borrowerData
+	 * Updates selected worker with provided data
+	 * @param workerData
 	 */
-	private void updateBorrower(Properties borrowerData){
-		borrower.stateChangeRequest(borrowerData);
-		if(borrower.save()){
+	private void updateBorrower(Properties workerData){
+		worker.stateChangeRequest(workerData);
+		if(worker.save()){
 			stateChangeRequest(Key.SAVE_SUCCESS, null);
 		}else{
-			inputErrors = borrower.getErrors();
+			inputErrors = worker.getErrors();
 			if(inputErrors.size() > 0){
 				stateChangeRequest(Key.INPUT_ERROR, null);
 			}else{

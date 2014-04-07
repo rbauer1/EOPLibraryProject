@@ -51,12 +51,23 @@ public abstract class Form extends Panel implements ActionListener{
 		Properties values = new Properties();
 		for(String key : fields.keySet()){
 			String value = fields.get(key).getValue();
-			if(value != null && value.length() != 0){
+			if(value != null){
 				values.setProperty(key, value);
 			}
 		}
 		return values;		
 	}
+	
+	public Properties getNonEmptyValues(){
+		Properties values = new Properties();
+		for(String key : fields.keySet()){
+			String value = fields.get(key).getValue();
+			if(value != null){
+				values.setProperty(key, value);
+			}
+		}
+		return values;		
+	}	
 	
 	public void setValues(Properties values){
 		for (String key : values.stringPropertyNames()) {
@@ -93,5 +104,5 @@ public abstract class Form extends Panel implements ActionListener{
 	protected FormField get(String name){
 		return fields.get(name);
 	}
-
+	
 }

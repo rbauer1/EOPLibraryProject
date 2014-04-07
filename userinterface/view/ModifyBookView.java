@@ -11,6 +11,7 @@ package userinterface.view;
 
 import java.awt.FlowLayout;
 import java.util.EventObject;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -58,6 +59,7 @@ public class ModifyBookView extends View {
 		
 		controller.subscribe(Key.INPUT_ERROR, this);
 		controller.subscribe(Key.SAVE_SUCCESS, this);
+		controller.subscribe(Key.SAVE_ERROR, this);
 	}
 
 	@Override
@@ -73,12 +75,16 @@ public class ModifyBookView extends View {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.INPUT_ERROR)) {
-			messagePanel.displayErrorMessage("There was an error");
+			System.out.println((List<String>) value);
+			messagePanel.displayErrorMessage("Aw shucks! There are errors in the input. Please try again.", (List<String>) value);
 		}else if(key.equals(Key.SAVE_SUCCESS)){
-			messagePanel.displayMessage("Success", "Book saved successfully"); 
+			messagePanel.displayMessage("Success", "Well done! Book was sucessfully saved."); 
+		}else if(key.equals(Key.SAVE_ERROR)){
+			messagePanel.displayErrorMessage("Whoops! An error occurred while saving.");
 		}
 	}
 	

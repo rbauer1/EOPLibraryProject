@@ -63,25 +63,29 @@ public class LibrarianController extends Controller {
 		} else if (key.equals(Key.EXECUTE_ADD_BOOK)) {		
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
 		} else if (key.equals(Key.EXECUTE_MODIFY_BOOK)) {	
-			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);//TODO needs Key.MODIFY_OR_DELETE?
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
 		} else if (key.equals(Key.EXECUTE_DELETE_BOOK)) {	
-			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU, Key.MODIFY_OR_DELETE);
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
 			
 		} else if (key.equals(Key.EXECUTE_ADD_BORROWER)) {		
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
 		} else if (key.equals(Key.EXECUTE_MODIFY_BORROWER)) {	
-			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);//TODO needs Key.MODIFY_OR_DELETE?
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
 		} else if (key.equals(Key.EXECUTE_DELETE_BORROWER)) {	
-			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU, Key.MODIFY_OR_DELETE);
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
 			
 		} else if (key.equals(Key.EXECUTE_ADD_WORKER)) {		
-				TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
-				
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
+		} else if (key.equals(Key.EXECUTE_MODIFY_WORKER)) {	
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
+		} else if (key.equals(Key.EXECUTE_DELETE_WORKER)) {	
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
+						
 		} else if (key.equals(Key.EXECUTE_RECOVER_PW)){		
 			TransactionFactory.executeTransaction(this, key, Key.RECOVER_PW_COMPLETED);
 		} else if (key.equals(Key.RECOVER_PW_COMPLETED)){
 			showView("LoginView");
-			passwordResetSuccess = (boolean)value;
+			passwordResetSuccess = (Boolean)value;
 		} else if (key.endsWith("Transaction")){			
 			TransactionFactory.executeTransaction(this, key);
 		} else if (key.equals(Key.LOGOUT)) {				

@@ -48,7 +48,7 @@ public class DeleteBorrowersTransaction extends Transaction {
 	
 	private void setBorrowerInactive(Borrower borrower){
 		if(deleteConfirmationPopup() == JOptionPane.YES_OPTION){
-			borrower.setInactive();
+			borrower.setInactive();//TODO handle delete error
 			listBorrowersTransaction.stateChangeRequest(Key.REFRESH_LIST, null);
 		}
 	}

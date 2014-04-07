@@ -70,13 +70,12 @@ public class AddBookView extends View {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void updateState(String key, Object value) {
-		
+	public void updateState(String key, Object value) {	
 		if (key.equals(Key.INPUT_ERROR)) {
 			System.out.println((List<String>) value);
-			messagePanel.displayErrorMessage("Aw shucks! Errors exist in the input. Please try again.", (List<String>) value);
+			messagePanel.displayErrorMessage("Aw shucks! There are errors in the input. Please try again.", (List<String>) value);
 		}else if(key.equals(Key.SAVE_SUCCESS)){
-			messagePanel.displayMessage("Success", "Well done! Book was sucesfully added."); 
+			messagePanel.displayMessage("Success", "Well done! Book was sucessfully added."); 
 		}else if(key.equals(Key.SAVE_ERROR)){
 			messagePanel.displayErrorMessage("Whoops! An error occurred while saving.");
 		}

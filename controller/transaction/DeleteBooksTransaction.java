@@ -48,7 +48,7 @@ public class DeleteBooksTransaction extends Transaction {
 	
 	private void setBookInactive(Book book){
 		if(deleteConfirmationPopup() == JOptionPane.YES_OPTION){
-			book.setInactive();
+			book.setInactive(); //TODO handle delete error
 			listBooksTransaction.stateChangeRequest(Key.REFRESH_LIST, null);
 		}
 	}

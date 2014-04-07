@@ -22,17 +22,17 @@ import userinterface.component.TextField;
 import userinterface.view.View;
 
 /**
- * Search Form to input search data for books
+ * Search Form to input search data for workers
  */
-public class BorrowerSearchForm extends Form {
+public class WorkerSearchForm extends Form {
 
 	private static final long serialVersionUID = -6075045845780411636L;
 
 	/**
-	 * Constructs new Book Search Form
+	 * Constructs new Worker Search Form
 	 * @param view
 	 */
-	public BorrowerSearchForm(View view) {
+	public WorkerSearchForm(View view) {
 		super(view);
 	}
 
@@ -75,11 +75,11 @@ public class BorrowerSearchForm extends Form {
 		addField("Email", emailField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Email", emailField));
 		
-		SelectField conditionField = new SelectField(new String[] { "Any", "Good Standing", "Delinquent"});
-		conditionField.addActionListener(this);
-		conditionField.setPreferredSize(new Dimension(130,25));
-		addField("BorrowerStatus", conditionField);
-		rightColumn.add(ViewHelper.formatFieldLeft("Status", conditionField));
+		SelectField credentialsField = new SelectField(new String[] { "Any", "Ordinary", "Administrator"});
+		credentialsField.addActionListener(this);
+		credentialsField.setPreferredSize(new Dimension(130,25));
+		addField("Credentials", credentialsField);
+		rightColumn.add(ViewHelper.formatFieldLeft("Credentials", credentialsField));
 		
 		Button searchButton = new Button("Search");
 		searchButton.addActionListener(this);
@@ -89,8 +89,8 @@ public class BorrowerSearchForm extends Form {
 	@Override
 	public Properties getValues(){
 		Properties values = super.getValues();
-		if(values.getProperty("BorrowerStatus", "").equals("Any")){
-			values.remove("BorrowerStatus");
+		if(values.getProperty("Credentials", "").equals("Any")){
+			values.remove("Credentials");
 		}
 		return values;		
 	}

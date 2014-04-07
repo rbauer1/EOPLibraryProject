@@ -9,6 +9,7 @@
  */
 package controller.transaction;
 
+import java.util.List;
 import java.util.Properties;
 
 import model.Borrower;
@@ -19,6 +20,8 @@ public class AddBorrowerTransaction extends Transaction {
 	
 	/** Book Model this transaction is adding */
 	private Borrower borrower;
+	
+	private List<String> inputErrors;
 
 	/**
 	 * Constructs Add Borrower Transaction
@@ -36,9 +39,11 @@ public class AddBorrowerTransaction extends Transaction {
 
 	@Override
 	public Object getState(String key) {
+		if(key.equals(Key.INPUT_ERROR)){
+			return inputErrors;
+		}
 		return null;
 	}
-
 	@Override
 	public void stateChangeRequest(String key, Object value) {
 		if(key.equals(Key.SUBMIT_BORROWER)){
@@ -55,9 +60,14 @@ public class AddBorrowerTransaction extends Transaction {
 	private void addBorrower(Properties borrowerData){
 		borrower = new Borrower(borrowerData);
 		if(borrower.save()){
-			stateChangeRequest(Key.BORROWER_SUBMIT_SUCCESS, null);
+			stateChangeRequest(Key.SAVE_SUCCESS, null);
 		}else{
-			stateChangeRequest(Key.INPUT_ERROR, null);
+			inputErrors = borrower.getErrors();
+			if(inputErrors.size() > 0){
+				stateChangeRequest(Key.INPUT_ERROR, null);
+			}else{
+				stateChangeRequest(Key.SAVE_ERROR, null);
+			}
 		}
 	}
 	

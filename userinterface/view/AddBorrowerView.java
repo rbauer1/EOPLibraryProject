@@ -11,6 +11,7 @@ package userinterface.view;
 
 import java.awt.FlowLayout;
 import java.util.EventObject;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -50,7 +51,8 @@ public class AddBorrowerView extends View {
 		add(createButtonsPanel());
 		
 		controller.subscribe(Key.INPUT_ERROR, this);
-		controller.subscribe(Key.BORROWER_SUBMIT_SUCCESS, this);
+		controller.subscribe(Key.SAVE_SUCCESS, this);
+		controller.subscribe(Key.SAVE_ERROR, this);
 	}
 
 	@Override
@@ -66,12 +68,16 @@ public class AddBorrowerView extends View {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.INPUT_ERROR)) {
-			messagePanel.displayErrorMessage("There was an error");
-		}else if(key.equals(Key.BORROWER_SUBMIT_SUCCESS)){
-			messagePanel.displayMessage("Success", "Borrower added successfully"); 
+			System.out.println((List<String>) value);
+			messagePanel.displayErrorMessage("Aw shucks! There are errors in the input. Please try again.", (List<String>) value);
+		}else if(key.equals(Key.SAVE_SUCCESS)){
+			messagePanel.displayMessage("Success", "Well done! Borrower was sucessfully added."); 
+		}else if(key.equals(Key.SAVE_ERROR)){
+			messagePanel.displayErrorMessage("Whoops! An error occurred while saving.");
 		}
 	}
 	

@@ -30,8 +30,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
-// project imports
 import event.Event;
+// project imports
 
 /** Layer a file onto a Properties object */
 //==============================================================

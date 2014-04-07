@@ -108,7 +108,7 @@ public class LoginView extends View {
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.LOGIN_ERROR)) {
 			messagePanel.displayErrorMessage(value.toString());
-		}else if(key.equals(Key.RECOVER_PW_COMPLETED) && (boolean)value){
+		}else if(key.equals(Key.RECOVER_PW_COMPLETED) && (Boolean)value){
 			messagePanel.displayMessage("Success", "Password successfully changed");
 		}
 

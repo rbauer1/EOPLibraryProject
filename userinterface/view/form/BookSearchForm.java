@@ -9,6 +9,8 @@
  */
 package userinterface.view.form;
 
+import java.util.Properties;
+
 import javax.swing.BoxLayout;
 
 import userinterface.ViewHelper;
@@ -67,14 +69,26 @@ public class BookSearchForm extends Form {
 		addField("ISBN", isbnField);
 		rightColumn.add(ViewHelper.formatFieldLeft("ISBN", isbnField));
 		
-		SelectField conditionField = new SelectField(new String[] { "Active", "Lost", "Any"});
+		SelectField conditionField = new SelectField(new String[] { "Active", "Lost", "Inactive", "Any"});
 		conditionField.addActionListener(this);
 		addField("BookStatus", conditionField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Status", conditionField));
+		//TODO Handle options
+		
+		rightColumn.add(ViewHelper.createPlaceHolder());
 		
 		Button searchButton = new Button("Search");
 		searchButton.addActionListener(this);
 		add(ViewHelper.formatCenter(searchButton));
+	}
+	
+	@Override
+	public Properties getValues(){
+		Properties values = super.getValues();
+		if(values.getProperty("BookStatus", "").equals("Any")){
+			values.remove("BookStatus");
+		}
+		return values;		
 	}
 
 }

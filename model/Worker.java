@@ -195,4 +195,9 @@ public class Worker extends Model {
 			return token;
 		}
 	}
+
+	public boolean setInactive(){
+		persistentState.setProperty("ActiveStatus", "Inactive");
+		return save();
+	}
 }

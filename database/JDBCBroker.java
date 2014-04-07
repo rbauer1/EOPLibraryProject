@@ -27,10 +27,10 @@ import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
 
-// project imports
 import common.PropertyFile;
 
 import event.Event;
+// project imports
 
 //==============================================================
 public class JDBCBroker

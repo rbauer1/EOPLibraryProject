@@ -7,16 +7,16 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-import model.Book;
+import model.Worker;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.Panel;
-import userinterface.view.form.BookSearchForm;
 import userinterface.view.form.Form;
+import userinterface.view.form.WorkerSearchForm;
 import utilities.Key;
 import controller.Controller;
 
-public class ListBooksView extends ListView {
+public class ListWorkersView extends ListView {
 	
 	private static final long serialVersionUID = 3952404276228902079L;
 	
@@ -24,22 +24,22 @@ public class ListBooksView extends ListView {
 	private Button searchButton;
 	private Button cancelButton;
 
-	private List<Book> books;
+	private List<Worker> workers;
 
 	private String operationType;
 	
 	private Form form;
 
-	public ListBooksView(Controller controller) {
-		super(controller, "Book Search");
+	public ListWorkersView(Controller controller) {
+		super(controller, "Worker Search");
 
 		// Get the operation type
 		operationType = (String) controller.getState(Key.OPERATION_TYPE);
 				
-		controller.subscribe(Key.GET_BOOK_COLLECTION, this);
+		controller.subscribe(Key.GET_WORKER_COLLECTION, this);
 		controller.subscribe(Key.REFRESH_LIST, this);
 		
-		// Get Books for initial filter settings
+		// Get workers for initial filter settings
 		filter();
 		
 		add(createButtonsPanel());
@@ -47,7 +47,7 @@ public class ListBooksView extends ListView {
 	
 	@Override
 	protected void buildFilterForm() {
-		form = new BookSearchForm(this);
+		form = new WorkerSearchForm(this);
 		add(form);
 	}
 
@@ -66,7 +66,7 @@ public class ListBooksView extends ListView {
 	}
 	
 	private void filter() {
-		controller.stateChangeRequest(Key.GET_BOOK_COLLECTION, form.getNonEmptyValues());
+		controller.stateChangeRequest(Key.GET_WORKER_COLLECTION, form.getValues());
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class ListBooksView extends ListView {
 		if (source == searchButton || source == form) {
 			filter();
 		} else if (source == cancelButton) {
-			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
+			controller.stateChangeRequest(Key.DISPLAY_WORKER_MENU, null);
 		} else if (source == submitButton) {
 			select();
 		}
@@ -86,9 +86,9 @@ public class ListBooksView extends ListView {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {
-		if (key.equals(Key.GET_BOOK_COLLECTION)) {
-			books = (List<Book>) value;
-			table.setModel(new BookTableModel(books));
+		if (key.equals(Key.GET_WORKER_COLLECTION)) {
+			workers = (List<Worker>) value;
+			table.setModel(new WorkerTableModel(workers));
 			table.repaint();			
 		}
 		if (key.equals(Key.REFRESH_LIST)) {
@@ -98,7 +98,7 @@ public class ListBooksView extends ListView {
 	
 	@Override
 	protected JTable createTable() {
-		return new JTable(new BookTableModel(new ArrayList<Book>()));
+		return new JTable(new WorkerTableModel(new ArrayList<Worker>()));
 	}
 
 	@Override
@@ -115,9 +115,9 @@ public class ListBooksView extends ListView {
 	protected void select() {
 		int rowIndex = table.getSelectedRow();
 		if (rowIndex > -1) {
-			controller.stateChangeRequest(Key.SELECT_BOOK, books.get(rowIndex));
+			controller.stateChangeRequest(Key.SELECT_WORKER, workers.get(rowIndex));
 		} else {
-			messagePanel.displayMessage("Warning", "Warning! Must select a book from the list!");
+			messagePanel.displayMessage("Warning", "Warning! Must select a worker from the list!");
 		}
 	}
 	

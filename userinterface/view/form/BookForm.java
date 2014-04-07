@@ -38,7 +38,6 @@ public class BookForm extends Form {
 	
 	@Override
 	protected void build() {
-		//TODO put in required fields message		
 		Panel fieldColumnsPanel = new Panel();
 		fieldColumnsPanel.setLayout(new BoxLayout(fieldColumnsPanel, BoxLayout.X_AXIS));
 		add(fieldColumnsPanel);

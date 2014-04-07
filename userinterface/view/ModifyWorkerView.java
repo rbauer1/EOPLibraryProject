@@ -17,24 +17,25 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import model.Borrower;
+import model.Worker;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.Panel;
-import userinterface.view.form.BorrowerForm;
+import userinterface.view.form.Form;
+import userinterface.view.form.WorkerForm;
 import utilities.Key;
 import controller.Controller;
 /**
- * View that provides interface for user to add new book.
+ * View that provides interface for user to modify a worker.
  */
-public class ModifyBorrowerView extends View {
+public class ModifyWorkerView extends View {
 	
 	private static final long serialVersionUID = 3340451129170570186L;
 
-	/** Form to take in book data */
-	private BorrowerForm form;
+	/** Form to take in worker data */
+	private Form form;
 	
-	private Borrower borrower;
+	private Worker worker;
 	
 	/* Buttons */
 	private JButton submitButton;
@@ -42,17 +43,17 @@ public class ModifyBorrowerView extends View {
 	private JButton backButton;
 	
 	/**
-	 * Constructs add book view
+	 * Constructs modify book view
 	 * @param controller
 	 */
-	public ModifyBorrowerView(Controller controller) {
-		super(controller, "Modify Borrower");
+	public ModifyWorkerView(Controller controller) {
+		super(controller, "Modify Worker");
 		
-		form = new BorrowerForm(this);
+		form = new WorkerForm(this);
 		add(form);
 		
-		borrower = (Borrower) controller.getState(Key.SELECT_BORROWER);
-		form.setValues(borrower.getPersistentState());
+		worker = (Worker) controller.getState(Key.SELECT_WORKER);
+		form.setValues(worker.getPersistentState());
 		
 		add(createButtonsPanel());
 		
@@ -66,11 +67,11 @@ public class ModifyBorrowerView extends View {
 		messagePanel.clear();
 
 		if (evt.getSource() == backButton) {
-			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
+			controller.stateChangeRequest(Key.DISPLAY_WORKER_MENU, null);
 		}else if (evt.getSource() == resetButton){
 			form.reset();
 		}else if (evt.getSource() == submitButton) {
-			controller.stateChangeRequest(Key.SUBMIT_BORROWER, form.getValues());
+			controller.stateChangeRequest(Key.SUBMIT_WORKER, form.getValues());
 		}
 	}
 
@@ -81,7 +82,7 @@ public class ModifyBorrowerView extends View {
 			System.out.println((List<String>) value);
 			messagePanel.displayErrorMessage("Aw shucks! There are errors in the input. Please try again.", (List<String>) value);
 		}else if(key.equals(Key.SAVE_SUCCESS)){
-			messagePanel.displayMessage("Success", "Well done! Borrower was sucessfully saved."); 
+			messagePanel.displayMessage("Success", "Well done! Worker was sucessfully saved."); 
 		}else if(key.equals(Key.SAVE_ERROR)){
 			messagePanel.displayErrorMessage("Whoops! An error occurred while saving.");
 		}

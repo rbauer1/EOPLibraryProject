@@ -11,7 +11,6 @@ import java.awt.Toolkit;
 import java.io.File;
 
 import javax.swing.UIManager;
-import javax.swing.WindowConstants;
 
 import userinterface.MainFrame;
 import userinterface.WindowPosition;
@@ -56,7 +55,7 @@ public class EOPLibrary {
 			mainFrame.setIconImage(toolKit.getImage("EOP.jpg"));
 		}
 
-		mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE); //TODO MAKE SURE THE DATABASE CAN HANDLE THIS
+		//mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE); //TODO MAKE SURE THE DATABASE CAN HANDLE THIS
 
 		try{
 			new LibrarianController();

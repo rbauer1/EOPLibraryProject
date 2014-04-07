@@ -27,7 +27,7 @@ public class Button extends JButton{
 	private static final Color FONT_COLOR = new Color(0xF0F0E8);
 	
 	/** Size of Button **/
-	private static final Dimension SIZE = new Dimension(185, 25);
+	private static final Dimension SIZE = new Dimension(195, 25);
 	
 	/** Lighter color for background gradient **/
 	private static final Color LIGHT_COLOR = new Color(0x668D3C);
