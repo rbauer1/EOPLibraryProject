@@ -11,28 +11,27 @@ package controller.transaction;
 
 import java.util.Properties;
 
-import model.Worker;
-import utilities.DateUtil;
+import model.Borrower;
 import utilities.Key;
 import controller.Controller;
 
-public class AddWorkerTransaction extends Transaction {
+public class AddBorrowerTransaction extends Transaction {
 	
-	/** Worker Model this transaction is adding */
-	private Worker worker;
+	/** Book Model this transaction is adding */
+	private Borrower borrower;
 
 	/**
-	 * Constructs Add Worker Transaction
+	 * Constructs Add Borrower Transaction
 	 * @param parentController
 	 */
-	public AddWorkerTransaction(Controller parentController) {
+	public AddBorrowerTransaction(Controller parentController) {
 		super(parentController);
 	}
 	
 	
 	@Override
 	public void execute() {
-		showView("AddWorkerView");
+		showView("AddBorrowerView");
 	}
 
 	@Override
@@ -42,24 +41,21 @@ public class AddWorkerTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.SUBMIT_WORKER)){
-			addWorker((Properties) value);
+		if(key.equals(Key.SUBMIT_BORROWER)){
+			addBorrower((Properties) value);
 		}
 		registry.updateSubscribers(key, this);
 	}
 
 
 	/**
-	 * Creates worker with provided data and saves it in db.
-	 * @param workerData
+	 * Creates book with provided data and saves it in db.
+	 * @param borrowerData
 	 */
-	private void addWorker(Properties workerData){
-		worker = new Worker(workerData);
-		//TODO handle encrypting password more gracefully in model
-		worker.stateChangeRequest(Key.PW, workerData.getProperty("Password"));
-		worker.beforeSave(true);
-		if(worker.save()){
-			stateChangeRequest(Key.WORKER_SUBMIT_SUCCESS, null);
+	private void addBorrower(Properties borrowerData){
+		borrower = new Borrower(borrowerData);
+		if(borrower.save()){
+			stateChangeRequest(Key.BORROWER_SUBMIT_SUCCESS, null);
 		}else{
 			stateChangeRequest(Key.INPUT_ERROR, null);
 		}

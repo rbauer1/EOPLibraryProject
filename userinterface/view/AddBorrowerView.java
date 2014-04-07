@@ -20,19 +20,19 @@ import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.Panel;
 import userinterface.view.form.BookForm;
-import userinterface.view.form.WorkerForm;
+import userinterface.view.form.BorrowerForm;
 import utilities.Key;
 import controller.Controller;
 
 /**
  * View that provides interface for user to add new book.
  */
-public class AddWorkerView extends View {
+public class AddBorrowerView extends View {
 	
 	private static final long serialVersionUID = -6030753682831962753L;
 
 	/** Form to take in book data */
-	private WorkerForm form;
+	private BorrowerForm form;
 	
 	/* Buttons */
 	private JButton submitButton;
@@ -43,26 +43,27 @@ public class AddWorkerView extends View {
 	 * Constructs add book view
 	 * @param controller
 	 */
-	public AddWorkerView(Controller controller) {
-		super(controller, "Add Worker");
+	public AddBorrowerView(Controller controller) {
+		super(controller, "Add Borrower");
 		
-		form = new WorkerForm(this);
+		form = new BorrowerForm(this);
 		add(form);
 		add(createButtonsPanel());
 		
 		controller.subscribe(Key.INPUT_ERROR, this);
-		controller.subscribe(Key.WORKER_SUBMIT_SUCCESS, this);
+		controller.subscribe(Key.BORROWER_SUBMIT_SUCCESS, this);
 	}
 
 	@Override
 	public void processAction(EventObject evt) {
 		messagePanel.clear();
+
 		if (evt.getSource() == backButton) {
-			controller.stateChangeRequest(Key.DISPLAY_WORKER_MENU, null);
+			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
 		}else if (evt.getSource() == resetButton){
 			form.reset();
 		}else if (evt.getSource() == submitButton) {
-			controller.stateChangeRequest(Key.SUBMIT_WORKER, form.getValues());
+			controller.stateChangeRequest(Key.SUBMIT_BORROWER, form.getValues());
 		}
 	}
 
@@ -70,8 +71,8 @@ public class AddWorkerView extends View {
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.INPUT_ERROR)) {
 			messagePanel.displayErrorMessage("There was an error");
-		}else if(key.equals(Key.WORKER_SUBMIT_SUCCESS)){
-			messagePanel.displayMessage("Success", "Worker added successfully"); 
+		}else if(key.equals(Key.BORROWER_SUBMIT_SUCCESS)){
+			messagePanel.displayMessage("Success", "Borrower added successfully"); 
 		}
 	}
 	

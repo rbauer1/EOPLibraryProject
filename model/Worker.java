@@ -15,11 +15,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Properties;
 
+import model.validation.AlphaNumericValidation;
 import model.validation.BannerIdValidation;
 import model.validation.DateValidation;
+import model.validation.EmailValidation;
 import model.validation.InclusionValidation;
 import model.validation.PhoneValidation;
 import model.validation.PresenceValidation;
+import utilities.DateUtil;
+import utilities.Key;
 import exception.InvalidPrimaryKeyException;
 
 /**
@@ -77,16 +81,16 @@ public class Worker extends Model {
 		validator.addValidation(new PresenceValidation("Password", "Password"));
 		
 		validator.addValidation(new PresenceValidation("FirstName", "First Name"));
-		validator.addValidation(new BannerIdValidation("FirstName", "First Name"));
+		validator.addValidation(new AlphaNumericValidation("FirstName", "First Name"));
 		
 		validator.addValidation(new PresenceValidation("LastName", "Last Name"));
-		validator.addValidation(new BannerIdValidation("LastName", "Last Name"));
+		validator.addValidation(new AlphaNumericValidation("LastName", "Last Name"));
 		
 		validator.addValidation(new PresenceValidation("ContactPhone", "Phone"));
 		validator.addValidation(new PhoneValidation("ContactPhone", "Phone"));
 		
 		validator.addValidation(new PresenceValidation("Email", "Email"));
-		validator.addValidation(new PhoneValidation("Email", "Email"));
+		validator.addValidation(new EmailValidation("Email", "Email"));
 		
 		validator.addValidation(new InclusionValidation("Credentials", "Credentials", new String[] {"Ordinary", "Administrator"}));
 
@@ -104,7 +108,7 @@ public class Worker extends Model {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals("Password")){
+		if(key.equals(Key.PW)){
 			value = encrypt((String) value);
 		}
 		super.stateChangeRequest(key, value);
@@ -153,6 +157,15 @@ public class Worker extends Model {
 		  }
 		  resetCode = new BigInteger(130, random).toString(32);
 		  return resetCode;
+	}
+	
+	@Override
+	public boolean beforeSave(boolean isCreate){
+		String currentDate =  DateUtil.getDate();
+		persistentState.setProperty("DateOfHire", currentDate);
+		persistentState.setProperty("DateOfLatestCredentialsStatus", currentDate);
+		persistentState.setProperty("DateOfLastUpdate", currentDate);
+		return true;
 	}
 
 	/**

@@ -11,8 +11,11 @@ package model;
 
 import java.util.Properties;
 
+import utilities.DateUtil;
+import model.validation.AlphaNumericValidation;
 import model.validation.BannerIdValidation;
 import model.validation.DateValidation;
+import model.validation.EmailValidation;
 import model.validation.InclusionValidation;
 import model.validation.LengthValidation;
 import model.validation.NumericValidation;
@@ -64,16 +67,16 @@ public class Borrower extends Model {
 		validator.addValidation(new BannerIdValidation("BannerID", "Banner Id"));
 		
 		validator.addValidation(new PresenceValidation("FirstName", "First Name"));
-		validator.addValidation(new BannerIdValidation("FirstName", "First Name"));
+		validator.addValidation(new AlphaNumericValidation("FirstName", "First Name"));
 		
 		validator.addValidation(new PresenceValidation("LastName", "Last Name"));
-		validator.addValidation(new BannerIdValidation("LastName", "Last Name"));
+		validator.addValidation(new AlphaNumericValidation("LastName", "Last Name"));
 		
 		validator.addValidation(new PresenceValidation("ContactPhone", "Phone"));
 		validator.addValidation(new PhoneValidation("ContactPhone", "Phone"));
 		
 		validator.addValidation(new PresenceValidation("Email", "Email"));
-		validator.addValidation(new PhoneValidation("Email", "Email"));
+		validator.addValidation(new EmailValidation("Email", "Email"));
 		
 		validator.addValidation(new InclusionValidation("BorrowerStatus", "Borrower Status", new String[] {"Good Standing", "Delinquent"}));
 
@@ -117,5 +120,17 @@ public class Borrower extends Model {
 	@Override
 	public boolean isPrimaryKeyAutoIncrement() {
 		return false;
+	}
+	
+	@Override
+	public boolean beforeSave(boolean isCreate){
+		String currentDate =  DateUtil.getDate();
+		persistentState.setProperty("BorrowerStatus", "Good Standing");
+		persistentState.setProperty("ActiveStatus", "Active");
+		persistentState.setProperty("MonetaryPenalty", "0");
+		persistentState.setProperty("DateOfFirstRegistration", currentDate);
+		persistentState.setProperty("DateOfLatestBorrowerStatus", currentDate);
+		persistentState.setProperty("DateOfLastUpdate", currentDate);
+		return true;
 	}
 }

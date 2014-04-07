@@ -25,8 +25,7 @@ import controller.Controller;
  */
 public class BorrowerMenuView extends View {
 	
-	private static final long serialVersionUID = -4462137345508528750L;
-	
+	private static final long serialVersionUID = -7493657951613059489L;
 	/* Buttons */
 	private Button addButton;
 	private Button modifyButton;
@@ -50,15 +49,15 @@ public class BorrowerMenuView extends View {
 		JPanel buttonPanel = new Panel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
-		addButton = new Button("Add Worker");
+		addButton = new Button("Add Borrower");
 		addButton.addActionListener(this);
 		buttonPanel.add(ViewHelper.formatCenter(addButton));
 
-		modifyButton = new Button("Modify Worker");
+		modifyButton = new Button("Modify Borrower");
 		modifyButton.addActionListener(this);
 		buttonPanel.add(ViewHelper.formatCenter(modifyButton));
 
-		deleteButton = new Button("Delete Worker");
+		deleteButton = new Button("Delete Borrower");
 		deleteButton.addActionListener(this);
 		buttonPanel.add(ViewHelper.formatCenter(deleteButton));
 
@@ -74,11 +73,11 @@ public class BorrowerMenuView extends View {
 		if (evt.getSource() == backButton) {
 			controller.stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);
 		} else if (evt.getSource() == addButton) {
-			controller.stateChangeRequest(Key.EXECUTE_ADD_WORKER, null);
+			controller.stateChangeRequest(Key.EXECUTE_ADD_BORROWER, null);
 		}else if (evt.getSource() == modifyButton) {
-			controller.stateChangeRequest(Key.EXECUTE_MODIFY_WORKER, null);
+			controller.stateChangeRequest(Key.EXECUTE_MODIFY_BORROWER, null);
 		} else if (evt.getSource() == deleteButton) {
-			controller.stateChangeRequest(Key.EXECUTE_DELETE_WORKER, null);
+			controller.stateChangeRequest(Key.EXECUTE_DELETE_BORROWER, null);
 		}
 	}
 

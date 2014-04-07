@@ -28,6 +28,11 @@ public class CurrencyTextField extends TextField {
 	
 	private int limit;
 
+	
+	/**
+	 * @param columns
+	 * @param limit
+	 */
 	public CurrencyTextField(int columns, int limit) {
 		super(columns);
 		this.limit = limit;

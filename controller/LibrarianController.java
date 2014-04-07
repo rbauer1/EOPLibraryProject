@@ -52,14 +52,18 @@ public class LibrarianController extends Controller {
 			showView("MainMenuView");
 		} else if (key.equals(Key.DISPLAY_BOOK_MENU)) {		
 			showView("BookMenuView");
-		}else if (key.equals(Key.DISPLAY_WORKER_MENU)) {		
-				showView("WorkerMenuView");
+		} else if (key.equals(Key.DISPLAY_BORROWER_MENU)) {		
+			showView("BorrowerMenuView");
+		} else if (key.equals(Key.DISPLAY_WORKER_MENU)) {		
+			showView("WorkerMenuView");
 		} else if (key.equals(Key.EXECUTE_ADD_BOOK)) {		
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
 		} else if (key.equals(Key.EXECUTE_MODIFY_BOOK)) {	
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);//TODO needs , Key.MODIFY_OR_DELETE?
 		} else if (key.equals(Key.EXECUTE_DELETE_BOOK)) {	
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU, Key.MODIFY_OR_DELETE);
+		} else if (key.equals(Key.EXECUTE_ADD_BORROWER)) {		
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
 		} else if (key.equals(Key.EXECUTE_ADD_WORKER)) {		
 				TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
 		} else if (key.equals(Key.EXECUTE_RECOVER_PW)){		

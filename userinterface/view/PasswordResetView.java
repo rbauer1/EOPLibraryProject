@@ -9,8 +9,6 @@
  */
 package userinterface.view;
 
-import impresario.IModel;
-
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -28,6 +26,7 @@ import javax.swing.JTextField;
 import userinterface.component.Button;
 import userinterface.message.MessagePanel;
 import utilities.Key;
+import controller.Controller;
 
 /**
  * The Password Reset View for the EOP Library application. Provides the
@@ -55,8 +54,8 @@ public class PasswordResetView extends View {
 	 * to the Recover Password Transaction model.
 	 * @param model The Recover Password Transaction
 	 */
-	public PasswordResetView(IModel model) {
-		super(model, "PasswordResetView");
+	public PasswordResetView(Controller controller) {
+		super(controller, "PasswordResetView");
 		System.out.println("PasswordResetView");
 
 		setBackground(BACKGROUND_COLOR);

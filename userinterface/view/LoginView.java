@@ -57,6 +57,7 @@ public class LoginView extends View {
 		
 		// Subscribe the to model events
 		controller.subscribe(Key.LOGIN_ERROR, this);
+		//TODO figure out a way to give the BannerID field focus automatically
 	}	
 
 	/**
@@ -138,6 +139,7 @@ public class LoginView extends View {
 			passwordField.addActionListener(this);
 			addField("Password", passwordField);
 			add(ViewHelper.formatFieldCenter("Password", passwordField));
+			
 		}
 		
 	}
