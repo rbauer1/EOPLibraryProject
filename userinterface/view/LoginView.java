@@ -77,12 +77,12 @@ public class LoginView extends View {
 		forgotPasswordButton = new Button("Forgot Password");
 		forgotPasswordButton.addActionListener(this);
 		buttonPanel.add(forgotPasswordButton);
-
+/*
 		buttonPanel.add(new JLabel("     "));
 
 		exitButton = new Button("Exit");
 		exitButton.addActionListener(this);
-		buttonPanel.add(exitButton);
+		buttonPanel.add(exitButton);*/
 
 		return ViewHelper.formatCenter(buttonPanel);
 	}

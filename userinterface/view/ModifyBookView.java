@@ -21,6 +21,7 @@ import model.Book;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.Panel;
+import userinterface.component.TextField;
 import userinterface.view.form.BookForm;
 import utilities.Key;
 import controller.Controller;
@@ -54,6 +55,9 @@ public class ModifyBookView extends View {
 		
 		book = (Book) controller.getState(Key.SELECT_BOOK);
 		form.setValues(book.getPersistentState());
+		
+		//TODO implement this cleaner
+		((TextField)form.get("Barcode")).setEnabled(false);
 		
 		add(createButtonsPanel());
 		

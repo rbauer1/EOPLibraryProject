@@ -21,6 +21,7 @@ import model.Worker;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.Panel;
+import userinterface.component.TextField;
 import userinterface.view.form.Form;
 import userinterface.view.form.WorkerForm;
 import utilities.Key;
@@ -54,6 +55,9 @@ public class ModifyWorkerView extends View {
 		
 		worker = (Worker) controller.getState(Key.SELECT_WORKER);
 		form.setValues(worker.getPersistentState());
+		
+		//TODO implement this cleaner
+		((TextField)form.get("BannerID")).setEnabled(false);
 		
 		add(createButtonsPanel());
 		

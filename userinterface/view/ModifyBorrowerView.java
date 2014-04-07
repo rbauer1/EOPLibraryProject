@@ -21,6 +21,7 @@ import model.Borrower;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.Panel;
+import userinterface.component.TextField;
 import userinterface.view.form.BorrowerForm;
 import utilities.Key;
 import controller.Controller;
@@ -53,6 +54,9 @@ public class ModifyBorrowerView extends View {
 		
 		borrower = (Borrower) controller.getState(Key.SELECT_BORROWER);
 		form.setValues(borrower.getPersistentState());
+		
+		//TODO implement this cleaner
+		((TextField)form.get("BannerID")).setEnabled(false);
 		
 		add(createButtonsPanel());
 		

@@ -101,7 +101,7 @@ public abstract class Form extends Panel implements ActionListener{
 		fields.put(name, field);
 	}
 	
-	protected FormField get(String name){
+	public FormField get(String name){
 		return fields.get(name);
 	}
 	
