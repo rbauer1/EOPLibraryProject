@@ -86,10 +86,7 @@ public class LoginView extends View {
 		return ViewHelper.formatCenter(buttonPanel);
 	}
 
-	/**
-	 * Called when click or focus lost event occurs on GUI component.
-	 * Used to handle button clicks to submit forms or to handle navigation.
-	 */
+	@Override
 	public void processAction(EventObject event) {
 		messagePanel.clear();
 		Object source = event.getSource();
@@ -106,10 +103,7 @@ public class LoginView extends View {
 
 	}
 	
-	/**
-	 * Called when events this View subscribed to is changed.
-	 * Should be used to update what is displayed in the view.
-	 */
+	@Override
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.LOGIN_ERROR)) {
 			messagePanel.displayErrorMessage(value.toString());

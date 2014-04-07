@@ -47,7 +47,7 @@ public class ModifyBooksTransaction extends Transaction {
 	public void stateChangeRequest(String key, Object value) {
 		if(key.equals(Key.SELECT_BOOK)){
 			book = (Book)value;
-			showView("AddBookView");
+			showView("ModifyBookView");
 		}else if(key.equals(Key.SUBMIT_BOOK)){
 			updateBook((Properties)value);
 		}

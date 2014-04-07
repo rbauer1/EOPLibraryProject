@@ -48,7 +48,7 @@ public class ListBooksTransaction extends Transaction {
 			return books;
 		}else if(key.equals(Key.SELECT_BOOK)){
 			return selectedBook;
-		}else if(key.equals(Key.MODIFY_OR_DELETE)){
+		}else if(key.equals(Key.OPERATION_TYPE)){
 			return operationType;
 		}
 		return null;

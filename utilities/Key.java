@@ -54,6 +54,8 @@ public class Key {
 	public static final String RESET_PW = "ResetPassword";
 	public static final String PW = "Password";
 	
+	public static final String OPERATION_TYPE = "OperationType";
+	
 	
 	private Key(){};
 }

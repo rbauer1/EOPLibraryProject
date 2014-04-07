@@ -10,12 +10,17 @@ import javax.swing.table.TableModel;
 import model.Book;
 
 public class BookTableModel extends AbstractTableModel implements TableModel {
+	
 	private static final long serialVersionUID = 4213802193658338074L;
+	
 	private List<Properties> state;
+	
 	/**	Names of columns as will appear on table in GUI */
-	private static final String[] COL_NAMES_DISP = {"Barcode","Title","Author","Discipline","ISBN","Date Of Last Update"};
+	private static final String[] COL_NAMES_DISP = {"Barcode","Title","Author","Discipline","ISBN","Date Last Updated"};
+	
 	/**	Names of properties corresponding to database  */
 	private static final String[] COL_NAMES_PROPS = {"Barcode","Title","Author1","Discipline","ISBN","DateOfLastUpdate"};
+	
 	private static final int NUM_COLS = 6;
 
 	public BookTableModel(List<Book> bookData) {
