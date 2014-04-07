@@ -125,10 +125,12 @@ public class Borrower extends Model {
 	@Override
 	public boolean beforeSave(boolean isCreate){
 		String currentDate =  DateUtil.getDate();
-		persistentState.setProperty("BorrowerStatus", "Good Standing");
-		persistentState.setProperty("ActiveStatus", "Active");
-		persistentState.setProperty("MonetaryPenalty", "0");
-		persistentState.setProperty("DateOfFirstRegistration", currentDate);
+		if(isCreate){
+			persistentState.setProperty("BorrowerStatus", "Good Standing");
+			persistentState.setProperty("ActiveStatus", "Active");
+			persistentState.setProperty("MonetaryPenalty", "0");
+			persistentState.setProperty("DateOfFirstRegistration", currentDate);
+		}		
 		persistentState.setProperty("DateOfLatestBorrowerStatus", currentDate);
 		persistentState.setProperty("DateOfLastUpdate", currentDate);
 		return true;

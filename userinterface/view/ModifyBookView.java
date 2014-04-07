@@ -57,7 +57,7 @@ public class ModifyBookView extends View {
 		add(createButtonsPanel());
 		
 		controller.subscribe(Key.INPUT_ERROR, this);
-		controller.subscribe(Key.BOOK_SUBMIT_SUCCESS, this);
+		controller.subscribe(Key.SAVE_SUCCESS, this);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class ModifyBookView extends View {
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.INPUT_ERROR)) {
 			messagePanel.displayErrorMessage("There was an error");
-		}else if(key.equals(Key.BOOK_SUBMIT_SUCCESS)){
+		}else if(key.equals(Key.SAVE_SUCCESS)){
 			messagePanel.displayMessage("Success", "Book saved successfully"); 
 		}
 	}

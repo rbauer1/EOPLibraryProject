@@ -10,8 +10,8 @@
 package model;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import model.validation.ModelValidator;
@@ -167,10 +167,16 @@ public abstract class Model extends EntityBase {
 	
 	/**
 	 * Return the error messages for the model.
-	 * @return map of errors
+	 * @return list errors
 	 */
-	public Map<String, List<String>> getErrors() {
-		return validator.getErrors();
+	public List<String> getErrors() {
+		List<String> errors = new ArrayList<String>();
+		for(List<String> fieldErrors : validator.getErrors().values()){
+			if(fieldErrors.size() > 0){
+				errors.add(fieldErrors.get(0));
+			}
+		}
+		return errors;
 	}
 	
 	/**

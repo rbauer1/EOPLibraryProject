@@ -35,11 +35,9 @@ public class ListBooksView extends ListView {
 
 		// Get the operation type
 		operationType = (String) controller.getState(Key.OPERATION_TYPE);
-		
-		System.out.println(this.operationType);
-		
+				
 		controller.subscribe(Key.GET_BOOK_COLLECTION, this);
-		controller.subscribe(Key.MODIFY_OR_DELETE, this);
+		controller.subscribe(Key.REFRESH_LIST, this);
 		
 		// Get Books for initial filter settings
 		filter();
@@ -92,6 +90,9 @@ public class ListBooksView extends ListView {
 			books = (List<Book>) value;
 			table.setModel(new BookTableModel(books));
 			table.repaint();			
+		}
+		if (key.equals(Key.REFRESH_LIST)) {
+			filter();		
 		}
 	}
 	

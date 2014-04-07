@@ -9,6 +9,7 @@
  */
 package controller.transaction;
 
+import java.util.List;
 import java.util.Properties;
 
 import model.Book;
@@ -19,6 +20,8 @@ public class AddBookTransaction extends Transaction {
 	
 	/** Book Model this transaction is adding */
 	private Book book;
+	
+	private List<String> inputErrors;
 
 	/**
 	 * Constructs Add Book Transaction
@@ -36,6 +39,9 @@ public class AddBookTransaction extends Transaction {
 
 	@Override
 	public Object getState(String key) {
+		if(key.equals(Key.INPUT_ERROR)){
+			return inputErrors;
+		}
 		return null;
 	}
 
@@ -55,9 +61,14 @@ public class AddBookTransaction extends Transaction {
 	private void addBook(Properties bookData){
 		book = new Book(bookData);
 		if(book.save()){
-			stateChangeRequest(Key.BOOK_SUBMIT_SUCCESS, null);
+			stateChangeRequest(Key.SAVE_SUCCESS, null);
 		}else{
-			stateChangeRequest(Key.INPUT_ERROR, null);
+			inputErrors = book.getErrors();
+			if(inputErrors.size() > 0){
+				stateChangeRequest(Key.INPUT_ERROR, null);
+			}else{
+				stateChangeRequest(Key.SAVE_ERROR, null);
+			}
 		}
 	}
 	

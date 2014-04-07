@@ -167,7 +167,10 @@ public class NumericValidation extends Validation {
 	
 	@Override
 	public boolean execute(Object value, ModelValidator validator) {
-		if(allowEmpty && (value == null || value.toString().length() == 0)){
+		if(value == null ){
+			value = "";
+		}
+		if(allowEmpty && value.toString().length() == 0){
 			return true;
 		}
 		try {  

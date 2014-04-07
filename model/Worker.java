@@ -162,7 +162,9 @@ public class Worker extends Model {
 	@Override
 	public boolean beforeSave(boolean isCreate){
 		String currentDate =  DateUtil.getDate();
-		persistentState.setProperty("DateOfHire", currentDate);
+		if(isCreate){
+			persistentState.setProperty("DateOfHire", currentDate);
+		}
 		persistentState.setProperty("DateOfLatestCredentialsStatus", currentDate);
 		persistentState.setProperty("DateOfLastUpdate", currentDate);
 		return true;

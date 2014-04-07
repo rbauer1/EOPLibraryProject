@@ -10,11 +10,15 @@
 package controller.transaction;
 
 
+import javax.swing.JOptionPane;
+
 import model.Book;
 import utilities.Key;
 import controller.Controller;
 
 public class DeleteBooksTransaction extends Transaction {
+	
+	private Transaction listBooksTransaction;
 
 	/**
 	 * Constructs Delete Books Transaction
@@ -31,14 +35,28 @@ public class DeleteBooksTransaction extends Transaction {
 	
 	@Override
 	public void execute(){
-		TransactionFactory.executeTransaction(this, "ListBooksTransaction", Key.DISPLAY_BOOK_MENU, Key.SELECT_BOOK);
+		listBooksTransaction = TransactionFactory.executeTransaction(this, "ListBooksTransaction", Key.DISPLAY_BOOK_MENU, Key.SELECT_BOOK);
 	}
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
 		if(key.equals(Key.SELECT_BOOK)){
-			((Book)value).setInactive(); //TODO handle error if save fails here!
+			setBookInactive((Book)value);
 		}
 		registry.updateSubscribers(key, this);
+	}
+	
+	private void setBookInactive(Book book){
+		if(deleteConfirmationPopup() == JOptionPane.YES_OPTION){
+			book.setInactive();
+			listBooksTransaction.stateChangeRequest(Key.REFRESH_LIST, null);
+		}
+	}
+	
+	private int deleteConfirmationPopup(){
+		String message = "ATTENTION: You are about to delete a book from the system.\n" +
+			"Are you sure you have selected the correct book and want to proceed?";
+		return JOptionPane.showConfirmDialog(frame, message, "Book will be deleted", JOptionPane.YES_NO_OPTION);
+
 	}
 }

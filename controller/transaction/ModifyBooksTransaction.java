@@ -61,7 +61,7 @@ public class ModifyBooksTransaction extends Transaction {
 	private void updateBook(Properties bookData){
 		book.stateChangeRequest(bookData);
 		if(book.save()){
-			stateChangeRequest(Key.BOOK_SUBMIT_SUCCESS, null);
+			stateChangeRequest(Key.SAVE_SUCCESS, null);
 		}else{
 			stateChangeRequest(Key.INPUT_ERROR, null);
 		}

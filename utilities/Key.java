@@ -6,6 +6,9 @@ public class Key {
 	public static final String LOGIN = "Login";
 	
 	public static final String LOGIN_ERROR = "LoginError";
+	
+	public static final String SAVE_SUCCESS = "SaveSuccess";
+	public static final String SAVE_ERROR = "SaveError";
 	public static final String INPUT_ERROR = "InputError";
 	
 	public static final String GET_PERSISTENT_STATE = "GetPersistentState";
@@ -25,7 +28,6 @@ public class Key {
 	
 	public static final String GET_BOOK_COLLECTION = "GetBookCollection";
 	
-	public static final String BOOK_SUBMIT_SUCCESS = "BookAddedOrModifiedSuccessfully";
 	public static final String BORROWER_SUBMIT_SUCCESS = "BorrowerAddedOrModifiedSuccessfully";
 	public static final String WORKER_SUBMIT_SUCCESS = "WorkerAddedOrModifiedSuccessfully";
 	
@@ -55,6 +57,7 @@ public class Key {
 	public static final String PW = "Password";
 	
 	public static final String OPERATION_TYPE = "OperationType";
+	public static final String REFRESH_LIST = "RefreshList";
 	
 	
 	private Key(){};
