@@ -27,7 +27,6 @@ import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.PasswordField;
 import userinterface.component.TextField;
-import userinterface.message.MessagePanel;
 import utilities.Key;
 import controller.Controller;
 

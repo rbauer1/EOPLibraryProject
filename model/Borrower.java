@@ -116,6 +116,11 @@ public class Borrower extends Model {
 	public String getPrimaryKey() {
 		return PRIMARY_KEY;
 	}
+	
+	public boolean setInactive(){
+		persistentState.setProperty("ActiveStatus", "Inactive");
+		return save();
+	}
 
 	@Override
 	public boolean isPrimaryKeyAutoIncrement() {
@@ -128,7 +133,7 @@ public class Borrower extends Model {
 		if(isCreate){
 			persistentState.setProperty("BorrowerStatus", "Good Standing");
 			persistentState.setProperty("ActiveStatus", "Active");
-			persistentState.setProperty("MonetaryPenalty", "0");
+			persistentState.setProperty("MonetaryPenalty", "0.00");
 			persistentState.setProperty("DateOfFirstRegistration", currentDate);
 		}		
 		persistentState.setProperty("DateOfLatestBorrowerStatus", currentDate);
