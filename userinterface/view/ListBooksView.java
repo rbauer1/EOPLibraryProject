@@ -34,8 +34,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import model.Book;
-import userinterface.component.Panel;
 import userinterface.component.Button;
+import userinterface.component.Panel;
 import userinterface.message.MessagePanel;
 import utilities.Key;
 

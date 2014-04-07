@@ -51,7 +51,6 @@ public class Label extends JLabel {
 		}else{
 			setFont(NORMAL_FONT);
 			setPreferredSize(SIZE_LABEL);
-			setMaximumSize(SIZE_LABEL);
 		}
 	}
 

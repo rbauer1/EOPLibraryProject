@@ -9,15 +9,11 @@
  */
 package userinterface.view.form;
 
-import java.awt.Color;
-import java.awt.Dimension;
-
 import javax.swing.BoxLayout;
 
 import userinterface.ViewHelper;
 import userinterface.component.Panel;
 import userinterface.component.PhoneField;
-import userinterface.component.SelectField;
 import userinterface.component.TextArea;
 import userinterface.component.TextField;
 import userinterface.view.View;
@@ -64,8 +60,7 @@ public class BorrowerForm extends Form {
 				addField("LastName", lastNameField);
 				leftColumn.add(ViewHelper.formatFieldLeft("Last Name", lastNameField));
 				
-				add(fieldColumnsPanel);
-				
+				add(fieldColumnsPanel);	
 				Panel rightColumn = new Panel();
 				rightColumn.setLayout(new BoxLayout(rightColumn, BoxLayout.Y_AXIS));
 				
@@ -89,6 +84,8 @@ public class BorrowerForm extends Form {
 //				borrowerStatusField.setPreferredSize(new Dimension(130,25));
 //				addField("BorrowerStatus", borrowerStatusField);
 //				rightColumn.add(ViewHelper.formatFieldLeft("Standing", borrowerStatusField));
+				
+				rightColumn.add(ViewHelper.createPlaceHolder());		
 				
 				TextArea notesField = new TextArea();
 				addField("Notes", notesField);

@@ -31,7 +31,6 @@ public class PasswordField extends JPasswordField implements FormField {
 		setAlignmentX(CENTER_ALIGNMENT);
 		setBorder(new LineBorder(BORDER_COLOR, 1));
 		setPreferredSize(SIZE);
-		setMaximumSize(SIZE);
 	}
 
 	@Override

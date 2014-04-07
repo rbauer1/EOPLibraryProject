@@ -75,6 +75,11 @@ public class AddBookView extends View {
 		}
 	}
 	
+	@Override
+	protected void afterShown(){
+		form.requestFocusForDefaultField();
+	}
+	
 	/**
 	 * Create button panel for this view.
 	 * @return button panel

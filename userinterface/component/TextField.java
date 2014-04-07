@@ -40,7 +40,6 @@ public class TextField extends JTextField implements FormField {
 		setAlignmentX(CENTER_ALIGNMENT);
 		setBorder(new LineBorder(BORDER_COLOR, 1));
 		setPreferredSize(SIZE);
-		setMaximumSize(SIZE);
 	}
 
 	@Override
@@ -57,4 +56,5 @@ public class TextField extends JTextField implements FormField {
 	public void reset() {
 		setText("");
 	}
+	
 }

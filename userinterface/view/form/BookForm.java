@@ -96,6 +96,8 @@ public class BookForm extends Form {
 		addField("SuggestedPrice", suggestedPriceField);
 		rightColumn.add(ViewHelper.formatCurrencyFieldLeft("Suggested Price", suggestedPriceField));	
 		
+		rightColumn.add(ViewHelper.createPlaceHolder());
+		
 		TextArea notesField = new TextArea();
 		addField("Notes", notesField);
 		add(ViewHelper.formatTextAreaFieldLeft("Notes", notesField));	

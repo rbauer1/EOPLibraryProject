@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.Panel;
-import userinterface.view.form.BookForm;
 import userinterface.view.form.WorkerForm;
 import utilities.Key;
 import controller.Controller;
@@ -73,6 +72,11 @@ public class AddWorkerView extends View {
 		}else if(key.equals(Key.WORKER_SUBMIT_SUCCESS)){
 			messagePanel.displayMessage("Success", "Worker added successfully"); 
 		}
+	}
+	
+	@Override
+	protected void afterShown(){
+		form.requestFocusForDefaultField();
 	}
 	
 	/**

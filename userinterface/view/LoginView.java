@@ -98,8 +98,10 @@ public class LoginView extends View {
 			controller.stateChangeRequest(Key.EXIT_SYSTEM, null);
 		} else if (source == forgotPasswordButton) {
 			controller.stateChangeRequest(Key.EXECUTE_RECOVER_PW, null);
+			form.reset();
 		} else if (source == loginButton || source == form) {	
 			controller.stateChangeRequest(Key.LOGIN, form.getValues());
+			form.reset();
 		}
 
 	}
@@ -113,6 +115,11 @@ public class LoginView extends View {
 			messagePanel.displayErrorMessage(value.toString());
 		}
 
+	}
+	
+	@Override
+	protected void afterShown(){
+		form.requestFocusForDefaultField();
 	}
 	
 	/**

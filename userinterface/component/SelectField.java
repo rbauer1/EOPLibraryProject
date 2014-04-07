@@ -30,7 +30,6 @@ public class SelectField extends JComboBox implements FormField {
 	public SelectField(String[] options) {
 		super(options);
 		setPreferredSize(SIZE);
-		setMaximumSize(SIZE);
 		setBorder(new LineBorder(BORDER_COLOR, 1));
 		setFont(FONT);
 		setAlignmentX(CENTER_ALIGNMENT);

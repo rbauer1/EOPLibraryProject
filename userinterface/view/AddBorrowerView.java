@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.Panel;
-import userinterface.view.form.BookForm;
 import userinterface.view.form.BorrowerForm;
 import utilities.Key;
 import controller.Controller;
@@ -74,6 +73,11 @@ public class AddBorrowerView extends View {
 		}else if(key.equals(Key.BORROWER_SUBMIT_SUCCESS)){
 			messagePanel.displayMessage("Success", "Borrower added successfully"); 
 		}
+	}
+	
+	@Override
+	protected void afterShown(){
+		form.requestFocusForDefaultField();
 	}
 	
 	/**

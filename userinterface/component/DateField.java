@@ -61,6 +61,11 @@ public class DateField extends Panel implements FormField {
 		build();
 	}
 	
+	@Override
+	public boolean requestFocusInWindow(){
+		return monthField.requestFocusInWindow();
+	}
+	
 	/**
 	 * Builds the field
 	 */

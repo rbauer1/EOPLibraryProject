@@ -36,7 +36,7 @@ public abstract class Form extends Panel implements ActionListener{
 	public static final Color FIELD_BORDER_COLOR = Color.black;
 	
 	protected Map<String, FormField> fields;
-	
+	protected FormField defaultFocusField;
 	protected View view;
 	
 	protected Form(View view){
@@ -72,6 +72,10 @@ public abstract class Form extends Panel implements ActionListener{
 		}
 	}
 	
+	public boolean requestFocusForDefaultField(){
+		return defaultFocusField.requestFocusInWindow();
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		view.processAction(new EventObject(this));
@@ -80,6 +84,9 @@ public abstract class Form extends Panel implements ActionListener{
 	protected abstract void build();
 	
 	protected void addField(String name, FormField field){
+		if(fields.isEmpty()){
+			defaultFocusField = field;
+		}
 		fields.put(name, field);
 	}
 	

@@ -10,13 +10,10 @@
 package userinterface.view.form;
 
 import java.awt.Dimension;
-import java.util.Arrays;
 
 import javax.swing.BoxLayout;
 
 import userinterface.ViewHelper;
-import userinterface.component.CurrencyTextField;
-import userinterface.component.FormField;
 import userinterface.component.Panel;
 import userinterface.component.PasswordField;
 import userinterface.component.PhoneField;
@@ -62,6 +59,7 @@ public class WorkerForm extends Form {
 		
 		PasswordField confirmPasswordField = new PasswordField(16);
 		confirmPasswordField.addActionListener(this);
+		addField("PasswordConfirmation", confirmPasswordField);
 		leftColumn.add(ViewHelper.formatFieldLeft("Confirm Password", confirmPasswordField));
 
 		TextField firstNameField = new TextField(16);
@@ -99,6 +97,8 @@ public class WorkerForm extends Form {
 		statusField.addActionListener(this);
 		addField("ActiveStatus", statusField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Status", statusField));
+		
+		rightColumn.add(ViewHelper.createPlaceHolder());	
 		
 		fieldColumnsPanel.add(rightColumn);
 	}

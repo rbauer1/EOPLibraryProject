@@ -9,10 +9,8 @@
  */
 package userinterface.component;
 
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -68,6 +66,11 @@ public class PhoneField extends Panel implements FormField {
 		add(phone3);
 	}
 
+	@Override
+	public boolean requestFocusInWindow(){
+		return phone1.requestFocusInWindow();
+	}
+	
 	private class PhoneFieldDocumentListener implements DocumentListener {
 		public void changedUpdate(DocumentEvent e) {}
 
@@ -83,4 +86,6 @@ public class PhoneField extends Panel implements FormField {
 			}
 		}
 	}
+	
+	
 }

@@ -20,13 +20,21 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.border.LineBorder;
 
 import userinterface.component.Label;
 import userinterface.component.Panel;
+import userinterface.view.form.Form;
 
 public class ViewHelper {
 	
 	private ViewHelper() {}
+	
+	public static JPanel createPlaceHolder(){
+		Panel panel = new Panel(new FlowLayout(FlowLayout.LEFT));
+		panel.add(new Label(""));
+		return panel;
+	}
 	
 	public static JPanel formatCenter(JComponent component) {
 		Panel panel = new Panel(new FlowLayout(FlowLayout.CENTER));
@@ -64,7 +72,6 @@ public class ViewHelper {
 		Label label = new Label(labelText);
 		final Dimension size = new Dimension(140, 30);
 		label.setPreferredSize(size);
-		label.setMaximumSize(size);
 		panel.add(label);
 		
 		panel.add(new JLabel("$"));
@@ -84,7 +91,11 @@ public class ViewHelper {
 	public static JPanel formatTextAreaField(String label, JTextArea textArea, LayoutManager layout) {
 		Panel panel = new Panel(layout);
 		panel.add(new Label(label));	
-		panel.add(new JScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+		JScrollPane scrollPane =  new JScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setAlignmentX(JScrollPane.CENTER_ALIGNMENT);
+		scrollPane.setBorder(new LineBorder(Form.FIELD_BORDER_COLOR, 1));
+		scrollPane.setPreferredSize(new Dimension( 300, 70 ));
+		panel.add(scrollPane);
 		return panel;
 	}
 		

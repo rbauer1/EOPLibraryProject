@@ -32,4 +32,6 @@ public interface FormField {
 	 */
 	public void reset();
 	
+	public boolean requestFocusInWindow();
+	
 }

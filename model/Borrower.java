@@ -11,7 +11,6 @@ package model;
 
 import java.util.Properties;
 
-import utilities.DateUtil;
 import model.validation.AlphaNumericValidation;
 import model.validation.BannerIdValidation;
 import model.validation.DateValidation;
@@ -21,6 +20,7 @@ import model.validation.LengthValidation;
 import model.validation.NumericValidation;
 import model.validation.PhoneValidation;
 import model.validation.PresenceValidation;
+import utilities.DateUtil;
 import exception.InvalidPrimaryKeyException;
 
 /**

@@ -78,6 +78,7 @@ public abstract class Message extends Panel{
 			}
 			sb.append("</ul>");
 		}
+		sb.append("</html>");
 		label.setText(sb.toString());
 	}
 }
