@@ -120,22 +120,23 @@ public class Book extends Model {
 	}
 	
 	@Override
-	public boolean beforeSave(boolean isCreate) {
-		if(!validate(PRIMARY_KEY)){
-			return false;
-		}
-		try {
-			BookBarcodePrefix barcodePrefix = new BookBarcodePrefix((persistentState.getProperty(PRIMARY_KEY)).substring(0, 3));
-			persistentState.setProperty("Discipline", (String)barcodePrefix.getState("Discipline"));
-		} catch (InvalidPrimaryKeyException e) {
-			return false;
-		}
-		
+	public boolean beforeValidate(boolean isCreate) {
 		if(isCreate){
 			persistentState.setProperty("BookStatus", "Active");
 		}
 		
 		persistentState.setProperty("DateOfLastUpdate", DateUtil.getDate());
+		return true;
+	}
+	
+	@Override
+	public boolean beforeSave(boolean isCreate) {
+		try {
+			BookBarcodePrefix barcodePrefix = new BookBarcodePrefix((persistentState.getProperty(PRIMARY_KEY)).substring(0, 3));
+			persistentState.setProperty("Discipline", (String)barcodePrefix.getState("Discipline"));
+		} catch (InvalidPrimaryKeyException e) {
+			return false;
+		}		
 		return true;
 	}
 	

@@ -187,6 +187,14 @@ public abstract class Model extends EntityBase {
 		return validator.getErrors(key);
 	}
 	
+	public boolean beforeValidate(boolean isCreate) {
+		return true;
+	}
+	
+	public void afterValidate(boolean isCreate) {
+
+	}
+	
 	/**
 	 * Can be used to perform pre-save logic.
 	 * Hook method that is called before save. Should be overridden in subclass.
@@ -235,7 +243,11 @@ public abstract class Model extends EntityBase {
 	public boolean save() {
 		String keyValue = (String) this.getState(getPrimaryKey());
 		boolean isCreate = !this.persisted || keyValue == null || keyValue.length() == 0;
-		if(!beforeSave(isCreate) || !validate()){
+		if(!beforeValidate(isCreate) || !validate()){
+			return false;
+		}		
+		afterValidate(isCreate);
+		if(!beforeSave(isCreate)){
 			return false;
 		}		
 		try {

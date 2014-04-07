@@ -123,7 +123,7 @@ public class Borrower extends Model {
 	}
 	
 	@Override
-	public boolean beforeSave(boolean isCreate){
+	public boolean beforeValidate(boolean isCreate){
 		String currentDate =  DateUtil.getDate();
 		if(isCreate){
 			persistentState.setProperty("BorrowerStatus", "Good Standing");
