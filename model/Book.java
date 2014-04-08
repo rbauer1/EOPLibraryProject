@@ -66,7 +66,7 @@ public class Book extends Model {
 		validator.addValidation(new PresenceValidation("Title", "Title"));
 		validator.addValidation(new LengthValidation("Title", "Title", 1, 50));
 		
-		validator.addValidation(new PresenceValidation("Discipline", "Discipline"));
+		validator.addValidation(new PresenceValidation("Discipline", "Discipline", "is invalid, verify barcode is correct"));
 		validator.addValidation(new LengthValidation("Discipline", "Discipline", 1, 25));
 		
 		validator.addValidation(new PresenceValidation("Author1", "Author 1"));
@@ -126,17 +126,22 @@ public class Book extends Model {
 		}
 		
 		persistentState.setProperty("DateOfLastUpdate", DateUtil.getDate());
+		
+		if(persistentState.getProperty("Barcode", "").length() > 3){
+			try {
+				BookBarcodePrefix barcodePrefix = new BookBarcodePrefix((persistentState.getProperty(PRIMARY_KEY)).substring(0, 3));
+				persistentState.setProperty("Discipline", (String)barcodePrefix.getState("Discipline"));
+			} catch (InvalidPrimaryKeyException e) {
+				return false;
+			}		
+		}
+		
 		return true;
 	}
 	
 	@Override
 	public boolean beforeSave(boolean isCreate) {
-		try {
-			BookBarcodePrefix barcodePrefix = new BookBarcodePrefix((persistentState.getProperty(PRIMARY_KEY)).substring(0, 3));
-			persistentState.setProperty("Discipline", (String)barcodePrefix.getState("Discipline"));
-		} catch (InvalidPrimaryKeyException e) {
-			return false;
-		}		
+
 		return true;
 	}
 	

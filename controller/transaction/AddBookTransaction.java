@@ -60,6 +60,7 @@ public class AddBookTransaction extends Transaction {
 	 */
 	private void addBook(Properties bookData){
 		book = new Book(bookData);
+		//book.beforeSave(true); //TODO figure out if this should be somewhere else
 		if(book.save()){
 			stateChangeRequest(Key.SAVE_SUCCESS, null);
 		}else{

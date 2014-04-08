@@ -102,11 +102,11 @@ public class ModifyBorrowerView extends View {
 		submitButton.addActionListener(this);
 		buttonPanel.add(submitButton);
 
-		buttonPanel.add(new JLabel("     "));
-		
-		resetButton = new Button("Reset");
-		resetButton.addActionListener(this);
-		buttonPanel.add(resetButton);
+//		buttonPanel.add(new JLabel("     "));
+//		
+//		resetButton = new Button("Reset");
+//		resetButton.addActionListener(this);
+//		buttonPanel.add(resetButton);
 
 		buttonPanel.add(new JLabel("     "));
 

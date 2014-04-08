@@ -63,10 +63,9 @@ public class WorkerForm extends Form {
 		addField("NewPasswordConfirmation", confirmPasswordField); //TODO Handle confirmation
 		leftColumn.add(ViewHelper.formatFieldLeft("Confirm Password", confirmPasswordField));
 
-		SelectField credentialsField = new SelectField(new String[] { "Ordinary", ""
-				+ "" });
+		SelectField credentialsField = new SelectField(new String[] { "Ordinary", "Administrator"});
 		credentialsField.addActionListener(this);
-		credentialsField.setPreferredSize(new Dimension(120,25));
+		credentialsField.setPreferredSize(new Dimension(130,25));
 		addField("Credentials", credentialsField);
 		leftColumn.add(ViewHelper.formatFieldLeft("Credentials", credentialsField));
 		
@@ -103,6 +102,7 @@ public class WorkerForm extends Form {
 	public Properties getValues(){
 		Properties values = super.getValues();
 		//TODO dont do this
+		// I need to handle password changes in worker model
 		values.remove("NewPassword");
 		values.remove("NewPasswordConfirmation");
 		return values;		

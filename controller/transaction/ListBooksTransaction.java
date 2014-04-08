@@ -65,6 +65,7 @@ public class ListBooksTransaction extends Transaction {
 	}
 	
 	private void getBooks(Properties props){
+//		props.setProperty("BookStatus", "Active");
 		bookCollection = new BookCollection();
 		bookCollection.findLike(props);
 		books = bookCollection.getEntities();
