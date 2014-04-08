@@ -17,6 +17,7 @@ import javax.swing.BoxLayout;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.Panel;
+import userinterface.component.PhoneField;
 import userinterface.component.SelectField;
 import userinterface.component.TextField;
 import userinterface.view.View;
@@ -65,7 +66,7 @@ public class BorrowerSearchForm extends Form {
 		rightColumn.setLayout(new BoxLayout(rightColumn, BoxLayout.Y_AXIS));
 		fieldColumnsPanel.add(rightColumn);
 		
-		TextField phoneField = new TextField(16);
+		PhoneField phoneField = new PhoneField();
 		phoneField.addActionListener(this);
 		addField("ContactPhone", phoneField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Phone", phoneField));
@@ -75,11 +76,11 @@ public class BorrowerSearchForm extends Form {
 		addField("Email", emailField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Email", emailField));
 		
-		SelectField conditionField = new SelectField(new String[] { "Any", "Good Standing", "Delinquent"});
-		conditionField.addActionListener(this);
-		conditionField.setPreferredSize(new Dimension(130,25));
-		addField("BorrowerStatus", conditionField);
-		rightColumn.add(ViewHelper.formatFieldLeft("Status", conditionField));
+		SelectField borrowerStatusField = new SelectField(new String[] { "Any", "Good Standing", "Delinquent"});
+		borrowerStatusField.addActionListener(this);
+		borrowerStatusField.setPreferredSize(new Dimension(130,25));
+		addField("BorrowerStatus", borrowerStatusField);
+		rightColumn.add(ViewHelper.formatFieldLeft("Borrowing Status", borrowerStatusField));
 		
 		Button searchButton = new Button("Search");
 		searchButton.addActionListener(this);
@@ -87,8 +88,7 @@ public class BorrowerSearchForm extends Form {
 	}
 	
 	@Override
-	public Properties getValues(){
-		Properties values = super.getValues();
+	protected Properties filterValues(Properties values){
 		if(values.getProperty("BorrowerStatus", "").equals("Any")){
 			values.remove("BorrowerStatus");
 		}

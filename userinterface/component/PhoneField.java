@@ -9,8 +9,10 @@
  */
 package userinterface.component;
 
-import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -19,62 +21,106 @@ public class PhoneField extends Panel implements FormField {
 
 	private static final long serialVersionUID = 808393114307875546L;
 	
-	private NumericTextField phone1;
-	private NumericTextField phone2;
-	private NumericTextField phone3;
+	private NumericTextField phone1Field;
+	private NumericTextField phone2Field;
+	private NumericTextField phone3Field;
 	
 	public PhoneField(){
-		super(new FlowLayout(FlowLayout.LEFT));
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));		
 		build();
 	}
 
 	@Override
 	public String getValue() {
-		return phone1.getValue() + "-" + phone2.getValue() + "-" + phone3.getValue();
+		// Using underscores for missing digits because underscore is wildward in sql like condition
+		final String underscores = "____";
+		String phone1 = phone1Field.getValue();
+		phone1 += underscores.substring(phone1.length(), 3);
+		String phone2 = phone2Field.getValue();
+		phone2 += underscores.substring(phone2.length(), 3);
+		String phone3 = phone3Field.getValue();
+		phone3 += underscores.substring(phone3.length(), 4);
+		String phone = phone1 + "-" + phone2 + "-" + phone3;
+		//return empty string if empty
+		return phone.equals("___-___-____") ? "" : phone;
 	}
 
 	@Override
 	public void setValue(String value) {
 		value = value.replaceAll("[^\\d]", "");
 		if(value.length() == 10){
-			phone1.setValue(value.substring(0, 3));
-			phone2.setValue(value.substring(3, 6));
-			phone3.setValue(value.substring(6, 10));
+			phone1Field.setValue(value.substring(0, 3));
+			phone2Field.setValue(value.substring(3, 6));
+			phone3Field.setValue(value.substring(6, 10));
 		}else{
-			phone1.reset();
-			phone2.reset();
-			phone3.reset();
+			phone1Field.reset();
+			phone2Field.reset();
+			phone3Field.reset();
 		}
 	}
 
 	@Override
 	public void reset() {
-		phone1.reset();
-		phone2.reset();
-		phone3.reset();
+		phone1Field.reset();
+		phone2Field.reset();
+		phone3Field.reset();
 	}
 
 	private void build(){
-		phone1 = new NumericTextField(3,3);
-		phone1.getDocument().addDocumentListener(new PhoneFieldDocumentListener());
-		add(phone1);
+		phone1Field = new NumericTextField(3,3);
+		phone1Field.getDocument().addDocumentListener(new PhoneFieldDocumentListener());
+		phone1Field.addActionListener(new PhoneFieldActionListener());
+		add(phone1Field);
 		
 		add(new JLabel(" - "));
 		
-		phone2 = new NumericTextField(3,3);
-		phone2.getDocument().addDocumentListener(new PhoneFieldDocumentListener());
-		add(phone2);
+		phone2Field = new NumericTextField(3,3);
+		phone2Field.getDocument().addDocumentListener(new PhoneFieldDocumentListener());
+		phone2Field.addActionListener(new PhoneFieldActionListener());
+		add(phone2Field);
 		
 		add(new JLabel(" - "));
 		
-		phone3 = new NumericTextField(4,4);
-		phone3.getDocument().addDocumentListener(new PhoneFieldDocumentListener());
-		add(phone3);
+		phone3Field = new NumericTextField(4,4);
+		phone3Field.getDocument().addDocumentListener(new PhoneFieldDocumentListener());
+		phone3Field.addActionListener(new PhoneFieldActionListener());
+		add(phone3Field);
+		
 	}
 
 	@Override
 	public boolean requestFocusInWindow(){
-		return phone1.requestFocusInWindow();
+		return phone1Field.requestFocusInWindow();
+	}
+		
+	public void addActionListener(ActionListener l) {
+		listenerList.add(ActionListener.class, l);
+	}
+
+	public void removeActionListener(ActionListener l) {
+		listenerList.remove(ActionListener.class, l);
+	}
+	
+	protected void fireActionPerformed(ActionEvent e) {
+	    Object[] listeners = listenerList.getListenerList();
+
+	    for (int i = listeners.length - 2; i >= 0; i -= 2) {
+	        if (listeners[i] == ActionListener.class) {
+	            ((ActionListener)listeners[i + 1]).actionPerformed(e);
+	        }
+	    }
+	}
+
+	public ActionListener[] getActionListeners() {
+		return (ActionListener[]) listenerList.getListeners(ActionListener.class);
+	}	
+	
+	private class PhoneFieldActionListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			fireActionPerformed(e);
+		}
+
 	}
 	
 	private class PhoneFieldDocumentListener implements DocumentListener {
@@ -83,12 +129,12 @@ public class PhoneField extends Panel implements FormField {
 		public void removeUpdate(DocumentEvent e) {}
 
 		public void insertUpdate(DocumentEvent e) {
-			if (phone1.getText().length() == 3 && phone2.getText().length() == 0) {
-				phone2.requestFocus(true);
+			if (phone1Field.getText().length() == 3 && phone2Field.getText().length() == 0) {
+				phone2Field.requestFocus(true);
 			}
 
-			if (phone2.getText().length() == 3 	&& phone3.getText().length() == 0) {
-				phone3.requestFocus(true);
+			if (phone2Field.getText().length() == 3 	&& phone3Field.getText().length() == 0) {
+				phone3Field.requestFocus(true);
 			}
 		}
 	}

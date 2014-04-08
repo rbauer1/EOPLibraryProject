@@ -86,7 +86,6 @@ public class BookForm extends Form {
 		rightColumn.add(ViewHelper.formatFieldLeft("Publication Year", publicationYearField));
 		
 		SelectField conditionField = new SelectField(new String[] { "Good", "Damaged" });
-		conditionField.addActionListener(this);
 		addField("Condition", conditionField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Condition", conditionField));
 		

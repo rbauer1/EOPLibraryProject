@@ -69,6 +69,7 @@ public class ListBorrowersTransaction extends Transaction {
 		borrowerCollection = new BorrowerCollection();
 		borrowerCollection.findLike(props);
 		borrowers = borrowerCollection.getEntities();
+		System.out.println(borrowers);
 	}
 		
 }

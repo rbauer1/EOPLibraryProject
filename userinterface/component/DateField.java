@@ -9,7 +9,6 @@
  */
 package userinterface.component;
 
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
@@ -17,6 +16,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 
 import utilities.DateUtil;
@@ -38,7 +38,7 @@ public class DateField extends Panel implements FormField {
 	 * Constructs a date field.
 	 */
 	public DateField() {
-		super(new FlowLayout(FlowLayout.LEFT));
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));	
 		calendar = new GregorianCalendar();
 		build();
 		addListeners();

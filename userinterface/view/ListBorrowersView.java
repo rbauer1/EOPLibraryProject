@@ -66,6 +66,7 @@ public class ListBorrowersView extends ListView {
 	}
 	
 	private void filter() {
+		System.out.println(form.getNonEmptyValues());
 		controller.stateChangeRequest(Key.GET_BORROWER_COLLECTION, form.getNonEmptyValues());
 	}
 

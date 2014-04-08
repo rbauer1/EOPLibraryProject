@@ -55,7 +55,7 @@ public abstract class Form extends Panel implements ActionListener{
 				values.setProperty(key, value);
 			}
 		}
-		return values;		
+		return filterValues(values);		
 	}
 	
 	public Properties getNonEmptyValues(){
@@ -66,7 +66,11 @@ public abstract class Form extends Panel implements ActionListener{
 				values.setProperty(key, value);
 			}
 		}
-		return values;		
+		return filterValues(values);	
+	}	
+	
+	protected Properties filterValues(Properties values){
+		return values;
 	}	
 	
 	public void setValues(Properties values){

@@ -82,8 +82,7 @@ public class BookSearchForm extends Form {
 	}
 	
 	@Override
-	public Properties getValues(){
-		Properties values = super.getValues();
+	protected Properties filterValues(Properties values){
 		if(values.getProperty("Status", "").equals("Any")){
 			values.remove("Status");
 		}

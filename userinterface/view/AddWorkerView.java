@@ -56,17 +56,19 @@ public class AddWorkerView extends View {
 	}
 
 	@Override
-	public void processAction(EventObject evt) {
+	public void processAction(EventObject event) {
 		messagePanel.clear();
-		if (evt.getSource() == backButton) {
+		Object source = event.getSource();
+
+		if (source == backButton) {
 			controller.stateChangeRequest(Key.DISPLAY_WORKER_MENU, null);
-		}else if (evt.getSource() == resetButton){
+		}else if (source == resetButton){
 			form.reset();
-		}else if (evt.getSource() == submitButton) {
+		}else if (source == submitButton || source == form) {
 			controller.stateChangeRequest(Key.SUBMIT_WORKER, form.getValues());
 		}
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {

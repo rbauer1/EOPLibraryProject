@@ -36,61 +36,61 @@ public class BorrowerForm extends Form {
 	
 	@Override
 	protected void build() {
-		//TODO confirm that date of hire should be date of Add
-				Panel fieldColumnsPanel = new Panel();
-				fieldColumnsPanel.setLayout(new BoxLayout(fieldColumnsPanel, BoxLayout.X_AXIS));
-				
-				Panel leftColumn = new Panel();
-				leftColumn.setLayout(new BoxLayout(leftColumn, BoxLayout.Y_AXIS));
-				fieldColumnsPanel.add(leftColumn);
+		Panel fieldColumnsPanel = new Panel();
+		fieldColumnsPanel.setLayout(new BoxLayout(fieldColumnsPanel, BoxLayout.X_AXIS));
 
-				TextField bannerIdField = new TextField(16);
-				bannerIdField.addActionListener(this);
-				addField("BannerID", bannerIdField);
-				leftColumn.add(ViewHelper.formatFieldLeft("Banner ID", bannerIdField));
-				
-				TextField firstNameField = new TextField(16);
-				firstNameField.addActionListener(this);
-				addField("FirstName", firstNameField);
-				leftColumn.add(ViewHelper.formatFieldLeft("First Name", firstNameField));
-				
-				TextField lastNameField = new TextField(16);
-				lastNameField.addActionListener(this);
-				addField("LastName", lastNameField);
-				leftColumn.add(ViewHelper.formatFieldLeft("Last Name", lastNameField));
-				
-				add(fieldColumnsPanel);	
-				Panel rightColumn = new Panel();
-				rightColumn.setLayout(new BoxLayout(rightColumn, BoxLayout.Y_AXIS));
-				
-				PhoneField phoneField = new PhoneField();
-//				phoneField.addActionListener(this); //TODO figure out about this
-				addField("ContactPhone", phoneField);
-				rightColumn.add(ViewHelper.formatFieldLeft("Phone Number", phoneField));
-				
-				TextField emailField = new TextField(16);
-				emailField.addActionListener(this);
-				addField("Email", emailField);
-				rightColumn.add(ViewHelper.formatFieldLeft("Email", emailField));
-/*				
-				SelectField statusField = new SelectField(new String[] { "Active", "Inactive" }); //TODO should this even be an option?
-				statusField.addActionListener(this);
-				addField("Status", statusField);
-				rightColumn.add(ViewHelper.formatFieldLeft("Status", statusField));
-				
-				SelectField borrowerStatusField = new SelectField(new String[] { "Good Standing", "Delinquent" }); //TODO should this even be an option?
-				borrowerStatusField.addActionListener(this);
-				borrowerStatusField.setPreferredSize(new Dimension(130,25));
-				addField("BorrowerStatus", borrowerStatusField);
-				rightColumn.add(ViewHelper.formatFieldLeft("Standing", borrowerStatusField));
-				*/
-				rightColumn.add(ViewHelper.createPlaceHolder());		
-				
-				TextArea notesField = new TextArea();
-				addField("Notes", notesField);
-				add(ViewHelper.formatTextAreaFieldLeft("Notes", notesField));	
-				
-				fieldColumnsPanel.add(rightColumn);
+		Panel leftColumn = new Panel();
+		leftColumn.setLayout(new BoxLayout(leftColumn, BoxLayout.Y_AXIS));
+		fieldColumnsPanel.add(leftColumn);
+
+		TextField bannerIdField = new TextField(16);
+		bannerIdField.addActionListener(this);
+		addField("BannerID", bannerIdField);
+		leftColumn.add(ViewHelper.formatFieldLeft("Banner ID", bannerIdField));
+
+		TextField firstNameField = new TextField(16);
+		firstNameField.addActionListener(this);
+		addField("FirstName", firstNameField);
+		leftColumn.add(ViewHelper.formatFieldLeft("First Name", firstNameField));
+
+		TextField lastNameField = new TextField(16);
+		lastNameField.addActionListener(this);
+		addField("LastName", lastNameField);
+		leftColumn.add(ViewHelper.formatFieldLeft("Last Name", lastNameField));
+
+		add(fieldColumnsPanel);
+		Panel rightColumn = new Panel();
+		rightColumn.setLayout(new BoxLayout(rightColumn, BoxLayout.Y_AXIS));
+
+		PhoneField phoneField = new PhoneField();
+		phoneField.addActionListener(this);
+		addField("ContactPhone", phoneField);
+		rightColumn.add(ViewHelper.formatFieldLeft("Phone", phoneField));
+
+		TextField emailField = new TextField(16);
+		emailField.addActionListener(this);
+		addField("Email", emailField);
+		rightColumn.add(ViewHelper.formatFieldLeft("Email", emailField));
+		/*
+		 * SelectField statusField = new SelectField(new String[] { "Active",
+		 * "Inactive" }); //TODO should this even be an option?
+		 * addField("Status", statusField);
+		 * rightColumn.add(ViewHelper.formatFieldLeft("Status", statusField));
+		 * 
+		 * SelectField borrowerStatusField = new SelectField(new String[] {
+		 * "Good Standing", "Delinquent" }); //TODO should this even be an option? 
+		 * borrowerStatusField.setPreferredSize(new Dimension(130,25));
+		 * addField("BorrowerStatus", borrowerStatusField);
+		 * rightColumn.add(ViewHelper.formatFieldLeft("Standing",
+		 * borrowerStatusField));
+		 */
+		rightColumn.add(ViewHelper.createPlaceHolder());
+
+		TextArea notesField = new TextArea();
+		addField("Notes", notesField);
+		add(ViewHelper.formatTextAreaFieldLeft("Notes", notesField));
+
+		fieldColumnsPanel.add(rightColumn);
 	}
 
 }

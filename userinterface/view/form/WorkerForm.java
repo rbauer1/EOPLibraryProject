@@ -10,7 +10,6 @@
 package userinterface.view.form;
 
 import java.awt.Dimension;
-import java.util.Properties;
 
 import javax.swing.BoxLayout;
 
@@ -59,11 +58,10 @@ public class WorkerForm extends Form {
 		
 		PasswordField confirmPasswordField = new PasswordField(16);
 		confirmPasswordField.addActionListener(this);
-		addField("NewPasswordConfirmation", confirmPasswordField); //TODO Handle confirmation
+		addField("NewPasswordConfirmation", confirmPasswordField);
 		leftColumn.add(ViewHelper.formatFieldLeft("Confirm Password", confirmPasswordField));
 
 		SelectField credentialsField = new SelectField(new String[] { "Ordinary", "Administrator"});
-		credentialsField.addActionListener(this);
 		credentialsField.setPreferredSize(new Dimension(130,25));
 		addField("Credentials", credentialsField);
 		leftColumn.add(ViewHelper.formatFieldLeft("Credentials", credentialsField));
@@ -85,9 +83,9 @@ public class WorkerForm extends Form {
 		rightColumn.add(ViewHelper.formatFieldLeft("Last Name", lastNameField));
 		
 		PhoneField phoneField = new PhoneField();
-//		phoneField.addActionListener(this); //TODO figure out about this
+		phoneField.addActionListener(this);
 		addField("ContactPhone", phoneField);
-		rightColumn.add(ViewHelper.formatFieldLeft("Phone Number", phoneField));
+		rightColumn.add(ViewHelper.formatFieldLeft("Phone", phoneField));
 		
 		TextField emailField = new TextField(16);
 		emailField.addActionListener(this);

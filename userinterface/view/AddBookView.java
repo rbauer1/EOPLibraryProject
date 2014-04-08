@@ -56,14 +56,15 @@ public class AddBookView extends View {
 	}
 
 	@Override
-	public void processAction(EventObject evt) {
+	public void processAction(EventObject event) {
 		messagePanel.clear();
+		Object source = event.getSource();
 
-		if (evt.getSource() == backButton) {
+		if (source == backButton) {
 			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
-		}else if (evt.getSource() == resetButton){
+		}else if (source == resetButton){
 			form.reset();
-		}else if (evt.getSource() == submitButton) {
+		}else if (source == submitButton || source == form) {
 			controller.stateChangeRequest(Key.SUBMIT_BOOK, form.getValues());
 		}
 	}
