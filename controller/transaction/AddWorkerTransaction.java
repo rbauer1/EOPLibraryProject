@@ -60,8 +60,6 @@ public class AddWorkerTransaction extends Transaction {
 	 */
 	private void addWorker(Properties workerData){
 		worker = new Worker(workerData);
-		//TODO handle encrypting password more gracefully in model
-		worker.stateChangeRequest(Key.PW, workerData.getProperty("Password"));
 		if(worker.save()){
 			stateChangeRequest(Key.SAVE_SUCCESS, null);
 		}else{

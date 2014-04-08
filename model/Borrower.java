@@ -93,7 +93,7 @@ public class Borrower extends Model {
 				
 		validator.addValidation(new LengthValidation("Notes", "Notes", 0, 300));
 	
-		validator.addValidation(new InclusionValidation("ActiveStatus", "Status", new String[] {"Active", "Inactive"}));
+		validator.addValidation(new InclusionValidation("Status", "Status", new String[] {"Active", "Inactive"}));
 
 		validator.addValidation(new PresenceValidation("DateOfLastUpdate", "Date Updated"));
 		validator.addValidation(new DateValidation("DateOfLastUpdate", "Date Updated"));
@@ -118,7 +118,7 @@ public class Borrower extends Model {
 	}
 	
 	public boolean setInactive(){
-		persistentState.setProperty("ActiveStatus", "Inactive");
+		persistentState.setProperty("Status", "Inactive");
 		return save();
 	}
 
@@ -132,7 +132,7 @@ public class Borrower extends Model {
 		String currentDate =  DateUtil.getDate();
 		if(isCreate){
 			persistentState.setProperty("BorrowerStatus", "Good Standing");
-			persistentState.setProperty("ActiveStatus", "Active");
+			persistentState.setProperty("Status", "Active");
 			persistentState.setProperty("MonetaryPenalty", "0.00");
 			persistentState.setProperty("DateOfFirstRegistration", currentDate);
 		}		

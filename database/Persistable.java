@@ -107,7 +107,7 @@ abstract public class Persistable {
 	 * @return list with each element being a Properties object containing the columnName=columnValue mappings
 	 */
 	protected List<Properties> getPersistentStateLike(Properties schema, Properties whereClause) {
-		return getSelectQueryResult(new SQLQueryStatement(schema, schema, whereClause, false).toString());
+		return getSelectQueryResult(new SQLSelectStatement(schema, schema, whereClause, false).toString());
 	}
 
 	/**
@@ -119,7 +119,7 @@ abstract public class Persistable {
 	 * @return list of Properties objects containing columnName=columnValue mappings
 	 */
 	protected List<Properties> getQueriedState(Properties schema, Properties projectionSchema, Properties whereClause) {
-		return getSelectQueryResult(new SQLQueryStatement(schema, projectionSchema, whereClause, false).toString());
+		return getSelectQueryResult(new SQLSelectStatement(schema, projectionSchema, whereClause, false).toString());
 	}
 
 	/**
@@ -131,7 +131,7 @@ abstract public class Persistable {
 	 * @return list of Properties objects containing columnName=columnValue mappings
 	 */
 	protected List<Properties> getQueriedStateWithExactMatches(Properties schema, Properties projectionSchema, Properties whereClause) {
-		return getSelectQueryResult(new SQLQueryStatement(schema, projectionSchema, whereClause, true).toString());
+		return getSelectQueryResult(new SQLSelectStatement(schema, projectionSchema, whereClause, true).toString());
 	}
 
 	/**

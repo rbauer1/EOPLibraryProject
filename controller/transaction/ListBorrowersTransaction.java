@@ -65,7 +65,7 @@ public class ListBorrowersTransaction extends Transaction {
 	}
 	
 	private void getBorrowers(Properties props){
-		props.setProperty("ActiveStatus", "Active");
+		props.setProperty("Status", "Active");
 		borrowerCollection = new BorrowerCollection();
 		borrowerCollection.findLike(props);
 		borrowers = borrowerCollection.getEntities();

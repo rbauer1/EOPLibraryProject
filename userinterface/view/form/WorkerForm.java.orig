@@ -10,7 +10,6 @@
 package userinterface.view.form;
 
 import java.awt.Dimension;
-import java.util.Properties;
 
 import javax.swing.BoxLayout;
 
@@ -96,5 +95,19 @@ public class WorkerForm extends Form {
 
 		fieldColumnsPanel.add(rightColumn);
 	}
+<<<<<<< HEAD
 
+	@Override
+	public Properties getValues(){
+		Properties values = super.getValues();
+		//TODO dont do this
+		// I need to handle password changes in worker model
+		values.remove("NewPassword");
+		values.remove("NewPasswordConfirmation");
+		return values;		
+	}
+
+=======
+>>>>>>> Cleaned up DB queries and fixes Modify/Add Worker password issues
+	
 }

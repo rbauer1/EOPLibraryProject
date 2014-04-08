@@ -37,7 +37,6 @@ public class BorrowerForm extends Form {
 	@Override
 	protected void build() {
 		//TODO confirm that date of hire should be date of Add
-				//TODO put in required fields message		
 				Panel fieldColumnsPanel = new Panel();
 				fieldColumnsPanel.setLayout(new BoxLayout(fieldColumnsPanel, BoxLayout.X_AXIS));
 				
@@ -73,18 +72,18 @@ public class BorrowerForm extends Form {
 				emailField.addActionListener(this);
 				addField("Email", emailField);
 				rightColumn.add(ViewHelper.formatFieldLeft("Email", emailField));
+/*				
+				SelectField statusField = new SelectField(new String[] { "Active", "Inactive" }); //TODO should this even be an option?
+				statusField.addActionListener(this);
+				addField("Status", statusField);
+				rightColumn.add(ViewHelper.formatFieldLeft("Status", statusField));
 				
-//				SelectField activeStatusField = new SelectField(new String[] { "Active", "Inactive" }); //TODO should this even be an option?
-//				activeStatusField.addActionListener(this);
-//				addField("ActiveStatus", activeStatusField);
-//				rightColumn.add(ViewHelper.formatFieldLeft("Status", activeStatusField));
-				
-//				SelectField borrowerStatusField = new SelectField(new String[] { "Good Standing", "Delinquent" }); //TODO should this even be an option?
-//				borrowerStatusField.addActionListener(this);
-//				borrowerStatusField.setPreferredSize(new Dimension(130,25));
-//				addField("BorrowerStatus", borrowerStatusField);
-//				rightColumn.add(ViewHelper.formatFieldLeft("Standing", borrowerStatusField));
-				
+				SelectField borrowerStatusField = new SelectField(new String[] { "Good Standing", "Delinquent" }); //TODO should this even be an option?
+				borrowerStatusField.addActionListener(this);
+				borrowerStatusField.setPreferredSize(new Dimension(130,25));
+				addField("BorrowerStatus", borrowerStatusField);
+				rightColumn.add(ViewHelper.formatFieldLeft("Standing", borrowerStatusField));
+				*/
 				rightColumn.add(ViewHelper.createPlaceHolder());		
 				
 				TextArea notesField = new TextArea();

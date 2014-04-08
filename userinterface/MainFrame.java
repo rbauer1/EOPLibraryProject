@@ -160,6 +160,8 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 			// add our view into the CENTER of the MainFrame
 			this.getContentPane().add((JPanel)newView, BorderLayout.CENTER);
 
+			((JPanel)newView).repaint();
+			
 			// pack the frame and show it
 			this.pack();
 			

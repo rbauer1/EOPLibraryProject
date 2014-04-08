@@ -87,7 +87,7 @@ public class BookForm extends Form {
 		
 		SelectField conditionField = new SelectField(new String[] { "Good", "Damaged" });
 		conditionField.addActionListener(this);
-		addField("BookCondition", conditionField);
+		addField("Condition", conditionField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Condition", conditionField));
 		
 		CurrencyTextField suggestedPriceField = new CurrencyTextField(16, 16);

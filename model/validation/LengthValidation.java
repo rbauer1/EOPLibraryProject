@@ -18,7 +18,30 @@ public class LengthValidation extends Validation {
 	
 	/** Error message displayed when field length not equal to equal value */
 	private String notEqualToMessage;
+	
+	/** Allow field to be empty */
+	private  boolean allowEmpty;
 
+	/**
+	 * Constructs validation for field key that ensures field length 
+	 * is between minSize and maxSize (Inclusive). If minSize == maxSize,
+	 * then validation ensures field length is equal to minSize also.
+	 * @param fieldKey
+	 * @param fieldName
+	 * @param minSize
+	 * @param maxSize
+	 * @param allowEmpty
+	 */
+	public LengthValidation(String fieldKey, String fieldName, int minSize, int maxSize, boolean allowEmpty) {
+		super(fieldKey, fieldName);
+		this.minSize = minSize;
+		this.maxSize = maxSize;
+		this.tooShortMessage = "is too short (Minimum length is %{length})";
+		this.tooLongMessage = "is too long (Maximum length is %{length})";
+		this.notEqualToMessage = "must have a length of %{length}";
+		this.allowEmpty = allowEmpty;
+	}
+	
 	/**
 	 * Constructs validation for field key that ensures field length 
 	 * is between minSize and maxSize (Inclusive). If minSize == maxSize,
@@ -29,12 +52,7 @@ public class LengthValidation extends Validation {
 	 * @param maxSize
 	 */
 	public LengthValidation(String fieldKey, String fieldName, int minSize, int maxSize) {
-		super(fieldKey, fieldName);
-		this.minSize = minSize;
-		this.maxSize = maxSize;
-		this.tooShortMessage = "is too short (Minimum length is %{length})";
-		this.tooLongMessage = "is too long (Maximum length is %{length})";
-		this.notEqualToMessage = "must have a length of %{length}";
+		this(fieldKey, fieldName, minSize, maxSize, false);
 	}
 	
 	/**
@@ -45,7 +63,19 @@ public class LengthValidation extends Validation {
 	 * @param equalToSize
 	 */
 	public LengthValidation(String fieldKey, String fieldName, int equalToSize) {
-		this(fieldKey, fieldName, equalToSize, equalToSize);
+		this(fieldKey, fieldName, equalToSize, false);
+	}
+	
+	/**
+	 * Constructs validation for field key that ensures field length 
+	 * is equal to equalToSize.
+	 * @param fieldKey
+	 * @param fieldName
+	 * @param equalToSize
+	 * @param allowEmpty
+	 */
+	public LengthValidation(String fieldKey, String fieldName, int equalToSize, boolean allowEmpty) {
+		this(fieldKey, fieldName, equalToSize, equalToSize, allowEmpty);
 	}
 	
 	/**
@@ -77,10 +107,14 @@ public class LengthValidation extends Validation {
 
 	@Override
 	public boolean execute(Object value, ModelValidator validator) {
-		String str = (String)value;
-		if(str == null){
-			str = "";
+		if(value == null){
+			value = "";
 		}
+		String str = (String)value;
+		if(allowEmpty && str.length() == 0){
+			return true;
+		}
+		
 		if(this.minSize == this.maxSize && str.length() != this.minSize){
 			validator.addError(getFieldKey(), getFieldName() + " " + 
 					this.notEqualToMessage.replace("%{length}", this.minSize + ""));

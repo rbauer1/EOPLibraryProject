@@ -19,7 +19,9 @@ import model.validation.AlphaNumericValidation;
 import model.validation.BannerIdValidation;
 import model.validation.DateValidation;
 import model.validation.EmailValidation;
+import model.validation.EqualityValidation;
 import model.validation.InclusionValidation;
+import model.validation.LengthValidation;
 import model.validation.PhoneValidation;
 import model.validation.PresenceValidation;
 import utilities.DateUtil;
@@ -78,7 +80,8 @@ public class Worker extends Model {
 		validator.addValidation(new PresenceValidation("BannerID", "Banner Id"));
 		validator.addValidation(new BannerIdValidation("BannerID", "Banner Id"));
 		
-		validator.addValidation(new PresenceValidation("Password", "Password"));
+		validator.addValidation(new LengthValidation("NewPassword", "New Password", 6, 50, true));
+		validator.addValidation(new EqualityValidation("NewPassword", "New Password", "NewPasswordConfirmation", "Password Confirmation"));
 		
 		validator.addValidation(new PresenceValidation("FirstName", "First Name"));
 		validator.addValidation(new AlphaNumericValidation("FirstName", "First Name"));
@@ -100,7 +103,7 @@ public class Worker extends Model {
 		validator.addValidation(new PresenceValidation("DateOfHire", "Date Registered"));
 		validator.addValidation(new DateValidation("DateOfHire", "Date Registered"));
 		
-		validator.addValidation(new InclusionValidation("ActiveStatus", "Status", new String[] {"Active", "Inactive"}));
+		validator.addValidation(new InclusionValidation("Status", "Status", new String[] {"Active", "Inactive"}));
 
 		validator.addValidation(new PresenceValidation("DateOfLastUpdate", "Date Updated"));
 		validator.addValidation(new DateValidation("DateOfLastUpdate", "Date Updated"));	
@@ -164,10 +167,22 @@ public class Worker extends Model {
 		String currentDate =  DateUtil.getDate();
 		if(isCreate){
 			persistentState.setProperty("DateOfHire", currentDate);
-			persistentState.setProperty("ActiveStatus", "Active");
+			persistentState.setProperty("Status", "Active");
 		}
+		persistentState.setProperty("DateOfHire", currentDate);
 		persistentState.setProperty("DateOfLatestCredentialsStatus", currentDate);
 		persistentState.setProperty("DateOfLastUpdate", currentDate);
+		return true;
+	}
+	
+	@Override
+	public boolean beforeSave(boolean isCreate) {
+		String password = persistentState.getProperty("NewPassword");
+		// New Password is set which means the password is being saved
+		if(password != null && password.length() > 0){
+			persistentState.setProperty("Password", encrypt(password));
+		}
+		
 		return true;
 	}
 
@@ -197,7 +212,7 @@ public class Worker extends Model {
 	}
 
 	public boolean setInactive(){
-		persistentState.setProperty("ActiveStatus", "Inactive");
+		persistentState.setProperty("Status", "Inactive");
 		return save();
 	}
 }

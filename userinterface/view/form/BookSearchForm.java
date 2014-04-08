@@ -71,9 +71,8 @@ public class BookSearchForm extends Form {
 		
 		SelectField conditionField = new SelectField(new String[] { "Active", "Lost", "Inactive", "Any"});
 		conditionField.addActionListener(this);
-		addField("BookStatus", conditionField);
+		addField("Status", conditionField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Status", conditionField));
-		//TODO Handle options
 		
 		rightColumn.add(ViewHelper.createPlaceHolder());
 		
@@ -85,8 +84,8 @@ public class BookSearchForm extends Form {
 	@Override
 	public Properties getValues(){
 		Properties values = super.getValues();
-		if(values.getProperty("BookStatus", "").equals("Any")){
-			values.remove("BookStatus");
+		if(values.getProperty("Status", "").equals("Any")){
+			values.remove("Status");
 		}
 		return values;		
 	}
