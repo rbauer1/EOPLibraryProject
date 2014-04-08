@@ -16,6 +16,7 @@ import javax.swing.BoxLayout;
 
 import userinterface.ViewHelper;
 import userinterface.component.Button;
+import userinterface.component.NumericTextField;
 import userinterface.component.Panel;
 import userinterface.component.PhoneField;
 import userinterface.component.SelectField;
@@ -47,7 +48,7 @@ public class BorrowerSearchForm extends Form {
 		leftColumn.setLayout(new BoxLayout(leftColumn, BoxLayout.Y_AXIS));
 		fieldColumnsPanel.add(leftColumn);
 		
-		TextField bannerIdField = new TextField(16);
+		NumericTextField bannerIdField = new NumericTextField(16, 9);
 		bannerIdField.addActionListener(this);
 		addField("BannerID", bannerIdField);
 		leftColumn.add(ViewHelper.formatFieldLeft("Banner ID", bannerIdField));		
@@ -62,6 +63,11 @@ public class BorrowerSearchForm extends Form {
 		addField("LastName", lastNameField);
 		leftColumn.add(ViewHelper.formatFieldLeft("Last Name", lastNameField));
 		
+		TextField emailField = new TextField(16);
+		emailField.addActionListener(this);
+		addField("Email", emailField);
+		leftColumn.add(ViewHelper.formatFieldLeft("Email", emailField));
+		
 		Panel rightColumn = new Panel();
 		rightColumn.setLayout(new BoxLayout(rightColumn, BoxLayout.Y_AXIS));
 		fieldColumnsPanel.add(rightColumn);
@@ -71,16 +77,17 @@ public class BorrowerSearchForm extends Form {
 		addField("ContactPhone", phoneField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Phone", phoneField));
 		
-		TextField emailField = new TextField(16);
-		emailField.addActionListener(this);
-		addField("Email", emailField);
-		rightColumn.add(ViewHelper.formatFieldLeft("Email", emailField));
-		
 		SelectField borrowerStatusField = new SelectField(new String[] { "Any", "Good Standing", "Delinquent"});
 		borrowerStatusField.addActionListener(this);
 		borrowerStatusField.setPreferredSize(new Dimension(130,25));
 		addField("BorrowerStatus", borrowerStatusField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Borrowing Status", borrowerStatusField));
+		
+		SelectField statusField = new SelectField(new String[] { "Active", "Inactive", "Any"});
+		statusField.addActionListener(this);
+		statusField.setPreferredSize(new Dimension(130,25));
+		addField("Status", statusField);
+		rightColumn.add(ViewHelper.formatFieldLeft("Status", statusField));
 		
 		Button searchButton = new Button("Search");
 		searchButton.addActionListener(this);
@@ -91,6 +98,9 @@ public class BorrowerSearchForm extends Form {
 	protected Properties filterValues(Properties values){
 		if(values.getProperty("BorrowerStatus", "").equals("Any")){
 			values.remove("BorrowerStatus");
+		}
+		if(values.getProperty("Status", "").equals("Any")){
+			values.remove("Status");
 		}
 		return values;		
 	}

@@ -12,6 +12,7 @@ package userinterface.view.form;
 import javax.swing.BoxLayout;
 
 import userinterface.ViewHelper;
+import userinterface.component.NumericTextField;
 import userinterface.component.Panel;
 import userinterface.component.PhoneField;
 import userinterface.component.TextArea;
@@ -43,7 +44,7 @@ public class BorrowerForm extends Form {
 		leftColumn.setLayout(new BoxLayout(leftColumn, BoxLayout.Y_AXIS));
 		fieldColumnsPanel.add(leftColumn);
 
-		TextField bannerIdField = new TextField(16);
+		NumericTextField bannerIdField = new NumericTextField(16,9);
 		bannerIdField.addActionListener(this);
 		addField("BannerID", bannerIdField);
 		leftColumn.add(ViewHelper.formatFieldLeft("Banner ID", bannerIdField));

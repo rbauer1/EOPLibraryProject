@@ -9,6 +9,7 @@
  */
 package userinterface.view.form;
 
+import java.awt.Dimension;
 import java.util.Properties;
 
 import javax.swing.BoxLayout;
@@ -58,7 +59,7 @@ public class BookSearchForm extends Form {
 		TextField author1Field = new TextField(16);
 		author1Field.addActionListener(this);
 		addField("Author1", author1Field);
-		leftColumn.add(ViewHelper.formatFieldLeft("Author 1", author1Field));
+		leftColumn.add(ViewHelper.formatFieldLeft("Author", author1Field));
 		
 		Panel rightColumn = new Panel();
 		rightColumn.setLayout(new BoxLayout(rightColumn, BoxLayout.Y_AXIS));
@@ -69,13 +70,18 @@ public class BookSearchForm extends Form {
 		addField("ISBN", isbnField);
 		rightColumn.add(ViewHelper.formatFieldLeft("ISBN", isbnField));
 		
-		SelectField conditionField = new SelectField(new String[] { "Active", "Lost", "Inactive", "Any"});
+		SelectField conditionField = new SelectField(new String[] { "Any", "Good", "Damaged" });
 		conditionField.addActionListener(this);
-		addField("Status", conditionField);
-		rightColumn.add(ViewHelper.formatFieldLeft("Status", conditionField));
+		conditionField.setPreferredSize(new Dimension(130,25));
+		addField("Condition", conditionField);
+		rightColumn.add(ViewHelper.formatFieldLeft("Condition", conditionField));
 		
-		rightColumn.add(ViewHelper.createPlaceHolder());
-		
+		SelectField statusField = new SelectField(new String[] { "Active", "Lost", "Inactive", "Any"});
+		statusField.addActionListener(this);
+		statusField.setPreferredSize(new Dimension(130,25));
+		addField("Status", statusField);
+		rightColumn.add(ViewHelper.formatFieldLeft("Status", statusField));
+				
 		Button searchButton = new Button("Search");
 		searchButton.addActionListener(this);
 		add(ViewHelper.formatCenter(searchButton));
@@ -83,6 +89,9 @@ public class BookSearchForm extends Form {
 	
 	@Override
 	protected Properties filterValues(Properties values){
+		if(values.getProperty("Condition", "").equals("Any")){
+			values.remove("Condition");
+		}
 		if(values.getProperty("Status", "").equals("Any")){
 			values.remove("Status");
 		}

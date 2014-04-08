@@ -80,6 +80,7 @@ public class Worker extends Model {
 		validator.addValidation(new PresenceValidation("BannerID", "Banner Id"));
 		validator.addValidation(new BannerIdValidation("BannerID", "Banner Id"));
 		
+		validator.addValidation(new PresenceValidation("Password", "Password"));
 		validator.addValidation(new LengthValidation("NewPassword", "New Password", 6, 50, true));
 		validator.addValidation(new EqualityValidation("NewPassword", "New Password", "NewPasswordConfirmation", "Password Confirmation"));
 		
