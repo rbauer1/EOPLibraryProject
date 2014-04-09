@@ -12,16 +12,18 @@ package userinterface.view;
 import impresario.IView;
 
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.EventObject;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.border.Border;
+import javax.swing.JPanel;
 
+import userinterface.ViewHelper;
+import userinterface.component.Button;
 import userinterface.component.Label;
 import userinterface.component.Panel;
 import userinterface.message.MessagePanel;
@@ -39,10 +41,10 @@ public abstract class View extends Panel implements IView, ActionListener {
 	
 	/** Panel for displaying messages */
 	protected MessagePanel messagePanel;
+	
+	/** Buttons on the bottom of screen */
+	protected Map<String, Button> buttons;
 
-	/** GUI components **/
-	// protected final Color blue = new Color ( 133, 195, 230 );
-	// protected static final Color BACKGROUNG_COLOR = new Color (0x577080);
 	public static final Color BACKGROUND_COLOR = new Color(0xF0F0E8);
 	public static final Color BANNER_COLOR = new Color(0xE2E2D4);
 	public static final Color SEPARATOR_COLOR = new Color(0x668D3C);
@@ -50,53 +52,15 @@ public abstract class View extends Panel implements IView, ActionListener {
 	public static final String FONT_NAME = "Garamond";
 	public static final int GENERAL_FONT_SIZE = 16;
 	public static final int TITLE_FONT_SIZE = GENERAL_FONT_SIZE + 2;
-
-	/**
-	 * indicate the font for all components that will be used in the program
-	 * views, i.e. JButtons, JTextFields, JLabels and etc.
-	 **/
-	protected static final Font GENERAL_FONT = new Font(FONT_NAME,
-			Font.TYPE1_FONT, GENERAL_FONT_SIZE);
-
-	/**
-	 * indicate the font for a View's Title, will be used to format all Views
-	 * Titles
-	 **/
-	protected static final Font TITLE_FONT = new Font(FONT_NAME, Font.BOLD,
-			TITLE_FONT_SIZE);
-
-	/** preferred empty box size, used to position components **/
-	protected static final Dimension SIZE = new Dimension(200, 15);
-
-	/** indicate preferred size of a Button **/
-	protected static final Dimension SIZE_BUTTON = new Dimension(185, 25);
-
-	/** indicate preferred size of a Combo Box **/
-	protected static final Dimension SMALL_DROP_DOWN = new Dimension(85, 25);
-
-	/** indicate preferred size of a Button **/
-	protected static final Dimension SIZE_BUTTON_SMALL = new Dimension(100, 25);
-
-	/** indicates preferred size of a Text Area **/
-	protected static final Dimension SIZE_AREA = new Dimension(300, 70);
-
-	/** indicates preferred size of a Label **/
-	protected static final Dimension SIZE_LABEL = new Dimension(102, 30);
-
-	/** indicates preferred size of a Large Label **/
-	protected static final Dimension SIZE_MID_LABEL = new Dimension(153, 30);
-
-	/** indicates preferred size of a Large Label **/
-	protected static final Dimension SIZE_LARGE_LABEL = new Dimension(204, 30);
-
-	/** indicates preferred size for a form **/
-	protected static final Dimension SIZE_FORM_SPACE = new Dimension(100, 5);
-
-	protected static final Border FORM_BORDER = BorderFactory
-			.createEmptyBorder(20, 50, 20, 20);
+	protected static final Font GENERAL_FONT = new Font(FONT_NAME, Font.TYPE1_FONT, GENERAL_FONT_SIZE);
 
 	protected View(Controller controller, String title) {
+		this(controller, title, null);
+	}
+	
+	protected View(Controller controller, String title, String[] buttonNames) {
 		this.controller = controller;
+		this.buttons = new HashMap<String, Button>();
 		
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -106,6 +70,14 @@ public abstract class View extends Panel implements IView, ActionListener {
 		// Add Message Panel
 		this.messagePanel = new MessagePanel();
 		add(messagePanel);
+		
+		// Build Content
+		build();
+		
+		// Create Buttons
+		if(buttonNames != null){
+			add(createButtons(buttonNames));
+		}
 	}
 	
 	/**
@@ -115,10 +87,29 @@ public abstract class View extends Panel implements IView, ActionListener {
 	public void afterShown() {
 		
 	}	
+	
+	public abstract void processAction(Object source);
 
-	public abstract void processAction(EventObject evt);
-
-	public void actionPerformed(ActionEvent evt) {
-		processAction(evt);
+	public void actionPerformed(ActionEvent event) {
+		processAction(event.getSource());
 	}
+	
+	protected abstract void build();
+	
+	protected void subscribeToController(String...keys){
+		for(String key : keys){
+			controller.subscribe(key, this);
+		}
+	}
+	
+	protected JPanel createButtons(String[] names){
+		Panel panel = new Panel(new FlowLayout(FlowLayout.CENTER));
+		for(String name : names){
+			Button button = new Button(name);
+			button.addActionListener(this);
+			buttons.put(name, button);
+			panel.add(ViewHelper.formatButton(button));
+		}
+		return panel;
+	};
 }

@@ -17,10 +17,18 @@ import model.BookCollection;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * Transaction that handles listing and selecting a book
+ */
 public class ListBooksTransaction extends Transaction {
-	private BookCollection bookCollection;
+	
+	/** list of books returned from search */
 	private List<Book> books;
+	
+	/** book selected from list */
 	private Book selectedBook;
+	
+	/** type of operation, can be Delete or Modify */
 	private String operationType;
 
 	/**
@@ -31,8 +39,7 @@ public class ListBooksTransaction extends Transaction {
 		super(parentController);
 		if(parentController instanceof DeleteBooksTransaction){
 			operationType = "Delete";
-		}
-		else if(parentController instanceof ModifyBooksTransaction){
+		}else if(parentController instanceof ModifyBooksTransaction){
 			operationType = "Modify";
 		}
 	}
@@ -44,7 +51,7 @@ public class ListBooksTransaction extends Transaction {
 
 	@Override
 	public Object getState(String key) {
-		if (key.equals(Key.GET_BOOK_COLLECTION)) {
+		if (key.equals(Key.BOOK_COLLECTION)) {
 			return books;
 		}else if(key.equals(Key.SELECT_BOOK)){
 			return selectedBook;
@@ -56,7 +63,7 @@ public class ListBooksTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.GET_BOOK_COLLECTION)){
+		if(key.equals(Key.BOOK_COLLECTION)){
 			getBooks((Properties)value);
 		}else if(key.equals(Key.SELECT_BOOK)){
 			selectedBook = (Book)value;
@@ -64,10 +71,13 @@ public class ListBooksTransaction extends Transaction {
 		registry.updateSubscribers(key, this);
 	}
 	
-	private void getBooks(Properties props){
-		bookCollection = new BookCollection();
-		bookCollection.findLike(props);
+	/**
+	 * Fetches books that match searchCriteria 
+	 * @param searchCriteria
+	 */
+	private void getBooks(Properties searchCriteria){
+		BookCollection bookCollection = new BookCollection();
+		bookCollection.findLike(searchCriteria);
 		books = bookCollection.getEntities();
-	}
-		
+	}		
 }

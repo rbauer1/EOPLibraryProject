@@ -17,10 +17,18 @@ import model.WorkerCollection;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * Transaction that handles listing and selecting a worker
+ */
 public class ListWorkersTransaction extends Transaction {
-	private WorkerCollection workerCollection;
+	
+	/** list of workers returned from search */
 	private List<Worker> workers;
+	
+	/** worker selected from list */
 	private Worker selectedWorker;
+	
+	/** type of operation, can be Delete or Modify */
 	private String operationType;
 
 	/**
@@ -31,8 +39,7 @@ public class ListWorkersTransaction extends Transaction {
 		super(parentController);
 		if(parentController instanceof DeleteWorkersTransaction){
 			operationType = "Delete";
-		}
-		else if(parentController instanceof ModifyWorkersTransaction){
+		}else if(parentController instanceof ModifyWorkersTransaction){
 			operationType = "Modify";
 		}
 	}
@@ -44,7 +51,7 @@ public class ListWorkersTransaction extends Transaction {
 
 	@Override
 	public Object getState(String key) {
-		if (key.equals(Key.GET_WORKER_COLLECTION)) {
+		if (key.equals(Key.WORKER_COLLECTION)) {
 			return workers;
 		}else if(key.equals(Key.SELECT_WORKER)){
 			return selectedWorker;
@@ -56,18 +63,21 @@ public class ListWorkersTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.GET_WORKER_COLLECTION)){
-			getBorrowers((Properties)value);
+		if(key.equals(Key.WORKER_COLLECTION)){
+			getWorkers((Properties)value);
 		}else if(key.equals(Key.SELECT_WORKER)){
 			selectedWorker = (Worker)value;
 		}
 		registry.updateSubscribers(key, this);
 	}
 	
-	private void getBorrowers(Properties props){
-		workerCollection = new WorkerCollection();
-		workerCollection.findLike(props);
+	/**
+	 * Fetches workers that match searchCriteria 
+	 * @param searchCriteria
+	 */
+	private void getWorkers(Properties searchCriteria){
+		WorkerCollection workerCollection = new WorkerCollection();
+		workerCollection.findLike(searchCriteria);
 		workers = workerCollection.getEntities();
-	}
-		
+	}		
 }

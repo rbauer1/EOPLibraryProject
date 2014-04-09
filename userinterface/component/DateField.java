@@ -66,6 +66,13 @@ public class DateField extends Panel implements FormField {
 		return monthField.requestFocusInWindow();
 	}
 	
+	@Override
+	public void setEnabled(boolean enabled){
+		monthField.setEnabled(enabled);
+		dayField.setEnabled(enabled);
+		yearField.setEnabled(enabled);
+	}
+	
 	/**
 	 * Builds the field
 	 */

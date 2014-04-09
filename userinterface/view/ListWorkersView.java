@@ -1,48 +1,49 @@
 package userinterface.view;
 
 import java.util.ArrayList;
-import java.util.EventObject;
 import java.util.List;
 
-import javax.swing.JPanel;
 import javax.swing.JTable;
 
 import model.Worker;
-import userinterface.ViewHelper;
-import userinterface.component.Button;
-import userinterface.component.Panel;
-import userinterface.view.form.Form;
 import userinterface.view.form.WorkerSearchForm;
+import userinterface.view.form.Form;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * View that provides interface to search and list workers
+ */
 public class ListWorkersView extends ListView {
 	
 	private static final long serialVersionUID = 3952404276228902079L;
 	
-	private Button submitButton;
-	private Button searchButton;
-	private Button cancelButton;
-
-	private List<Worker> workers;
-
-	private String operationType;
+	/** Names of buttons on bottom, Must be in order which you want them to appear */
+	private static final String[] BUTTON_NAMES = {"Submit", "Back"};
 	
+	/** Entities in the table */
+	private List<Worker> workers;
+	
+	/** Form to provide search criteria*/
 	private Form form;
 
+	/**
+	 * Constructs list workers view
+	 * @param controller
+	 */
 	public ListWorkersView(Controller controller) {
-		super(controller, "Worker Search");
+		super(controller, "Worker Search", BUTTON_NAMES);
 
-		// Get the operation type
-		operationType = (String) controller.getState(Key.OPERATION_TYPE);
-				
-		controller.subscribe(Key.GET_WORKER_COLLECTION, this);
-		controller.subscribe(Key.REFRESH_LIST, this);
+		// Get the operation type and update button
+		String operationType = (String) controller.getState(Key.OPERATION_TYPE);
+		if(operationType != null){
+			buttons.get("Submit").setText(operationType);
+		}
 		
-		// Get workers for initial filter settings
+		subscribeToController(Key.WORKER_COLLECTION, Key.REFRESH_LIST);
+		
+		// Get Workers for initial filter settings
 		filter();
-		
-		add(createButtonsPanel());
 	}
 	
 	@Override
@@ -51,34 +52,14 @@ public class ListWorkersView extends ListView {
 		add(form);
 	}
 
-	private JPanel createButtonsPanel() {
-		Panel buttonPanel = new Panel();
-
-		submitButton = new Button(operationType);
-		submitButton.addActionListener(this);
-		buttonPanel.add(submitButton);		
-
-		cancelButton = new Button("Cancel");
-		cancelButton.addActionListener(this);
-		buttonPanel.add(cancelButton);
-
-		return ViewHelper.formatCenter(buttonPanel);
-	}
-	
-	private void filter() {
-		controller.stateChangeRequest(Key.GET_WORKER_COLLECTION, form.getNonEmptyValues());
-	}
-
 	@Override
-	public void processAction(EventObject event) {
+	public void processAction(Object source) {
 		messagePanel.clear();
-		Object source = event.getSource();
-
-		if (source == searchButton || source == form) {
+		if (source == form) {
 			filter();
-		} else if (source == cancelButton) {
+		} else if (source == buttons.get("Back")) {
 			controller.stateChangeRequest(Key.DISPLAY_WORKER_MENU, null);
-		} else if (source == submitButton) {
+		} else if (source == buttons.get("Submit")) {
 			select();
 		}
 	}
@@ -86,7 +67,7 @@ public class ListWorkersView extends ListView {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {
-		if (key.equals(Key.GET_WORKER_COLLECTION)) {
+		if (key.equals(Key.WORKER_COLLECTION)) {
 			workers = (List<Worker>) value;
 			table.setModel(new WorkerTableModel(workers));
 			table.repaint();			
@@ -103,12 +84,7 @@ public class ListWorkersView extends ListView {
 
 	@Override
 	protected void processListSelection() {
-		int rowIndex = table.getSelectedRow();
-		if (rowIndex < 0) {
-			submitButton.setEnabled(false);
-		} else {
-			submitButton.setEnabled(true);
-		}
+		buttons.get("Submit").setEnabled(table.getSelectedRow() >= 0);
 	}
 	
 	@Override
@@ -121,12 +97,10 @@ public class ListWorkersView extends ListView {
 		}
 	}
 	
-	@Override
-	public void afterShown() {
-		if (table.getSelectedRow() < 0) {
-			submitButton.setEnabled(false);
-		} else {
-			submitButton.setEnabled(true);
-		}
+	/**
+	 * Filters the table by the criteria specified in the form
+	 */
+	private void filter() {
+		controller.stateChangeRequest(Key.WORKER_COLLECTION, form.getNonEmptyValues());
 	}
 }

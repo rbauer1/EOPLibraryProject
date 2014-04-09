@@ -9,19 +9,8 @@
  */
 package userinterface.view;
 
-import java.awt.FlowLayout;
-import java.util.EventObject;
-
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import userinterface.ViewHelper;
-import userinterface.component.Button;
-import userinterface.component.Panel;
-import userinterface.component.PasswordField;
-import userinterface.component.TextField;
 import userinterface.view.form.Form;
+import userinterface.view.form.LoginForm;
 import utilities.Key;
 import controller.Controller;
 
@@ -33,119 +22,51 @@ public class LoginView extends View {
 	
 	private static final long serialVersionUID = 5785171554484853130L;
 
-	/* Buttons */
-	private Button loginButton;
-	private Button forgotPasswordButton;
-	private Button exitButton;
-
+	/** Names of buttons on bottom, Must be in order which you want them to appear */
+	private static final String[] BUTTON_NAMES = {"Login", "Forgot Password"};
+	
 	/** Form to take in worker login data */
-	private LoginForm form;
+	private Form form;
 	
 	/**
 	 * Constructs Login view object and subscribes to the Librarian model.
 	 * @param model The Librarian
 	 */
 	public LoginView(Controller controller) {
-		super(controller, "Login");
-		
-		// Create Login form
+		super(controller, "Login", BUTTON_NAMES);
+		subscribeToController(Key.INPUT_ERROR, Key.RECOVER_PW_COMPLETED);
+	}	
+	
+	@Override
+	protected void build() {
 		form = new LoginForm(this);
 		add(form);
-		
-		// Create Button Panel
-		add(createButtonsPanel());	
-		
-		// Subscribe the to model events
-		controller.subscribe(Key.LOGIN_ERROR, this);
-		controller.subscribe(Key.RECOVER_PW_COMPLETED, this);
-		//TODO figure out a way to give the BannerID field focus automatically
-	}	
-
-	/**
-	 * Create button panel for this view.
-	 * @return button panel
-	 */
-	private JPanel createButtonsPanel() {
-		JPanel buttonPanel = new Panel(new FlowLayout(FlowLayout.CENTER));
-
-		loginButton = new Button("Login");
-		loginButton.addActionListener(this);
-		buttonPanel.add(loginButton);
-
-		buttonPanel.add(new JLabel("     "));
-		
-		forgotPasswordButton = new Button("Forgot Password");
-		forgotPasswordButton.addActionListener(this);
-		buttonPanel.add(forgotPasswordButton);
-/*
-		buttonPanel.add(new JLabel("     "));
-
-		exitButton = new Button("Exit");
-		exitButton.addActionListener(this);
-		buttonPanel.add(exitButton);*/
-
-		return ViewHelper.formatCenter(buttonPanel);
 	}
 
 	@Override
-	public void processAction(EventObject event) {
+	public void processAction(Object source) {
 		messagePanel.clear();
-		Object source = event.getSource();
-		
-		if (source == exitButton) {
-			controller.stateChangeRequest(Key.EXIT_SYSTEM, null);
-		} else if (source == forgotPasswordButton) {
+		if (source == buttons.get("Forgot Password")) {
 			controller.stateChangeRequest(Key.EXECUTE_RECOVER_PW, null);
+			//TODO send banner id along
 			form.reset();
-		} else if (source == loginButton || source == form) {	
+		} else if (source == buttons.get("Login") || source == form) {	
 			controller.stateChangeRequest(Key.LOGIN, form.getValues());
 			form.reset();
 		}
-
 	}
 	
 	@Override
 	public void updateState(String key, Object value) {
-		if (key.equals(Key.LOGIN_ERROR)) {
+		if (key.equals(Key.INPUT_ERROR)) {
 			messagePanel.displayErrorMessage(value.toString());
 		}else if(key.equals(Key.RECOVER_PW_COMPLETED) && (Boolean)value){
 			messagePanel.displayMessage("Success", "Password successfully changed");
 		}
-
 	}
 	
 	@Override
 	public void afterShown(){
 		form.requestFocusForDefaultField();
 	}
-	
-	/**
-	 * Form that takes worker login information
-	 */
-	private class LoginForm extends Form{
-
-		private static final long serialVersionUID = -3857834050959995582L;
-
-		public LoginForm(View view) {
-			super(view);
-		}
-
-		@Override
-		protected void build() {
-			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-			
-			TextField bannerIdField = new TextField(15);
-			bannerIdField.addActionListener(this);
-			addField("BannerID", bannerIdField);
-			add(ViewHelper.formatFieldCenter("Banner ID", bannerIdField));
-			
-			PasswordField passwordField = new PasswordField(15);
-			passwordField.addActionListener(this);
-			addField("Password", passwordField);
-			add(ViewHelper.formatFieldCenter("Password", passwordField));
-			
-		}
-		
-	}
-
 }

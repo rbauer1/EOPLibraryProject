@@ -9,82 +9,68 @@
  */
 package userinterface.view;
 
-import java.awt.FlowLayout;
-import java.util.EventObject;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import model.Worker;
-import userinterface.ViewHelper;
-import userinterface.component.Button;
-import userinterface.component.Panel;
-import userinterface.component.TextField;
-import userinterface.view.form.Form;
+import model.Model;
 import userinterface.view.form.WorkerForm;
+import userinterface.view.form.Form;
 import utilities.Key;
 import controller.Controller;
+
 /**
- * View that provides interface for user to modify a worker.
+ * View that provides interface for user to modify worker.
  */
 public class ModifyWorkerView extends View {
 	
 	private static final long serialVersionUID = 3340451129170570186L;
+	
+	/** Names of buttons on bottom, Must be in order which you want them to appear */
+	private static final String[] BUTTON_NAMES = {"Recover", "Save", "Reset", "Back"};
 
-	/** Form to take in worker data */
+	/** Form to take in data */
 	private Form form;
 	
-	private Worker worker;
-	
-	/* Buttons */
-	private JButton submitButton;
-	private JButton resetButton;
-	private JButton backButton;
+	/** Model whose data we are displaying */
+	private Model worker;
 	
 	/**
-	 * Constructs modify book view
+	 * Constructs modify worker view
 	 * @param controller
 	 */
 	public ModifyWorkerView(Controller controller) {
-		super(controller, "Modify Worker");
-		
+		super(controller, "Modify Worker", BUTTON_NAMES);
+		subscribeToController(Key.WORKER, Key.INPUT_ERROR, Key.SAVE_SUCCESS, Key.SAVE_ERROR);
+	}
+	
+	@Override
+	protected void build() {
 		form = new WorkerForm(this);
 		add(form);
-		
-		worker = (Worker) controller.getState(Key.SELECT_WORKER);
-		form.setValues(worker.getPersistentState());
-		
-		//TODO implement this cleaner
-		((TextField)form.get("BannerID")).setEnabled(false);
-		
-		add(createButtonsPanel());
-		
-		controller.subscribe(Key.INPUT_ERROR, this);
-		controller.subscribe(Key.SAVE_SUCCESS, this);
-		controller.subscribe(Key.SAVE_ERROR, this);
 	}
 
 	@Override
-	public void processAction(EventObject event) {
+	public void processAction(Object source) {
 		messagePanel.clear();
-		Object source = event.getSource();
-
-		if (source == backButton) {
+		if (source == buttons.get("Back")) {
 			controller.stateChangeRequest(Key.DISPLAY_WORKER_MENU, null);
-		}else if (source == resetButton){
-			form.reset();
-		}else if (source == submitButton || source == form) {
-			controller.stateChangeRequest(Key.SUBMIT_WORKER, form.getValues());
+		}else if (source == buttons.get("Reset")){
+			controller.stateChangeRequest(Key.RELOAD_ENTITY, null);
+		}else if (source == buttons.get("Save") || source == form) {
+			controller.stateChangeRequest(Key.SAVE_WORKER, form.getValues());
+		}else if (source == buttons.get("Recover")) {
+			setFormActive(true);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {
-		if (key.equals(Key.INPUT_ERROR)) {
-			System.out.println((List<String>) value);
+		if(key.equals(Key.WORKER)){
+			worker = (Worker) value;
+			form.setValues(worker.getPersistentState());
+			setFormActive(!worker.getState("Status").equals("Inactive"));
+		}else if (key.equals(Key.INPUT_ERROR)) {
 			messagePanel.displayErrorMessage("Aw shucks! There are errors in the input. Please try again.", (List<String>) value);
 		}else if(key.equals(Key.SAVE_SUCCESS)){
 			messagePanel.displayMessage("Success", "Well done! Worker was sucessfully saved."); 
@@ -94,28 +80,16 @@ public class ModifyWorkerView extends View {
 	}
 	
 	/**
-	 * Create button panel for this view.
-	 * @return button panel
+	 * Sets up the modify form depending on if the entity is active
+	 * @param active
 	 */
-	private JPanel createButtonsPanel() {
-		JPanel buttonPanel = new Panel(new FlowLayout(FlowLayout.CENTER));
-
-		submitButton = new Button("Save");
-		submitButton.addActionListener(this);
-		buttonPanel.add(submitButton);
-
-//		buttonPanel.add(new JLabel("     "));
-//		
-//		resetButton = new Button("Reset");
-//		resetButton.addActionListener(this);
-//		buttonPanel.add(resetButton);
-
-		buttonPanel.add(new JLabel("     "));
-
-		backButton = new Button("Back");
-		backButton.addActionListener(this);
-		buttonPanel.add(backButton);
-
-		return ViewHelper.formatCenter(buttonPanel);
+	private void setFormActive(boolean active){
+		form.setAllFieldsEnabled(active);
+		form.setFieldEnabled(worker.getPrimaryKey(), false);
+		buttons.get("Recover").getParent().setVisible(!active);
+		buttons.get("Save").getParent().setVisible(active);
+		if(!active){
+			messagePanel.displayMessage("Info", "Heads Up! This worker is archived. It must be recovered before it can be modified.");
+		}
 	}
 }

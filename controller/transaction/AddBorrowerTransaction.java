@@ -16,11 +16,12 @@ import model.Borrower;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * Transaction that handles adding a new borrower.
+ */
 public class AddBorrowerTransaction extends Transaction {
 	
-	/** Book Model this transaction is adding */
-	private Borrower borrower;
-	
+	/** List of errors in the input */
 	private List<String> inputErrors;
 
 	/**
@@ -44,21 +45,21 @@ public class AddBorrowerTransaction extends Transaction {
 		}
 		return null;
 	}
+
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.SUBMIT_BORROWER)){
+		if(key.equals(Key.SAVE_BORROWER)){
 			addBorrower((Properties) value);
 		}
 		registry.updateSubscribers(key, this);
 	}
 
-
 	/**
-	 * Creates book with provided data and saves it in db.
+	 * Creates borrower with provided data and saves it in db.
 	 * @param borrowerData
 	 */
 	private void addBorrower(Properties borrowerData){
-		borrower = new Borrower(borrowerData);
+		Borrower borrower = new Borrower(borrowerData);
 		if(borrower.save()){
 			stateChangeRequest(Key.SAVE_SUCCESS, null);
 		}else{
@@ -70,5 +71,4 @@ public class AddBorrowerTransaction extends Transaction {
 			}
 		}
 	}
-	
 }

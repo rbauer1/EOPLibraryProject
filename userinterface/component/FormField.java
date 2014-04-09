@@ -32,6 +32,15 @@ public interface FormField {
 	 */
 	public void reset();
 	
+	/**
+	 * Requests focus on this field.
+	 * @return true if it is likely to succeed
+	 */
 	public boolean requestFocusInWindow();
 	
+	/**
+	 * Sets field enabled or disabled
+	 * @param enabled - if field can be modified
+	 */
+	public void setEnabled(boolean enabled);
 }

@@ -22,6 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 
+import userinterface.component.Button;
 import userinterface.component.Label;
 import userinterface.component.Panel;
 import userinterface.view.form.Form;
@@ -40,6 +41,13 @@ public class ViewHelper {
 		Panel panel = new Panel(new FlowLayout(FlowLayout.CENTER));
 		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		panel.add(component);
+		return panel;
+	}	
+	
+	public static JPanel formatButton(Button button) {
+		Panel panel = new Panel(new FlowLayout(FlowLayout.CENTER));
+		panel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+		panel.add(button);
 		return panel;
 	}	
 	

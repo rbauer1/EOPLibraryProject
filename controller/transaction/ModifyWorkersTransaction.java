@@ -17,15 +17,19 @@ import model.Worker;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * Transaction that handles modifying a new worker.
+ */
 public class ModifyWorkersTransaction extends Transaction {
 	
 	/** Worker Model this transaction is updating */
 	private Worker worker;
 	
+	/** List of errors in the input */
 	private List<String> inputErrors;
 	
 	/**
-	 * Constructs Modify Worker Transaction
+	 * Constructs Modify Workers Transaction
 	 * @param parentController
 	 */
 	public ModifyWorkersTransaction(Controller parentController) {
@@ -33,14 +37,21 @@ public class ModifyWorkersTransaction extends Transaction {
 	}
 	
 	@Override
+	protected Properties getDependencies(){
+		Properties dependencies = new Properties();
+		dependencies.setProperty(Key.SELECT_WORKER, Key.WORKER);
+		dependencies.setProperty(Key.RELOAD_ENTITY, Key.WORKER);
+		return dependencies;
+	}
+	
+	@Override
 	public void execute(){
-		TransactionFactory.executeTransaction(this, "ListWorkersTransaction", 
-						Key.DISPLAY_WORKER_MENU, Key.SELECT_WORKER, Key.MODIFY_OR_DELETE);
+		TransactionFactory.executeTransaction(this, "ListWorkersTransaction", Key.DISPLAY_WORKER_MENU, Key.SELECT_WORKER);
 	}
 
 	@Override
 	public Object getState(String key) {
-		if(key.equals(Key.SELECT_WORKER)){
+		if(key.equals(Key.WORKER)){
 			return worker;
 		}
 		if(key.equals(Key.INPUT_ERROR)){
@@ -54,8 +65,10 @@ public class ModifyWorkersTransaction extends Transaction {
 		if(key.equals(Key.SELECT_WORKER)){
 			worker = (Worker)value;
 			showView("ModifyWorkerView");
-		}else if(key.equals(Key.SUBMIT_WORKER)){
-			updateBorrower((Properties)value);
+		}else if(key.equals(Key.SAVE_WORKER)){
+			updateWorker((Properties)value);
+		}else if(key.equals(Key.RELOAD_ENTITY)){
+			worker.reload();
 		}
 		registry.updateSubscribers(key, this);
 	}
@@ -64,7 +77,7 @@ public class ModifyWorkersTransaction extends Transaction {
 	 * Updates selected worker with provided data
 	 * @param workerData
 	 */
-	private void updateBorrower(Properties workerData){
+	private void updateWorker(Properties workerData){
 		worker.stateChangeRequest(workerData);
 		if(worker.save()){
 			stateChangeRequest(Key.SAVE_SUCCESS, null);
@@ -77,4 +90,5 @@ public class ModifyWorkersTransaction extends Transaction {
 			}
 		}
 	}
+	
 }	

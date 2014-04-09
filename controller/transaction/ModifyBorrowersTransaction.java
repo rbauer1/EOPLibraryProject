@@ -17,15 +17,19 @@ import model.Borrower;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * Transaction that handles modifying a new borrower.
+ */
 public class ModifyBorrowersTransaction extends Transaction {
 	
-	/** Book Model this transaction is updating */
+	/** Borrower Model this transaction is updating */
 	private Borrower borrower;
 	
+	/** List of errors in the input */
 	private List<String> inputErrors;
 	
 	/**
-	 * Constructs Modify Borrower Transaction
+	 * Constructs Modify Borrowers Transaction
 	 * @param parentController
 	 */
 	public ModifyBorrowersTransaction(Controller parentController) {
@@ -33,14 +37,21 @@ public class ModifyBorrowersTransaction extends Transaction {
 	}
 	
 	@Override
+	protected Properties getDependencies(){
+		Properties dependencies = new Properties();
+		dependencies.setProperty(Key.SELECT_BORROWER, Key.BORROWER);
+		dependencies.setProperty(Key.RELOAD_ENTITY, Key.BORROWER);
+		return dependencies;
+	}
+	
+	@Override
 	public void execute(){
-		TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", 
-						Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
+		TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
 	}
 
 	@Override
 	public Object getState(String key) {
-		if(key.equals(Key.SELECT_BORROWER)){
+		if(key.equals(Key.BORROWER)){
 			return borrower;
 		}
 		if(key.equals(Key.INPUT_ERROR)){
@@ -54,8 +65,10 @@ public class ModifyBorrowersTransaction extends Transaction {
 		if(key.equals(Key.SELECT_BORROWER)){
 			borrower = (Borrower)value;
 			showView("ModifyBorrowerView");
-		}else if(key.equals(Key.SUBMIT_BORROWER)){
+		}else if(key.equals(Key.SAVE_BORROWER)){
 			updateBorrower((Properties)value);
+		}else if(key.equals(Key.RELOAD_ENTITY)){
+			borrower.reload();
 		}
 		registry.updateSubscribers(key, this);
 	}
@@ -77,4 +90,5 @@ public class ModifyBorrowersTransaction extends Transaction {
 			}
 		}
 	}
+	
 }	

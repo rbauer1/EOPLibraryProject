@@ -14,6 +14,7 @@ import impresario.IView;
 import impresario.ModelRegistry;
 
 import java.util.HashMap;
+import java.util.Properties;
 
 import userinterface.MainFrame;
 import userinterface.view.View;
@@ -43,7 +44,7 @@ public abstract class Controller implements IView, IModel {
 		this.parentController = parentController;
 		this.frame = MainFrame.getInstance();
 		this.views = new HashMap<String, View>();
-		this.registry = new ModelRegistry(this.getClass().getSimpleName());
+		this.registry = new ModelRegistry(this.getClass().getSimpleName(), getDependencies());
 	}
 	
 	/**
@@ -75,6 +76,13 @@ public abstract class Controller implements IView, IModel {
 	 */
 	protected void showView(String name){
 		frame.swapToView(getView(name));
+	}
+	
+	/**
+	 * Sets the dependencies for keys in the registry
+	 */
+	protected Properties getDependencies(){
+		return new Properties();
 	}
 	
 	public void subscribe(String key, IView subscriber){

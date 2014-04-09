@@ -1,48 +1,49 @@
 package userinterface.view;
 
 import java.util.ArrayList;
-import java.util.EventObject;
 import java.util.List;
 
-import javax.swing.JPanel;
 import javax.swing.JTable;
 
 import model.Borrower;
-import userinterface.ViewHelper;
-import userinterface.component.Button;
-import userinterface.component.Panel;
 import userinterface.view.form.BorrowerSearchForm;
 import userinterface.view.form.Form;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * View that provides interface to search and list borrowers
+ */
 public class ListBorrowersView extends ListView {
 	
 	private static final long serialVersionUID = 3952404276228902079L;
 	
-	private Button submitButton;
-	private Button searchButton;
-	private Button cancelButton;
-
-	private List<Borrower> borrowers;
-
-	private String operationType;
+	/** Names of buttons on bottom, Must be in order which you want them to appear */
+	private static final String[] BUTTON_NAMES = {"Submit", "Back"};
 	
+	/** Entities in the table */
+	private List<Borrower> borrowers;
+	
+	/** Form to provide search criteria*/
 	private Form form;
 
+	/**
+	 * Constructs list borrowers view
+	 * @param controller
+	 */
 	public ListBorrowersView(Controller controller) {
-		super(controller, "Borrower Search");
+		super(controller, "Borrower Search", BUTTON_NAMES);
 
-		// Get the operation type
-		operationType = (String) controller.getState(Key.OPERATION_TYPE);
-				
-		controller.subscribe(Key.GET_BORROWER_COLLECTION, this);
-		controller.subscribe(Key.REFRESH_LIST, this);
+		// Get the operation type and update button
+		String operationType = (String) controller.getState(Key.OPERATION_TYPE);
+		if(operationType != null){
+			buttons.get("Submit").setText(operationType);
+		}
+		
+		subscribeToController(Key.BORROWER_COLLECTION, Key.REFRESH_LIST);
 		
 		// Get Borrowers for initial filter settings
 		filter();
-		
-		add(createButtonsPanel());
 	}
 	
 	@Override
@@ -51,35 +52,14 @@ public class ListBorrowersView extends ListView {
 		add(form);
 	}
 
-	private JPanel createButtonsPanel() {
-		Panel buttonPanel = new Panel();
-
-		submitButton = new Button(operationType);
-		submitButton.addActionListener(this);
-		buttonPanel.add(submitButton);		
-
-		cancelButton = new Button("Cancel");
-		cancelButton.addActionListener(this);
-		buttonPanel.add(cancelButton);
-
-		return ViewHelper.formatCenter(buttonPanel);
-	}
-	
-	private void filter() {
-		System.out.println(form.getNonEmptyValues());
-		controller.stateChangeRequest(Key.GET_BORROWER_COLLECTION, form.getNonEmptyValues());
-	}
-
 	@Override
-	public void processAction(EventObject event) {
+	public void processAction(Object source) {
 		messagePanel.clear();
-		Object source = event.getSource();
-
-		if (source == searchButton || source == form) {
+		if (source == form) {
 			filter();
-		} else if (source == cancelButton) {
+		} else if (source == buttons.get("Back")) {
 			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
-		} else if (source == submitButton) {
+		} else if (source == buttons.get("Submit")) {
 			select();
 		}
 	}
@@ -87,7 +67,7 @@ public class ListBorrowersView extends ListView {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {
-		if (key.equals(Key.GET_BORROWER_COLLECTION)) {
+		if (key.equals(Key.BORROWER_COLLECTION)) {
 			borrowers = (List<Borrower>) value;
 			table.setModel(new BorrowerTableModel(borrowers));
 			table.repaint();			
@@ -104,12 +84,7 @@ public class ListBorrowersView extends ListView {
 
 	@Override
 	protected void processListSelection() {
-		int rowIndex = table.getSelectedRow();
-		if (rowIndex < 0) {
-			submitButton.setEnabled(false);
-		} else {
-			submitButton.setEnabled(true);
-		}
+		buttons.get("Submit").setEnabled(table.getSelectedRow() >= 0);
 	}
 	
 	@Override
@@ -122,12 +97,10 @@ public class ListBorrowersView extends ListView {
 		}
 	}
 	
-	@Override
-	public void afterShown() {
-		if (table.getSelectedRow() < 0) {
-			submitButton.setEnabled(false);
-		} else {
-			submitButton.setEnabled(true);
-		}
+	/**
+	 * Filters the table by the criteria specified in the form
+	 */
+	private void filter() {
+		controller.stateChangeRequest(Key.BORROWER_COLLECTION, form.getNonEmptyValues());
 	}
 }

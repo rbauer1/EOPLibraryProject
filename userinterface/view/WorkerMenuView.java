@@ -9,14 +9,8 @@
  */
 package userinterface.view;
 
-import java.util.EventObject;
-
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-
 import userinterface.ViewHelper;
 import userinterface.component.Button;
-import userinterface.component.Panel;
 import utilities.Key;
 import controller.Controller;
 
@@ -39,45 +33,36 @@ public class WorkerMenuView extends View {
 	 */
 	public WorkerMenuView(Controller controller) {
 		super(controller, "Choose a Transaction Operation");
-		add(createMenuButtons());
-	}
-
-	/**
-	 * Creates the menu buttons
-	 * @return buttonPanel
-	 */
-	private JPanel createMenuButtons() {
-		JPanel buttonPanel = new Panel();
-		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-
-		addButton = new Button("Add Worker");
-		addButton.addActionListener(this);
-		buttonPanel.add(ViewHelper.formatCenter(addButton));
-
-		modifyButton = new Button("Modify Worker");
-		modifyButton.addActionListener(this);
-		buttonPanel.add(ViewHelper.formatCenter(modifyButton));
-
-		deleteButton = new Button("Delete Worker");
-		deleteButton.addActionListener(this);
-		buttonPanel.add(ViewHelper.formatCenter(deleteButton));
-
-		backButton = new Button("Back");
-		backButton.addActionListener(this);
-		buttonPanel.add(ViewHelper.formatCenter(backButton));
-
-		return buttonPanel;
 	}
 
 	@Override
-	public void processAction(EventObject evt) {
-		if (evt.getSource() == backButton) {
+	protected void build() {
+		addButton = new Button("Add Worker");
+		addButton.addActionListener(this);
+		add(ViewHelper.formatCenter(addButton));
+
+		modifyButton = new Button("Modify Worker");
+		modifyButton.addActionListener(this);
+		add(ViewHelper.formatCenter(modifyButton));
+
+		deleteButton = new Button("Delete Worker");
+		deleteButton.addActionListener(this);
+		add(ViewHelper.formatCenter(deleteButton));
+
+		backButton = new Button("Back");
+		backButton.addActionListener(this);
+		add(ViewHelper.formatCenter(backButton));
+	}
+
+	@Override
+	public void processAction(Object source) {
+		if (source == backButton) {
 			controller.stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);
-		} else if (evt.getSource() == addButton) {
+		} else if (source == addButton) {
 			controller.stateChangeRequest(Key.EXECUTE_ADD_WORKER, null);
-		}else if (evt.getSource() == modifyButton) {
+		}else if (source == modifyButton) {
 			controller.stateChangeRequest(Key.EXECUTE_MODIFY_WORKER, null);
-		} else if (evt.getSource() == deleteButton) {
+		} else if (source == deleteButton) {
 			controller.stateChangeRequest(Key.EXECUTE_DELETE_WORKER, null);
 		}
 	}

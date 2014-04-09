@@ -13,7 +13,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -62,7 +61,7 @@ public abstract class Form extends Panel implements ActionListener{
 		Properties values = new Properties();
 		for(String key : fields.keySet()){
 			String value = fields.get(key).getValue();
-			if(value != null){
+			if(value != null && value.length() > 0){
 				values.setProperty(key, value);
 			}
 		}
@@ -91,9 +90,19 @@ public abstract class Form extends Panel implements ActionListener{
 		return defaultFocusField.requestFocusInWindow();
 	}
 	
+	public void setAllFieldsEnabled(boolean enabled){
+		for(FormField field : fields.values()){
+			field.setEnabled(enabled);
+		}
+	}
+	
+	public void setFieldEnabled(String key, boolean enabled){
+		fields.get(key).setEnabled(enabled);
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		view.processAction(new EventObject(this));
+		view.processAction(this);
 	}
 	
 	protected abstract void build();

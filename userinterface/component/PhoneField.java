@@ -65,6 +65,13 @@ public class PhoneField extends Panel implements FormField {
 		phone2Field.reset();
 		phone3Field.reset();
 	}
+	
+	@Override
+	public void setEnabled(boolean enabled){
+		phone1Field.setEnabled(enabled);
+		phone2Field.setEnabled(enabled);
+		phone3Field.setEnabled(enabled);
+	}
 
 	private void build(){
 		phone1Field = new NumericTextField(3,3);

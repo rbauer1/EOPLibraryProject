@@ -69,6 +69,7 @@ public class MessagePanel extends Panel {
 	 */
 	public void clear() {
 		removeAll();
+		MainFrame.getInstance().pack();
 	}
 
 	/**

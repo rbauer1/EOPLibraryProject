@@ -81,7 +81,7 @@ public abstract class Model extends EntityBase {
 		whereClause.setProperty(key, value);
 		find(whereClause);
 	}
-	
+		
 	/**
 	 * Hook method to set up validations in subclasses.
 	 */
@@ -132,11 +132,15 @@ public abstract class Model extends EntityBase {
 	/**
 	 * Changes value of column for provided key in persistent state.
 	 * This method can be overridden in subclasses to implement specific functionality.
+	 * Ignores attempts to change primary key value of persisted entity.
 	 * @param key - column name
 	 * @param value - value of column
 	 */
 	public void stateChangeRequest(String key, Object value) {
-		this.persistentState.setProperty(key, (String) value);
+		if(persisted && key.equals(getPrimaryKey())){
+			return;
+		}
+		persistentState.setProperty(key, (String) value);
 	}
 	
 	/**
@@ -309,6 +313,25 @@ public abstract class Model extends EntityBase {
 		Properties whereClause = new Properties();
 		whereClause.setProperty(getPrimaryKey(), persistentState.getProperty(getPrimaryKey()));
 		updatePersistentState(getSchema(), persistentState, whereClause);
+	}
+	
+	/**
+	 * Resets the persistent state of the entity with its contents in the database.
+	 * Assumes the value of primary key has not been changed.
+	 * Throws IllegalStateException if called on non-persisted entity.
+	 */
+	public void reload(){
+		if(!persisted){
+			throw new IllegalStateException("Cannot reload a non persisted entity");
+		}
+		Properties whereClause = new Properties();
+		whereClause.setProperty(getPrimaryKey(), (String)getState(getPrimaryKey()));
+		try {
+			find(whereClause);
+		} catch (InvalidPrimaryKeyException e) {
+			new Event(Event.getLeafLevelClassName(this), "reload",
+					"Invalid value of primary key while trying to reload model.", Event.ERROR);
+		}
 	}
 	
 	/**

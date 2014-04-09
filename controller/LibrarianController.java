@@ -35,7 +35,7 @@ public class LibrarianController extends Controller {
 	 * @return value associated with the key
 	 */
 	public Object getState(String key) {
-		if (key.equals(Key.LOGIN_ERROR)) {
+		if (key.equals(Key.INPUT_ERROR)) {
 			return loginErrorMessage;
 		}else if(key.equals(Key.RECOVER_PW_COMPLETED)){
 			return passwordResetSuccess;
@@ -49,7 +49,7 @@ public class LibrarianController extends Controller {
 			loginWorker((Properties) value);
 			//TODO Possibly start using TO_BOOK_MENU in place of XXX_COMPLETED for Book transactions
 			
-		} else if (key.equals(Key.LOGIN_ERROR)) {			
+		} else if (key.equals(Key.INPUT_ERROR)) {			
 			loginErrorMessage = value.toString();
 		} else if (key.equals(Key.DISPLAY_MAIN_MENU)) {		
 			showView("MainMenuView");
@@ -112,13 +112,13 @@ public class LibrarianController extends Controller {
 		try {
 			Worker worker = new Worker(workerData.getProperty("BannerID",""));
 			if(!worker.validPassword(workerData.getProperty("Password",""))){
-				stateChangeRequest(Key.LOGIN_ERROR, "Invalid Banner Id or Password.");
+				stateChangeRequest(Key.INPUT_ERROR, "Invalid Banner Id or Password.");
 			}else{
 				System.out.println("login success");
 				showView("MainMenuView");
 			}
 		} catch (InvalidPrimaryKeyException e) {
-			stateChangeRequest(Key.LOGIN_ERROR, "Invalid Banner Id or Password.");
+			stateChangeRequest(Key.INPUT_ERROR, "Invalid Banner Id or Password.");
 		}
 	}
 	

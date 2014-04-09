@@ -71,6 +71,8 @@ abstract public class Persistable {
 				String typeValue = columns.getString(6).toLowerCase();
 				if (typeValue.startsWith("smallint") || typeValue.startsWith("mediumint") || typeValue.startsWith("int")) {
 					typeValue = "numeric";
+				} else if (typeValue.equals("enum")) {
+					typeValue = "enum";
 				} else {
 					typeValue = "text";
 				}

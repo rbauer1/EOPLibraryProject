@@ -9,18 +9,10 @@
  */
 package userinterface.view;
 
-import java.awt.FlowLayout;
-import java.util.EventObject;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import userinterface.ViewHelper;
-import userinterface.component.Button;
-import userinterface.component.Panel;
 import userinterface.view.form.BookForm;
+import userinterface.view.form.Form;
 import utilities.Key;
 import controller.Controller;
 
@@ -30,42 +22,37 @@ import controller.Controller;
 public class AddBookView extends View {
 	
 	private static final long serialVersionUID = -6030753682831962753L;
-
-	/** Form to take in book data */
-	private BookForm form;
 	
-	/* Buttons */
-	private JButton submitButton;
-	private JButton resetButton;
-	private JButton backButton;
+	/** Names of buttons on bottom, Must be in order which you want them to appear */
+	private static final String[] BUTTON_NAMES = {"Add", "Reset", "Back"};
+
+	/** Form to take in data */
+	private Form form;
 	
 	/**
 	 * Constructs add book view
 	 * @param controller
 	 */
 	public AddBookView(Controller controller) {
-		super(controller, "Add Book");
-		
+		super(controller, "Add Book", BUTTON_NAMES);
+		subscribeToController(Key.INPUT_ERROR, Key.SAVE_SUCCESS, Key.SAVE_ERROR);
+	}
+	
+	@Override
+	protected void build() {
 		form = new BookForm(this);
 		add(form);
-		add(createButtonsPanel());
-		
-		controller.subscribe(Key.INPUT_ERROR, this);
-		controller.subscribe(Key.SAVE_SUCCESS, this);
-		controller.subscribe(Key.SAVE_ERROR, this);
 	}
 
 	@Override
-	public void processAction(EventObject event) {
+	public void processAction(Object source) {
 		messagePanel.clear();
-		Object source = event.getSource();
-
-		if (source == backButton) {
+		if (source == buttons.get("Back")) {
 			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
-		}else if (source == resetButton){
+		}else if (source == buttons.get("Reset")){
 			form.reset();
-		}else if (source == submitButton || source == form) {
-			controller.stateChangeRequest(Key.SUBMIT_BOOK, form.getValues());
+		}else if (source == buttons.get("Add") || source == form) {
+			controller.stateChangeRequest(Key.SAVE_BOOK, form.getValues());
 		}
 	}
 
@@ -73,10 +60,10 @@ public class AddBookView extends View {
 	@Override
 	public void updateState(String key, Object value) {	
 		if (key.equals(Key.INPUT_ERROR)) {
-			System.out.println((List<String>) value);
 			messagePanel.displayErrorMessage("Aw shucks! There are errors in the input. Please try again.", (List<String>) value);
 		}else if(key.equals(Key.SAVE_SUCCESS)){
-			messagePanel.displayMessage("Success", "Well done! Book was sucessfully added."); 
+			messagePanel.displayMessage("Success", "Well done! Book was sucessfully added.");
+			form.reset();
 		}else if(key.equals(Key.SAVE_ERROR)){
 			messagePanel.displayErrorMessage("Whoops! An error occurred while saving.");
 		}
@@ -85,31 +72,5 @@ public class AddBookView extends View {
 	@Override
 	public void afterShown(){
 		form.requestFocusForDefaultField();
-	}
-	
-	/**
-	 * Create button panel for this view.
-	 * @return button panel
-	 */
-	private JPanel createButtonsPanel() {
-		JPanel buttonPanel = new Panel(new FlowLayout(FlowLayout.CENTER));
-
-		submitButton = new Button("Add");
-		submitButton.addActionListener(this);
-		buttonPanel.add(submitButton);
-
-		buttonPanel.add(new JLabel("     "));
-		
-		resetButton = new Button("Reset");
-		resetButton.addActionListener(this);
-		buttonPanel.add(resetButton);
-
-		buttonPanel.add(new JLabel("     "));
-
-		backButton = new Button("Back");
-		backButton.addActionListener(this);
-		buttonPanel.add(backButton);
-
-		return ViewHelper.formatCenter(buttonPanel);
 	}
 }

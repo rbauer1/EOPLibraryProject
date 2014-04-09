@@ -17,10 +17,17 @@ public abstract class ListView extends View implements ListSelectionListener{
 	private static final long serialVersionUID = 771887742917121575L;
 	
 	protected JTable table;
-
-	public ListView(Controller controller, String title) {
+	
+	protected ListView(Controller controller, String title) {
 		super(controller, title);
-		
+	}
+
+	protected ListView(Controller controller, String title, String[] buttonNames) {
+		super(controller, title, buttonNames);
+	}
+	
+	@Override
+	protected void build(){
 		buildFilterForm();
 		
 		table = createTable();
@@ -37,6 +44,11 @@ public abstract class ListView extends View implements ListSelectionListener{
 			}
 		});
 		add(new JScrollPane(table));
+	}
+	
+	@Override
+	public void afterShown() {
+		processListSelection();
 	}
 	
 	protected abstract void buildFilterForm();

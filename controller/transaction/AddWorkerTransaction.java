@@ -16,11 +16,12 @@ import model.Worker;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * Transaction that handles adding a new worker.
+ */
 public class AddWorkerTransaction extends Transaction {
 	
-	/** Worker Model this transaction is adding */
-	private Worker worker;
-	
+	/** List of errors in the input */
 	private List<String> inputErrors;
 
 	/**
@@ -47,19 +48,18 @@ public class AddWorkerTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.SUBMIT_WORKER)){
+		if(key.equals(Key.SAVE_WORKER)){
 			addWorker((Properties) value);
 		}
 		registry.updateSubscribers(key, this);
 	}
-
 
 	/**
 	 * Creates worker with provided data and saves it in db.
 	 * @param workerData
 	 */
 	private void addWorker(Properties workerData){
-		worker = new Worker(workerData);
+		Worker worker = new Worker(workerData);
 		if(worker.save()){
 			stateChangeRequest(Key.SAVE_SUCCESS, null);
 		}else{
@@ -71,5 +71,4 @@ public class AddWorkerTransaction extends Transaction {
 			}
 		}
 	}
-	
 }

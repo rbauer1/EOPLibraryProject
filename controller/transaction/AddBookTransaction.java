@@ -16,11 +16,12 @@ import model.Book;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * Transaction that handles adding a new book.
+ */
 public class AddBookTransaction extends Transaction {
 	
-	/** Book Model this transaction is adding */
-	private Book book;
-	
+	/** List of errors in the input */
 	private List<String> inputErrors;
 
 	/**
@@ -47,19 +48,18 @@ public class AddBookTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.SUBMIT_BOOK)){
+		if(key.equals(Key.SAVE_BOOK)){
 			addBook((Properties) value);
 		}
 		registry.updateSubscribers(key, this);
 	}
-
 
 	/**
 	 * Creates book with provided data and saves it in db.
 	 * @param bookData
 	 */
 	private void addBook(Properties bookData){
-		book = new Book(bookData);
+		Book book = new Book(bookData);
 		if(book.save()){
 			stateChangeRequest(Key.SAVE_SUCCESS, null);
 		}else{
@@ -71,5 +71,4 @@ public class AddBookTransaction extends Transaction {
 			}
 		}
 	}
-	
 }

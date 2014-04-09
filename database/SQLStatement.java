@@ -72,11 +72,11 @@ public abstract class SQLStatement {
 					String columnType = schema.getProperty(columnName).toLowerCase();
 					if (columnValue.equals("NULL")) {
 						whereClause += "IS NULL";
-					} else if (columnType.equals("numeric")){
+					} else if (columnType.equals("numeric")) {
 						whereClause += "= " + columnValue;
-					}else if(exactMatch){
+					} else if(exactMatch || columnType.equals("enum")) {
 						whereClause += "= '" + columnValue + "'";
-					}else{
+					}else {
 						whereClause += "LIKE '%" + columnValue + "%'";
 					}
 				}			
@@ -105,6 +105,7 @@ public abstract class SQLStatement {
 
 	@Override
 	public String toString() {
+		System.out.println(statement);
 		return statement;
 	}
 }

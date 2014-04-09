@@ -17,10 +17,18 @@ import model.BorrowerCollection;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * Transaction that handles listing and selecting a borrower
+ */
 public class ListBorrowersTransaction extends Transaction {
-	private BorrowerCollection borrowerCollection;
+	
+	/** list of borrowers returned from search */
 	private List<Borrower> borrowers;
+	
+	/** borrower selected from list */
 	private Borrower selectedBorrower;
+	
+	/** type of operation, can be Delete or Modify */
 	private String operationType;
 
 	/**
@@ -31,8 +39,7 @@ public class ListBorrowersTransaction extends Transaction {
 		super(parentController);
 		if(parentController instanceof DeleteBorrowersTransaction){
 			operationType = "Delete";
-		}
-		else if(parentController instanceof ModifyBorrowersTransaction){
+		}else if(parentController instanceof ModifyBorrowersTransaction){
 			operationType = "Modify";
 		}
 	}
@@ -44,7 +51,7 @@ public class ListBorrowersTransaction extends Transaction {
 
 	@Override
 	public Object getState(String key) {
-		if (key.equals(Key.GET_BORROWER_COLLECTION)) {
+		if (key.equals(Key.BORROWER_COLLECTION)) {
 			return borrowers;
 		}else if(key.equals(Key.SELECT_BORROWER)){
 			return selectedBorrower;
@@ -56,7 +63,7 @@ public class ListBorrowersTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.GET_BORROWER_COLLECTION)){
+		if(key.equals(Key.BORROWER_COLLECTION)){
 			getBorrowers((Properties)value);
 		}else if(key.equals(Key.SELECT_BORROWER)){
 			selectedBorrower = (Borrower)value;
@@ -64,11 +71,13 @@ public class ListBorrowersTransaction extends Transaction {
 		registry.updateSubscribers(key, this);
 	}
 	
-	private void getBorrowers(Properties props){
-		borrowerCollection = new BorrowerCollection();
-		borrowerCollection.findLike(props);
+	/**
+	 * Fetches borrowers that match searchCriteria 
+	 * @param searchCriteria
+	 */
+	private void getBorrowers(Properties searchCriteria){
+		BorrowerCollection borrowerCollection = new BorrowerCollection();
+		borrowerCollection.findLike(searchCriteria);
 		borrowers = borrowerCollection.getEntities();
-		System.out.println(borrowers);
-	}
-		
+	}		
 }

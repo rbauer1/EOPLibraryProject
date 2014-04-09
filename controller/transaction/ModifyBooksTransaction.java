@@ -17,11 +17,15 @@ import model.Book;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * Transaction that handles modifying a new book.
+ */
 public class ModifyBooksTransaction extends Transaction {
 	
 	/** Book Model this transaction is updating */
 	private Book book;
 	
+	/** List of errors in the input */
 	private List<String> inputErrors;
 	
 	/**
@@ -33,14 +37,21 @@ public class ModifyBooksTransaction extends Transaction {
 	}
 	
 	@Override
+	protected Properties getDependencies(){
+		Properties dependencies = new Properties();
+		dependencies.setProperty(Key.SELECT_BOOK, Key.BOOK);
+		dependencies.setProperty(Key.RELOAD_ENTITY, Key.BOOK);
+		return dependencies;
+	}
+	
+	@Override
 	public void execute(){
-		TransactionFactory.executeTransaction(this, "ListBooksTransaction", 
-						Key.DISPLAY_BOOK_MENU, Key.SELECT_BOOK);
+		TransactionFactory.executeTransaction(this, "ListBooksTransaction", Key.DISPLAY_BOOK_MENU, Key.SELECT_BOOK);
 	}
 
 	@Override
 	public Object getState(String key) {
-		if(key.equals(Key.SELECT_BOOK)){
+		if(key.equals(Key.BOOK)){
 			return book;
 		}
 		if(key.equals(Key.INPUT_ERROR)){
@@ -54,8 +65,10 @@ public class ModifyBooksTransaction extends Transaction {
 		if(key.equals(Key.SELECT_BOOK)){
 			book = (Book)value;
 			showView("ModifyBookView");
-		}else if(key.equals(Key.SUBMIT_BOOK)){
+		}else if(key.equals(Key.SAVE_BOOK)){
 			updateBook((Properties)value);
+		}else if(key.equals(Key.RELOAD_ENTITY)){
+			book.reload();
 		}
 		registry.updateSubscribers(key, this);
 	}

@@ -9,14 +9,8 @@
  */
 package userinterface.view;
 
-import java.util.EventObject;
-
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-
 import userinterface.ViewHelper;
 import userinterface.component.Button;
-import userinterface.component.Panel;
 import utilities.Key;
 import controller.Controller;
 
@@ -41,53 +35,45 @@ public class MainMenuView extends View {
 	 */
 	public MainMenuView(Controller controller) {
 		super(controller, "Choose a Transaction Operation");
-		add(createMenuButtons());
 	}
 
-	/**
-	 * Creates the menu buttons
-	 * @return buttonPanel
-	 */
-	private JPanel createMenuButtons() {
-		JPanel buttonPanel = new Panel();
-		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
+	@Override
+	protected void build() {
 		bookActionsButton = new Button("Book Actions");
 		bookActionsButton.addActionListener(this);
-		buttonPanel.add(ViewHelper.formatCenter(bookActionsButton));
+		add(ViewHelper.formatCenter(bookActionsButton));
 
 		borrowerActionsButton = new Button("Borrower Actions");
 		borrowerActionsButton.addActionListener(this);
-		buttonPanel.add(ViewHelper.formatCenter(borrowerActionsButton));
+		add(ViewHelper.formatCenter(borrowerActionsButton));
 
 		workerActionsButton = new Button("Workers Actions");
 		workerActionsButton.addActionListener(this);
-		buttonPanel.add(ViewHelper.formatCenter(workerActionsButton));
+		add(ViewHelper.formatCenter(workerActionsButton));
 
 		checkinBookButton = new Button("Check in a Book");
 		checkinBookButton.addActionListener(this);
-		buttonPanel.add(ViewHelper.formatCenter(checkinBookButton));
+		add(ViewHelper.formatCenter(checkinBookButton));
 
 		checkoutBookButton = new Button("Check out a Book");
 		checkoutBookButton.addActionListener(this);
-		buttonPanel.add(ViewHelper.formatCenter(checkoutBookButton));
+		add(ViewHelper.formatCenter(checkoutBookButton));
 
 		logoutButton = new Button("Logout");
 		logoutButton.addActionListener(this);
-		buttonPanel.add(ViewHelper.formatCenter(logoutButton));
-
-		return buttonPanel;
+		add(ViewHelper.formatCenter(logoutButton));
 	}
 
 	@Override
-	public void processAction(EventObject evt) {
-		if (evt.getSource() == logoutButton) {
+	public void processAction(Object source) {
+		if (source == logoutButton) {
 			controller.stateChangeRequest(Key.LOGOUT, null);
-		} else if (evt.getSource() == bookActionsButton) {
+		} else if (source == bookActionsButton) {
 			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
-		} else if (evt.getSource() == borrowerActionsButton) {
+		} else if (source == borrowerActionsButton) {
 			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
-		} else if (evt.getSource() == workerActionsButton) {
+		} else if (source == workerActionsButton) {
 			controller.stateChangeRequest(Key.DISPLAY_WORKER_MENU, null);
 		}
 	}
