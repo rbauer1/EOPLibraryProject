@@ -9,47 +9,47 @@
  */
 package userinterface.view;
 
-import userinterface.view.form.BannerIdForm;
 import userinterface.view.form.Form;
+import userinterface.view.form.ResetPasswordForm;
 import utilities.Key;
 import controller.Controller;
 
 /**
- * The Forgot Password View for the EOP Library application. Provides the
- * interface for the workers to recover their password to the system.
+ * The Password Reset View for the EOP Library application. Provides the
+ * interface for the workers to reset their password with the reset token emailed to them.
  */
-public class ForgotPasswordView extends View {
+public class ResetPasswordView extends View {
 	
-	private static final long serialVersionUID = 1169974525395804659L;
+	private static final long serialVersionUID = -7309149910050009529L;
 	
 	/** Names of buttons on bottom, Must be in order which you want them to appear */
 	private static final String[] BUTTON_NAMES = {"Submit", "Cancel"};
-
+	
 	/** Form to take in data */
 	private Form form;
 
 	/**
-	 * Constructs Forgot Password view
+	 * Constructs Reset Password view 
 	 * @param controller
 	 */
-	public ForgotPasswordView(Controller controller) {
-		super(controller, "Reset Password", BUTTON_NAMES);
+	public ResetPasswordView(Controller controller) {
+		super(controller, "Set Password", BUTTON_NAMES);
 		subscribeToController(Key.INPUT_ERROR);
 	}
 
 	@Override
 	protected void build() {
-		form = new BannerIdForm(this);
+		form = new ResetPasswordForm(this);
 		add(form);
 	}
-	
+
 	@Override
 	public void processAction(Object source) {
 		messagePanel.clear();
 		if (source == buttons.get("Cancel")) {
 			controller.stateChangeRequest(Key.RECOVER_PW_COMPLETED, null);
-		} else if (source == buttons.get("Submit")) {
-			controller.stateChangeRequest(Key.REQUEST_RESET_TOKEN, form.getValues());
+		} else if (source == buttons.get("Cancel")) {
+			controller.stateChangeRequest(Key.RESET_PW, form.getValues());
 		}
 	}
 

@@ -72,23 +72,29 @@ public class RecoverPasswordTransaction extends Transaction {
 	}
 
 	private void sendPasswordResetToken(Properties workerData){
+		
 		try {
-			worker = new Worker(workerData.getProperty("BannerID"));
+			String bannerId = workerData.getProperty("BannerID", "");
+			worker = new Worker(bannerId);
 			Mailer mailer = new Mailer();
 			String email = (String)worker.getState("Email");
 			String name = (String)worker.getState("FirstName") + " " + (String)worker.getState("LastName");
 			resetCode = worker.getResetToken();
-			StringBuilder sb = new StringBuilder();
-			sb.append("<h1>EOP Library System</h1>");
-			sb.append("<h2>Password Reset</h2>");
-			sb.append("<p>A password reset was requested for " + name + ".</p>");
-			sb.append("<p>To reset password, use the following reset code:</p>");
-			sb.append("<p>" + resetCode + "</p>");
-			mailer.send(email, "EOP Library Password Reset", sb.toString());
-			showView("PasswordResetView");
+			mailer.send(email, "EOP Library Password Reset", getResetCodeEmail(name, resetCode));
+			showView("ResetPasswordView");
 		} catch (InvalidPrimaryKeyException e) {
 			stateChangeRequest(Key.INPUT_ERROR, "Invalid Banner Id.");
 		}
+	}
+	
+	private String getResetCodeEmail(String name, String resetCode){
+		StringBuilder sb = new StringBuilder();
+		sb.append("<h1>EOP Library System</h1>");
+		sb.append("<h2>Password Reset</h2>");
+		sb.append("<p>A password reset was requested for " + name + ".</p>");
+		sb.append("<p>To reset password, use the following reset code:</p>");
+		sb.append("<p>" + resetCode + "</p>");
+		return sb.toString();
 	}
 	
 	private void resetPassword(Properties passwordData){
