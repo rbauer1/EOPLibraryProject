@@ -22,12 +22,12 @@ public class LoginForm extends Form {
 
 	@Override
 	protected void build() {	
-		TextField bannerIdField = new TextField(15);
+		TextField bannerIdField = new TextField(16);
 		bannerIdField.addActionListener(this);
 		addField("BannerID", bannerIdField);
 		add(ViewHelper.formatFieldCenter("Banner ID", bannerIdField));
 		
-		PasswordField passwordField = new PasswordField(15);
+		PasswordField passwordField = new PasswordField(16);
 		passwordField.addActionListener(this);
 		addField("Password", passwordField);
 		add(ViewHelper.formatFieldCenter("Password", passwordField));

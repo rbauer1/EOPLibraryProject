@@ -18,7 +18,7 @@ import controller.Controller;
  * The Forgot Password View for the EOP Library application. Provides the
  * interface for the workers to recover their password to the system.
  */
-public class ForgotPasswordView extends View {
+public class SendPasswordResetCodeView extends View {
 	
 	private static final long serialVersionUID = 1169974525395804659L;
 	
@@ -32,9 +32,9 @@ public class ForgotPasswordView extends View {
 	 * Constructs Forgot Password view
 	 * @param controller
 	 */
-	public ForgotPasswordView(Controller controller) {
+	public SendPasswordResetCodeView(Controller controller) {
 		super(controller, "Reset Password", BUTTON_NAMES);
-		subscribeToController(Key.INPUT_ERROR);
+		subscribeToController(Key.INPUT_ERROR, "BannerID");
 	}
 
 	@Override
@@ -47,9 +47,9 @@ public class ForgotPasswordView extends View {
 	public void processAction(Object source) {
 		messagePanel.clear();
 		if (source == buttons.get("Cancel")) {
-			controller.stateChangeRequest(Key.RECOVER_PW_COMPLETED, null);
+			controller.stateChangeRequest(Key.DISPLAY_LOGIN, null);
 		} else if (source == buttons.get("Submit")) {
-			controller.stateChangeRequest(Key.REQUEST_RESET_TOKEN, form.getValues());
+			controller.stateChangeRequest(Key.SEND_RESET_CODE, form.getValues());
 		}
 	}
 
@@ -57,6 +57,8 @@ public class ForgotPasswordView extends View {
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.INPUT_ERROR)) {
 			messagePanel.displayErrorMessage(value.toString());
+		}else if(key.equals("BannerID")){
+			form.get("BannerID").setValue((String) value);
 		}
 	}
 	

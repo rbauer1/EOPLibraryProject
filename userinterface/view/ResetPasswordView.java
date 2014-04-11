@@ -9,6 +9,8 @@
  */
 package userinterface.view;
 
+import java.util.List;
+
 import userinterface.view.form.Form;
 import userinterface.view.form.ResetPasswordForm;
 import utilities.Key;
@@ -34,29 +36,34 @@ public class ResetPasswordView extends View {
 	 */
 	public ResetPasswordView(Controller controller) {
 		super(controller, "Set Password", BUTTON_NAMES);
-		subscribeToController(Key.INPUT_ERROR);
+		subscribeToController(Key.INPUT_ERROR, Key.SAVE_ERROR);
 	}
 
 	@Override
 	protected void build() {
 		form = new ResetPasswordForm(this);
 		add(form);
+		messagePanel.displayMessage("Info", "Heads up! The reset code has been sent to the email associated with the provided Banner Id.");
 	}
 
 	@Override
 	public void processAction(Object source) {
 		messagePanel.clear();
 		if (source == buttons.get("Cancel")) {
-			controller.stateChangeRequest(Key.RECOVER_PW_COMPLETED, null);
-		} else if (source == buttons.get("Cancel")) {
-			controller.stateChangeRequest(Key.RESET_PW, form.getValues());
+			controller.stateChangeRequest(Key.DISPLAY_LOGIN, null);
+		} else if (source == buttons.get("Submit")) {
+			controller.stateChangeRequest(Key.RESET_PASSWORD, form.getValues());
 		}
 	}
 
 	@Override
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.INPUT_ERROR)) {
-			messagePanel.displayErrorMessage(value.toString());
+			@SuppressWarnings("unchecked")
+			List<String> inputErrorMessages = (List<String>) controller.getState(Key.INPUT_ERROR_MESSAGES);
+			messagePanel.displayErrorMessage(value.toString(), inputErrorMessages);
+		}else if (key.equals(Key.SAVE_ERROR)) {
+			messagePanel.displayErrorMessage("Whoops! An error occurred while saving.");
 		}
 	}
 	

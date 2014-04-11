@@ -22,19 +22,19 @@ public class ResetPasswordForm extends Form {
 
 	@Override
 	protected void build() {	
-		TextField resetCodeField = new TextField(15);
+		TextField resetCodeField = new TextField(16);
 		resetCodeField.addActionListener(this);
-		addField("ResetCode", resetCodeField);
+		addField("PasswordResetCodeConfirmation", resetCodeField);
 		add(ViewHelper.formatFieldCenter("Reset Code", resetCodeField));
 		
 		PasswordField passwordField = new PasswordField(16);
 		passwordField.addActionListener(this);
 		addField("NewPassword", passwordField);
-		add(ViewHelper.formatFieldLeft("New Password", passwordField));
+		add(ViewHelper.formatFieldCenter("New Password", passwordField));
 		
 		PasswordField confirmPasswordField = new PasswordField(16);
 		confirmPasswordField.addActionListener(this);
 		addField("NewPasswordConfirmation", confirmPasswordField);
-		add(ViewHelper.formatFieldLeft("Confirm Password", confirmPasswordField));
+		add(ViewHelper.formatFieldCenter("Confirm Password", confirmPasswordField));
 	}
 }
