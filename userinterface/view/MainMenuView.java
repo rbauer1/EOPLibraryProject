@@ -79,5 +79,5 @@ public class MainMenuView extends View {
 	}
 
 	@Override
-	public void updateState(String key, Object value) {}
+	public void updateState(String key, Object value) {	}
 }

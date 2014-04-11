@@ -11,12 +11,18 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+/**
+ * Manages sending an email. This is a singleton class.
+ * To modify email server settings edit the emailConfig.ini
+ */
 public class Mailer {
+	
+	private static Mailer instance;
 
 	private Properties emailProperties;
 	private Session session;
 
-	public Mailer() {
+	private Mailer() {
 		emailProperties = new PropertyFile("emailConfig.ini");
 		session = Session.getDefaultInstance(emailProperties);
 	}
@@ -42,6 +48,13 @@ public class Mailer {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static Mailer getInstance(){
+		if(instance == null){
+			instance = new Mailer();
+		}
+		return instance;
 	}
 
 }

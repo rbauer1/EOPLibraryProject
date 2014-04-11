@@ -13,6 +13,7 @@ import java.util.Properties;
 
 import model.Worker;
 import utilities.Key;
+import controller.transaction.Transaction;
 import controller.transaction.TransactionFactory;
 import exception.InvalidPrimaryKeyException;
 
@@ -21,9 +22,8 @@ import exception.InvalidPrimaryKeyException;
  */
 public class LibrarianController extends Controller {
 
-	protected String loginErrorMessage = "";
-	private boolean passwordResetSuccess = false;
-	
+	private String loginErrorMessage = "";
+		
 	public LibrarianController() {
 		super();
 		showView("LoginView");
@@ -37,21 +37,19 @@ public class LibrarianController extends Controller {
 	public Object getState(String key) {
 		if (key.equals(Key.INPUT_ERROR)) {
 			return loginErrorMessage;
-		}else if(key.equals(Key.RECOVER_PW_COMPLETED)){
-			return passwordResetSuccess;
 		}
 		throw new IllegalArgumentException("Unknown key: " + key);
 	}
 	
 	public void stateChangeRequest(String key, Object value) {
+		Transaction transaction;
 		if (key.equals(Key.LOGIN)) {
 			loginErrorMessage = "";
-			loginWorker((Properties) value);
-			//TODO Possibly start using TO_BOOK_MENU in place of XXX_COMPLETED for Book transactions
-			
+			loginWorker((Properties) value);			
 		} else if (key.equals(Key.INPUT_ERROR)) {			
-			loginErrorMessage = value.toString();
-		} else if (key.equals(Key.DISPLAY_MAIN_MENU)) {		
+			loginErrorMessage = (String) value;
+			
+		} else if (key.equals(Key.DISPLAY_MAIN_MENU)) {	
 			showView("MainMenuView");
 		} else if (key.equals(Key.DISPLAY_BOOK_MENU)) {		
 			showView("BookMenuView");
@@ -59,6 +57,8 @@ public class LibrarianController extends Controller {
 			showView("BorrowerMenuView");
 		} else if (key.equals(Key.DISPLAY_WORKER_MENU)) {		
 			showView("WorkerMenuView");
+		} else if (key.equals(Key.DISPLAY_LOGIN)) {		
+			showView("LoginView");
 			
 		} else if (key.equals(Key.EXECUTE_ADD_BOOK)) {		
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
@@ -81,11 +81,10 @@ public class LibrarianController extends Controller {
 		} else if (key.equals(Key.EXECUTE_DELETE_WORKER)) {	
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
 						
-		} else if (key.equals(Key.EXECUTE_RECOVER_PW)){		
-			TransactionFactory.executeTransaction(this, key, Key.RECOVER_PW_COMPLETED);
-		} else if (key.equals(Key.RECOVER_PW_COMPLETED)){
-			showView("LoginView");
-			passwordResetSuccess = (Boolean)value;
+		} else if (key.equals(Key.EXECUTE_RECOVER_PASSWORD)){		
+			transaction = TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU, Key.DISPLAY_LOGIN);
+			transaction.stateChangeRequest("BannerID", value);
+			
 		} else if (key.endsWith("Transaction")){			
 			TransactionFactory.executeTransaction(this, key);
 		} else if (key.equals(Key.LOGOUT)) {				
@@ -114,7 +113,6 @@ public class LibrarianController extends Controller {
 			if(!worker.validPassword(workerData.getProperty("Password",""))){
 				stateChangeRequest(Key.INPUT_ERROR, "Invalid Banner Id or Password.");
 			}else{
-				System.out.println("login success");
 				showView("MainMenuView");
 			}
 		} catch (InvalidPrimaryKeyException e) {

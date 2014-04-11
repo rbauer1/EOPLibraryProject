@@ -24,8 +24,8 @@ import model.validation.InclusionValidation;
 import model.validation.LengthValidation;
 import model.validation.PhoneValidation;
 import model.validation.PresenceValidation;
+import model.validation.Validation;
 import utilities.DateUtil;
-import utilities.Key;
 import exception.InvalidPrimaryKeyException;
 
 /**
@@ -45,9 +45,9 @@ public class Worker extends Model {
 	/** Random generator for generating password reset code */
 	private static SecureRandom random;
 	
-	/** Reset code generated for this worker */
-	private String resetCode;
-
+	/** Validation that is dynamically added for password changes */
+	Validation passwordLengthValidation;
+	
 	/**
 	 * Constructs Worker by querying db with primary key.
 	 * @param id - primary key
@@ -83,6 +83,9 @@ public class Worker extends Model {
 		validator.addValidation(new PresenceValidation("Password", "Password"));
 		validator.addValidation(new LengthValidation("NewPassword", "New Password", 6, 50, true));
 		validator.addValidation(new EqualityValidation("NewPassword", "New Password", "NewPasswordConfirmation", "Password Confirmation"));
+		passwordLengthValidation = new LengthValidation("NewPassword", "New Password", 6, 50);
+		
+		validator.addValidation(new EqualityValidation("PasswordResetCode", "Password Reset Code", "PasswordResetCodeConfirmation", "provided reset code"));
 		
 		validator.addValidation(new PresenceValidation("FirstName", "First Name"));
 		validator.addValidation(new AlphaNumericValidation("FirstName", "First Name"));
@@ -112,7 +115,7 @@ public class Worker extends Model {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.PW)){
+		if(key.equals("Password")){
 			value = encrypt((String) value);
 		}
 		super.stateChangeRequest(key, value);
@@ -141,7 +144,6 @@ public class Worker extends Model {
 		return false;
 	}
 
-
 	/**
 	 * Checks if provided password matches worker's password.
 	 * @param password- inputted by user
@@ -153,40 +155,48 @@ public class Worker extends Model {
 	
 	/**
 	 * Generate a password reset token for worker
-	 * @return random string of length 32
+	 * @return random string of length 15
 	 */
-	public String getResetToken() {
+	public String createPasswordResetCode() {
 		  if(random == null){
 			  random = new SecureRandom();
 		  }
-		  resetCode = new BigInteger(130, random).toString(32);
-		  return resetCode;
+		  String passwordResetCode = new BigInteger(130, random).toString(32).substring(0, 15);
+		  stateChangeRequest("PasswordResetCode", passwordResetCode);
+		  return passwordResetCode;
 	}
 	
 	@Override
 	public boolean beforeValidate(boolean isCreate){
+		String password = persistentState.getProperty("NewPassword");
+		// New Password is set which means the password is being saved
+		if(password != null && password.length() > 0){
+			stateChangeRequest("Password", password);
+		}
+		
+		String passwordChangeType = (String) getState("PasswordChangeType");
+		if(passwordChangeType != null && passwordChangeType.equals("CodeReset")){
+			validator.addValidation(passwordLengthValidation);
+		}		
+		
 		String currentDate =  DateUtil.getDate();
 		if(isCreate){
 			persistentState.setProperty("DateOfHire", currentDate);
 			persistentState.setProperty("Status", "Active");
 		}
-		persistentState.setProperty("DateOfHire", currentDate);
 		persistentState.setProperty("DateOfLatestCredentialsStatus", currentDate);
 		persistentState.setProperty("DateOfLastUpdate", currentDate);
 		return true;
 	}
 	
 	@Override
-	public boolean beforeSave(boolean isCreate) {
-		String password = persistentState.getProperty("NewPassword");
-		// New Password is set which means the password is being saved
-		if(password != null && password.length() > 0){
-			persistentState.setProperty("Password", encrypt(password));
-		}
-		
-		return true;
+	public void afterValidate(boolean isCreate){
+		String passwordChangeType = (String) getState("PasswordChangeType");
+		if(passwordChangeType != null && passwordChangeType.equals("CodeReset")){
+			validator.removeValidation(passwordLengthValidation);
+		}		
 	}
-
+	
 	/**
 	 * Encrypts a string using an MD5 hash
 	 * @param token

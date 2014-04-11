@@ -34,7 +34,7 @@ public class LoginView extends View {
 	 */
 	public LoginView(Controller controller) {
 		super(controller, "Login", BUTTON_NAMES);
-		subscribeToController(Key.INPUT_ERROR, Key.RECOVER_PW_COMPLETED);
+		subscribeToController(Key.INPUT_ERROR);
 	}	
 	
 	@Override
@@ -47,21 +47,17 @@ public class LoginView extends View {
 	public void processAction(Object source) {
 		messagePanel.clear();
 		if (source == buttons.get("Forgot Password")) {
-			controller.stateChangeRequest(Key.EXECUTE_RECOVER_PW, null);
-			//TODO send banner id along
-			form.reset();
+			controller.stateChangeRequest(Key.EXECUTE_RECOVER_PASSWORD, form.get("BannerID").getValue());
 		} else if (source == buttons.get("Login") || source == form) {	
 			controller.stateChangeRequest(Key.LOGIN, form.getValues());
-			form.reset();
 		}
+		form.reset();
 	}
 	
 	@Override
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.INPUT_ERROR)) {
 			messagePanel.displayErrorMessage(value.toString());
-		}else if(key.equals(Key.RECOVER_PW_COMPLETED) && (Boolean)value){
-			messagePanel.displayMessage("Success", "Password successfully changed");
 		}
 	}
 	

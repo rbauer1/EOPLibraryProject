@@ -8,6 +8,8 @@ public class Key {
 	public static final String SAVE_SUCCESS = "SaveSuccess";
 	public static final String SAVE_ERROR = "SaveError";
 	public static final String INPUT_ERROR = "InputError";
+	public static final String INPUT_ERROR_MESSAGES = "InputErrorMessages";
+
 	
 	public static final String BOOK = "Book";
 	public static final String WORKER = "Worker";
@@ -33,6 +35,8 @@ public class Key {
 	public static final String DISPLAY_BOOK_MENU = "DisplayBookMenu";
 	public static final String DISPLAY_WORKER_MENU = "DisplayWorkerMenu";
 	public static final String DISPLAY_BORROWER_MENU = "DisplayBorrowerMenu";
+	public static final String DISPLAY_LOGIN = "DisplayLogin";
+
 	
 
 	/* Book Transactions */
@@ -49,15 +53,15 @@ public class Key {
 	public static final String EXECUTE_ADD_WORKER 		= "AddWorkerTransaction";
 	public static final String EXECUTE_MODIFY_WORKER 	= "ModifyWorkersTransaction";
 	public static final String EXECUTE_DELETE_WORKER 	= "DeleteWorkersTransaction";
-	public static final String EXECUTE_RECOVER_PW 		= "RecoverPasswordTransaction";
+	public static final String EXECUTE_RECOVER_PASSWORD 		= "RecoverPasswordTransaction";
 	
 	public static final String RECOVER_PW_COMPLETED = "RecoverPasswordTransactionCompleted";
 	
 	public static final String TRANSACTION_COMPLETED = "TransactionCompleted";
 	
-	public static final String REQUEST_RESET_TOKEN = "RequestResetToken";
+	public static final String SEND_RESET_CODE = "RequestResetToken";
 	
-	public static final String RESET_PW = "ResetPassword";
+	public static final String RESET_PASSWORD = "ResetPassword";
 	public static final String PW = "Password";
 	
 	public static final String OPERATION_TYPE = "OperationType";
