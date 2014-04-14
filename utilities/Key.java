@@ -14,10 +14,12 @@ public class Key {
 	public static final String BOOK = "Book";
 	public static final String WORKER = "Worker";
 	public static final String BORROWER = "Borrower";
+	public static final String RENTAL = "Rental";
 	
 	public static final String BOOK_COLLECTION = "BookCollection";
 	public static final String BORROWER_COLLECTION = "BorrowerCollection";
 	public static final String WORKER_COLLECTION = "WorkerCollection";
+	public static final String RENTAL_COLLECTION = "RentalCollection";
 	
 	public static final String MESSAGE = "Message";
 	
@@ -27,7 +29,8 @@ public class Key {
 	
 	public static final String SELECT_BOOK = "SelectBook";
 	public static final String SELECT_BORROWER = "SelectBorrower";
-	public static final String SELECT_WORKER = "SelectWorkerer";
+	public static final String SELECT_WORKER = "SelectWorker";
+	public static final String SELECT_RENTAL = "SelectRental";
 	
 	public static final String RELOAD_ENTITY = "ReloadEntity";
 	public static final String GET_PERSISTENT_STATE = "GetPersistentState";		
@@ -45,6 +48,7 @@ public class Key {
 	public static final String EXECUTE_ADD_BOOK 	= "AddBookTransaction";
 	public static final String EXECUTE_MODIFY_BOOK 	= "ModifyBooksTransaction";
 	public static final String EXECUTE_DELETE_BOOK 	= "DeleteBooksTransaction";
+	public static final String EXECUTE_PROCESS_LOST_BOOK = "ProcessLostBookTransaction";
 	
 	/* Borrower Transactions */
 	public static final String EXECUTE_ADD_BORROWER 	= "AddBorrowerTransaction";
@@ -55,7 +59,10 @@ public class Key {
 	public static final String EXECUTE_ADD_WORKER 		= "AddWorkerTransaction";
 	public static final String EXECUTE_MODIFY_WORKER 	= "ModifyWorkersTransaction";
 	public static final String EXECUTE_DELETE_WORKER 	= "DeleteWorkersTransaction";
+	
 	public static final String EXECUTE_RECOVER_PASSWORD 		= "RecoverPasswordTransaction";
+	
+	
 	
 	public static final String RECOVER_PW_COMPLETED = "RecoverPasswordTransactionCompleted";
 	

@@ -66,6 +66,9 @@ public class LibrarianController extends Controller {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
 		} else if (key.equals(Key.EXECUTE_DELETE_BOOK)) {	
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
+		} else if (key.equals(Key.EXECUTE_PROCESS_LOST_BOOK)){		
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
+			
 			
 		} else if (key.equals(Key.EXECUTE_ADD_BORROWER)) {		
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);

@@ -140,4 +140,10 @@ public class Borrower extends Model {
 		persistentState.setProperty("DateOfLastUpdate", currentDate);
 		return true;
 	}
+	
+	public RentalCollection getRentals(){
+		RentalCollection rentals = new RentalCollection();
+		rentals.findByBorrower(this);
+		return rentals;
+	}
 }

@@ -34,31 +34,31 @@ public class MainMenuView extends View {
 	 * @param controller
 	 */
 	public MainMenuView(Controller controller) {
-		super(controller, "Choose a Transaction Operation");
+		super(controller, "Main Menu");
 	}
 
 
 	@Override
 	protected void build() {
-		bookActionsButton = new Button("Book Actions");
+		bookActionsButton = new Button("Book Menu");
 		bookActionsButton.addActionListener(this);
 		add(ViewHelper.formatCenter(bookActionsButton));
 
-		borrowerActionsButton = new Button("Borrower Actions");
+		borrowerActionsButton = new Button("Borrower Menu");
 		borrowerActionsButton.addActionListener(this);
 		add(ViewHelper.formatCenter(borrowerActionsButton));
 
-		workerActionsButton = new Button("Workers Actions");
+		workerActionsButton = new Button("Workers Menu");
 		workerActionsButton.addActionListener(this);
 		add(ViewHelper.formatCenter(workerActionsButton));
 
-		checkinBookButton = new Button("Check in a Book");
-		checkinBookButton.addActionListener(this);
-		add(ViewHelper.formatCenter(checkinBookButton));
-
-		checkoutBookButton = new Button("Check out a Book");
+		checkoutBookButton = new Button("Rent a Book");
 		checkoutBookButton.addActionListener(this);
 		add(ViewHelper.formatCenter(checkoutBookButton));
+		
+		checkinBookButton = new Button("Return a Book");
+		checkinBookButton.addActionListener(this);
+		add(ViewHelper.formatCenter(checkinBookButton));
 
 		logoutButton = new Button("Logout");
 		logoutButton.addActionListener(this);

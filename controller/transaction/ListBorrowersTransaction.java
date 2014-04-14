@@ -41,6 +41,10 @@ public class ListBorrowersTransaction extends Transaction {
 			operationType = "Delete";
 		}else if(parentController instanceof ModifyBorrowersTransaction){
 			operationType = "Modify";
+		}else if(parentController instanceof ProcessLostBookTransaction){
+			operationType = "Select";
+		}else{
+			operationType = "Select";
 		}
 	}
 

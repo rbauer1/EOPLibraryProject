@@ -20,7 +20,7 @@ import userinterface.component.Panel;
 /**
  * Super class for all types of messages
  */
-public abstract class Message extends Panel{
+public abstract class Message extends Panel implements MessageConstants{
 	
 	private static final long serialVersionUID = 5719958237714620678L;
 

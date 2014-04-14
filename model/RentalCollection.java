@@ -27,4 +27,8 @@ public class RentalCollection extends ModelCollection<Rental> {
 	protected Rental createEntity(Properties persistentState) {
 		return new Rental(persistentState, true);
 	}
+	
+	public void findByBorrower(Borrower borrower){
+		findByKey("BorrowerID", (String)borrower.getState(borrower.getPrimaryKey()));
+	}
 }
