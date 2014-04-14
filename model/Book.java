@@ -114,7 +114,8 @@ public class Book extends Model {
 		return super.getState(key);
 	}
 	
-	public boolean setInactive(){
+	public boolean setInactive(String notes){
+		persistentState.setProperty("Notes", notes);
 		persistentState.setProperty("Status", "Inactive");
 		return save();
 	}

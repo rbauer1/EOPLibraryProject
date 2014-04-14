@@ -10,6 +10,7 @@
 package controller.transaction;
 
 
+import java.util.List;
 import java.util.Properties;
 
 import model.Book;
@@ -22,6 +23,9 @@ public class DeleteBooksTransaction extends Transaction {
 	
 	/** Book Model this transaction is updating */
 	private Book book;
+	
+	/** List of errors in the input */
+	private List<String> inputErrors;
 
 	/**
 	 * Constructs Delete Books Transaction
@@ -43,6 +47,9 @@ public class DeleteBooksTransaction extends Transaction {
 		if(key.equals(Key.BOOK)){
 			return book;
 		}
+		if(key.equals(Key.INPUT_ERROR)){
+			return inputErrors;
+		}
 		return null;
 	}
 	
@@ -57,9 +64,25 @@ public class DeleteBooksTransaction extends Transaction {
 			book = (Book)value;
 			showView("DeleteBookView");
 		}else if(key.equals(Key.SAVE_BOOK)){
-			book.setInactive(); //TODO handle delete error
-			listBooksTransaction.stateChangeRequest(Key.REFRESH_LIST, null);
+			deleteBook((Properties)value);
 		}
 		registry.updateSubscribers(key, this);
+	}
+	
+	private void deleteBook(Properties bookData){
+		String notes = "Reason For Deletion: " + bookData.getProperty("DeletionReason", "None") + "\n";
+		notes += bookData.getProperty("Notes", "");
+		if(book.setInactive(notes)){
+			//TODO show success message
+			listBooksTransaction.stateChangeRequest(Key.REFRESH_LIST, null);
+			listBooksTransaction.execute();
+		}else{
+			inputErrors = book.getErrors();
+			if(inputErrors.size() > 0){
+				stateChangeRequest(Key.INPUT_ERROR, null);
+			}else{
+				stateChangeRequest(Key.SAVE_ERROR, null);
+			}
+		}
 	}
 }

@@ -9,6 +9,8 @@
  */
 package userinterface.view.form;
 
+import java.awt.Dimension;
+
 import userinterface.ViewHelper;
 import userinterface.component.SelectField;
 import userinterface.component.TextArea;
@@ -44,7 +46,8 @@ public class BookDeleteForm extends Form {
 		addField("Author1", author1Field);
 		add(ViewHelper.formatFieldLeft("Author", author1Field));
 
-		SelectField deleteReasonField = new SelectField(new String[] { "Good", "Damaged" });
+		SelectField deleteReasonField = new SelectField(new String[] { "None", "Damaged - Discarded ", "Obsolete - Discarded", "Donated" });
+		deleteReasonField.setPreferredSize(new Dimension(185,25));
 		addField("DeletionReason", deleteReasonField);
 		add(ViewHelper.formatFieldLeft("Reason", deleteReasonField));
 				
