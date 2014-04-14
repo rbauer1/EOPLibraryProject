@@ -1,168 +1,156 @@
-// tabs=4
-//************************************************************
-//	COPYRIGHT 2007 ArchSynergy, Ltd. - ALL RIGHTS RESERVED
-//
-// This file is the product of ArchSynergy, Ltd. and cannot be 
-// reproduced, copied, or used in any shape or form without 
-// the express written consent of ArchSynergy, Ltd.
-//************************************************************
-//
-//	$URL: svn://archsynergy.net/Volumes/Storage/SEEMTool/Implementation/database/JDBCBroker.java $
-//
-//	$Date: 2007-01-08 19:49:24 -0500 (Mon, 08 Jan 2007) $
-//
-//	Reason: Manage the connection to the database. This is a singleton!
-//
-//*************************************************************
-
-/** @author		$Author: tomb $ */
-/** @version	$Revision: 168 $ */
-/** @version	$Revision: timmullins,2008-02-20 $ */
-
-// specify the package
+/**
+ * COPYRIGHT 2003 ArchSynergy, Ltd. - ALL RIGHTS RESERVED
+ * This file is the product of ArchSynergy, Ltd. and cannot be 
+ * reproduced, copied, or used in any shape or form without 
+ * the express written consent of ArchSynergy, Ltd.
+ */
 package database;
 
-/// system imports
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import common.PropertyFile;
 
 import event.Event;
-// project imports
 
-//==============================================================
-public class JDBCBroker
-{
-    // Single broker to be shared by all other Servlets
- 	private static JDBCBroker myInstance = null;
-    	private static Connection theDBConnection = null;
-	public static Driver theDriver = null;
-	private PropertyFile props = null;
+/**
+ * Manages the connection to the database. This is a singleton class.
+ * Application can only have one connection to the database.
+ */
+public class JDBCBroker {
+	
+	private static final String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
+	private static final String DATABASE_CONFIG = "dbConfig.ini";
+	
+	private static JDBCBroker instance;
 
-	// DB Access data
-	private String dbName = null;
+	private Connection connection;
+	private Driver driver;
+	private String databaseName = null;
 	private String username = null;
 	private String password = null;
-    private String server = null;
-    
-	// singleton constructor
-	//----------------------------------------------------------
-	static public JDBCBroker getInstance()
-	{
-		// DEBUG: System.out.println("JDBCBroker.getInstance()");
-		
-	        if(myInstance == null)
-        	{
-			myInstance = new JDBCBroker();
-		}
+	private String server = null;
 
-		/* DEBUG
-     		Enumeration e = DriverManager.getDrivers();
-     		while (e.hasMoreElements())  
-     		{
-     			Driver d = (Driver)e.nextElement();
-     			//theDriver = (Driver)e.nextElement();
-     			System.out.println("Driver Major Version = " + 
-     			 d.getMajorVersion());
-     			//theDriver.getMajorVersion());   	
- 	        } */  
+	/**
+	 * Constructs jdbc broker.
+	 */
+	private JDBCBroker() {
+		Properties properties = new PropertyFile(DATABASE_CONFIG);
+		databaseName = properties.getProperty("dbName");
+		username = properties.getProperty("username");
+		password = properties.getProperty("password");
+		server = properties.getProperty("server");
+		if (server == null){
+			server = "localhost";
+		}
 		
-		return myInstance;
+		try {
+			driver = (Driver) Class.forName(DATABASE_DRIVER).newInstance();
+		} catch (ClassNotFoundException exc) {
+			new Event(Event.getLeafLevelClassName(this), "init", "Could not load driver class[" + DATABASE_DRIVER + "]", Event.ERROR);
+		} catch (InstantiationException exc) {
+			new Event(Event.getLeafLevelClassName(this), "init", "Could not load driver class[" + DATABASE_DRIVER + "]", Event.ERROR);
+		} catch (IllegalAccessException exc) {
+			new Event(Event.getLeafLevelClassName(this), "init", "Could not load driver class[" + DATABASE_DRIVER + "]", Event.ERROR);
+		}
 	}
 	
-	
-	// private constructor for singleton
-	//----------------------------------------------------------
-	protected JDBCBroker()
-    	{
-    		// DEBUG: System.out.println("JDBCBroker.JDBCBroker()");
-		props = new PropertyFile("dbConfig.ini");
-		if (props != null)
-		{
-			dbName = props.getProperty("dbName");
-			username = props.getProperty("username");
-			password = props.getProperty("password");
-			server = props.getProperty("server");
-			if (server == null)
-				server = "localhost";
+	/**
+	 * Returns an instance of the database broker
+	 * @return database broker
+	 */
+	public static JDBCBroker getInstance() {
+		if (instance == null) {
+			instance = new JDBCBroker();
 		}
-		String driverClassName = "com.mysql.jdbc.Driver";
-		try
-		{	
-			// load and register the JDBC driver classes
-			theDriver = (Driver) Class.forName(driverClassName).newInstance();
-		} 
-			catch(ClassNotFoundException exc)
-		{
-			System.err.println("JDBCBroker.JDBCBroker - Could not load driver class: ClassNotFoundException");
-			new Event(Event.getLeafLevelClassName(this), "JDBCBroker", "Could not load driver class[" + driverClassName + "]", Event.ERROR);
-		}	
-			catch(InstantiationException exc)
-		{
-			System.err.println("JDBCBroker.JDBCBroker - Could not load driver class: InstantiationException");
-			new Event(Event.getLeafLevelClassName(this), "JDBCBroker", "Could not load driver class[" + driverClassName + "]", Event.ERROR);
-		}
-			catch(IllegalAccessException exc)
-		{
-			System.err.println("JDBCBroker.JDBCBroker - Could not load driver class: IllegalAccessException");
-			new Event(Event.getLeafLevelClassName(this), "JDBCBroker", "Could not load driver class[" + driverClassName + "]", Event.ERROR);			
-    		}
- 	}
-    
-	/** Create a connection to the database */
-	//-------------------------------------------------------- 
-	public Connection getConnection() 
-	{	
-		//System.out.println("JDBCBroker.getConnection() with Driver " + theDriver);
-		if (myInstance != null)
-		{
-			if(theDBConnection == null)
-			{
-				if ((dbName != null) & (username != null) && (password != null))
-				{
-					try
-					{
-						// Create a connection to the database
-						theDBConnection = theDriver.connect("jdbc:mysql://"+server+":3306/" + 
-							dbName + "?" + "user=" + username + "&password=" +
-							password, null);					
-					}
-					catch(SQLException exc)
-					{
-						System.err.println("JDBCBroker.getConnection - Could not connect to database!" + "\n" + exc.getMessage());
-						//new Event(Event.getLeafLevelClassName(this), "getConnection", "Could not connect to database", Event.ERROR);
-					}     
-				}
-			}   
-		}	
-		//System.out.println("JDBCBroker.getConnection() with connection " + theDBConnection);
-	       	return theDBConnection;
-    }
-    
-    
-	/** Release a previously allocated connection */
-	//--------------------------------------------------------
-	public void releaseConnection(Connection connection) 
-	{
-		// don't release the connection, hang on till we're destructed
+		return instance;
 	}
-	
-	//--------------------------------------------------------
-	protected void finalize()
-	{
-		if(theDBConnection != null)
-        {
-			try
-			{
-				theDBConnection.close();
-				theDBConnection = null;
+
+	/**
+	 * Fetches a connection to the database.
+	 * Opens a new connection if one doesn't yet exist.
+	 * @return connection to database
+	 */
+	public Connection getConnection() {
+		if (connection == null && databaseName != null && username != null && password != null) {
+			try {
+				// Create a connection to the database
+				connection = driver.connect("jdbc:mysql://" + server + ":3306/"
+						+ databaseName + "?" + "user=" + username + "&password=" + password, null);
+			} catch (SQLException exc) {
+				new Event(Event.getLeafLevelClassName(this), "getConnection", "Could not connect to database", Event.ERROR);
 			}
-			catch(SQLException exc)
-			{
-				new Event(Event.getLeafLevelClassName(this), "releaseConnection", "Could not release connection", Event.WARNING);
-			}        
+		}
+		return connection;
+	}
+	
+
+	/**
+	 * Closes the connection to the database if one exists.
+	 */
+	public void closeConnection() {
+		if (connection != null) {
+			try {
+				connection.close();
+				connection = null;
+			} catch (SQLException exc) {
+				new Event(Event.getLeafLevelClassName(this), "closeConnection", "Could not release connection", Event.WARNING);
+			}
+		}
+	}
+	
+	/**
+	 * Starts a new transaction to the database.
+	 * If this is called while a previous transaction is active, the previous transaction is committed.
+	 */
+	public void startTransaction() {
+		Connection connection = getConnection();
+		try {
+			connection.setAutoCommit(false);
+		} catch (SQLException e) {
+			new Event(Event.getLeafLevelClassName(this), "startTransaction", "Could not start transaction", Event.ERROR);
+		}
+	}
+	
+	/**
+	 * Commit the transaction to the database.
+	 */
+	public void commitTransaction() {
+		Connection connection = getConnection();
+		try {
+			connection.commit();
+		} catch (SQLException e) {
+			new Event(Event.getLeafLevelClassName(this), "commitTransaction", "Could not commit transaction", Event.ERROR);
+		} finally {
+			endTransaction();
+		}
+	}
+	
+	/**
+	 * Rollsback the current transaction.
+	 */
+	public void rollbackTransaction() {
+		Connection connection = getConnection();
+		try {
+			connection.rollback();
+		} catch (SQLException e) {
+			new Event(Event.getLeafLevelClassName(this), "rollbackTransaction", "Could not rollbak transaction", Event.ERROR);
+		} finally {
+			endTransaction();
+		}
+	}
+	
+	/**
+	 * Ends the active transaction by setting the auto commit to true.
+	 */
+	protected void endTransaction() {
+		Connection connection = getConnection();
+		try {
+			connection.setAutoCommit(true);
+		} catch (SQLException e) {
+			new Event(Event.getLeafLevelClassName(this), "endTransaction", "Could not end transaction", Event.ERROR);
 		}
 	}
 }
