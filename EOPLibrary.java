@@ -10,12 +10,13 @@
 import java.awt.Toolkit;
 import java.io.File;
 
+import javax.swing.JFrame;
 import javax.swing.UIManager;
-import javax.swing.WindowConstants;
 
 import userinterface.MainFrame;
 import userinterface.WindowPosition;
 import controller.LibrarianController;
+import database.JDBCBroker;
 import event.Event;
 
 /**
@@ -28,6 +29,9 @@ public class EOPLibrary {
 	/** Main frame of the application */
 	private MainFrame mainFrame;
 
+	/**
+	 * 
+	 */
 	public EOPLibrary(){
 		System.out.println("EOP Library System");
 		// See if you can set the look and feel requested, if not indicate error
@@ -56,8 +60,16 @@ public class EOPLibrary {
 			mainFrame.setIconImage(toolKit.getImage("EOP.jpg"));
 		}
 
-		mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //TODO MAKE SURE THE DATABASE CAN HANDLE THIS
-
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		
+		// Rollback any uncommitted work on exit!
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			public void run() {
+				JDBCBroker.getInstance().rollbackTransaction();
+			}
+		}));
+		
 		try{
 			new LibrarianController();
 		}

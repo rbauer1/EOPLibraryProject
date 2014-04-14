@@ -32,6 +32,8 @@ public class JDBCBroker {
 	private String username = null;
 	private String password = null;
 	private String server = null;
+	
+	private boolean openTransaction = false;
 
 	/**
 	 * Constructs jdbc broker.
@@ -61,7 +63,7 @@ public class JDBCBroker {
 	 * Returns an instance of the database broker
 	 * @return database broker
 	 */
-	public static JDBCBroker getInstance() {
+	public static synchronized JDBCBroker getInstance() {
 		if (instance == null) {
 			instance = new JDBCBroker();
 		}
@@ -106,8 +108,12 @@ public class JDBCBroker {
 	 * If this is called while a previous transaction is active, the previous transaction is committed.
 	 */
 	public void startTransaction() {
+		if(openTransaction){
+			commitTransaction();
+		}
 		Connection connection = getConnection();
 		try {
+			openTransaction = true;
 			connection.setAutoCommit(false);
 		} catch (SQLException e) {
 			new Event(Event.getLeafLevelClassName(this), "startTransaction", "Could not start transaction", Event.ERROR);
@@ -116,8 +122,12 @@ public class JDBCBroker {
 	
 	/**
 	 * Commit the transaction to the database.
+	 * No action if no transaction open
 	 */
 	public void commitTransaction() {
+		if(!openTransaction){
+			return;
+		}
 		Connection connection = getConnection();
 		try {
 			connection.commit();
@@ -130,13 +140,17 @@ public class JDBCBroker {
 	
 	/**
 	 * Rollsback the current transaction.
+	 * No action if no transaction open
 	 */
 	public void rollbackTransaction() {
+		if(!openTransaction){
+			return;
+		}
 		Connection connection = getConnection();
 		try {
 			connection.rollback();
 		} catch (SQLException e) {
-			new Event(Event.getLeafLevelClassName(this), "rollbackTransaction", "Could not rollbak transaction", Event.ERROR);
+			new Event(Event.getLeafLevelClassName(this), "rollbackTransaction", "Could not rollback transaction", Event.ERROR);
 		} finally {
 			endTransaction();
 		}
@@ -148,6 +162,7 @@ public class JDBCBroker {
 	protected void endTransaction() {
 		Connection connection = getConnection();
 		try {
+			openTransaction = false;
 			connection.setAutoCommit(true);
 		} catch (SQLException e) {
 			new Event(Event.getLeafLevelClassName(this), "endTransaction", "Could not end transaction", Event.ERROR);

@@ -89,18 +89,8 @@ public class LibrarianController extends Controller {
 			TransactionFactory.executeTransaction(this, key);
 		} else if (key.equals(Key.LOGOUT)) {				
 			showView("LoginView");
-		} else if (key.equals(Key.EXIT_SYSTEM)) {			
-			exitSystem();
 		}
 		registry.updateSubscribers(key, this);
-	}
-	
-	/**
-	 * Exits from the system, and is likely to be called as a result of
-	 * a click on a button labeled something like 'Exit Application'.
-	 */
-	protected void exitSystem() {
-		System.exit(0);
 	}
 		
 	/**
