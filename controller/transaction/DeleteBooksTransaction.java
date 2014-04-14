@@ -10,7 +10,7 @@
 package controller.transaction;
 
 
-import javax.swing.JOptionPane;
+import java.util.Properties;
 
 import model.Book;
 import utilities.Key;
@@ -19,6 +19,9 @@ import controller.Controller;
 public class DeleteBooksTransaction extends Transaction {
 	
 	private Transaction listBooksTransaction;
+	
+	/** Book Model this transaction is updating */
+	private Book book;
 
 	/**
 	 * Constructs Delete Books Transaction
@@ -29,7 +32,17 @@ public class DeleteBooksTransaction extends Transaction {
 	}
 	
 	@Override
+	protected Properties getDependencies(){
+		Properties dependencies = new Properties();
+		dependencies.setProperty(Key.SELECT_BOOK, Key.BOOK);
+		return dependencies;
+	}
+	
+	@Override
 	public Object getState(String key) {
+		if(key.equals(Key.BOOK)){
+			return book;
+		}
 		return null;
 	}
 	
@@ -41,22 +54,12 @@ public class DeleteBooksTransaction extends Transaction {
 	@Override
 	public void stateChangeRequest(String key, Object value) {
 		if(key.equals(Key.SELECT_BOOK)){
-			setBookInactive((Book)value);
-		}
-		registry.updateSubscribers(key, this);
-	}
-	
-	private void setBookInactive(Book book){
-		if(deleteConfirmationPopup() == JOptionPane.YES_OPTION){
+			book = (Book)value;
+			showView("DeleteBookView");
+		}else if(key.equals(Key.SAVE_BOOK)){
 			book.setInactive(); //TODO handle delete error
 			listBooksTransaction.stateChangeRequest(Key.REFRESH_LIST, null);
 		}
-	}
-	
-	private int deleteConfirmationPopup(){
-		String message = "ATTENTION: You are about to delete a book from the system.\n" +
-			"Are you sure you have selected the correct book and want to proceed?";
-		return JOptionPane.showConfirmDialog(frame, message, "Book will be deleted", JOptionPane.YES_NO_OPTION);
-
+		registry.updateSubscribers(key, this);
 	}
 }

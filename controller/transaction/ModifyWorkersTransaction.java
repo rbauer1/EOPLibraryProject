@@ -78,6 +78,7 @@ public class ModifyWorkersTransaction extends Transaction {
 	 * @param workerData
 	 */
 	private void updateWorker(Properties workerData){
+		workerData.setProperty("Status", "Active");
 		worker.stateChangeRequest(workerData);
 		if(worker.save()){
 			stateChangeRequest(Key.SAVE_SUCCESS, null);

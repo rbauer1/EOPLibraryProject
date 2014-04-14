@@ -78,6 +78,7 @@ public class ModifyBorrowersTransaction extends Transaction {
 	 * @param borrowerData
 	 */
 	private void updateBorrower(Properties borrowerData){
+		borrowerData.setProperty("Status", "Active");
 		borrower.stateChangeRequest(borrowerData);
 		if(borrower.save()){
 			stateChangeRequest(Key.SAVE_SUCCESS, null);
