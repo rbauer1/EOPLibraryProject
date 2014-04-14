@@ -9,11 +9,9 @@
  */
 package userinterface.view;
 
-import java.util.List;
-
 import model.Book;
 import model.Model;
-
+import userinterface.message.MessageEvent;
 import userinterface.view.form.BookDeleteForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -41,7 +39,7 @@ public class DeleteBookView extends View {
 	 */
 	public DeleteBookView(Controller controller) {
 		super(controller, "Delete Book", BUTTON_NAMES);
-		subscribeToController(Key.BOOK, Key.INPUT_ERROR, Key.SAVE_SUCCESS, Key.SAVE_ERROR);
+		subscribeToController(Key.BOOK, Key.MESSAGE);
 	}
 	
 	@Override
@@ -64,19 +62,13 @@ public class DeleteBookView extends View {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {	
 		if(key.equals(Key.BOOK)){
 			book = (Book) value;
 			form.setValues(book.getPersistentState());
-		}else if (key.equals(Key.INPUT_ERROR)) {
-			messagePanel.displayErrorMessage("Aw shucks! There are errors in the input. Please try again.", (List<String>) value);
-		}else if(key.equals(Key.SAVE_SUCCESS)){
-			messagePanel.displayMessage("Success", "Well done! Book was sucessfully deleted.");
-			form.reset();
-		}else if(key.equals(Key.SAVE_ERROR)){
-			messagePanel.displayErrorMessage("Whoops! An error occurred while deleting.");
+		}else if (key.equals(Key.MESSAGE)) {
+			messagePanel.displayMessage((MessageEvent)value);
 		}
 	}
 	

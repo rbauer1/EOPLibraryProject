@@ -14,19 +14,18 @@ import java.util.List;
 import java.util.Properties;
 
 import model.Book;
+import userinterface.message.MessageEvent;
 import utilities.Key;
 import controller.Controller;
 
 public class DeleteBooksTransaction extends Transaction {
 	
+	/** Transaction for listing books */
 	private Transaction listBooksTransaction;
 	
 	/** Book Model this transaction is updating */
-	private Book book;
+	private Book book;	
 	
-	/** List of errors in the input */
-	private List<String> inputErrors;
-
 	/**
 	 * Constructs Delete Books Transaction
 	 * @param parentController
@@ -47,10 +46,7 @@ public class DeleteBooksTransaction extends Transaction {
 		if(key.equals(Key.BOOK)){
 			return book;
 		}
-		if(key.equals(Key.INPUT_ERROR)){
-			return inputErrors;
-		}
-		return null;
+		return super.getState(key);
 	}
 	
 	@Override
@@ -66,22 +62,21 @@ public class DeleteBooksTransaction extends Transaction {
 		}else if(key.equals(Key.SAVE_BOOK)){
 			deleteBook((Properties)value);
 		}
-		registry.updateSubscribers(key, this);
+		super.stateChangeRequest(key, value);
 	}
 	
 	private void deleteBook(Properties bookData){
 		String notes = "Reason For Deletion: " + bookData.getProperty("DeletionReason", "None") + "\n";
 		notes += bookData.getProperty("Notes", "");
 		if(book.setInactive(notes)){
-			//TODO show success message
-			listBooksTransaction.stateChangeRequest(Key.REFRESH_LIST, null);
 			listBooksTransaction.execute();
+			listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent("Success", "Good Job! The book was deleted successfully."));
 		}else{
-			inputErrors = book.getErrors();
+			List<String> inputErrors = book.getErrors();
 			if(inputErrors.size() > 0){
-				stateChangeRequest(Key.INPUT_ERROR, null);
+				stateChangeRequest(Key.MESSAGE, new MessageEvent("Error", "Aw shucks! There are errors in the input. Please try again.", inputErrors));
 			}else{
-				stateChangeRequest(Key.SAVE_ERROR, null);
+				stateChangeRequest(Key.MESSAGE, new MessageEvent("Error", "Whoops! An error occurred while deleting."));
 			}
 		}
 	}

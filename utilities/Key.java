@@ -19,6 +19,8 @@ public class Key {
 	public static final String BORROWER_COLLECTION = "BorrowerCollection";
 	public static final String WORKER_COLLECTION = "WorkerCollection";
 	
+	public static final String MESSAGE = "Message";
+	
 	public static final String SAVE_BOOK = "SaveBook";
 	public static final String SAVE_BORROWER = "SaveBorrower";
 	public static final String SAVE_WORKER = "SaveWorker";

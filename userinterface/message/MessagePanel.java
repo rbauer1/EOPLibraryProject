@@ -63,6 +63,14 @@ public class MessagePanel extends Panel {
 	public void displayMessage(String type, String title) {
 		displayMessage(MessageFactory.createMessage(type, title));
 	}
+	
+	/**
+	 * Display Message
+	 * @param messageEvent
+	 */
+	public void displayMessage(MessageEvent messageEvent) {
+		displayMessage(MessageFactory.createMessage(messageEvent));		
+	}
 
 	/**
 	 * Clear message
