@@ -99,4 +99,14 @@ public class Rental extends Model {
 	public boolean isPrimaryKeyAutoIncrement() {
 		return true;
 	}
+	
+	public Book getBook(){
+		try {
+			return new Book(persistentState.getProperty("BookID"));
+		} catch (InvalidPrimaryKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

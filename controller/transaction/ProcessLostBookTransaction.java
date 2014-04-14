@@ -13,9 +13,9 @@ package controller.transaction;
 import java.util.List;
 import java.util.Properties;
 
+import model.Book;
 import model.Borrower;
 import model.Rental;
-import model.RentalCollection;
 import utilities.Key;
 import controller.Controller;
 
@@ -33,6 +33,9 @@ public class ProcessLostBookTransaction extends Transaction {
 	/** Selected Rental from table */
 	private Rental selectedRental;
 	
+	/** Book Model this transaction is marking as lost */
+	private Book book;
+	
 	/** List of errors in the input */
 	private List<String> inputErrors;
 	
@@ -47,7 +50,7 @@ public class ProcessLostBookTransaction extends Transaction {
 	@Override
 	protected Properties getDependencies(){
 		Properties dependencies = new Properties();
-		dependencies.setProperty(Key.SELECT_BOOK, Key.BOOK);
+		dependencies.setProperty(Key.SELECT_RENTAL, Key.BOOK + "," + Key.BORROWER);
 		dependencies.setProperty(Key.RELOAD_ENTITY, Key.BOOK);
 		return dependencies;
 	}
@@ -68,6 +71,9 @@ public class ProcessLostBookTransaction extends Transaction {
 		if(key.equals(Key.RENTAL)){
 			return selectedRental;
 		}
+		if(key.equals(Key.BOOK)){
+			return book;
+		}
 		if(key.equals(Key.INPUT_ERROR)){
 			return inputErrors;
 		}
@@ -80,8 +86,10 @@ public class ProcessLostBookTransaction extends Transaction {
 			borrower = (Borrower)value;
 			rentals = borrower.getRentals().getEntities();
 			showView("ListRentalsView");
-		}else if(key.equals(Key.SELECT_RENTAL)){
+		} else if(key.equals(Key.SELECT_RENTAL)){
 			selectedRental = (Rental)value;
+			book = selectedRental.getBook();
+			showView("LostBookView");
 		}
 		registry.updateSubscribers(key, this);
 	}
