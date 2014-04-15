@@ -32,7 +32,7 @@ public class BorrowerMenuView extends View {
 	 * @param controller
 	 */
 	public BorrowerMenuView(Controller controller) {
-		super(controller, "Choose a Transaction Operation");
+		super(controller, "Borrower Menu");
 	}
 
 	@Override

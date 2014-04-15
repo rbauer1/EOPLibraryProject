@@ -11,6 +11,8 @@ package model;
 
 import java.util.Properties;
 
+import utilities.DateUtil;
+
 import model.validation.BannerIdValidation;
 import model.validation.DateValidation;
 import model.validation.LengthValidation;
@@ -98,5 +100,21 @@ public class Rental extends Model {
 	@Override
 	public boolean isPrimaryKeyAutoIncrement() {
 		return true;
+	}
+	
+	public Book getBook(){
+		try {
+			return new Book(persistentState.getProperty("BookID"));
+		} catch (InvalidPrimaryKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public boolean checkIn(Worker worker){
+		persistentState.setProperty("CheckinDate", DateUtil.getDate());
+		persistentState.setProperty("CheckinWorkerId", (String)worker.getState(worker.getPrimaryKey()));
+		return save();
 	}
 }

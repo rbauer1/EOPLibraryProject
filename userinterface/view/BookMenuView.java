@@ -35,7 +35,7 @@ public class BookMenuView extends View {
 	 * @param controller
 	 */
 	public BookMenuView(Controller controller) {
-		super(controller, "Choose a Transaction Operation");
+		super(controller, "Book Menu");
 	}
 
 	@Override
@@ -79,6 +79,8 @@ public class BookMenuView extends View {
 			controller.stateChangeRequest(Key.EXECUTE_MODIFY_BOOK, null);
 		} else if (source == deleteButton) {
 			controller.stateChangeRequest(Key.EXECUTE_DELETE_BOOK, null);
+		} else if (source == processLostBookButton) {
+			controller.stateChangeRequest(Key.EXECUTE_PROCESS_LOST_BOOK, null);
 		}
 	}
 

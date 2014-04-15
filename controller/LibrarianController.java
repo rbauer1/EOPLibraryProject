@@ -24,6 +24,8 @@ public class LibrarianController extends Controller {
 
 	private String loginErrorMessage = "";
 		
+	private Worker worker;
+	
 	public LibrarianController() {
 		super();
 		showView("LoginView");
@@ -38,7 +40,10 @@ public class LibrarianController extends Controller {
 		if (key.equals(Key.INPUT_ERROR)) {
 			return loginErrorMessage;
 		}
-		throw new IllegalArgumentException("Unknown key: " + key);
+		if (key.equals(Key.WORKER)){
+			return worker;
+		}
+		return super.getState(key);
 	}
 	
 	public void stateChangeRequest(String key, Object value) {
@@ -66,6 +71,9 @@ public class LibrarianController extends Controller {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
 		} else if (key.equals(Key.EXECUTE_DELETE_BOOK)) {	
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
+		} else if (key.equals(Key.EXECUTE_PROCESS_LOST_BOOK)){		
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
+			
 			
 		} else if (key.equals(Key.EXECUTE_ADD_BORROWER)) {		
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
@@ -99,7 +107,7 @@ public class LibrarianController extends Controller {
 	 */
 	protected void loginWorker(Properties workerData) {
 		try {
-			Worker worker = new Worker(workerData.getProperty("BannerID",""));
+			worker = new Worker(workerData.getProperty("BannerID",""));
 			if(!worker.validPassword(workerData.getProperty("Password",""))){
 				stateChangeRequest(Key.INPUT_ERROR, "Invalid Banner Id or Password.");
 			}else{

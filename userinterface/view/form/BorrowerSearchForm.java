@@ -88,10 +88,12 @@ public class BorrowerSearchForm extends Form {
 		statusField.setPreferredSize(new Dimension(130,25));
 		addField("Status", statusField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Status", statusField));
+		rightColumn.add(ViewHelper.createPlaceHolder());
 		
 		Button searchButton = new Button("Search");
 		searchButton.addActionListener(this);
 		add(ViewHelper.formatCenter(searchButton));
+		
 	}
 	
 	@Override

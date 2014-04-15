@@ -55,6 +55,7 @@ public class ViewFactory {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 			new Event("ViewFactory", "createView", "Exception thrown by view constructor.", Event.FATAL);
+			e.printStackTrace();
 		}
 		throw new IllegalArgumentException("Invalid view name provided");
 	}

@@ -7,6 +7,7 @@ import javax.swing.JTable;
 
 import model.Borrower;
 import userinterface.message.MessageEvent;
+import userinterface.message.Message;
 import userinterface.view.form.BorrowerSearchForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -100,7 +101,7 @@ public class ListBorrowersView extends ListView {
 		if (rowIndex > -1) {
 			controller.stateChangeRequest(Key.SELECT_BORROWER, borrowers.get(rowIndex));
 		} else {
-			messagePanel.displayMessage("Warning", "Warning! Must select a borrower from the list!");
+			messagePanel.displayMessage(Message.WARNING, "Warning! Must select a borrower from the list!");
 		}
 	}
 	

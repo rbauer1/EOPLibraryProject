@@ -62,7 +62,7 @@ public class ModifyBooksTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.SELECT_BOOK)){
+		if(key.equals(Key.SELECT_BOOK)){	
 			book = (Book)value;
 			showView("ModifyBookView");
 		}else if(key.equals(Key.SAVE_BOOK)){

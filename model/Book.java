@@ -83,7 +83,7 @@ public class Book extends Model {
 		
 		validator.addValidation(new LengthValidation("ISBN", "ISBN", 0, 15));
 
-		validator.addValidation(new InclusionValidation("Condition", "Condition", new String[] {"Good", "Damaged"}));
+		validator.addValidation(new InclusionValidation("Condition", "Condition", new String[] {"Good", "Fair", "Damaged"}));
 	
 		validator.addValidation(new PresenceValidation("SuggestedPrice", "Suggested Price"));
 		NumericValidation priceValidation = new NumericValidation("SuggestedPrice", "Suggested Price");
@@ -117,6 +117,12 @@ public class Book extends Model {
 	public boolean setInactive(String notes){
 		persistentState.setProperty("Notes", notes);
 		persistentState.setProperty("Status", "Inactive");
+		return save();
+	}
+	
+	public boolean setLost(String notes){
+		persistentState.setProperty("Notes", notes);
+		persistentState.setProperty("Status", "Lost");
 		return save();
 	}
 	
