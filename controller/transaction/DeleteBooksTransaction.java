@@ -10,16 +10,25 @@
 package controller.transaction;
 
 
-import javax.swing.JOptionPane;
+import java.util.List;
+import java.util.Properties;
 
 import model.Book;
+import userinterface.message.MessageEvent;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * Transacation responsible for deleting books
+ */
 public class DeleteBooksTransaction extends Transaction {
 	
+	/** Transaction for listing books */
 	private Transaction listBooksTransaction;
-
+	
+	/** Book Model this transaction is updating */
+	private Book book;	
+	
 	/**
 	 * Constructs Delete Books Transaction
 	 * @param parentController
@@ -29,34 +38,49 @@ public class DeleteBooksTransaction extends Transaction {
 	}
 	
 	@Override
-	public Object getState(String key) {
-		return null;
+	protected Properties getDependencies(){
+		Properties dependencies = new Properties();
+		dependencies.setProperty(Key.SELECT_BOOK, Key.BOOK);
+		return dependencies;
 	}
 	
 	@Override
 	public void execute(){
 		listBooksTransaction = TransactionFactory.executeTransaction(this, "ListBooksTransaction", Key.DISPLAY_BOOK_MENU, Key.SELECT_BOOK);
 	}
+	
+	@Override
+	public Object getState(String key) {
+		if(key.equals(Key.BOOK)){
+			return book;
+		}
+		return super.getState(key);
+	}
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
 		if(key.equals(Key.SELECT_BOOK)){
-			setBookInactive((Book)value);
+			book = (Book)value;
+			showView("DeleteBookView");
+		}else if(key.equals(Key.SAVE_BOOK)){
+			deleteBook((Properties)value);
 		}
-		registry.updateSubscribers(key, this);
+		super.stateChangeRequest(key, value);
 	}
 	
-	private void setBookInactive(Book book){
-		if(deleteConfirmationPopup() == JOptionPane.YES_OPTION){
-			book.setInactive(); //TODO handle delete error
-			listBooksTransaction.stateChangeRequest(Key.REFRESH_LIST, null);
+	private void deleteBook(Properties bookData){
+		String notes = "Reason For Deletion: " + bookData.getProperty("DeletionReason", "None") + "\n";
+		notes += bookData.getProperty("Notes", "");
+		if(book.setInactive(notes)){
+			listBooksTransaction.execute();
+			listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent("Success", "Good Job! The book was deleted successfully."));
+		}else{
+			List<String> inputErrors = book.getErrors();
+			if(inputErrors.size() > 0){
+				stateChangeRequest(Key.MESSAGE, new MessageEvent("Error", "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+			}else{
+				stateChangeRequest(Key.MESSAGE, new MessageEvent("Error", "Whoops! An error occurred while deleting."));
+			}
 		}
-	}
-	
-	private int deleteConfirmationPopup(){
-		String message = "ATTENTION: You are about to delete a book from the system.\n" +
-			"Are you sure you have selected the correct book and want to proceed?";
-		return JOptionPane.showConfirmDialog(frame, message, "Book will be deleted", JOptionPane.YES_NO_OPTION);
-
 	}
 }

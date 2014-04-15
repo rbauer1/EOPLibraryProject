@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JTable;
 
 import model.Borrower;
+import userinterface.message.MessageEvent;
 import userinterface.view.form.BorrowerSearchForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -40,11 +41,18 @@ public class ListBorrowersView extends ListView {
 			buttons.get("Submit").setText(operationType);
 		}
 		
-		subscribeToController(Key.BORROWER_COLLECTION, Key.REFRESH_LIST);
+		subscribeToController(Key.MESSAGE, Key.BORROWER_COLLECTION);
 		
 		// Get Borrowers for initial filter settings
 		filter();
 	}
+	
+	@Override
+	public void afterShown() {
+		super.afterShown();
+		filter();
+	}
+	
 	
 	@Override
 	protected void buildFilterForm() {
@@ -71,9 +79,8 @@ public class ListBorrowersView extends ListView {
 			borrowers = (List<Borrower>) value;
 			table.setModel(new BorrowerTableModel(borrowers));
 			table.repaint();			
-		}
-		if (key.equals(Key.REFRESH_LIST)) {
-			filter();		
+		}else if (key.equals(Key.MESSAGE)) {
+			messagePanel.displayMessage((MessageEvent)value);
 		}
 	}
 	

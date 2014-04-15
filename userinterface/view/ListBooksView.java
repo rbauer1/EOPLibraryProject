@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JTable;
 
 import model.Book;
+import userinterface.message.MessageEvent;
 import userinterface.view.form.BookSearchForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -40,9 +41,15 @@ public class ListBooksView extends ListView {
 			buttons.get("Submit").setText(operationType);
 		}
 		
-		subscribeToController(Key.BOOK_COLLECTION, Key.REFRESH_LIST);
+		subscribeToController(Key.MESSAGE, Key.BOOK_COLLECTION);
 		
 		// Get Books for initial filter settings
+		filter();
+	}
+	
+	@Override
+	public void afterShown() {
+		super.afterShown();
 		filter();
 	}
 	
@@ -71,9 +78,8 @@ public class ListBooksView extends ListView {
 			books = (List<Book>) value;
 			table.setModel(new BookTableModel(books));
 			table.repaint();			
-		}
-		if (key.equals(Key.REFRESH_LIST)) {
-			filter();		
+		}else if (key.equals(Key.MESSAGE)) {
+			messagePanel.displayMessage((MessageEvent)value);
 		}
 	}
 	

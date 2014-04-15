@@ -117,7 +117,8 @@ public class Borrower extends Model {
 		return PRIMARY_KEY;
 	}
 	
-	public boolean setInactive(){
+	public boolean setInactive(String notes){
+		persistentState.setProperty("Notes", notes);
 		persistentState.setProperty("Status", "Inactive");
 		return save();
 	}

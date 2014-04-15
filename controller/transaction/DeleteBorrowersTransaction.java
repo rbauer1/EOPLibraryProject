@@ -10,16 +10,25 @@
 package controller.transaction;
 
 
-import javax.swing.JOptionPane;
+import java.util.List;
+import java.util.Properties;
 
 import model.Borrower;
+import userinterface.message.MessageEvent;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * Transacation responsible for deleting borrowers
+ */
 public class DeleteBorrowersTransaction extends Transaction {
 	
+	/** Transaction for listing borrowers */
 	private Transaction listBorrowersTransaction;
-
+	
+	/** Borrower Model this transaction is updating */
+	private Borrower borrower;	
+	
 	/**
 	 * Constructs Delete Borrowers Transaction
 	 * @param parentController
@@ -29,34 +38,49 @@ public class DeleteBorrowersTransaction extends Transaction {
 	}
 	
 	@Override
-	public Object getState(String key) {
-		return null;
+	protected Properties getDependencies(){
+		Properties dependencies = new Properties();
+		dependencies.setProperty(Key.SELECT_BORROWER, Key.BORROWER);
+		return dependencies;
 	}
 	
 	@Override
 	public void execute(){
 		listBorrowersTransaction = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
 	}
+	
+	@Override
+	public Object getState(String key) {
+		if(key.equals(Key.BORROWER)){
+			return borrower;
+		}
+		return super.getState(key);
+	}
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
 		if(key.equals(Key.SELECT_BORROWER)){
-			setBorrowerInactive((Borrower)value);
+			borrower = (Borrower)value;
+			showView("DeleteBorrowerView");
+		}else if(key.equals(Key.SAVE_BORROWER)){
+			deleteBorrower((Properties)value);
 		}
-		registry.updateSubscribers(key, this);
+		super.stateChangeRequest(key, value);
 	}
 	
-	private void setBorrowerInactive(Borrower borrower){
-		if(deleteConfirmationPopup() == JOptionPane.YES_OPTION){
-			borrower.setInactive();//TODO handle delete error
-			listBorrowersTransaction.stateChangeRequest(Key.REFRESH_LIST, null);
+	private void deleteBorrower(Properties borrowerData){
+		String notes = "Reason For Deletion: " + borrowerData.getProperty("DeletionReason", "None") + "\n";
+		notes += borrowerData.getProperty("Notes", "");
+		if(borrower.setInactive(notes)){
+			listBorrowersTransaction.execute();
+			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent("Success", "Good Job! The borrower was deleted successfully."));
+		}else{
+			List<String> inputErrors = borrower.getErrors();
+			if(inputErrors.size() > 0){
+				stateChangeRequest(Key.MESSAGE, new MessageEvent("Error", "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+			}else{
+				stateChangeRequest(Key.MESSAGE, new MessageEvent("Error", "Whoops! An error occurred while deleting."));
+			}
 		}
-	}
-	
-	private int deleteConfirmationPopup(){
-		String message = "ATTENTION: You are about to delete a borrower from the system.\n" +
-			"Are you sure you have selected the correct borrower and want to proceed?";
-		return JOptionPane.showConfirmDialog(frame, message, "Borrower will be deleted", JOptionPane.YES_NO_OPTION);
-
 	}
 }

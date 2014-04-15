@@ -78,6 +78,7 @@ public class ModifyBooksTransaction extends Transaction {
 	 * @param bookData
 	 */
 	private void updateBook(Properties bookData){
+		bookData.setProperty("Status", "Active");
 		book.stateChangeRequest(bookData);
 		if(book.save()){
 			stateChangeRequest(Key.SAVE_SUCCESS, null);

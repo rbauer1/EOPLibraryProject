@@ -58,7 +58,7 @@ public class ListBorrowersTransaction extends Transaction {
 		}else if(key.equals(Key.OPERATION_TYPE)){
 			return operationType;
 		}
-		return null;
+		return super.getState(key);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class ListBorrowersTransaction extends Transaction {
 		}else if(key.equals(Key.SELECT_BORROWER)){
 			selectedBorrower = (Borrower)value;
 		}
-		registry.updateSubscribers(key, this);
+		super.stateChangeRequest(key, value);
 	}
 	
 	/**

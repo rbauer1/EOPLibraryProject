@@ -17,8 +17,10 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import userinterface.MainFrame;
+import userinterface.message.MessageEvent;
 import userinterface.view.View;
 import userinterface.view.ViewFactory;
+import utilities.Key;
 
 public abstract class Controller implements IView, IModel {
 
@@ -33,6 +35,9 @@ public abstract class Controller implements IView, IModel {
 	
 	/** Controller that created this */
 	protected Controller parentController;
+	
+	/** Holds latest message event generated  */
+	protected MessageEvent messageEvent;
 	
 	
 	/**
@@ -85,16 +90,34 @@ public abstract class Controller implements IView, IModel {
 		return new Properties();
 	}
 	
+	@Override
 	public void subscribe(String key, IView subscriber){
 		registry.subscribe(key, subscriber);
 	}
 
-	
+	@Override
 	public void unSubscribe(String key, IView subscriber){
 		registry.unSubscribe(key, subscriber);
 	}
 	
+	@Override
 	public void updateState(String key, Object value){
 		stateChangeRequest(key, value);
+	}
+	
+	@Override
+	public Object getState(String key) {
+		if(key.equals(Key.MESSAGE)){
+			return messageEvent;
+		}			
+		return null;
+	}
+
+	@Override
+	public void stateChangeRequest(String key, Object value) {
+		if(key.equals(Key.MESSAGE)){
+			messageEvent = (MessageEvent)value; 
+		}
+		registry.updateSubscribers(key, this);
 	}
 }
