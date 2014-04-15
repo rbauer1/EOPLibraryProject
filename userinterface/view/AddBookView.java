@@ -1,17 +1,15 @@
 /**
- * COPYRIGHT 2014 Sandeep Mitra and students 
+ * COPYRIGHT 2014 Sandeep Mitra and students
  * The College at Brockport, State University of New York.
  * ALL RIGHTS RESERVED
  * 
  * This file is the product of The College at Brockport and cannot
  * be reproduced, copied, or used in any shape or form without
- * he express written consent of The College at Brockport. * 
+ * he express written consent of The College at Brockport. *
  */
 package userinterface.view;
 
-import java.util.List;
-
-import userinterface.message.MessageType;
+import userinterface.message.MessageEvent;
 import userinterface.view.form.BookForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -21,24 +19,29 @@ import controller.Controller;
  * View that provides interface for user to add new book.
  */
 public class AddBookView extends View {
-	
-	private static final long serialVersionUID = -6030753682831962753L;
-	
+
 	/** Names of buttons on bottom, Must be in order which you want them to appear */
 	private static final String[] BUTTON_NAMES = {"Add", "Reset", "Back"};
 
+	private static final long serialVersionUID = -6030753682831962753L;
+
 	/** Form to take in data */
 	private Form form;
-	
+
 	/**
 	 * Constructs add book view
 	 * @param controller
 	 */
 	public AddBookView(Controller controller) {
 		super(controller, "Add Book", BUTTON_NAMES);
-		subscribeToController(Key.INPUT_ERROR, Key.SAVE_SUCCESS, Key.SAVE_ERROR);
+		subscribeToController(Key.MESSAGE);
 	}
-	
+
+	@Override
+	public void afterShown(){
+		form.requestFocusForDefaultField();
+	}
+
 	@Override
 	protected void build() {
 		form = new BookForm(this);
@@ -57,21 +60,10 @@ public class AddBookView extends View {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void updateState(String key, Object value) {	
-		if (key.equals(Key.INPUT_ERROR)) {
-			messagePanel.displayErrorMessage("Aw shucks! There are errors in the input. Please try again.", (List<String>) value);
-		}else if(key.equals(Key.SAVE_SUCCESS)){
-			messagePanel.displayMessage(MessageType.SUCCESS, "Well done! Book was sucessfully added.");
-			form.reset();
-		}else if(key.equals(Key.SAVE_ERROR)){
-			messagePanel.displayErrorMessage("Whoops! An error occurred while saving.");
+	public void updateState(String key, Object value) {
+		if (key.equals(Key.MESSAGE)) {
+			messagePanel.displayMessage((MessageEvent)value);
 		}
-	}
-	
-	@Override
-	public void afterShown(){
-		form.requestFocusForDefaultField();
 	}
 }

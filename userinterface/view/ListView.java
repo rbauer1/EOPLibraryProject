@@ -15,9 +15,9 @@ import controller.Controller;
 public abstract class ListView extends View implements ListSelectionListener{
 
 	private static final long serialVersionUID = 771887742917121575L;
-	
+
 	protected JTable table;
-	
+
 	protected ListView(Controller controller, String title) {
 		super(controller, title);
 	}
@@ -25,11 +25,17 @@ public abstract class ListView extends View implements ListSelectionListener{
 	protected ListView(Controller controller, String title, String[] buttonNames) {
 		super(controller, title, buttonNames);
 	}
-	
+
+	@Override
+	public void afterShown() {
+		messagePanel.clear();
+		processListSelection();
+	}
+
 	@Override
 	protected void build(){
 		buildFilterForm();
-		
+
 		table = createTable();
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -37,6 +43,7 @@ public abstract class ListView extends View implements ListSelectionListener{
 		table.setAutoCreateRowSorter(true);
 		table.getSelectionModel().addListSelectionListener(this);
 		table.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getSource() == table && e.getClickCount() == 2) {
 					select();
@@ -45,20 +52,15 @@ public abstract class ListView extends View implements ListSelectionListener{
 		});
 		add(new JScrollPane(table));
 	}
-	
-	@Override
-	public void afterShown() {
-		processListSelection();
-	}
-	
+
 	protected abstract void buildFilterForm();
-	
+
 	protected abstract JTable createTable();
-	
-	protected abstract void select();
 
 	protected abstract void processListSelection();
-	
+
+	protected abstract void select();
+
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		processListSelection();
