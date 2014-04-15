@@ -10,16 +10,25 @@
 package controller.transaction;
 
 
-import javax.swing.JOptionPane;
+import java.util.List;
+import java.util.Properties;
 
 import model.Worker;
+import userinterface.message.MessageEvent;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * Transacation responsible for deleting workers
+ */
 public class DeleteWorkersTransaction extends Transaction {
 	
+	/** Transaction for listing workers */
 	private Transaction listWorkersTransaction;
-
+	
+	/** Worker Model this transaction is updating */
+	private Worker worker;	
+	
 	/**
 	 * Constructs Delete Workers Transaction
 	 * @param parentController
@@ -29,34 +38,49 @@ public class DeleteWorkersTransaction extends Transaction {
 	}
 	
 	@Override
-	public Object getState(String key) {
-		return null;
+	protected Properties getDependencies(){
+		Properties dependencies = new Properties();
+		dependencies.setProperty(Key.SELECT_WORKER, Key.WORKER);
+		return dependencies;
 	}
 	
 	@Override
 	public void execute(){
 		listWorkersTransaction = TransactionFactory.executeTransaction(this, "ListWorkersTransaction", Key.DISPLAY_WORKER_MENU, Key.SELECT_WORKER);
 	}
+	
+	@Override
+	public Object getState(String key) {
+		if(key.equals(Key.WORKER)){
+			return worker;
+		}
+		return super.getState(key);
+	}
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
 		if(key.equals(Key.SELECT_WORKER)){
-			setWorkerInactive((Worker)value);
+			worker = (Worker)value;
+			showView("DeleteWorkerView");
+		}else if(key.equals(Key.SAVE_WORKER)){
+			deleteWorker((Properties)value);
 		}
-		registry.updateSubscribers(key, this);
+		super.stateChangeRequest(key, value);
 	}
 	
-	private void setWorkerInactive(Worker worker){
-		if(deleteConfirmationPopup() == JOptionPane.YES_OPTION){
-			worker.setInactive();//TODO handle delete error
-			listWorkersTransaction.stateChangeRequest(Key.REFRESH_LIST, null);
+	private void deleteWorker(Properties workerData){
+		String notes = "Reason For Deletion: " + workerData.getProperty("DeletionReason", "None") + "\n";
+		notes += workerData.getProperty("Notes", "");
+		if(worker.setInactive(notes)){
+			listWorkersTransaction.execute();
+			listWorkersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent("Success", "Good Job! The worker was deleted successfully."));
+		}else{
+			List<String> inputErrors = worker.getErrors();
+			if(inputErrors.size() > 0){
+				stateChangeRequest(Key.MESSAGE, new MessageEvent("Error", "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+			}else{
+				stateChangeRequest(Key.MESSAGE, new MessageEvent("Error", "Whoops! An error occurred while deleting."));
+			}
 		}
-	}
-	
-	private int deleteConfirmationPopup(){
-		String message = "ATTENTION: You are about to delete a worker from the system.\n" +
-			"Are you sure you have selected the correct worker and want to proceed?";
-		return JOptionPane.showConfirmDialog(frame, message, "Worker will be deleted", JOptionPane.YES_NO_OPTION);
-
 	}
 }

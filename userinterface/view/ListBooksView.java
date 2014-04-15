@@ -41,7 +41,7 @@ public class ListBooksView extends ListView {
 			buttons.get("Submit").setText(operationType);
 		}
 		
-		subscribeToController(Key.MESSAGE, Key.BOOK_COLLECTION, Key.REFRESH_LIST);
+		subscribeToController(Key.MESSAGE, Key.BOOK_COLLECTION);
 		
 		// Get Books for initial filter settings
 		filter();

@@ -9,18 +9,18 @@
  */
 package userinterface.view;
 
-import model.Book;
+import model.Borrower;
 import model.Model;
 import userinterface.message.MessageEvent;
-import userinterface.view.form.BookDeleteForm;
+import userinterface.view.form.BorrowerDeleteForm;
 import userinterface.view.form.Form;
 import utilities.Key;
 import controller.Controller;
 
 /**
- * View that provides interface for user to delete book.
+ * View that provides interface for user to delete borrower.
  */
-public class DeleteBookView extends View {
+public class DeleteBorrowerView extends View {
 	
 	private static final long serialVersionUID = -6030753682831962753L;
 	
@@ -31,24 +31,24 @@ public class DeleteBookView extends View {
 	private Form form;
 	
 	/** Model whose data we are displaying */
-	private Model book;
+	private Model borrower;
 	
 	/**
-	 * Constructs delete book view
+	 * Constructs delete borrower view
 	 * @param controller
 	 */
-	public DeleteBookView(Controller controller) {
-		super(controller, "Delete Book", BUTTON_NAMES);
-		subscribeToController(Key.BOOK, Key.MESSAGE);
+	public DeleteBorrowerView(Controller controller) {
+		super(controller, "Delete Borrower", BUTTON_NAMES);
+		subscribeToController(Key.BORROWER, Key.MESSAGE);
 	}
 	
 	@Override
 	protected void build() {
-		messagePanel.displayMessage("Warning", "Caution! Please verify you have selected the correct book for deletion.");
-		form = new BookDeleteForm(this);
-		form.setFieldEnabled("Barcode", false);
-		form.setFieldEnabled("Title", false);
-		form.setFieldEnabled("Author1", false);
+		messagePanel.displayMessage("Warning", "Caution! Please verify you have selected the correct borrower for deletion.");
+		form = new BorrowerDeleteForm(this);
+		form.setFieldEnabled("BannerID", false);
+		form.setFieldEnabled("FirstName", false);
+		form.setFieldEnabled("LastName", false);
 		add(form);	
 	}
 
@@ -56,17 +56,17 @@ public class DeleteBookView extends View {
 	public void processAction(Object source) {
 		messagePanel.clear();
 		if (source == buttons.get("Back")) {
-			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
+			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
 		}else if (source == buttons.get("Delete") || source == form) {
-			controller.stateChangeRequest(Key.SAVE_BOOK, form.getValues());
+			controller.stateChangeRequest(Key.SAVE_BORROWER, form.getValues());
 		}
 	}
 
 	@Override
 	public void updateState(String key, Object value) {	
-		if(key.equals(Key.BOOK)){
-			book = (Book) value;
-			form.setValues(book.getPersistentState());
+		if(key.equals(Key.BORROWER)){
+			borrower = (Borrower) value;
+			form.setValues(borrower.getPersistentState());
 			form.get("Notes").reset();
 		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);

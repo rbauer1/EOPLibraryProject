@@ -53,6 +53,7 @@ public class ViewFactory {
 		} catch (IllegalArgumentException e) {
 			new Event("ViewFactory", "createView", "Illegal argument pass to view constructor.", Event.FATAL);
 		} catch (InvocationTargetException e) {
+			e.printStackTrace();
 			new Event("ViewFactory", "createView", "Exception thrown by view constructor.", Event.FATAL);
 		}
 		throw new IllegalArgumentException("Invalid view name provided");

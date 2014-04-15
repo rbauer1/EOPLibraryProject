@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JTable;
 
 import model.Worker;
+import userinterface.message.MessageEvent;
 import userinterface.view.form.WorkerSearchForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -40,11 +41,18 @@ public class ListWorkersView extends ListView {
 			buttons.get("Submit").setText(operationType);
 		}
 		
-		subscribeToController(Key.WORKER_COLLECTION, Key.REFRESH_LIST);
+		subscribeToController(Key.MESSAGE, Key.WORKER_COLLECTION);
 		
 		// Get Workers for initial filter settings
 		filter();
 	}
+	
+	@Override
+	public void afterShown() {
+		super.afterShown();
+		filter();
+	}
+	
 	
 	@Override
 	protected void buildFilterForm() {
@@ -71,9 +79,8 @@ public class ListWorkersView extends ListView {
 			workers = (List<Worker>) value;
 			table.setModel(new WorkerTableModel(workers));
 			table.repaint();			
-		}
-		if (key.equals(Key.REFRESH_LIST)) {
-			filter();		
+		}else if (key.equals(Key.MESSAGE)) {
+			messagePanel.displayMessage((MessageEvent)value);
 		}
 	}
 	

@@ -18,6 +18,9 @@ import userinterface.message.MessageEvent;
 import utilities.Key;
 import controller.Controller;
 
+/**
+ * Transacation responsible for deleting books
+ */
 public class DeleteBooksTransaction extends Transaction {
 	
 	/** Transaction for listing books */
@@ -42,16 +45,16 @@ public class DeleteBooksTransaction extends Transaction {
 	}
 	
 	@Override
+	public void execute(){
+		listBooksTransaction = TransactionFactory.executeTransaction(this, "ListBooksTransaction", Key.DISPLAY_BOOK_MENU, Key.SELECT_BOOK);
+	}
+	
+	@Override
 	public Object getState(String key) {
 		if(key.equals(Key.BOOK)){
 			return book;
 		}
 		return super.getState(key);
-	}
-	
-	@Override
-	public void execute(){
-		listBooksTransaction = TransactionFactory.executeTransaction(this, "ListBooksTransaction", Key.DISPLAY_BOOK_MENU, Key.SELECT_BOOK);
 	}
 
 	@Override

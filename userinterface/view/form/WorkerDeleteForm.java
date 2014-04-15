@@ -18,35 +18,35 @@ import userinterface.component.TextField;
 import userinterface.view.View;
 
 /**
- * Form that takes the input of notes for deleting a Book model.
+ * Form that takes the input of notes for deleting a Worker model.
  */
-public class BookDeleteForm extends Form {
+public class WorkerDeleteForm extends Form {
 
 	private static final long serialVersionUID = 8891254032102434181L;
 
 	/**
-	 * Constructs Book Delete Form
+	 * Constructs Worker Delete Form
 	 * @param view
 	 */
-	public BookDeleteForm(View view) {
+	public WorkerDeleteForm(View view) {
 		super(view);
 	}
 	
 	@Override
 	protected void build() {
 		TextField barcodeField = new TextField(16);
-		addField("Barcode", barcodeField);
-		add(ViewHelper.formatFieldLeft("Barcode", barcodeField));
+		addField("BannerID", barcodeField);
+		add(ViewHelper.formatFieldLeft("Banner ID", barcodeField));
 		
-		TextField titleField = new TextField(16);
-		addField("Title", titleField);
-		add(ViewHelper.formatFieldLeft("Title", titleField));
+		TextField firstNameField = new TextField(16);
+		addField("FirstName", firstNameField);
+		add(ViewHelper.formatFieldLeft("First Name", firstNameField));
 		
-		TextField author1Field = new TextField(16);
-		addField("Author1", author1Field);
-		add(ViewHelper.formatFieldLeft("Author", author1Field));
+		TextField lastNameField = new TextField(16);
+		addField("LastName", lastNameField);
+		add(ViewHelper.formatFieldLeft("Last Name", lastNameField));
 
-		SelectField deleteReasonField = new SelectField(new String[] { "Other", "Damaged - Discarded ", "Obsolete - Discarded", "Donated" });
+		SelectField deleteReasonField = new SelectField(new String[] { "Other", "Graduated", "No Longer in Program", "Transferred" });
 		deleteReasonField.setPreferredSize(new Dimension(185,25));
 		addField("DeletionReason", deleteReasonField);
 		add(ViewHelper.formatFieldLeft("Reason", deleteReasonField));
