@@ -46,7 +46,7 @@ public class WorkerDeleteForm extends Form {
 		addField("LastName", lastNameField);
 		add(ViewHelper.formatFieldLeft("Last Name", lastNameField));
 
-		SelectField deleteReasonField = new SelectField(new String[] { "Other", "Graduated", "No Longer in Program", "Transferred" });
+		SelectField deleteReasonField = new SelectField(new String[] { "Other", "No longer Employee - Graduated", "No longer Employee - Terminated" });
 		deleteReasonField.setPreferredSize(new Dimension(185,25));
 		addField("DeletionReason", deleteReasonField);
 		add(ViewHelper.formatFieldLeft("Reason", deleteReasonField));

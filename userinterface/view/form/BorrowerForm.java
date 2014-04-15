@@ -72,19 +72,7 @@ public class BorrowerForm extends Form {
 		emailField.addActionListener(this);
 		addField("Email", emailField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Email", emailField));
-		/*
-		 * SelectField statusField = new SelectField(new String[] { "Active",
-		 * "Inactive" }); //TODO should this even be an option?
-		 * addField("Status", statusField);
-		 * rightColumn.add(ViewHelper.formatFieldLeft("Status", statusField));
-		 * 
-		 * SelectField borrowerStatusField = new SelectField(new String[] {
-		 * "Good Standing", "Delinquent" }); //TODO should this even be an option? 
-		 * borrowerStatusField.setPreferredSize(new Dimension(130,25));
-		 * addField("BorrowerStatus", borrowerStatusField);
-		 * rightColumn.add(ViewHelper.formatFieldLeft("Standing",
-		 * borrowerStatusField));
-		 */
+
 		rightColumn.add(ViewHelper.createPlaceHolder());
 
 		TextArea notesField = new TextArea();

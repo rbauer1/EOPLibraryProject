@@ -38,8 +38,12 @@ public class ViewHelper {
 	}
 	
 	public static JPanel formatCenter(JComponent component) {
+		return formatCenter(component, 5);
+	}	
+	
+	public static JPanel formatCenter(JComponent component, int margin) {
 		Panel panel = new Panel(new FlowLayout(FlowLayout.CENTER));
-		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		panel.setBorder(BorderFactory.createEmptyBorder(margin,margin,margin,margin));
 		panel.add(component);
 		return panel;
 	}	
@@ -104,7 +108,7 @@ public class ViewHelper {
 		JScrollPane scrollPane =  new JScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setAlignmentX(JScrollPane.CENTER_ALIGNMENT);
 		scrollPane.setBorder(new LineBorder(Form.FIELD_BORDER_COLOR, 1));
-		scrollPane.setPreferredSize(new Dimension( 300, 70 ));
+		scrollPane.setPreferredSize(new Dimension( 400, 100 ));
 		panel.add(scrollPane);
 		return panel;
 	}

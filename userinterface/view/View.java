@@ -65,7 +65,7 @@ public abstract class View extends Panel implements IView, ActionListener {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		// Add title
-		add(ViewHelper.formatCenter(new Label(title, true)));
+		add(ViewHelper.formatCenter(new Label(title, true), 0));
 		
 		// Add Message Panel
 		this.messagePanel = new MessagePanel();

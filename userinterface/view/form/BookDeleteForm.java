@@ -34,15 +34,15 @@ public class BookDeleteForm extends Form {
 	
 	@Override
 	protected void build() {
-		TextField barcodeField = new TextField(16);
+		TextField barcodeField = new TextField(20);
 		addField("Barcode", barcodeField);
 		add(ViewHelper.formatFieldLeft("Barcode", barcodeField));
 		
-		TextField titleField = new TextField(16);
+		TextField titleField = new TextField(20);
 		addField("Title", titleField);
 		add(ViewHelper.formatFieldLeft("Title", titleField));
 		
-		TextField author1Field = new TextField(16);
+		TextField author1Field = new TextField(20);
 		addField("Author1", author1Field);
 		add(ViewHelper.formatFieldLeft("Author", author1Field));
 
