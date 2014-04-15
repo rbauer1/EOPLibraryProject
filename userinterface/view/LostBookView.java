@@ -14,7 +14,7 @@ import java.util.List;
 import model.Book;
 import model.Borrower;
 import model.Model;
-import userinterface.message.Message;
+import userinterface.message.MessageType;
 import userinterface.view.form.Form;
 import userinterface.view.form.RentalForm;
 import utilities.Key;
@@ -49,7 +49,7 @@ public class LostBookView extends View {
 	
 	@Override
 	protected void build() {
-		messagePanel.displayMessage(Message.WARNING, "Caution! Please verify you have selected the correct book to be marked as lost.");
+		messagePanel.displayMessage(MessageType.WARNING, "Caution! Please verify you have selected the correct book to be marked as lost.");
 		form = new RentalForm(this);
 		form.setFieldEnabled("Barcode", false);
 		form.setFieldEnabled("Title", false);
@@ -84,7 +84,7 @@ public class LostBookView extends View {
 		}else if (key.equals(Key.INPUT_ERROR)) {
 			messagePanel.displayErrorMessage("Aw shucks! There are errors in the input. Please try again.", (List<String>) value);
 		}else if(key.equals(Key.SAVE_SUCCESS)){
-			messagePanel.displayMessage(Message.SUCCESS, "Well done! Book was sucessfully deleted.");
+			messagePanel.displayMessage(MessageType.SUCCESS, "Well done! Book was sucessfully deleted.");
 			form.reset();
 		}else if(key.equals(Key.SAVE_ERROR)){
 			messagePanel.displayErrorMessage("Whoops! An error occurred while deleting.");

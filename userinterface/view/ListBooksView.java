@@ -7,6 +7,7 @@ import javax.swing.JTable;
 
 import model.Book;
 import userinterface.message.MessageEvent;
+import userinterface.message.MessageType;
 import userinterface.view.form.BookSearchForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -99,7 +100,7 @@ public class ListBooksView extends ListView {
 		if (rowIndex > -1) {
 			controller.stateChangeRequest(Key.SELECT_BOOK, books.get(rowIndex));
 		} else {
-			messagePanel.displayMessage("Warning", "Warning! Must select a book from the list!");
+			messagePanel.displayMessage(MessageType.WARNING, "Warning! Must select a book from the list!");
 		}
 	}
 	

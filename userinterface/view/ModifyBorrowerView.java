@@ -13,6 +13,7 @@ import java.util.List;
 
 import model.Borrower;
 import model.Model;
+import userinterface.message.MessageType;
 import userinterface.view.form.BorrowerForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -73,7 +74,7 @@ public class ModifyBorrowerView extends View {
 		}else if (key.equals(Key.INPUT_ERROR)) {
 			messagePanel.displayErrorMessage("Aw shucks! There are errors in the input. Please try again.", (List<String>) value);
 		}else if(key.equals(Key.SAVE_SUCCESS)){
-			messagePanel.displayMessage("Success", "Well done! Borrower was sucessfully saved."); 
+			messagePanel.displayMessage(MessageType.SUCCESS, "Well done! Borrower was sucessfully saved."); 
 		}else if(key.equals(Key.SAVE_ERROR)){
 			messagePanel.displayErrorMessage("Whoops! An error occurred while saving.");
 		}
@@ -89,7 +90,7 @@ public class ModifyBorrowerView extends View {
 		buttons.get("Recover").getParent().setVisible(!active);
 		buttons.get("Save").getParent().setVisible(active);
 		if(!active){
-			messagePanel.displayMessage("Info", "Heads Up! This borrower is archived. It must be recovered before it can be modified.");
+			messagePanel.displayMessage(MessageType.INFO, "Heads Up! This borrower is archived. It must be recovered before it can be modified.");
 		}
 	}
 }

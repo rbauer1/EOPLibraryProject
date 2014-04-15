@@ -6,8 +6,8 @@ import java.util.List;
 import javax.swing.JTable;
 
 import model.Rental;
-import userinterface.message.Message;
 import userinterface.message.MessageEvent;
+import userinterface.message.MessageType;
 import utilities.Key;
 import controller.Controller;
 
@@ -80,7 +80,7 @@ public class ListRentalsView extends ListView {
 		if (rowIndex > -1) {
 			controller.stateChangeRequest(Key.SELECT_RENTAL, rentals.get(rowIndex));
 		} else {
-			messagePanel.displayMessage(Message.WARNING, "Warning! Must select a rental from the list!");
+			messagePanel.displayMessage(MessageType.WARNING, "Warning! Must select a rental from the list!");
 		}
 	}
 	

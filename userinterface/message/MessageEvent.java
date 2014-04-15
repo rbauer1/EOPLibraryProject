@@ -13,7 +13,7 @@ public final class MessageEvent {
 	private final String title;
 	
 	/** Type of message - can be Success, Error, Info, Warning */
-	private final String type;
+	private final MessageType type;
 	
 	/** List of sub messages */
 	private final List<String> messages;
@@ -23,7 +23,7 @@ public final class MessageEvent {
 	 * @param title
 	 * @param messages
 	 */
-	public MessageEvent(String type, String title, List<String> messages) {
+	public MessageEvent(MessageType type, String title, List<String> messages) {
 		this.title = title;
 		this.type = type;
 		this.messages = messages;
@@ -33,7 +33,7 @@ public final class MessageEvent {
 	 * @param type
 	 * @param title
 	 */
-	public MessageEvent(String type, String title) {
+	public MessageEvent(MessageType type, String title) {
 		this(type, title, new ArrayList<String>());
 	}
 
@@ -47,7 +47,7 @@ public final class MessageEvent {
 	/**
 	 * @return type - Success, Error, Info, Warning
 	 */
-	public String getType() {
+	public MessageType getType() {
 		return type;
 	}
 

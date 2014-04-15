@@ -15,6 +15,7 @@ import java.util.Properties;
 
 import model.Borrower;
 import userinterface.message.MessageEvent;
+import userinterface.message.MessageType;
 import utilities.Key;
 import controller.Controller;
 
@@ -73,13 +74,13 @@ public class DeleteBorrowersTransaction extends Transaction {
 		notes += borrowerData.getProperty("Notes", "");
 		if(borrower.setInactive(notes)){
 			listBorrowersTransaction.execute();
-			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent("Success", "Good Job! The borrower was deleted successfully."));
+			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The borrower was deleted successfully."));
 		}else{
 			List<String> inputErrors = borrower.getErrors();
 			if(inputErrors.size() > 0){
-				stateChangeRequest(Key.MESSAGE, new MessageEvent("Error", "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
 			}else{
-				stateChangeRequest(Key.MESSAGE, new MessageEvent("Error", "Whoops! An error occurred while deleting."));
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while deleting."));
 			}
 		}
 	}

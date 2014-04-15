@@ -12,6 +12,7 @@ package userinterface.view;
 import model.Borrower;
 import model.Model;
 import userinterface.message.MessageEvent;
+import userinterface.message.MessageType;
 import userinterface.view.form.BorrowerDeleteForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -44,7 +45,7 @@ public class DeleteBorrowerView extends View {
 	
 	@Override
 	protected void build() {
-		messagePanel.displayMessage("Warning", "Caution! Please verify you have selected the correct borrower for deletion.");
+		messagePanel.displayMessage(MessageType.WARNING, "Caution! Please verify you have selected the correct borrower for deletion.");
 		form = new BorrowerDeleteForm(this);
 		form.setFieldEnabled("BannerID", false);
 		form.setFieldEnabled("FirstName", false);

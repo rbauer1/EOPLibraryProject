@@ -17,8 +17,8 @@ import model.Book;
 import model.Borrower;
 import model.Rental;
 import model.Worker;
-import userinterface.message.Message;
 import userinterface.message.MessageEvent;
+import userinterface.message.MessageType;
 import utilities.Key;
 import controller.Controller;
 
@@ -120,14 +120,14 @@ public class ProcessLostBookTransaction extends Transaction {
 			showView("ListRentalsView");
 			borrower.addMonetaryPenaltyForLostBook(book);
 			selectedRental.checkIn((Worker)parentController.getState(Key.WORKER));
-			stateChangeRequest(Key.MESSAGE, new MessageEvent(Message.SUCCESS, "Good Job! The book was marked as lost successfully, and this student's monetary penalty has been updated appropriately"));
+			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The book was marked as lost successfully, and this student's monetary penalty has been updated appropriately"));
 			stateChangeRequest(Key.RENTAL_COLLECTION, null);
 		}else{
 			List<String> inputErrors = book.getErrors();
 			if(inputErrors.size() > 0){
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(Message.ERROR_T, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
 			}else{
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(Message.ERROR_T, "Whoops! An error occurred while marking as lost."));
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while marking as lost."));
 			}
 		}
 	}

@@ -9,11 +9,12 @@
  */
 package userinterface.view;
 
-import model.Worker;
 import model.Model;
+import model.Worker;
 import userinterface.message.MessageEvent;
-import userinterface.view.form.WorkerDeleteForm;
+import userinterface.message.MessageType;
 import userinterface.view.form.Form;
+import userinterface.view.form.WorkerDeleteForm;
 import utilities.Key;
 import controller.Controller;
 
@@ -44,7 +45,7 @@ public class DeleteWorkerView extends View {
 	
 	@Override
 	protected void build() {
-		messagePanel.displayMessage("Warning", "Caution! Please verify you have selected the correct worker for deletion.");
+		messagePanel.displayMessage(MessageType.WARNING, "Caution! Please verify you have selected the correct worker for deletion.");
 		form = new WorkerDeleteForm(this);
 		form.setFieldEnabled("BannerID", false);
 		form.setFieldEnabled("FirstName", false);

@@ -7,8 +7,9 @@ import javax.swing.JTable;
 
 import model.Worker;
 import userinterface.message.MessageEvent;
-import userinterface.view.form.WorkerSearchForm;
+import userinterface.message.MessageType;
 import userinterface.view.form.Form;
+import userinterface.view.form.WorkerSearchForm;
 import utilities.Key;
 import controller.Controller;
 
@@ -100,7 +101,7 @@ public class ListWorkersView extends ListView {
 		if (rowIndex > -1) {
 			controller.stateChangeRequest(Key.SELECT_WORKER, workers.get(rowIndex));
 		} else {
-			messagePanel.displayMessage("Warning", "Warning! Must select a worker from the list!");
+			messagePanel.displayMessage(MessageType.WARNING, "Warning! Must select a worker from the list!");
 		}
 	}
 	

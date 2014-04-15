@@ -32,7 +32,7 @@ public class MessagePanel extends Panel {
 	 * @param messages
 	 */
 	public void displayErrorMessage(String title, List<String> messages) {
-		displayMessage(MessageFactory.createMessage("Error", title, messages));
+		displayMessage(MessageFactory.createMessage(MessageType.ERROR, title, messages));
 	}
 	
 	/**
@@ -40,7 +40,7 @@ public class MessagePanel extends Panel {
 	 * @param title
 	 */
 	public void displayErrorMessage(String title) {
-		displayMessage(MessageFactory.createMessage("Error", title));
+		displayMessage(MessageFactory.createMessage(MessageType.ERROR, title));
 	}
 
 
@@ -50,7 +50,7 @@ public class MessagePanel extends Panel {
 	 * @param title
 	 * @param messages
 	 */
-	public void displayMessage(String type, String title, List<String> messages) {
+	public void displayMessage(MessageType type, String title, List<String> messages) {
 		displayMessage(MessageFactory.createMessage(type, title, messages));
 	}
 	
@@ -60,7 +60,7 @@ public class MessagePanel extends Panel {
 	 * @param title
 	 * @param messages
 	 */
-	public void displayMessage(String type, String title) {
+	public void displayMessage(MessageType type, String title) {
 		displayMessage(MessageFactory.createMessage(type, title));
 	}
 	

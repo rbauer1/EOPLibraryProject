@@ -11,8 +11,9 @@ package userinterface.view;
 
 import java.util.List;
 
-import userinterface.view.form.WorkerForm;
+import userinterface.message.MessageType;
 import userinterface.view.form.Form;
+import userinterface.view.form.WorkerForm;
 import utilities.Key;
 import controller.Controller;
 
@@ -62,7 +63,7 @@ public class AddWorkerView extends View {
 		if (key.equals(Key.INPUT_ERROR)) {
 			messagePanel.displayErrorMessage("Aw shucks! There are errors in the input. Please try again.", (List<String>) value);
 		}else if(key.equals(Key.SAVE_SUCCESS)){
-			messagePanel.displayMessage("Success", "Well done! Worker was sucessfully added.");
+			messagePanel.displayMessage(MessageType.SUCCESS, "Well done! Worker was sucessfully added.");
 			form.reset();
 		}else if(key.equals(Key.SAVE_ERROR)){
 			messagePanel.displayErrorMessage("Whoops! An error occurred while saving.");

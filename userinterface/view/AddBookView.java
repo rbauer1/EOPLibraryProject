@@ -11,6 +11,7 @@ package userinterface.view;
 
 import java.util.List;
 
+import userinterface.message.MessageType;
 import userinterface.view.form.BookForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -62,7 +63,7 @@ public class AddBookView extends View {
 		if (key.equals(Key.INPUT_ERROR)) {
 			messagePanel.displayErrorMessage("Aw shucks! There are errors in the input. Please try again.", (List<String>) value);
 		}else if(key.equals(Key.SAVE_SUCCESS)){
-			messagePanel.displayMessage("Success", "Well done! Book was sucessfully added.");
+			messagePanel.displayMessage(MessageType.SUCCESS, "Well done! Book was sucessfully added.");
 			form.reset();
 		}else if(key.equals(Key.SAVE_ERROR)){
 			messagePanel.displayErrorMessage("Whoops! An error occurred while saving.");
