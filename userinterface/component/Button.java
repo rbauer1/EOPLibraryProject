@@ -7,6 +7,8 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
@@ -44,6 +46,9 @@ public class Button extends JButton{
 	/** True while button is pressed **/
 	private boolean pressed;
 	
+	/** True if the button has focus **/
+	private boolean focused;
+	
 	public Button() {
 		super();
 		initialize();
@@ -65,6 +70,16 @@ public class Button extends JButton{
 		setPreferredSize(SIZE);
 		setAlignmentX(CENTER_ALIGNMENT);
 		rollover = false;
+		this.addFocusListener(new FocusListener(){
+			@Override
+			public void focusGained(FocusEvent e) {
+				focused = true;
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				focused = false;
+			}
+		});
 		this.getModel().addChangeListener(new ChangeListener() {
 		    @Override
 		    public void stateChanged(ChangeEvent e) {
@@ -83,10 +98,9 @@ public class Button extends JButton{
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		int height = getHeight();
 		int width  = getWidth();
-		
 		Color gradientLight = LIGHT_COLOR;
 		Color gradientDark = DARK_COLOR;
-		if(rollover){ 
+		if(rollover || focused){ 
 			gradientLight = gradientLight.brighter();
 			gradientDark = gradientDark.brighter();
 		}
