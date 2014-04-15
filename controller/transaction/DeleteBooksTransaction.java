@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Properties;
 
 import model.Book;
+import userinterface.message.Message;
 import userinterface.message.MessageEvent;
 import utilities.Key;
 import controller.Controller;
@@ -70,13 +71,13 @@ public class DeleteBooksTransaction extends Transaction {
 		notes += bookData.getProperty("Notes", "");
 		if(book.setInactive(notes)){
 			listBooksTransaction.execute();
-			listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent("Success", "Good Job! The book was deleted successfully."));
+			listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(Message.SUCCESS, "Good Job! The book was deleted successfully."));
 		}else{
 			List<String> inputErrors = book.getErrors();
 			if(inputErrors.size() > 0){
-				stateChangeRequest(Key.MESSAGE, new MessageEvent("Error", "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(Message.ERROR_T, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
 			}else{
-				stateChangeRequest(Key.MESSAGE, new MessageEvent("Error", "Whoops! An error occurred while deleting."));
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(Message.ERROR_T, "Whoops! An error occurred while deleting."));
 			}
 		}
 	}

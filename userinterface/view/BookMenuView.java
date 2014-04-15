@@ -35,7 +35,7 @@ public class BookMenuView extends View {
 	 * @param controller
 	 */
 	public BookMenuView(Controller controller) {
-		super(controller, "Choose a Transaction Operation");
+		super(controller, "Book Menu");
 	}
 
 	@Override

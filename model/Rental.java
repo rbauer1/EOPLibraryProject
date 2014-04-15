@@ -11,6 +11,8 @@ package model;
 
 import java.util.Properties;
 
+import utilities.DateUtil;
+
 import model.validation.BannerIdValidation;
 import model.validation.DateValidation;
 import model.validation.LengthValidation;
@@ -108,5 +110,11 @@ public class Rental extends Model {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public boolean checkIn(Worker worker){
+		persistentState.setProperty("CheckinDate", DateUtil.getDate());
+		persistentState.setProperty("CheckinWorkerId", (String)worker.getState(worker.getPrimaryKey()));
+		return save();
 	}
 }

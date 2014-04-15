@@ -16,6 +16,9 @@ import java.util.Properties;
 import model.Book;
 import model.Borrower;
 import model.Rental;
+import model.Worker;
+import userinterface.message.Message;
+import userinterface.message.MessageEvent;
 import utilities.Key;
 import controller.Controller;
 
@@ -39,6 +42,9 @@ public class ProcessLostBookTransaction extends Transaction {
 	/** List of errors in the input */
 	private List<String> inputErrors;
 	
+	/** ListBorrower Transaction */
+	private Transaction listBorrowers;
+	
 	/**
 	 * Constructs Process Lost Book Transaction
 	 * @param parentController
@@ -57,7 +63,7 @@ public class ProcessLostBookTransaction extends Transaction {
 	
 	@Override
 	public void execute(){
-		TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BOOK_MENU, Key.SELECT_BORROWER);
+		listBorrowers = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
 	}
 
 	@Override
@@ -77,20 +83,52 @@ public class ProcessLostBookTransaction extends Transaction {
 		if(key.equals(Key.INPUT_ERROR)){
 			return inputErrors;
 		}
-		return null;
+		return super.getState(key);
 	}
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
 		if(key.equals(Key.SELECT_BORROWER)){
 			borrower = (Borrower)value;
-			rentals = borrower.getRentals().getEntities();
+			stateChangeRequest(Key.RENTAL_COLLECTION, null);
 			showView("ListRentalsView");
 		} else if(key.equals(Key.SELECT_RENTAL)){
 			selectedRental = (Rental)value;
 			book = selectedRental.getBook();
 			showView("LostBookView");
+		} else if(key.equals(Key.SAVE_BOOK)){
+			processLostBook((Properties)value);
+		} else if(key.equals(Key.BACK)){
+			String view = (String)value;
+			if(view.equals("ListBorrowersView")){
+				listBorrowers.execute();
+			}else{
+				showView(view);
+			}
+		} else if(key.equals(Key.RENTAL_COLLECTION)){
+			rentals = borrower.getOutstandingRentals(borrower).getEntities();
+		} else if(key.equals(Key.DISPLAY_BORROWER_MENU)){
+			key = Key.DISPLAY_BOOK_MENU;
 		}
-		registry.updateSubscribers(key, this);
+		super.stateChangeRequest(key, value);
+	}
+	
+	private void processLostBook(Properties bookData){
+		String notes = "Additional Notes: ";
+		notes += bookData.getProperty("Notes", "");
+		if(book.setLost(notes)){
+			showView("ListRentalsView");
+			borrower.addMonetaryPenaltyForLostBook(book);
+			selectedRental.checkIn((Worker)parentController.getState(Key.WORKER));
+			stateChangeRequest(Key.MESSAGE, new MessageEvent(Message.SUCCESS, "Good Job! The book was marked as lost successfully, and this student's monetary penalty has been updated appropriately"));
+			stateChangeRequest(Key.RENTAL_COLLECTION, null);
+		}else{
+			List<String> inputErrors = book.getErrors();
+			if(inputErrors.size() > 0){
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(Message.ERROR_T, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+			}else{
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(Message.ERROR_T, "Whoops! An error occurred while marking as lost."));
+			}
+		}
 	}
 }	

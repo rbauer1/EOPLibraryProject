@@ -11,6 +11,7 @@ package userinterface.view;
 
 import model.Book;
 import model.Model;
+import userinterface.message.Message;
 import userinterface.message.MessageEvent;
 import userinterface.view.form.BookDeleteForm;
 import userinterface.view.form.Form;
@@ -44,7 +45,7 @@ public class DeleteBookView extends View {
 	
 	@Override
 	protected void build() {
-		messagePanel.displayMessage("Warning", "Caution! Please verify you have selected the correct book for deletion.");
+		messagePanel.displayMessage(Message.WARNING, "Caution! Please verify you have selected the correct book for deletion.");
 		form = new BookDeleteForm(this);
 		form.setFieldEnabled("Barcode", false);
 		form.setFieldEnabled("Title", false);

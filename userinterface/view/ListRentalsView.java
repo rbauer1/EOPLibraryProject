@@ -7,6 +7,7 @@ import javax.swing.JTable;
 
 import model.Rental;
 import userinterface.message.Message;
+import userinterface.message.MessageEvent;
 import utilities.Key;
 import controller.Controller;
 
@@ -36,7 +37,7 @@ public class ListRentalsView extends ListView {
 			buttons.get("Submit").setText(operationType);
 		}
 		
-		subscribeToController(Key.RENTAL_COLLECTION, Key.REFRESH_LIST);
+		subscribeToController(Key.RENTAL_COLLECTION, Key.REFRESH_LIST, Key.MESSAGE);
 		controller.stateChangeRequest(Key.RENTAL_COLLECTION, null);
 		
 	}
@@ -45,7 +46,7 @@ public class ListRentalsView extends ListView {
 	public void processAction(Object source) {
 		messagePanel.clear();
 		if (source == buttons.get("Back")) {
-			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
+			controller.stateChangeRequest(Key.BACK, "ListBorrowersView");
 		} else if (source == buttons.get("Submit")) {
 			select();
 		}
@@ -56,9 +57,10 @@ public class ListRentalsView extends ListView {
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.RENTAL_COLLECTION)) {
 			rentals = (List<Rental>) value;
-			System.out.println(rentals);
 			table.setModel(new RentalTableModel(rentals));
 			table.repaint();			
+		}else if (key.equals(Key.MESSAGE)) {
+			messagePanel.displayMessage((MessageEvent)value);
 		}
 	}
 	

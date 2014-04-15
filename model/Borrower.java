@@ -21,6 +21,7 @@ import model.validation.NumericValidation;
 import model.validation.PhoneValidation;
 import model.validation.PresenceValidation;
 import utilities.DateUtil;
+import utilities.NumberUtil;
 import exception.InvalidPrimaryKeyException;
 
 /**
@@ -141,9 +142,16 @@ public class Borrower extends Model {
 		return true;
 	}
 	
-	public RentalCollection getRentals(){
+	public RentalCollection getOutstandingRentals(Borrower borrower){
 		RentalCollection rentals = new RentalCollection();
-		rentals.findByBorrower(this);
+		rentals.findOutstandingByBorrower(borrower);
 		return rentals;
+	}
+	
+	public boolean addMonetaryPenaltyForLostBook(Book book){
+		double monetaryPenalty = Double.parseDouble((String)persistentState.get("MonetaryPenalty"));
+		monetaryPenalty += Double.parseDouble((String)book.getState("SuggestedPrice"));
+		persistentState.setProperty("MonetaryPenalty", NumberUtil.getAsCurrencyString(monetaryPenalty));
+		return save();
 	}
 }

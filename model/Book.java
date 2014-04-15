@@ -120,6 +120,12 @@ public class Book extends Model {
 		return save();
 	}
 	
+	public boolean setLost(String notes){
+		persistentState.setProperty("Notes", notes);
+		persistentState.setProperty("Status", "Lost");
+		return save();
+	}
+	
 	@Override
 	public boolean beforeValidate(boolean isCreate) {
 		if(isCreate){

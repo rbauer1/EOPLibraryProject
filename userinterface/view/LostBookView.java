@@ -64,9 +64,9 @@ public class LostBookView extends View {
 	public void processAction(Object source) {
 		messagePanel.clear();
 		if (source == buttons.get("Cancel")) {
-			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null); //TODO this should go back to the list of rentals
+			controller.stateChangeRequest(Key.BACK, "ListRentalsView");
 		}else if (source == buttons.get("Confirm") || source == form) {
-			controller.stateChangeRequest(Key.SAVE_BOOK, form.getValues()); //TODO also wrong
+			controller.stateChangeRequest(Key.SAVE_BOOK, form.getValues());
 		}
 	}
 
@@ -76,9 +76,11 @@ public class LostBookView extends View {
 		if(key.equals(Key.BOOK)){
 			book = (Book) value;
 			form.setValues(book.getPersistentState());
+			form.get("Notes").reset();
 		}else if(key.equals(Key.BORROWER)){
 			borrower = (Borrower) value;
 			form.setValues(borrower.getPersistentState());
+			form.get("Notes").reset();
 		}else if (key.equals(Key.INPUT_ERROR)) {
 			messagePanel.displayErrorMessage("Aw shucks! There are errors in the input. Please try again.", (List<String>) value);
 		}else if(key.equals(Key.SAVE_SUCCESS)){

@@ -4,6 +4,7 @@ public class Key {
 	public static final String EXIT_SYSTEM = "ExitSystem";
 	public static final String LOGOUT = "Logout";
 	public static final String LOGIN = "Login";
+	public static final String BACK = "Back";
 		
 	public static final String SAVE_SUCCESS = "SaveSuccess";
 	public static final String SAVE_ERROR = "SaveError";

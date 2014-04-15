@@ -32,7 +32,7 @@ public class WorkerMenuView extends View {
 	 * @param controller
 	 */
 	public WorkerMenuView(Controller controller) {
-		super(controller, "Choose a Transaction Operation");
+		super(controller, "Worker Menu");
 	}
 
 	@Override
