@@ -85,5 +85,5 @@ public class ListRentalsView extends ListView {
 	}
 	
 	@Override
-	protected void buildFilterForm() {} 
+	protected void buildForm() {} 
 }

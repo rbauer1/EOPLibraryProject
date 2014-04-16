@@ -11,6 +11,7 @@ package userinterface.view;
 
 import userinterface.ViewHelper;
 import userinterface.component.Button;
+import userinterface.message.MessageEvent;
 import utilities.Key;
 import controller.Controller;
 
@@ -35,8 +36,14 @@ public class MainMenuView extends View {
 	 */
 	public MainMenuView(Controller controller) {
 		super(controller, "Main Menu");
+		subscribeToController(Key.MESSAGE);
 	}
 
+
+	@Override
+	public void afterShown(){
+		messagePanel.clear();
+	}
 
 	@Override
 	protected void build() {
@@ -81,6 +88,10 @@ public class MainMenuView extends View {
 	}
 
 	@Override
-	public void updateState(String key, Object value) {	}
+	public void updateState(String key, Object value) {
+		if (key.equals(Key.MESSAGE)) {
+			messagePanel.displayMessage((MessageEvent)value);
+		}
+	}
 
 }
