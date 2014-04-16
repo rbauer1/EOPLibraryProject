@@ -159,18 +159,21 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 
 			// add our view into the CENTER of the MainFrame
 			this.getContentPane().add((JPanel)newView, BorderLayout.CENTER);
-
-			((JPanel)newView).repaint();
-			
-			// pack the frame and show it
-			this.pack();
-			
-			WindowPosition.placeCenter(this);
 			
 			((View) newView).afterShown();
+				
+			fix();
 		} else {
 			new Event("MainFrame", "swapToView", "Non-displayable view object sent ", Event.ERROR);
 			throw new IllegalArgumentException();
 		}
+	}
+	
+	public void fix(){
+		pack();
+		revalidate();
+		repaint();
+		
+		WindowPosition.placeCenter(this);
 	}
 }

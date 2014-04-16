@@ -15,6 +15,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 
 import userinterface.MainFrame;
+import userinterface.WindowPosition;
 import userinterface.component.Panel;
 
 public class MessagePanel extends Panel {
@@ -77,7 +78,7 @@ public class MessagePanel extends Panel {
 	 */
 	public void clear() {
 		removeAll();
-		MainFrame.getInstance().pack();
+		MainFrame.getInstance().fix();
 	}
 
 	/**
@@ -87,6 +88,7 @@ public class MessagePanel extends Panel {
 	private void displayMessage(Message message) {
 		clear();
 		add(message);
-		MainFrame.getInstance().pack();
+		
+		MainFrame.getInstance().fix();
 	}
 }

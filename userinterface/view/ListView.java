@@ -28,8 +28,8 @@ public abstract class ListView extends View implements ListSelectionListener{
 
 	@Override
 	public void afterShown() {
-		messagePanel.clear();
 		processListSelection();
+		messagePanel.clear();
 	}
 
 	@Override
