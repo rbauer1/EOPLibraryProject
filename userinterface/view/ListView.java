@@ -34,7 +34,7 @@ public abstract class ListView extends View implements ListSelectionListener{
 
 	@Override
 	protected void build(){
-		buildFilterForm();
+		buildForm();
 
 		table = createTable();
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -53,7 +53,7 @@ public abstract class ListView extends View implements ListSelectionListener{
 		add(new JScrollPane(table));
 	}
 
-	protected abstract void buildFilterForm();
+	protected abstract void buildForm();
 
 	protected abstract JTable createTable();
 

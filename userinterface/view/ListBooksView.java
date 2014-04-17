@@ -55,7 +55,7 @@ public class ListBooksView extends ListView {
 	}
 	
 	@Override
-	protected void buildFilterForm() {
+	protected void buildForm() {
 		form = new BookSearchForm(this);
 		add(form);
 	}

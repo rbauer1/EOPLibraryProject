@@ -1,16 +1,17 @@
 /**
- * COPYRIGHT 2014 Sandeep Mitra and students 
+ * COPYRIGHT 2014 Sandeep Mitra and students
  * The College at Brockport, State University of New York.
  * ALL RIGHTS RESERVED
  * 
  * This file is the product of The College at Brockport and cannot
  * be reproduced, copied, or used in any shape or form without
- * he express written consent of The College at Brockport. * 
+ * he express written consent of The College at Brockport. *
  */
 package userinterface.view;
 
 import userinterface.ViewHelper;
 import userinterface.component.Button;
+import userinterface.message.MessageEvent;
 import utilities.Key;
 import controller.Controller;
 
@@ -18,16 +19,16 @@ import controller.Controller;
  * Main Menu Screen. Serves as the main transaction selection screen.
  */
 public class MainMenuView extends View {
-	
+
 	private static final long serialVersionUID = -4462137345508528750L;
-	
+
 	/* Buttons */
 	private Button bookActionsButton;
 	private Button borrowerActionsButton;
-	private Button workerActionsButton;
 	private Button checkinBookButton;
 	private Button checkoutBookButton;
 	private Button logoutButton;
+	private Button workerActionsButton;
 
 	/**
 	 * Constructs main menu view
@@ -35,8 +36,14 @@ public class MainMenuView extends View {
 	 */
 	public MainMenuView(Controller controller) {
 		super(controller, "Main Menu");
+		subscribeToController(Key.MESSAGE);
 	}
 
+
+	@Override
+	public void afterShown(){
+		messagePanel.clear();
+	}
 
 	@Override
 	protected void build() {
@@ -55,7 +62,7 @@ public class MainMenuView extends View {
 		checkoutBookButton = new Button("Rent a Book");
 		checkoutBookButton.addActionListener(this);
 		add(ViewHelper.formatCenter(checkoutBookButton));
-		
+
 		checkinBookButton = new Button("Return a Book");
 		checkinBookButton.addActionListener(this);
 		add(ViewHelper.formatCenter(checkinBookButton));
@@ -75,10 +82,16 @@ public class MainMenuView extends View {
 			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
 		} else if (source == workerActionsButton) {
 			controller.stateChangeRequest(Key.DISPLAY_WORKER_MENU, null);
+		} else if (source == checkoutBookButton) {
+			controller.stateChangeRequest(Key.EXECUTE_CHECKOUT_BOOK, null);
 		}
 	}
 
 	@Override
-	public void updateState(String key, Object value) {	}
-	
+	public void updateState(String key, Object value) {
+		if (key.equals(Key.MESSAGE)) {
+			messagePanel.displayMessage((MessageEvent)value);
+		}
+	}
+
 }

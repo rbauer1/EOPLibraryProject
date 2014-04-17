@@ -56,7 +56,7 @@ public class ListWorkersView extends ListView {
 	
 	
 	@Override
-	protected void buildFilterForm() {
+	protected void buildForm() {
 		form = new WorkerSearchForm(this);
 		add(form);
 	}

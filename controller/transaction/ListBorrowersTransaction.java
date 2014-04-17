@@ -77,6 +77,7 @@ public class ListBorrowersTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
+		System.out.println(key);
 		if(key.equals(Key.BORROWER_COLLECTION)){
 			getBorrowers((Properties)value);
 		}else if(key.equals(Key.SELECT_BORROWER)){
