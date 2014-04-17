@@ -1,172 +1,192 @@
-// tabs=4
-//************************************************************
-//	COPYRIGHT 2010 Sandeep Mitra and students, The
-//    College at Brockport, State University of New York. -
-//	  ALL RIGHTS RESERVED
-//
-// This file is the product of The College at Brockport and cannot
-// be reproduced, copied, or used in any shape or form without
-// the express written consent of The College at Brockport.
-//************************************************************
-//
-// specify the package
+/**
+ * COPYRIGHT 2014 Sandeep Mitra and students
+ * The College at Brockport, State University of New York.
+ * ALL RIGHTS RESERVED
+ * 
+ * This file is the product of The College at Brockport and cannot
+ * be reproduced, copied, or used in any shape or form without
+ * he express written consent of The College at Brockport. *
+ */
 package userinterface;
 
-//system imports
-import javax.swing.*;
+import impresario.ISlideShow;
+import impresario.IView;
 
-import java.awt.*;
-import java.net.*;
-import java.awt.event.ComponentListener;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
-//=============================================================
-//The main frame for the Boy Scout Tree Sales application.
-//All sub-panels (Views) are inside this one frame only.
-//==============================================================
-public class MainFrame extends JFrame
-					   implements ComponentListener
-{
-	 // data members
-		//private JPanel mainPanel;	// primary panel placed in the frame
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-		private Dimension frameSize;	// frame size, prevents reset
+import userinterface.view.View;
+import event.Event;
 
-		// the only instance allowed, null in the beginning
-		private static MainFrame myInstance = null;
+/**
+ * The main frame for the EOP Library application. All sub-panels (Views) are
+ * inside this one frame only.
+ */
+public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 
-		private boolean sizeSet; // Indicates if frame size was set
+	private static final long serialVersionUID = 3974890556338206717L;
+	private static final String COPYRIGHT = "Copyright (c) 2014: Department of Computer Science, The College at Brockport";
 
-		//-------------------------------------------------------------
-		// class constructor may be called only from within this class,
-		// follows the idea of Singleton pattern
-		//-------------------------------------------------------------
-		private MainFrame (String title)
-		{
-			super( title );
+	/** Holds the only instance of this class for Singleton Pattern */
+	private static MainFrame instance = null;
 
-			// change the window's default Java image to custom Christmas Tree image
-			//URL myurl = this.getClass().getResource( "tree.jpg" );
-			//	Toolkit kit = this.getToolkit();
-
-			//super.setIconImage( kit.getImage( myurl ) );
-
-			// in case the program runs in Eclipse, not in jar uncomment the code below
-			// change the window's default Java image to custom Christmas Tree image
-			super.setIconImage( new ImageIcon ( "mcardlesheader3.jpg" ).getImage() );
-
-			super.setLayout(new BorderLayout () );
-
-
-			// This title is the logo panel that stays same for the
-			// duration of the entire program. Component at position (0)
-			super.add( createTitle(), BorderLayout.NORTH );
-
-			// This is the Copyright notice, that is the same for all the views, hence
-			// once it is installed into the main frame it should not be removed
-			// This is Frame Component at position (1)
-			JPanel copyRightPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-			copyRightPanel.setBackground( new Color ( 133, 195, 230 ));
-			copyRightPanel.add(new JLabel("Copyright (c) 2014: Department of Computer Science, The College at Brockport"));
-
-			super.add( copyRightPanel, BorderLayout.SOUTH );
-
-
-			// This panel is a "dummy" panel, which will be replaced by
-			// an actual panel, i.e. by a View that is displayed to the user
-			// This is Frame Component at position ( 2 ), which will be removed
-			// in swapToPanelView method and replaced with the view needed.
-			JPanel empty = new JPanel ( );
-			empty.setBackground( Color.pink );
-			super.add( empty, BorderLayout.CENTER );
-
-			super.setVisible( true );
-
-			super.setResizable( false );
-			sizeSet = true;
-
-	} // end of the constructor
-
-	//-------------------------------------------------------------
-	private JPanel createTitle()
-	{
-		// instantiate the LogoPanel and return it
-		// to the MainFrame constructor
-		return new LogoPanel();
+	/**
+	 * Returns the instance of the main frame. Creates one with blank title if none exists.
+	 * 
+	 * @return instance
+	 */
+	public static MainFrame getInstance() {
+		if (instance == null) {
+			instance = new MainFrame("");
+		}
+		return instance;
 	}
 
-	//----------------------------------------------------------------
-	// Singleton Pattern use: the MainFrame is instantiated just once
-	// All the views/panels go inside this frame instance
-	//----------------------------------------------------------------
-	public static MainFrame getInstance (String title)
-	{
-		if (myInstance == null)
-		{
-			myInstance = new MainFrame(title);
+	/**
+	 * Returns the instance of the main frame. Creates one with provided title if none exists.
+	 * 
+	 * @param title
+	 * @return instance
+	 */
+	public static MainFrame getInstance(String title) {
+		if (instance == null) {
+			instance = new MainFrame(title);
 		}
-
-		return myInstance;
+		return instance;
 	}
 
-	//----------------------------------------------------------
-	public static JFrame getInstance ()
-	{
-		if (myInstance == null)
-		{
-			myInstance = new MainFrame("");
-		}
+	/** Holds the first size set to the frame to prevent resizing */
+	private Dimension frameSize;
 
-		return myInstance;
+
+	/** Tells if size has been set yet */
+	private boolean sizeSet;
+
+	/**
+	 * Private constructor for the Singleton Pattern. Can only be called once.
+	 * 
+	 * @param title
+	 */
+	private MainFrame(String title) {
+		super(title);
+		super.setLayout(new BorderLayout());
+
+		/*
+		 * This title is the logo panel that stays same for the duration of
+		 * the entire program. Component at position (0)
+		 */
+		super.add(new HeaderPanel(), BorderLayout.NORTH);
+
+		/*
+		 * This is the Copyright notice, that is the same for all the views,
+		 * hence once it is installed into the main frame it should not be removed.
+		 * This is Frame Component at position (1)
+		 */
+		JPanel copyRightPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		copyRightPanel.setBackground(View.BACKGROUND_COLOR);
+		copyRightPanel.add(new JLabel(COPYRIGHT));
+		super.add(copyRightPanel, BorderLayout.SOUTH);
+
+		/*
+		 * This panel is a "dummy" panel, which will be replaced by
+		 * an actual panel, i.e. by a View that is displayed to the user
+		 * This is Frame Component at position ( 2 ), which will be removed
+		 * in swapToPanelView method and replaced with the view needed.
+		 */
+		JPanel empty = new JPanel();
+		empty.setBackground(Color.pink);
+		super.add(empty, BorderLayout.CENTER);
+
+		super.setVisible(true);
+		super.setResizable(false);
+		sizeSet = true;
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent arg0) {
+
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent arg0) {
+
 	}
 
 	/**
 	 * Prevents resize on frame
-	 *
-	 * @param	e	The Component Event generated by the resize request
+	 * 
+	 * @param e The Component Event generated by the resize request
 	 */
-	//--------------------------------------------------------------
-	public void componentResized(ComponentEvent e)
-	{
-		if (sizeSet == false)
-		{
-			sizeSet = true; // allow first one in (from pack call), and save size
+	@Override
+	public void componentResized(ComponentEvent e) {
+		if (!sizeSet) {
+			sizeSet = true; // allow first resize
 			frameSize = getSize();
-		}
-		else
-		{
+		} else {
 			// user tried to resize, set it back
 			setSize(frameSize);
 			pack();
 			validate();
 		}
-    }
-
-	/**  Part of the Component listener interface (don't care) */
-	//--------------------------------------------------------------
-	public void componentHidden(ComponentEvent e)
-	{
-		// dont care about this one
 	}
 
-	/**  Part of the Component listener interface (don't care) */
-	//--------------------------------------------------------------
-	public void componentMoved(ComponentEvent e)
-	{
-		// dont care about this one
+	@Override
+	public void componentShown(ComponentEvent arg0) {
+
 	}
 
-	/**  Part of the Component listener interface (don't care) */
-	//--------------------------------------------------------------
-	public void componentShown(ComponentEvent e)
-	{
-		// dont care about this one
+	public void fix(){
+		pack();
+		//revalidate();
+		//repaint();
+
+		Dimension windowSize = getSize();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+		double width = Math.min(windowSize.getWidth(), screenSize.getWidth() - 50);
+		double height = Math.min(windowSize.getHeight(), screenSize.getHeight() - 50);
+
+		Dimension newSize = new Dimension();
+		newSize.setSize(width, height);
+		setSize(newSize);
+		
+		revalidate();
+
+		WindowPosition.placeCenter(this);
 	}
 
+	@Override
+	public void swapToView(IView newView) {
+		if (newView == null) {
+			new Event("MainFrame", "swapToView", "Missing view for display ", Event.ERROR);
+			throw new NullPointerException();
+		}
 
+		if (newView instanceof JPanel) {
+			// Component #2 is being accessed here because component #1 is the Logo Panel and remove it
+			JPanel currentView = (JPanel) getContentPane().getComponent(2);
+			if (currentView != null) {
+				getContentPane().remove(currentView);
+			}
+
+			// add our view into the CENTER of the MainFrame
+			getContentPane().add((JPanel)newView, BorderLayout.CENTER);
+
+			((View) newView).afterShown();
+
+			fix();
+		} else {
+			new Event("MainFrame", "swapToView", "Non-displayable view object sent ", Event.ERROR);
+			throw new IllegalArgumentException();
+		}
+	}
 }
-
-
-
-

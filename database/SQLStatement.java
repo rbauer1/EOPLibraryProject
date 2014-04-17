@@ -1,109 +1,113 @@
-// tabs=4
-//************************************************************
-//	COPYRIGHT 2003 ArchSynergy, Ltd. - ALL RIGHTS RESERVED
-//
-// This file is the product of ArchSynergy, Ltd. and cannot be 
-// reproduced, copied, or used in any shape or form without 
-// the express written consent of ArchSynergy, Ltd.
-//************************************************************
-//
-//	$Source: /export/cvs1/repo1/GamePlayersUnlimited/database/SQLStatement.java,v $
-//
-//	Reason: Represents an abstract SQL Statement that can be 
-//			applied to a database.
-//
-//	Revision History: See end of file.
-//
-//*************************************************************
-
-/** @author		$Author: pwri0503 $ */
-/** @version	$Revision: 1.1.1.2 $ */
-
-
-// specify the package
+/**
+ * COPYRIGHT 2003 ArchSynergy, Ltd. - ALL RIGHTS RESERVED
+ * This file is the product of ArchSynergy, Ltd. and cannot be 
+ * reproduced, copied, or used in any shape or form without 
+ * the express written consent of ArchSynergy, Ltd.
+ */
 package database;
 
-// system imports
+import java.util.Properties;
 
-// project imports
+/**
+ * Represents an abstract SQL Statement that can be applied to a database.
+ */
+public abstract class SQLStatement {
 
-// Beginning of DatabaseManipulator class
-//---------------------------------------------------------------------------------------------------------
-public abstract class SQLStatement
-{
-	// constants used for parsing statements
-	private final char characterToEscape = '\'';
-	private final String escapeString = "\\";
-	protected String theSQLStatement;		// contains the resulting SQL statement
-    
+	/** Character to escape in provided values */
+	private static final String ESCAPE_TARGET = "'";
+	
+	/** String used to escape single quotes */
+	private static final String ESCAPE_REPLACEMENT = "\\'";
+
+	/** Generated SQL statement */
+	protected String statement; 
+	
+	/** Schema for the table */
+	protected Properties schema;
+	
+	/**
+	 * @param schema
+	 */
+	protected SQLStatement(Properties schema){
+		this.schema = schema;
+		this.statement = "";
+	}
 
 	/**
-     * In order to facilitate having apostrophe's in the data in the DB table
-     * columns, we need to insert the '\\' as escape string in the data values. This method
-     * accomplishes that.
-     * 
-     */
-	//----------------------------------------------------------------------
-	protected String insertEscapes(String inString)
-	{
-		// define our local data and constants
-		String outString = "";
-		int inStringLen = inString.length();
-		int indexOfEscapeChar = inString.indexOf(characterToEscape);
-		boolean allDone = (indexOfEscapeChar == -1);
-
-		while (allDone == false) // in other words, there is still an escape char to handle
-		{
-			String prefix = inString.substring(0, indexOfEscapeChar);
-			outString += prefix;
-			outString += escapeString;
-			outString += inString.charAt(indexOfEscapeChar);
-			
-			if (indexOfEscapeChar + 1 >= inStringLen)
-			{
-				allDone = true;
-				inString = "";
-			}
-			else
-			{
-				inString = inString.substring(indexOfEscapeChar + 1);
-				indexOfEscapeChar = inString.indexOf(characterToEscape);
-				allDone = (indexOfEscapeChar == -1);
-			}
-		} // while
-
-		outString += inString;
-		
-		return outString;
+	 * Escapes value in SQL string to prevent SQL Injection.
+	 * @param value
+	 * @return escaped string
+	 */
+	protected String insertEscapes(String value) {
+		return value.replace(ESCAPE_TARGET, ESCAPE_REPLACEMENT);
 	}
 	
+	/**
+	 * Construct where clause from provided values.
+	 * Only allows column names in the schema.
+	 * @param whereValues
+	 * @return whereClause
+	 */
+	protected String getWhereClause(Properties whereValues) {
+		return getWhereClause(whereValues, true);
+	}
 	
-	// override the toString method to output the constructed string
-	//----------------------------------------------------------
-	public String toString()
-	{
-		return theSQLStatement;
+	/**
+	 * Construct where clause from provided values.
+	 * Only allows column names in the schema.
+	 * @param whereValues
+	 * @param exactMatch - if true uses LIKE for string, else =
+	 * @return whereClause
+	 */
+	protected String getWhereClause(Properties whereValues, boolean exactMatch) {
+		int numConditions = 0;
+		String whereClause = " WHERE ";
+		if (whereValues != null) {
+			for(String columnName : whereValues.stringPropertyNames()){
+				if(schema.containsKey(columnName)){
+					numConditions++;
+					if(!whereClause.equals(" WHERE ")){
+						whereClause += " AND ";
+					}				
+					whereClause += "`" + columnName + "` ";
+					String columnValue = insertEscapes(whereValues.getProperty(columnName));
+					String columnType = schema.getProperty(columnName).toLowerCase();
+					if (columnValue.equals("NULL")) {
+						whereClause += "IS NULL";
+					} else if (columnType.equals("numeric")) {
+						whereClause += "= " + columnValue;
+					} else if(exactMatch || columnType.equals("enum")) {
+						whereClause += "= '" + columnValue + "'";
+					}else {
+						whereClause += "LIKE '%" + columnValue + "%'";
+					}
+				}			
+			}
+		}
+		return numConditions > 0 ? whereClause : "";
+	}
+	
+	/**
+	 * Builds list of column names from values in schema for use in queries
+	 * @param values
+	 * @return Comma separated list of column names in schema
+	 */
+	protected String getColumnNamesList(Properties values){
+		String columnNames = "";
+		for(String columnName : values.stringPropertyNames()){
+			if(schema.containsKey(columnName) && !columnName.equals("TableName")){
+				if (columnNames.length() > 0) {
+					columnNames += " , ";
+				}
+				columnNames += "`" + columnName + "`";	
+			}
+		}
+		return columnNames;
 	}
 
+	@Override
+	public String toString() {
+		System.out.println(statement);
+		return statement;
+	}
 }
-
-
-//---------------------------------------------------------------
-//	Revision History:
-//
-//	$Log: SQLStatement.java,v $
-//	Revision 1.1.1.2  2008/04/16 22:17:34  pwri0503
-//	no message
-//	
-//	Revision 1.1.1.1  2008/04/08 19:21:02  tswa0407
-//	no message
-//	
-//	Revision 1.3  2003/10/01 01:20:46  tomb
-//	Converted to abstract base class.
-//	
-//	Revision 1.2  2003/09/14 23:32:08  tomb
-//	Changed to use filedList.
-//	
-//	Revision 1.1  2003/09/07 21:15:01  tomb
-//	Initial checkin, extracted from Persistable.java.
-//	

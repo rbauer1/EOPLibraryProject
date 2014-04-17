@@ -1,35 +1,40 @@
-# What's the fuck happening right now with my git repository ???
+# What the fuck happening right now with my git repository (repo for short) ???
 -> git status
-# What's the fuck is different between my directory and the git repository
+# I typed "git status" and I see "Untracked files: ..." what the fuck do I do?
+-> calm the fuck down. Untracked files are most likely files that you have created "FuckingClass.java" that don't exist on the remote repository
+# My untracked files are fucking important, how do I share their glory with the world?
+-> Just fucking type "git add myUntrackedFileName" or "git add" + tab should auto-complete it
+# What the fuck is different between my directory and the git repository?
 -> git diff
-# How can I fucking update my working repository with the distant repository
+# How can I fucking update my working repository with the remote repository?
 -> git pull --rebase
 
     Why the fuck --rebase ?
         First I have to fucking explain 2 things
-            What the fuck is doing git pull : git fetch + git merge
-            What the fuck is going git pull --rebase : git fetch + git rebase
+            What the fuck is a git pull : git fetch + git merge
+            What the fuck is a git pull --rebase : git fetch + git rebase
 
         As you see the fucking first command use the merge feature of git and the 2nd don't.
 
         You can fucking understand that if you would like to avoid useless (fucking) merges you are supposed to use the 2nd one!
 
-        How it's fucking working ?
+        How it's fucking working:
 
-        Git pull exemple :
+        Git pull example :
 
         a-b---e (e is a useless commit resulting of the fucking useless merge of b and d)
          \   /
           c-d
 
-        Git pull --rebase exemple
+        Git pull --rebase example
 
         a-b
          \     ->   a-b-c-d (the base of c is now fucking rebase on b, so no merge needed)
           c-d
 
     What's can fucking append during rebase :
-        Fucking conflicts append when the same file as been edit in 2 differents commits, you will then find in the concerned file (let's say Fuck.java) a stuff like that :
+        Fucking conflicts append when the same file as been edit in 2 different commits, 
+        you will then find in the concerned file (let's say Fuck.java) a stuff like that :
             ---- HEAD
             System.out.print("Fuck you");
             ---- ebc24f
@@ -58,8 +63,13 @@
         Then continue the fucking rebasing (if you have solved all the conflicts)
             git rebase --continue
 
-        You can also abort the rebasing if you got the feeling to had fucked up and then retry your rebase :
+        You can also abort the rebasing if you get the feeling you fucked up and then retry your rebase :
             git rebase --abort
 
         At the end of your rebase you are free to fucking push ;)
             git push
+            
+        Note: It's likely that before you push, you'll have to fucking commit, and before that you might have to fucking add.
+        If you are using the fucking gitshell from the fucking github program (click the fucking gear, and then open shell here),
+        you will see the name of the branch you are on (e.g., fuck, develop, master).
+        

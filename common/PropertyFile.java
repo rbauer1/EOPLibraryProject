@@ -24,20 +24,21 @@
 package common;
 
 // system imports
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.File;
 import java.util.Properties;
 
-// project imports
 import event.Event;
+// project imports
 
 /** Layer a file onto a Properties object */
 //==============================================================
 public class PropertyFile extends Properties
 {
-    // data members
+	private static final long serialVersionUID = -6956339534115540152L;
+	// data members
     private String myFilename;
 	private static boolean allowWrites = true;
 
