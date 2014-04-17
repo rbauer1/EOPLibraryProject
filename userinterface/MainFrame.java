@@ -1,11 +1,11 @@
 /**
- * COPYRIGHT 2014 Sandeep Mitra and students 
+ * COPYRIGHT 2014 Sandeep Mitra and students
  * The College at Brockport, State University of New York.
  * ALL RIGHTS RESERVED
  * 
  * This file is the product of The College at Brockport and cannot
  * be reproduced, copied, or used in any shape or form without
- * he express written consent of The College at Brockport. * 
+ * he express written consent of The College at Brockport. *
  */
 package userinterface;
 
@@ -16,6 +16,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
@@ -38,52 +39,17 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	/** Holds the only instance of this class for Singleton Pattern */
 	private static MainFrame instance = null;
 
-	/** Holds the first size set to the frame to prevent resizing */
-	private Dimension frameSize;
-
-	/** Tells if size has been set yet */
-	private boolean sizeSet;
-
 	/**
-	 * Private constructor for the Singleton Pattern. Can only be called once.
+	 * Returns the instance of the main frame. Creates one with blank title if none exists.
 	 * 
-	 * @param title 
+	 * @return instance
 	 */
-	private MainFrame(String title) {
-		super(title);
-		super.setLayout(new BorderLayout());
-
-		/*
-		 * This title is the logo panel that stays same for the duration of 
-		 * the entire program. Component at position (0)
-		 */		
-		super.add(new HeaderPanel(), BorderLayout.NORTH);
-
-		/*
-		 * This is the Copyright notice, that is the same for all the views,
-		 * hence once it is installed into the main frame it should not be removed.
-		 * This is Frame Component at position (1)
-		 */
-		JPanel copyRightPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		copyRightPanel.setBackground(View.BACKGROUND_COLOR);
-		copyRightPanel.add(new JLabel(COPYRIGHT));
-		super.add(copyRightPanel, BorderLayout.SOUTH);
-
-		/* 
-		 * This panel is a "dummy" panel, which will be replaced by
-		 * an actual panel, i.e. by a View that is displayed to the user
-		 * This is Frame Component at position ( 2 ), which will be removed
-		 * in swapToPanelView method and replaced with the view needed. 
-		 */
-		JPanel empty = new JPanel();
-		empty.setBackground(Color.pink);
-		super.add(empty, BorderLayout.CENTER);
-
-		super.setVisible(true);
-		super.setResizable(false);
-		sizeSet = true;
+	public static MainFrame getInstance() {
+		if (instance == null) {
+			instance = new MainFrame("");
+		}
+		return instance;
 	}
-
 
 	/**
 	 * Returns the instance of the main frame. Creates one with provided title if none exists.
@@ -98,16 +64,61 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		return instance;
 	}
 
+	/** Holds the first size set to the frame to prevent resizing */
+	private Dimension frameSize;
+
+
+	/** Tells if size has been set yet */
+	private boolean sizeSet;
+
 	/**
-	 * Returns the instance of the main frame. Creates one with blank title if none exists.
+	 * Private constructor for the Singleton Pattern. Can only be called once.
 	 * 
-	 * @return instance 
+	 * @param title
 	 */
-	public static MainFrame getInstance() {
-		if (instance == null) {
-			instance = new MainFrame("");
-		}
-		return instance;
+	private MainFrame(String title) {
+		super(title);
+		super.setLayout(new BorderLayout());
+
+		/*
+		 * This title is the logo panel that stays same for the duration of
+		 * the entire program. Component at position (0)
+		 */
+		super.add(new HeaderPanel(), BorderLayout.NORTH);
+
+		/*
+		 * This is the Copyright notice, that is the same for all the views,
+		 * hence once it is installed into the main frame it should not be removed.
+		 * This is Frame Component at position (1)
+		 */
+		JPanel copyRightPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		copyRightPanel.setBackground(View.BACKGROUND_COLOR);
+		copyRightPanel.add(new JLabel(COPYRIGHT));
+		super.add(copyRightPanel, BorderLayout.SOUTH);
+
+		/*
+		 * This panel is a "dummy" panel, which will be replaced by
+		 * an actual panel, i.e. by a View that is displayed to the user
+		 * This is Frame Component at position ( 2 ), which will be removed
+		 * in swapToPanelView method and replaced with the view needed.
+		 */
+		JPanel empty = new JPanel();
+		empty.setBackground(Color.pink);
+		super.add(empty, BorderLayout.CENTER);
+
+		super.setVisible(true);
+		super.setResizable(false);
+		sizeSet = true;
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent arg0) {
+
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent arg0) {
+
 	}
 
 	/**
@@ -129,20 +140,30 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	}
 
 	@Override
-	public void componentHidden(ComponentEvent arg0) {
-
-	}
-
-	@Override
-	public void componentMoved(ComponentEvent arg0) {
-
-	}
-
-	@Override
 	public void componentShown(ComponentEvent arg0) {
 
 	}
-	
+
+	public void fix(){
+		pack();
+		//revalidate();
+		//repaint();
+
+		Dimension windowSize = getSize();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+		double width = Math.min(windowSize.getWidth(), screenSize.getWidth() - 50);
+		double height = Math.min(windowSize.getHeight(), screenSize.getHeight() - 50);
+
+		Dimension newSize = new Dimension();
+		newSize.setSize(width, height);
+		setSize(newSize);
+		
+		revalidate();
+
+		WindowPosition.placeCenter(this);
+	}
+
 	@Override
 	public void swapToView(IView newView) {
 		if (newView == null) {
@@ -152,28 +173,20 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 
 		if (newView instanceof JPanel) {
 			// Component #2 is being accessed here because component #1 is the Logo Panel and remove it
-			JPanel currentView = (JPanel) this.getContentPane().getComponent(2);
+			JPanel currentView = (JPanel) getContentPane().getComponent(2);
 			if (currentView != null) {
-				this.getContentPane().remove(currentView);
+				getContentPane().remove(currentView);
 			}
 
 			// add our view into the CENTER of the MainFrame
-			this.getContentPane().add((JPanel)newView, BorderLayout.CENTER);
-			
+			getContentPane().add((JPanel)newView, BorderLayout.CENTER);
+
 			((View) newView).afterShown();
-				
+
 			fix();
 		} else {
 			new Event("MainFrame", "swapToView", "Non-displayable view object sent ", Event.ERROR);
 			throw new IllegalArgumentException();
 		}
-	}
-	
-	public void fix(){
-		pack();
-		revalidate();
-		repaint();
-		
-		WindowPosition.placeCenter(this);
 	}
 }
