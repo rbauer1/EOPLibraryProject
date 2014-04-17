@@ -6,7 +6,6 @@ import java.util.Collection;
 import javax.swing.JTable;
 
 import model.Book;
-import model.Rental;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.message.MessageEvent;
@@ -60,7 +59,7 @@ public class CheckoutBookView extends ListView {
 
 	@Override
 	protected JTable createTable() {
-		return new JTable(new RentalTableModel(new ArrayList<Rental>()));
+		return new JTable(new BookTableModel(new ArrayList<Book>()));
 	}
 
 	@Override
