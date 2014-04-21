@@ -9,6 +9,8 @@
  */
 package userinterface;
 
+import javax.swing.JComponent;
+import userinterface.component.*;
 import impresario.ISlideShow;
 import impresario.IView;
 
@@ -38,11 +40,19 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	/** Holds the only instance of this class for Singleton Pattern */
 	private static MainFrame instance = null;
 
+	/** The dimension of the frame */
+	public static final int WIDTH = 1024;
+	public static final int HEIGHT = 600;
+
 	/** Holds the first size set to the frame to prevent resizing */
 	private Dimension frameSize;
 
 	/** Tells if size has been set yet */
 	private boolean sizeSet;
+	
+	/** == */
+	private HeaderPanel header = null;
+	private MenuPanel menu = null;
 
 	/**
 	 * Private constructor for the Singleton Pattern. Can only be called once.
@@ -52,13 +62,37 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	private MainFrame(String title) {
 		super(title);
 		super.setLayout(new BorderLayout());
+		super.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		
+		/*
+		 * This is the left menu of the frame
+		 */
+		header = new HeaderPanel();
+		menu = new MenuPanel();
 
 		/*
 		 * This title is the logo panel that stays same for the duration of 
 		 * the entire program. Component at position (0)
 		 */		
-		super.add(new HeaderPanel(), BorderLayout.NORTH);
+		super.add(header, BorderLayout.NORTH);
+		super.add(menu, BorderLayout.WEST);
+		
+		/*
+		menu.add("Book Actions", new JComponent[] {
+		});
+		menu.add("Borrower Actions", new JComponent[] {
+		});
+		menu.add("Workers Actions", new JComponent[] {
+		});
+		menu.add("Check in a book", new JComponent[] {
+		});
+		menu.add("Check out a book", new JComponent[] {
+		});
+		menu.add(new Button("Logout"));
 
+		menu.fit();
+		*/
+		
 		/*
 		 * This is the Copyright notice, that is the same for all the views,
 		 * hence once it is installed into the main frame it should not be removed.
@@ -83,7 +117,10 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		super.setResizable(false);
 		sizeSet = true;
 	}
-
+	
+	public MenuPanel getMenu() {
+		return menu;
+	}
 
 	/**
 	 * Returns the instance of the main frame. Creates one with provided title if none exists.
