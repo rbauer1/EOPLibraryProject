@@ -5,12 +5,14 @@ import org.icepdf.ri.common.PrintHelper;
 import org.icepdf.ri.common.SwingController;
 import org.icepdf.ri.common.views.DocumentViewController;
 import org.icepdf.ri.common.views.DocumentViewControllerImpl;
+import userinterface.MainFrame;
 import utilities.Key;
 
 import javax.print.*;
 import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.PrintQuality;
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Created by chaber_e on 14/04/2014.
@@ -106,7 +108,9 @@ public class GeneratePDFView extends View {
 
 	private void    saveAction()
 	{
-
+		FileDialog  fd = new FileDialog(MainFrame.getInstance(),"Save your file",FileDialog.SAVE);
+		fd.setDirectory("c:\\");
+		fd.setVisible(true);
 	}
 
 	@Override
