@@ -73,6 +73,10 @@ public class MenuPanel extends JPanel {
 		accordion.add(b, container);
 	}
 	
+	public void add(String but, JComponent container) {
+		accordion.add(new Button(but), container);
+	}
+	
 	public void fit() {
 		accordion.fit();
 	}

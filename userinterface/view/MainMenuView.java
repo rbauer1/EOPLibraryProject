@@ -9,6 +9,8 @@
  */
 package userinterface.view;
 
+import userinterface.MenuPanel;
+import userinterface.MainFrame;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import utilities.Key;
@@ -35,6 +37,18 @@ public class MainMenuView extends View {
 	 */
 	public MainMenuView(Controller controller) {
 		super(controller, "Choose a Transaction Operation");
+		
+		MenuPanel menu = MainFrame.getInstance().getMenu();
+		
+		menu.add("Book Action",
+				ViewFactory.createView("BookMenuView", controller).toMenu());
+		menu.add("Borrower Actions",
+				ViewFactory.createView("BorrowerMenuView", controller).toMenu());
+		menu.add("Workers Actions",
+				ViewFactory.createView("WorkerMenuView", controller).toMenu());
+
+		// menu.add("Check in a book", /* TODO */ );
+		// menu.add("Check out a book", /* TODO */ );
 	}
 
 

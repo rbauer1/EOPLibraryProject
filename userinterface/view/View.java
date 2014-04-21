@@ -26,6 +26,7 @@ import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.Label;
 import userinterface.component.Panel;
+import userinterface.component.Accordion;
 import userinterface.message.MessagePanel;
 import controller.Controller;
 
@@ -95,6 +96,7 @@ public abstract class View extends Panel implements IView, ActionListener {
 	}
 	
 	protected abstract void build();
+	public Accordion toMenu() { return null; }
 	
 	protected void subscribeToController(String...keys){
 		for(String key : keys){

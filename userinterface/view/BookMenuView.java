@@ -11,6 +11,7 @@ package userinterface.view;
 
 import userinterface.ViewHelper;
 import userinterface.component.Button;
+import userinterface.component.Accordion;
 import utilities.Key;
 import controller.Controller;
 
@@ -60,6 +61,21 @@ public class BookMenuView extends View {
 
 		backButton = new Button("Back", this);
 		add(ViewHelper.formatCenter(backButton));
+	}
+	
+	public Accordion toMenu() {
+		build(); // FIXME could be avoided ? Should the general view be removed ? Or replaced by that menu ?
+
+		Accordion menu = new Accordion();
+		
+		menu.add(addButton);
+		menu.add(modifyButton);
+		menu.add(deleteButton);
+		menu.add(processLostBookButton);
+		menu.add(listUnavailableButton);
+		menu.add(listAvailableButton);
+		
+		return menu;
 	}
 
 	@Override
