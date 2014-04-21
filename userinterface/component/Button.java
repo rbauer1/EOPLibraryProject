@@ -69,6 +69,8 @@ public class Button extends JButton{
 		setContentAreaFilled(false);
 		setForeground(FONT_COLOR);
 		setFont(FONT);
+		setMaximumSize(SIZE);
+		setMinimumSize(SIZE);
 		setPreferredSize(SIZE);
 		setAlignmentX(CENTER_ALIGNMENT);
 		rollover = false;
