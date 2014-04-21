@@ -54,6 +54,7 @@ public class LibrarianController extends Controller {
 	protected void loginWorker(Properties workerData) {
 		try {
 			worker = new Worker(workerData.getProperty("BannerID",""));
+			System.out.println(worker.getPrimaryKeyValue() + "\t" + worker.isAdmin());
 			if(!worker.validPassword(workerData.getProperty("Password",""))){
 				stateChangeRequest(Key.INPUT_ERROR, "Invalid Banner Id or Password.");
 			}else{
@@ -118,6 +119,11 @@ public class LibrarianController extends Controller {
 			TransactionFactory.executeTransaction(this, key);
 		} else if (key.equals(Key.LOGOUT)) {
 			showView("LoginView");
+			/*
+			 * This is needed to update the menus between logins in case the next worker has different credentials
+			 */
+			views.clear();
+			
 		}
 		super.stateChangeRequest(key, value);
 	}

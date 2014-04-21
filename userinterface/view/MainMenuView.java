@@ -9,6 +9,7 @@
  */
 package userinterface.view;
 
+import model.Worker;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.message.MessageEvent;
@@ -51,13 +52,16 @@ public class MainMenuView extends View {
 		bookActionsButton.addActionListener(this);
 		add(ViewHelper.formatCenter(bookActionsButton));
 
-		borrowerActionsButton = new Button("Borrower Menu");
-		borrowerActionsButton.addActionListener(this);
-		add(ViewHelper.formatCenter(borrowerActionsButton));
-
-		workerActionsButton = new Button("Workers Menu");
-		workerActionsButton.addActionListener(this);
-		add(ViewHelper.formatCenter(workerActionsButton));
+		if(((Worker)controller.getState(Key.WORKER)).isAdmin()){
+			borrowerActionsButton = new Button("Borrower Menu");
+			borrowerActionsButton.addActionListener(this);
+			add(ViewHelper.formatCenter(borrowerActionsButton));
+			
+			workerActionsButton = new Button("Workers Menu");
+			workerActionsButton.addActionListener(this);
+			add(ViewHelper.formatCenter(workerActionsButton));
+		}
+		
 
 		checkoutBookButton = new Button("Rent a Book");
 		checkoutBookButton.addActionListener(this);

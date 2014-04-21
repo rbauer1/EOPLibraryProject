@@ -9,6 +9,7 @@
  */
 package userinterface.view;
 
+import model.Worker;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import utilities.Key;
@@ -40,26 +41,28 @@ public class BookMenuView extends View {
 
 	@Override
 	protected void build() {
-		addButton = new Button("Add Book");
-		addButton.addActionListener(this);
-		add(ViewHelper.formatCenter(addButton));
-
-		modifyButton = new Button("Modify Book");
-		modifyButton.addActionListener(this);
-		add(ViewHelper.formatCenter(modifyButton));
-
-		deleteButton = new Button("Delete Book");
-		deleteButton.addActionListener(this);
-		add(ViewHelper.formatCenter(deleteButton));
-
-		processLostBookButton = new Button("Process Lost Book");
-		processLostBookButton.addActionListener(this);
-		add(ViewHelper.formatCenter(processLostBookButton));
-
+		if(((Worker)controller.getState(Key.WORKER)).isAdmin()){
+			addButton = new Button("Add Book");
+			addButton.addActionListener(this);
+			add(ViewHelper.formatCenter(addButton));
+	
+			modifyButton = new Button("Modify Book");
+			modifyButton.addActionListener(this);
+			add(ViewHelper.formatCenter(modifyButton));
+	
+			deleteButton = new Button("Delete Book");
+			deleteButton.addActionListener(this);
+			add(ViewHelper.formatCenter(deleteButton));
+	
+			processLostBookButton = new Button("Process Lost Book");
+			processLostBookButton.addActionListener(this);
+			add(ViewHelper.formatCenter(processLostBookButton));
+		}
+		
 		listAvailableButton = new Button("List Available Books");
 		listAvailableButton.addActionListener(this);
 		add(ViewHelper.formatCenter(listAvailableButton));
-
+		
 		listUnavailableButton = new Button("List Unavailable Books");
 		listUnavailableButton.addActionListener(this);
 		add(ViewHelper.formatCenter(listUnavailableButton));
