@@ -1,11 +1,11 @@
 /**
- * COPYRIGHT 2014 Sandeep Mitra and students 
+ * COPYRIGHT 2014 Sandeep Mitra and students
  * The College at Brockport, State University of New York.
  * ALL RIGHTS RESERVED
  * 
  * This file is the product of The College at Brockport and cannot
  * be reproduced, copied, or used in any shape or form without
- * he express written consent of The College at Brockport. * 
+ * he express written consent of The College at Brockport. *
  */
 package controller.transaction;
 
@@ -21,15 +21,15 @@ import controller.Controller;
  * Transaction that handles listing and selecting a book
  */
 public class ListBooksTransaction extends Transaction {
-	
+
 	/** list of books returned from search */
 	private List<Book> books;
-	
-	/** book selected from list */
-	private Book selectedBook;
-	
+
 	/** type of operation, can be Delete or Modify */
 	private String operationType;
+
+	/** book selected from list */
+	private Book selectedBook;
 
 	/**
 	 * Constructs List Books Transaction
@@ -41,12 +41,24 @@ public class ListBooksTransaction extends Transaction {
 			operationType = "Delete";
 		}else if(parentController instanceof ModifyBooksTransaction){
 			operationType = "Modify";
+		}else{
+			operationType = "Select";
 		}
 	}
 
 	@Override
 	public void execute() {
 		showView("ListBooksView");
+	}
+
+	/**
+	 * Fetches books that match searchCriteria
+	 * @param searchCriteria
+	 */
+	private void getBooks(Properties searchCriteria){
+		BookCollection bookCollection = new BookCollection();
+		bookCollection.findLike(searchCriteria);
+		books = bookCollection.getEntities();
 	}
 
 	@Override
@@ -58,7 +70,7 @@ public class ListBooksTransaction extends Transaction {
 		}else if(key.equals(Key.OPERATION_TYPE)){
 			return operationType;
 		}
-		return null;
+		return super.getState(key);
 	}
 
 	@Override
@@ -68,16 +80,6 @@ public class ListBooksTransaction extends Transaction {
 		}else if(key.equals(Key.SELECT_BOOK)){
 			selectedBook = (Book)value;
 		}
-		registry.updateSubscribers(key, this);
+		super.stateChangeRequest(key, value);
 	}
-	
-	/**
-	 * Fetches books that match searchCriteria 
-	 * @param searchCriteria
-	 */
-	private void getBooks(Properties searchCriteria){
-		BookCollection bookCollection = new BookCollection();
-		bookCollection.findLike(searchCriteria);
-		books = bookCollection.getEntities();
-	}		
 }

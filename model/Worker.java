@@ -107,6 +107,8 @@ public class Worker extends Model {
 		validator.addValidation(new PresenceValidation("DateOfHire", "Date Registered"));
 		validator.addValidation(new DateValidation("DateOfHire", "Date Registered"));
 		
+		validator.addValidation(new LengthValidation("Notes", "Notes", 0, 300));
+		
 		validator.addValidation(new InclusionValidation("Status", "Status", new String[] {"Active", "Inactive"}));
 
 		validator.addValidation(new PresenceValidation("DateOfLastUpdate", "Date Updated"));
@@ -222,8 +224,13 @@ public class Worker extends Model {
 		}
 	}
 
-	public boolean setInactive(){
+	public boolean setInactive(String notes){
+		persistentState.setProperty("Notes", notes);
 		persistentState.setProperty("Status", "Inactive");
 		return save();
+	}
+	
+	public boolean isAdmin(){
+		return (persistentState.getProperty("Credentials","")).equals("Administrator");
 	}
 }

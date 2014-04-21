@@ -9,19 +9,21 @@
  */
 package userinterface.view;
 
+import model.Model;
 import userinterface.message.MessageEvent;
-import userinterface.view.form.BorrowerForm;
+import userinterface.message.MessageType;
+import userinterface.view.form.BorrowerDeleteForm;
 import userinterface.view.form.Form;
 import utilities.Key;
 import controller.Controller;
 
 /**
- * View that provides interface for user to add new borrower.
+ * View that provides interface for user to delete borrower.
  */
-public class AddBorrowerView extends View {
+public class DeleteBorrowerView extends View {
 
 	/** Names of buttons on bottom, Must be in order which you want them to appear */
-	private static final String[] BUTTON_NAMES = {"Add", "Reset", "Back"};
+	private static final String[] BUTTON_NAMES = {"Delete", "Back"};
 
 	private static final long serialVersionUID = -6030753682831962753L;
 
@@ -29,12 +31,12 @@ public class AddBorrowerView extends View {
 	private Form form;
 
 	/**
-	 * Constructs add borrower view
+	 * Constructs delete borrower view
 	 * @param controller
 	 */
-	public AddBorrowerView(Controller controller) {
-		super(controller, "Add Borrower", BUTTON_NAMES);
-		subscribeToController(Key.MESSAGE);
+	public DeleteBorrowerView(Controller controller) {
+		super(controller, "Delete Borrower", BUTTON_NAMES);
+		subscribeToController(Key.BORROWER, Key.MESSAGE);
 	}
 
 	@Override
@@ -44,7 +46,11 @@ public class AddBorrowerView extends View {
 
 	@Override
 	protected void build() {
-		form = new BorrowerForm(this);
+		messagePanel.displayMessage(MessageType.WARNING, "Caution! Please verify you have selected the correct borrower for deletion.");
+		form = new BorrowerDeleteForm(this);
+		form.setFieldEnabled("BannerID", false);
+		form.setFieldEnabled("FirstName", false);
+		form.setFieldEnabled("LastName", false);
 		add(form);
 	}
 
@@ -52,17 +58,18 @@ public class AddBorrowerView extends View {
 	public void processAction(Object source) {
 		messagePanel.clear();
 		if (source == buttons.get("Back")) {
-			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
-		}else if (source == buttons.get("Reset")){
-			form.reset();
-		}else if (source == buttons.get("Add") || source == form) {
+			controller.stateChangeRequest(Key.BACK, "ListBorrowersView");
+		}else if (source == buttons.get("Delete") || source == form) {
 			controller.stateChangeRequest(Key.SAVE_BORROWER, form.getValues());
 		}
 	}
 
 	@Override
 	public void updateState(String key, Object value) {
-		if (key.equals(Key.MESSAGE)) {
+		if(key.equals(Key.BORROWER)){
+			form.setValues(((Model) value).getPersistentState());
+			form.get("Notes").reset();
+		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
 		}
 	}

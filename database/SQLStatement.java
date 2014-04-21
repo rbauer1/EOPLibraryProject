@@ -60,10 +60,12 @@ public abstract class SQLStatement {
 	 * @return whereClause
 	 */
 	protected String getWhereClause(Properties whereValues, boolean exactMatch) {
+		int numConditions = 0;
 		String whereClause = " WHERE ";
 		if (whereValues != null) {
 			for(String columnName : whereValues.stringPropertyNames()){
 				if(schema.containsKey(columnName)){
+					numConditions++;
 					if(!whereClause.equals(" WHERE ")){
 						whereClause += " AND ";
 					}				
@@ -82,7 +84,7 @@ public abstract class SQLStatement {
 				}			
 			}
 		}
-		return whereClause;
+		return numConditions > 0 ? whereClause : "";
 	}
 	
 	/**

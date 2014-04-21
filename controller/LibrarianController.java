@@ -1,11 +1,11 @@
 /**
- * COPYRIGHT 2014 Sandeep Mitra and students 
+ * COPYRIGHT 2014 Sandeep Mitra and students
  * The College at Brockport, State University of New York.
  * ALL RIGHTS RESERVED
  * 
  * This file is the product of The College at Brockport and cannot
  * be reproduced, copied, or used in any shape or form without
- * he express written consent of The College at Brockport. * 
+ * he express written consent of The College at Brockport. *
  */
 package controller;
 
@@ -24,83 +24,38 @@ import exception.InvalidPrimaryKeyException;
 public class LibrarianController extends Controller {
 
 	private String loginErrorMessage = "";
-		
+
+	private Worker worker;
+
 	public LibrarianController() {
 		super();
 		showView("LoginView");
 	}
-	
+
 	/**
 	 * Provides the value associated with the provided key.
 	 * @param key that references an attribute
 	 * @return value associated with the key
 	 */
+	@Override
 	public Object getState(String key) {
 		if (key.equals(Key.INPUT_ERROR)) {
 			return loginErrorMessage;
 		}
-		throw new IllegalArgumentException("Unknown key: " + key);
-	}
-	
-	public void stateChangeRequest(String key, Object value) {
-		Transaction transaction;
-		if (key.equals(Key.LOGIN)) {
-			loginErrorMessage = "";
-			loginWorker((Properties) value);			
-		} else if (key.equals(Key.INPUT_ERROR)) {			
-			loginErrorMessage = (String) value;
-			
-		} else if (key.equals(Key.DISPLAY_MAIN_MENU)) {	
-			showView("MainMenuView");
-		} else if (key.equals(Key.DISPLAY_BOOK_MENU)) {		
-			showView("BookMenuView");
-		} else if (key.equals(Key.DISPLAY_BORROWER_MENU)) {		
-			showView("BorrowerMenuView");
-		} else if (key.equals(Key.DISPLAY_WORKER_MENU)) {		
-			showView("WorkerMenuView");
-		} else if (key.equals(Key.DISPLAY_LOGIN)) {		
-			showView("LoginView");
-			
-		} else if (key.equals(Key.EXECUTE_ADD_BOOK)) {		
-			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
-		} else if (key.equals(Key.EXECUTE_MODIFY_BOOK)) {	
-			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
-		} else if (key.equals(Key.EXECUTE_DELETE_BOOK)) {	
-			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
-			
-		} else if (key.equals(Key.EXECUTE_ADD_BORROWER)) {		
-			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
-		} else if (key.equals(Key.EXECUTE_MODIFY_BORROWER)) {	
-			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
-		} else if (key.equals(Key.EXECUTE_DELETE_BORROWER)) {	
-			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
-			
-		} else if (key.equals(Key.EXECUTE_ADD_WORKER)) {		
-			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
-		} else if (key.equals(Key.EXECUTE_MODIFY_WORKER)) {	
-			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
-		} else if (key.equals(Key.EXECUTE_DELETE_WORKER)) {	
-			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
-						
-		} else if (key.equals(Key.EXECUTE_RECOVER_PASSWORD)){		
-			transaction = TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU, Key.DISPLAY_LOGIN);
-			transaction.stateChangeRequest("BannerID", value);
-			
-		} else if (key.endsWith("Transaction")){			
-			TransactionFactory.executeTransaction(this, key);
-		} else if (key.equals(Key.LOGOUT)) {				
-			showView("LoginView");
+		if (key.equals(Key.WORKER)){
+			return worker;
 		}
-		registry.updateSubscribers(key, this);
+		return super.getState(key);
 	}
-		
+
 	/**
 	 * Tries to login a worker with the provided username and password.
 	 * @param workerData
 	 */
 	protected void loginWorker(Properties workerData) {
 		try {
-			Worker worker = new Worker(workerData.getProperty("BannerID",""));
+			worker = new Worker(workerData.getProperty("BannerID",""));
+			System.out.println(worker.getPrimaryKeyValue() + "\t" + worker.isAdmin());
 			if(!worker.validPassword(workerData.getProperty("Password",""))){
 				stateChangeRequest(Key.INPUT_ERROR, "Invalid Banner Id or Password.");
 			}else{
@@ -110,5 +65,68 @@ public class LibrarianController extends Controller {
 			stateChangeRequest(Key.INPUT_ERROR, "Invalid Banner Id or Password.");
 		}
 	}
-	
+
+	@Override
+	public void stateChangeRequest(String key, Object value) {
+		Transaction transaction;
+		if (key.equals(Key.LOGIN)) {
+			loginErrorMessage = "";
+			loginWorker((Properties) value);
+		} else if (key.equals(Key.INPUT_ERROR)) {
+			loginErrorMessage = (String) value;
+
+		} else if (key.equals(Key.DISPLAY_MAIN_MENU)) {
+			showView("MainMenuView");
+		} else if (key.equals(Key.DISPLAY_BOOK_MENU)) {
+			showView("BookMenuView");
+		} else if (key.equals(Key.DISPLAY_BORROWER_MENU)) {
+			showView("BorrowerMenuView");
+		} else if (key.equals(Key.DISPLAY_WORKER_MENU)) {
+			showView("WorkerMenuView");
+		} else if (key.equals(Key.DISPLAY_LOGIN)) {
+			showView("LoginView");
+
+		} else if (key.equals(Key.EXECUTE_ADD_BOOK)) {
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
+		} else if (key.equals(Key.EXECUTE_MODIFY_BOOK)) {
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
+		} else if (key.equals(Key.EXECUTE_DELETE_BOOK)) {
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
+		} else if (key.equals(Key.EXECUTE_PROCESS_LOST_BOOK)){
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
+		} else if (key.equals(Key.EXECUTE_CHECKOUT_BOOK)){
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU, Key.MESSAGE);
+
+
+		} else if (key.equals(Key.EXECUTE_ADD_BORROWER)) {
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
+		} else if (key.equals(Key.EXECUTE_MODIFY_BORROWER)) {
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
+		} else if (key.equals(Key.EXECUTE_DELETE_BORROWER)) {
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
+
+		} else if (key.equals(Key.EXECUTE_ADD_WORKER)) {
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
+		} else if (key.equals(Key.EXECUTE_MODIFY_WORKER)) {
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
+		} else if (key.equals(Key.EXECUTE_DELETE_WORKER)) {
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
+
+		} else if (key.equals(Key.EXECUTE_RECOVER_PASSWORD)){
+			transaction = TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU, Key.DISPLAY_LOGIN);
+			transaction.stateChangeRequest("BannerID", value);
+
+		} else if (key.endsWith("Transaction")){
+			TransactionFactory.executeTransaction(this, key);
+		} else if (key.equals(Key.LOGOUT)) {
+			showView("LoginView");
+			/*
+			 * This is needed to update the menus between logins in case the next worker has different credentials
+			 */
+			views.clear();
+			
+		}
+		super.stateChangeRequest(key, value);
+	}
+
 }

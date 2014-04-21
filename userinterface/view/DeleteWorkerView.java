@@ -9,19 +9,21 @@
  */
 package userinterface.view;
 
+import model.Model;
 import userinterface.message.MessageEvent;
-import userinterface.view.form.BookForm;
+import userinterface.message.MessageType;
 import userinterface.view.form.Form;
+import userinterface.view.form.WorkerDeleteForm;
 import utilities.Key;
 import controller.Controller;
 
 /**
- * View that provides interface for user to add new book.
+ * View that provides interface for user to delete worker.
  */
-public class AddBookView extends View {
+public class DeleteWorkerView extends View {
 
 	/** Names of buttons on bottom, Must be in order which you want them to appear */
-	private static final String[] BUTTON_NAMES = {"Add", "Reset", "Back"};
+	private static final String[] BUTTON_NAMES = {"Delete", "Back"};
 
 	private static final long serialVersionUID = -6030753682831962753L;
 
@@ -29,12 +31,12 @@ public class AddBookView extends View {
 	private Form form;
 
 	/**
-	 * Constructs add book view
+	 * Constructs delete worker view
 	 * @param controller
 	 */
-	public AddBookView(Controller controller) {
-		super(controller, "Add Book", BUTTON_NAMES);
-		subscribeToController(Key.MESSAGE);
+	public DeleteWorkerView(Controller controller) {
+		super(controller, "Delete Worker", BUTTON_NAMES);
+		subscribeToController(Key.WORKER, Key.MESSAGE);
 	}
 
 	@Override
@@ -44,7 +46,11 @@ public class AddBookView extends View {
 
 	@Override
 	protected void build() {
-		form = new BookForm(this);
+		messagePanel.displayMessage(MessageType.WARNING, "Caution! Please verify you have selected the correct worker for deletion.");
+		form = new WorkerDeleteForm(this);
+		form.setFieldEnabled("BannerID", false);
+		form.setFieldEnabled("FirstName", false);
+		form.setFieldEnabled("LastName", false);
 		add(form);
 	}
 
@@ -52,17 +58,18 @@ public class AddBookView extends View {
 	public void processAction(Object source) {
 		messagePanel.clear();
 		if (source == buttons.get("Back")) {
-			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
-		}else if (source == buttons.get("Reset")){
-			form.reset();
-		}else if (source == buttons.get("Add") || source == form) {
-			controller.stateChangeRequest(Key.SAVE_BOOK, form.getValues());
+			controller.stateChangeRequest(Key.BACK, "ListWorkersView");
+		}else if (source == buttons.get("Delete") || source == form) {
+			controller.stateChangeRequest(Key.SAVE_WORKER, form.getValues());
 		}
 	}
 
 	@Override
 	public void updateState(String key, Object value) {
-		if (key.equals(Key.MESSAGE)) {
+		if(key.equals(Key.WORKER)){
+			form.setValues(((Model) value).getPersistentState());
+			form.get("Notes").reset();
+		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
 		}
 	}

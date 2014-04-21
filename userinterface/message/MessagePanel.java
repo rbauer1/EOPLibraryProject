@@ -1,11 +1,11 @@
 /**
- * COPYRIGHT 2014 Sandeep Mitra and students 
+ * COPYRIGHT 2014 Sandeep Mitra and students
  * The College at Brockport, State University of New York.
  * ALL RIGHTS RESERVED
  * 
  * This file is the product of The College at Brockport and cannot
  * be reproduced, copied, or used in any shape or form without
- * he express written consent of The College at Brockport. * 
+ * he express written consent of The College at Brockport. *
  */
 package userinterface.message;
 
@@ -25,51 +25,32 @@ public class MessagePanel extends Panel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setBorder(BorderFactory.createEmptyBorder( 5, 50, 5, 50 ));
 	}
-	
-	/**
-	 * Display error message
-	 * @param title
-	 * @param messages
-	 */
-	public void displayErrorMessage(String title, List<String> messages) {
-		displayMessage(MessageFactory.createMessage("Error", title, messages));
-	}
-	
-	/**
-	 * Display error message
-	 * @param title
-	 */
-	public void displayErrorMessage(String title) {
-		displayMessage(MessageFactory.createMessage("Error", title));
-	}
-
-
-	/**
-	 * Display message
-	 * @param type
-	 * @param title
-	 * @param messages
-	 */
-	public void displayMessage(String type, String title, List<String> messages) {
-		displayMessage(MessageFactory.createMessage(type, title, messages));
-	}
-	
-	/**
-	 * Display Message
-	 * @param type
-	 * @param title
-	 * @param messages
-	 */
-	public void displayMessage(String type, String title) {
-		displayMessage(MessageFactory.createMessage(type, title));
-	}
 
 	/**
 	 * Clear message
 	 */
 	public void clear() {
 		removeAll();
-		MainFrame.getInstance().pack();
+		setVisible(false);
+		MainFrame.getInstance().fix();
+	}
+
+	/**
+	 * Display error message
+	 * @param title
+	 */
+	public void displayErrorMessage(String title) {
+		displayMessage(MessageFactory.createMessage(MessageType.ERROR, title));
+	}
+
+
+	/**
+	 * Display error message
+	 * @param title
+	 * @param messages
+	 */
+	public void displayErrorMessage(String title, List<String> messages) {
+		displayMessage(MessageFactory.createMessage(MessageType.ERROR, title, messages));
 	}
 
 	/**
@@ -79,6 +60,35 @@ public class MessagePanel extends Panel {
 	private void displayMessage(Message message) {
 		clear();
 		add(message);
-		MainFrame.getInstance().pack();
+		setVisible(true);
+		MainFrame.getInstance().fix();
+	}
+
+	/**
+	 * Display Message
+	 * @param messageEvent
+	 */
+	public void displayMessage(MessageEvent messageEvent) {
+		displayMessage(MessageFactory.createMessage(messageEvent));
+	}
+
+	/**
+	 * Display Message
+	 * @param type
+	 * @param title
+	 * @param messages
+	 */
+	public void displayMessage(MessageType type, String title) {
+		displayMessage(MessageFactory.createMessage(type, title));
+	}
+
+	/**
+	 * Display message
+	 * @param type
+	 * @param title
+	 * @param messages
+	 */
+	public void displayMessage(MessageType type, String title, List<String> messages) {
+		displayMessage(MessageFactory.createMessage(type, title, messages));
 	}
 }

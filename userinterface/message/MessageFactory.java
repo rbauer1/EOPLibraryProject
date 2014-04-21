@@ -34,7 +34,7 @@ public class MessageFactory {
 	 * @param messages
 	 * @return Message of provided type
 	 */
-	public static Message createMessage(String type, String title, List<String> messages){
+	public static Message createMessage(MessageType type, String title, List<String> messages){
 		try {
 			Class<?> clazz = Class.forName(MESSAGE_PACKAGE + "." + type + "Message");
 			if(messages == null){
@@ -67,7 +67,16 @@ public class MessageFactory {
 	 * @param title
 	 * @return message of provided type
 	 */
-	public static Message createMessage(String type, String title){
+	public static Message createMessage(MessageType type, String title){
 		return createMessage(type, title, null);
+	}
+
+	/**
+	 * Creates message for event provided
+	 * @param messageEvent
+	 * @return message for provided event
+	 */
+	public static Message createMessage(MessageEvent messageEvent) {
+		return createMessage(messageEvent.getType(), messageEvent.getTitle(), messageEvent.getMessages());
 	}
 }

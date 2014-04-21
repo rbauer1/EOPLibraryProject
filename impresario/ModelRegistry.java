@@ -75,7 +75,6 @@ public class ModelRegistry extends Registry<IView> {
 		if(dependencies.getProperty(key) != null){
 			keys += "," + dependencies.getProperty(key);
 		}
-
 		String[] events = keys.split(",");
 		for(String event : events){
 			List<IView> eventSubscribers = subscribers.get(event);

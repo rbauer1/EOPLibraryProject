@@ -14,24 +14,21 @@ import javax.swing.BoxLayout;
 import userinterface.ViewHelper;
 import userinterface.component.NumericTextField;
 import userinterface.component.Panel;
-import userinterface.component.PhoneField;
 import userinterface.component.TextArea;
 import userinterface.component.TextField;
 import userinterface.view.View;
 
 /**
- * Form that takes the input for a Book model.
- * Can be used for adding of modifying a Book.
+ * Form that represents a Rental Model
  */
-public class BorrowerForm extends Form {
-
-	private static final long serialVersionUID = -2103617588036549056L;
+public class RentalForm extends Form {
+	private static final long serialVersionUID = -5569243490261183491L;
 
 	/**
-	 * Constructs new Book Form
+	 * Constructs Book Delete Form
 	 * @param view
 	 */
-	public BorrowerForm(View view) {
+	public RentalForm(View view) {
 		super(view);
 	}
 	
@@ -39,47 +36,51 @@ public class BorrowerForm extends Form {
 	protected void build() {
 		Panel fieldColumnsPanel = new Panel();
 		fieldColumnsPanel.setLayout(new BoxLayout(fieldColumnsPanel, BoxLayout.X_AXIS));
-
+		add(fieldColumnsPanel);
+		
 		Panel leftColumn = new Panel();
 		leftColumn.setLayout(new BoxLayout(leftColumn, BoxLayout.Y_AXIS));
 		fieldColumnsPanel.add(leftColumn);
-
+		
 		NumericTextField bannerIdField = new NumericTextField(16,9);
 		bannerIdField.addActionListener(this);
 		addField("BannerID", bannerIdField);
 		leftColumn.add(ViewHelper.formatFieldLeft("Banner ID", bannerIdField));
-
+		
 		TextField firstNameField = new TextField(16);
 		firstNameField.addActionListener(this);
 		addField("FirstName", firstNameField);
 		leftColumn.add(ViewHelper.formatFieldLeft("First Name", firstNameField));
-
+		
 		TextField lastNameField = new TextField(16);
 		lastNameField.addActionListener(this);
 		addField("LastName", lastNameField);
 		leftColumn.add(ViewHelper.formatFieldLeft("Last Name", lastNameField));
-
-		add(fieldColumnsPanel);
+		
 		Panel rightColumn = new Panel();
 		rightColumn.setLayout(new BoxLayout(rightColumn, BoxLayout.Y_AXIS));
+		fieldColumnsPanel.add(rightColumn);
+		
+		TextField barcodeField = new TextField(16);
+		addField("Barcode", barcodeField);
+		rightColumn.add(ViewHelper.formatFieldLeft("Barcode", barcodeField));
+		
+		TextField titleField = new TextField(16);
+		addField("Title", titleField);
+		rightColumn.add(ViewHelper.formatFieldLeft("Title", titleField));
+		
+		TextField author1Field = new TextField(16);
+		addField("Author1", author1Field);
+		rightColumn.add(ViewHelper.formatFieldLeft("Author", author1Field));
 
-		PhoneField phoneField = new PhoneField();
-		phoneField.addActionListener(this);
-		addField("ContactPhone", phoneField);
-		rightColumn.add(ViewHelper.formatFieldLeft("Phone", phoneField));
-
-		TextField emailField = new TextField(16);
-		emailField.addActionListener(this);
-		addField("Email", emailField);
-		rightColumn.add(ViewHelper.formatFieldLeft("Email", emailField));
-
-		rightColumn.add(ViewHelper.createPlaceHolder());
-
+		fieldColumnsPanel.add(leftColumn);
+		fieldColumnsPanel.add(rightColumn);
+		
 		TextArea notesField = new TextArea();
 		addField("Notes", notesField);
-		add(ViewHelper.formatTextAreaFieldLeft("Notes", notesField));
-
-		fieldColumnsPanel.add(rightColumn);
+		add(ViewHelper.formatTextAreaFieldLeft("Notes", notesField));	
+		
+		
 	}
 
 }

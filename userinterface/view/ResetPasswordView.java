@@ -11,6 +11,7 @@ package userinterface.view;
 
 import java.util.List;
 
+import userinterface.message.MessageType;
 import userinterface.view.form.Form;
 import userinterface.view.form.ResetPasswordForm;
 import utilities.Key;
@@ -43,7 +44,7 @@ public class ResetPasswordView extends View {
 	protected void build() {
 		form = new ResetPasswordForm(this);
 		add(form);
-		messagePanel.displayMessage("Info", "Heads up! The reset code has been sent to the email associated with the provided Banner Id.");
+		messagePanel.displayMessage(MessageType.INFO, "Heads up! The reset code has been sent to the email associated with the provided Banner Id.");
 	}
 
 	@Override

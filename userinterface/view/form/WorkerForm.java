@@ -19,6 +19,7 @@ import userinterface.component.Panel;
 import userinterface.component.PasswordField;
 import userinterface.component.PhoneField;
 import userinterface.component.SelectField;
+import userinterface.component.TextArea;
 import userinterface.component.TextField;
 import userinterface.view.View;
 
@@ -94,6 +95,10 @@ public class WorkerForm extends Form {
 		rightColumn.add(ViewHelper.formatFieldLeft("Email", emailField));
 
 		fieldColumnsPanel.add(rightColumn);
+		
+		TextArea notesField = new TextArea();
+		addField("Notes", notesField);
+		add(ViewHelper.formatTextAreaFieldLeft("Notes", notesField));
 	}
 
 }

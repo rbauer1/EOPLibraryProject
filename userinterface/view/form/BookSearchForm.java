@@ -70,7 +70,7 @@ public class BookSearchForm extends Form {
 		addField("ISBN", isbnField);
 		rightColumn.add(ViewHelper.formatFieldLeft("ISBN", isbnField));
 		
-		SelectField conditionField = new SelectField(new String[] { "Any", "Good", "Damaged" });
+		SelectField conditionField = new SelectField(new String[] { "Any", "Good", "Fair", "Damaged" });
 		conditionField.addActionListener(this);
 		conditionField.setPreferredSize(new Dimension(130,25));
 		addField("Condition", conditionField);

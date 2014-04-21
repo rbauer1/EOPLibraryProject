@@ -6,8 +6,10 @@ import java.util.List;
 import javax.swing.JTable;
 
 import model.Worker;
-import userinterface.view.form.WorkerSearchForm;
+import userinterface.message.MessageEvent;
+import userinterface.message.MessageType;
 import userinterface.view.form.Form;
+import userinterface.view.form.WorkerSearchForm;
 import utilities.Key;
 import controller.Controller;
 
@@ -40,14 +42,21 @@ public class ListWorkersView extends ListView {
 			buttons.get("Submit").setText(operationType);
 		}
 		
-		subscribeToController(Key.WORKER_COLLECTION, Key.REFRESH_LIST);
+		subscribeToController(Key.MESSAGE, Key.WORKER_COLLECTION);
 		
 		// Get Workers for initial filter settings
 		filter();
 	}
 	
 	@Override
-	protected void buildFilterForm() {
+	public void afterShown() {
+		super.afterShown();
+		filter();
+	}
+	
+	
+	@Override
+	protected void buildForm() {
 		form = new WorkerSearchForm(this);
 		add(form);
 	}
@@ -71,9 +80,8 @@ public class ListWorkersView extends ListView {
 			workers = (List<Worker>) value;
 			table.setModel(new WorkerTableModel(workers));
 			table.repaint();			
-		}
-		if (key.equals(Key.REFRESH_LIST)) {
-			filter();		
+		}else if (key.equals(Key.MESSAGE)) {
+			messagePanel.displayMessage((MessageEvent)value);
 		}
 	}
 	
@@ -93,7 +101,7 @@ public class ListWorkersView extends ListView {
 		if (rowIndex > -1) {
 			controller.stateChangeRequest(Key.SELECT_WORKER, workers.get(rowIndex));
 		} else {
-			messagePanel.displayMessage("Warning", "Warning! Must select a worker from the list!");
+			messagePanel.displayMessage(MessageType.WARNING, "Warning! Must select a worker from the list!");
 		}
 	}
 	

@@ -5,36 +5,31 @@ import java.util.List;
 
 import javax.swing.JTable;
 
-import model.Book;
+import model.Rental;
 import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
-import userinterface.view.form.BookSearchForm;
-import userinterface.view.form.Form;
 import utilities.Key;
 import controller.Controller;
 
 /**
  * View that provides interface to search and list books
  */
-public class ListBooksView extends ListView {
+public class ListRentalsView extends ListView {
 	
-	private static final long serialVersionUID = 3952404276228902079L;
-	
+	private static final long serialVersionUID = -7452072411398228893L;
+
 	/** Names of buttons on bottom, Must be in order which you want them to appear */
 	private static final String[] BUTTON_NAMES = {"Submit", "Back"};
 	
 	/** Entities in the table */
-	private List<Book> books;
+	private List<Rental> rentals;
 	
-	/** Form to provide search criteria*/
-	private Form form;
-
 	/**
-	 * Constructs list books view
+	 * Constructs list rentals view
 	 * @param controller
 	 */
-	public ListBooksView(Controller controller) {
-		super(controller, "Book Search", BUTTON_NAMES);
+	public ListRentalsView(Controller controller) {
+		super(controller, "Rental Search", BUTTON_NAMES);
 
 		// Get the operation type and update button
 		String operationType = (String) controller.getState(Key.OPERATION_TYPE);
@@ -42,31 +37,16 @@ public class ListBooksView extends ListView {
 			buttons.get("Submit").setText(operationType);
 		}
 		
-		subscribeToController(Key.MESSAGE, Key.BOOK_COLLECTION);
+		subscribeToController(Key.RENTAL_COLLECTION, Key.REFRESH_LIST, Key.MESSAGE);
+		controller.stateChangeRequest(Key.RENTAL_COLLECTION, null);
 		
-		// Get Books for initial filter settings
-		filter();
 	}
 	
-	@Override
-	public void afterShown() {
-		super.afterShown();
-		filter();
-	}
-	
-	@Override
-	protected void buildForm() {
-		form = new BookSearchForm(this);
-		add(form);
-	}
-
 	@Override
 	public void processAction(Object source) {
 		messagePanel.clear();
-		if (source == form) {
-			filter();
-		} else if (source == buttons.get("Back")) {
-			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
+		if (source == buttons.get("Back")) {
+			controller.stateChangeRequest(Key.BACK, "ListBorrowersView");
 		} else if (source == buttons.get("Submit")) {
 			select();
 		}
@@ -75,9 +55,9 @@ public class ListBooksView extends ListView {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {
-		if (key.equals(Key.BOOK_COLLECTION)) {
-			books = (List<Book>) value;
-			table.setModel(new BookTableModel(books));
+		if (key.equals(Key.RENTAL_COLLECTION)) {
+			rentals = (List<Rental>) value;
+			table.setModel(new RentalTableModel(rentals));
 			table.repaint();			
 		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
@@ -86,7 +66,7 @@ public class ListBooksView extends ListView {
 	
 	@Override
 	protected JTable createTable() {
-		return new JTable(new BookTableModel(new ArrayList<Book>()));
+		return new JTable(new RentalTableModel(new ArrayList<Rental>()));
 	}
 
 	@Override
@@ -98,16 +78,12 @@ public class ListBooksView extends ListView {
 	protected void select() {
 		int rowIndex = table.getSelectedRow();
 		if (rowIndex > -1) {
-			controller.stateChangeRequest(Key.SELECT_BOOK, books.get(rowIndex));
+			controller.stateChangeRequest(Key.SELECT_RENTAL, rentals.get(rowIndex));
 		} else {
-			messagePanel.displayMessage(MessageType.WARNING, "Warning! Must select a book from the list!");
+			messagePanel.displayMessage(MessageType.WARNING, "Warning! Must select a rental from the list!");
 		}
 	}
 	
-	/**
-	 * Filters the table by the criteria specified in the form
-	 */
-	private void filter() {
-		controller.stateChangeRequest(Key.BOOK_COLLECTION, form.getNonEmptyValues());
-	}
+	@Override
+	protected void buildForm() {} 
 }
