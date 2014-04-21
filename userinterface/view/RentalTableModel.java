@@ -15,16 +15,19 @@ public class RentalTableModel extends AbstractTableModel implements TableModel {
 	private List<Properties> state;
 	
 	/**	Names of columns as will appear on table in GUI */
-	private static final String[] COL_NAMES_DISP = {"Banner ID","Barcode","Checkout Date","ID of checkout worker"};
+	private static final String[] COL_NAMES_DISP = {"Banner ID","Barcode","Title","Checkout Date","Due Date","Checkout Worker ID"};
 	
 	/**	Names of properties corresponding to database  */
-	private static final String[] COL_NAMES_PROPS = {"BorrowerID","BookID","CheckoutDate", "CheckoutWorkerID"};
+	private static final String[] COL_NAMES_PROPS = {"BorrowerID","BookID", "Title","CheckoutDate","DueDate", "CheckoutWorkerID"};
 	
 	private static final int NUM_COLS = COL_NAMES_DISP.length;
 
 	public RentalTableModel(List<Rental> rentalData) {
 		state = new ArrayList<Properties>();
-		for(Rental r : rentalData) state.add(r.getPersistentState());
+		for(Rental r : rentalData){
+			state.add(r.getPersistentState());
+			System.out.println(r.getPersistentState());
+		}
 	}
 
 	public int getColumnCount() {
