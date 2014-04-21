@@ -231,6 +231,6 @@ public class Worker extends Model {
 	}
 	
 	public boolean isAdmin(){
-		return (persistentState.getProperty("Credentials")).equals("Administrator");
+		return (persistentState.getProperty("Credentials","")).equals("Administrator");
 	}
 }
