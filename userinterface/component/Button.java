@@ -7,6 +7,7 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.ActionListener;
 
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
@@ -55,6 +56,12 @@ public class Button extends JButton{
 	public Button(String text) {
 		super(text);
 		initialize();
+	}
+	
+	public Button(String text, ActionListener listener) {
+		super(text);
+		initialize();
+		addActionListener(listener);
 	}
 	
 	private void initialize(){

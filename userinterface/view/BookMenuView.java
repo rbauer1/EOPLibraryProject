@@ -40,32 +40,25 @@ public class BookMenuView extends View {
 
 	@Override
 	protected void build() {
-		addButton = new Button("Add Book");
-		addButton.addActionListener(this);
+		addButton = new Button("Add Book", this);
 		add(ViewHelper.formatCenter(addButton));
 
-		modifyButton = new Button("Modify Book");
-		modifyButton.addActionListener(this);
+		modifyButton = new Button("Modify Book", this);
 		add(ViewHelper.formatCenter(modifyButton));
 
-		deleteButton = new Button("Delete Book");
-		deleteButton.addActionListener(this);
+		deleteButton = new Button("Delete Book", this);
 		add(ViewHelper.formatCenter(deleteButton));
 
-		processLostBookButton = new Button("Process Lost Book");
-		processLostBookButton.addActionListener(this);
+		processLostBookButton = new Button("Process Lost Book", this);
 		add(ViewHelper.formatCenter(processLostBookButton));
 
-		listAvailableButton = new Button("List Available Books");
-		listAvailableButton.addActionListener(this);
+		listAvailableButton = new Button("List Available Books", this);
 		add(ViewHelper.formatCenter(listAvailableButton));
 
-		listUnavailableButton = new Button("List Unavailable Books");
-		listUnavailableButton.addActionListener(this);
+		listUnavailableButton = new Button("List Unavailable Books", this);
 		add(ViewHelper.formatCenter(listUnavailableButton));
 
-		backButton = new Button("Back");
-		backButton.addActionListener(this);
+		backButton = new Button("Back", this);
 		add(ViewHelper.formatCenter(backButton));
 	}
 

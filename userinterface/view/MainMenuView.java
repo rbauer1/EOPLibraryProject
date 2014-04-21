@@ -40,28 +40,22 @@ public class MainMenuView extends View {
 
 	@Override
 	protected void build() {
-		bookActionsButton = new Button("Book Actions");
-		bookActionsButton.addActionListener(this);
+		bookActionsButton = new Button("Book Actions", this);
 		add(ViewHelper.formatCenter(bookActionsButton));
 
-		borrowerActionsButton = new Button("Borrower Actions");
-		borrowerActionsButton.addActionListener(this);
+		borrowerActionsButton = new Button("Borrower Actions", this);
 		add(ViewHelper.formatCenter(borrowerActionsButton));
 
-		workerActionsButton = new Button("Workers Actions");
-		workerActionsButton.addActionListener(this);
+		workerActionsButton = new Button("Workers Actions", this);
 		add(ViewHelper.formatCenter(workerActionsButton));
 
-		checkinBookButton = new Button("Check in a Book");
-		checkinBookButton.addActionListener(this);
+		checkinBookButton = new Button("Check in a Book", this);
 		add(ViewHelper.formatCenter(checkinBookButton));
 
-		checkoutBookButton = new Button("Check out a Book");
-		checkoutBookButton.addActionListener(this);
+		checkoutBookButton = new Button("Check out a Book", this);
 		add(ViewHelper.formatCenter(checkoutBookButton));
 
-		logoutButton = new Button("Logout");
-		logoutButton.addActionListener(this);
+		logoutButton = new Button("Logout", this);
 		add(ViewHelper.formatCenter(logoutButton));
 	}
 

@@ -37,20 +37,16 @@ public class WorkerMenuView extends View {
 
 	@Override
 	protected void build() {
-		addButton = new Button("Add Worker");
-		addButton.addActionListener(this);
+		addButton = new Button("Add Worker", this);
 		add(ViewHelper.formatCenter(addButton));
 
-		modifyButton = new Button("Modify Worker");
-		modifyButton.addActionListener(this);
+		modifyButton = new Button("Modify Worker", this);
 		add(ViewHelper.formatCenter(modifyButton));
 
-		deleteButton = new Button("Delete Worker");
-		deleteButton.addActionListener(this);
+		deleteButton = new Button("Delete Worker", this);
 		add(ViewHelper.formatCenter(deleteButton));
 
-		backButton = new Button("Back");
-		backButton.addActionListener(this);
+		backButton = new Button("Back", this);
 		add(ViewHelper.formatCenter(backButton));
 	}
 

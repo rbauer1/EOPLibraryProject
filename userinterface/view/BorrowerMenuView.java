@@ -37,20 +37,16 @@ public class BorrowerMenuView extends View {
 
 	@Override
 	protected void build() {
-		addButton = new Button("Add Borrower");
-		addButton.addActionListener(this);
+		addButton = new Button("Add Borrower", this);
 		add(ViewHelper.formatCenter(addButton));
 
-		modifyButton = new Button("Modify Borrower");
-		modifyButton.addActionListener(this);
+		modifyButton = new Button("Modify Borrower", this);
 		add(ViewHelper.formatCenter(modifyButton));
 
-		deleteButton = new Button("Delete Borrower");
-		deleteButton.addActionListener(this);
+		deleteButton = new Button("Delete Borrower", this);
 		add(ViewHelper.formatCenter(deleteButton));
 
-		backButton = new Button("Back");
-		backButton.addActionListener(this);
+		backButton = new Button("Back", this);
 		add(ViewHelper.formatCenter(backButton));
 	}
 
