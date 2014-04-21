@@ -21,6 +21,7 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -210,8 +211,8 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		}
 
 		if (newView instanceof JPanel) {
-			// Component #2 is being accessed here because component #1 is the Logo Panel and remove it
-			JPanel currentView = (JPanel) getContentPane().getComponent(2);
+			// Component #3 is being accessed here because component #0 is header, 1 is menu, 2 is menu padding.
+			JPanel currentView = (JPanel) getContentPane().getComponent(3); //TODO figure out a way to make this less terrible. (get rid of literal)
 			if (currentView != null) {
 				getContentPane().remove(currentView);
 			}
