@@ -43,14 +43,12 @@ public class ListBooksView extends ListView {
 		}
 		
 		subscribeToController(Key.MESSAGE, Key.BOOK_COLLECTION);
-		
-		// Get Books for initial filter settings
-		filter();
 	}
 	
 	@Override
 	public void afterShown() {
 		super.afterShown();
+		// Get Books for initial filter settings
 		filter();
 	}
 	

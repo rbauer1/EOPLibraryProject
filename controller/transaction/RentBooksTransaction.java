@@ -54,7 +54,7 @@ public class RentBooksTransaction extends Transaction {
 	}
 
 	/**
-	 * Adds book to list of books to be rented. Verifies all the neccessary requirements
+	 * Adds book to list of books to be rented. Verifies all the necessary requirements
 	 * @param bookData
 	 * @return true if book was added
 	 */
@@ -89,7 +89,7 @@ public class RentBooksTransaction extends Transaction {
 		stateChangeRequest(Key.REFRESH_LIST, null);
 		dueDate = new BookDueDate();
 		listBorrowersTransaction  = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
-		listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select the borrower whom is renting books from the list below."));
+		listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select the borrower who is renting books from the list below."));
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class RentBooksTransaction extends Transaction {
 	}
 
 	/**
-	 * Sets the borrower whom is renting books. Verifies the borrower is in good standing.
+	 * Sets the borrower who is renting books. Verifies the borrower is in good standing.
 	 * @param borrower
 	 */
 	private void selectBorrower(Borrower borrower) {
@@ -173,7 +173,7 @@ public class RentBooksTransaction extends Transaction {
 			String view = (String)value;
 			if(view.equals("ListBorrowersView")){
 				listBorrowersTransaction.execute();
-				listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select the borrower whom is renting books from the list below."));
+				listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select the borrower who is renting books from the list below."));
 			}else{
 				showView(view);
 			}

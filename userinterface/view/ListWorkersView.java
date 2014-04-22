@@ -43,14 +43,12 @@ public class ListWorkersView extends ListView {
 		}
 		
 		subscribeToController(Key.MESSAGE, Key.WORKER_COLLECTION);
-		
-		// Get Workers for initial filter settings
-		filter();
 	}
 	
 	@Override
 	public void afterShown() {
 		super.afterShown();
+		// Get Workers for initial filter settings
 		filter();
 	}
 	

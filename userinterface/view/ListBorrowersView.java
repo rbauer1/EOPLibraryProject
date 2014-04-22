@@ -43,14 +43,12 @@ public class ListBorrowersView extends ListView {
 		}
 
 		subscribeToController(Key.MESSAGE, Key.BORROWER_COLLECTION);
-
-		// Get Borrowers for initial filter settings
-		filter();
 	}
 
 	@Override
 	public void afterShown() {
 		super.afterShown();
+		// Get Borrowers for initial filter settings
 		filter();
 	}
 

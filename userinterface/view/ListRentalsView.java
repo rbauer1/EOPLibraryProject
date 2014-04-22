@@ -38,8 +38,13 @@ public class ListRentalsView extends ListView {
 		}
 		
 		subscribeToController(Key.RENTAL_COLLECTION, Key.REFRESH_LIST, Key.MESSAGE);
-		controller.stateChangeRequest(Key.RENTAL_COLLECTION, null);
 		
+	}
+	
+	@Override
+	public void afterShown() {
+		super.afterShown();
+		controller.stateChangeRequest(Key.RENTAL_COLLECTION, null);
 	}
 	
 	@Override
