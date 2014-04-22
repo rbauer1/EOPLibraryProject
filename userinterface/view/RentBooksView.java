@@ -16,9 +16,9 @@ import controller.Controller;
  * View that provides interface to rent books
  */
 public class RentBooksView extends ListView {
-	
+
 	private static final long serialVersionUID = -7452072411398228893L;
-	
+
 	/** Names of buttons on top under form, Must be in order which you want them to appear */
 	private static final String[] TOP_BUTTON_NAMES = {"Add", "Remove"};
 
@@ -45,6 +45,7 @@ public class RentBooksView extends ListView {
 		messagePanel.clear();
 		barcodeForm.reset();
 		barcodeForm.requestFocusForDefaultField();
+		processListSelection();
 	}
 
 	@Override
@@ -66,7 +67,7 @@ public class RentBooksView extends ListView {
 		if (source == barcodeForm  || source == buttons.get("Add")) {
 			controller.stateChangeRequest(Key.ADD_BOOK_TO_LIST, barcodeForm.getValues());
 		} else if (source == buttons.get("Remove")) {
-
+			removeSelectedBook();
 		} else if (source == buttons.get("Back")) {
 			controller.stateChangeRequest(Key.BACK, "ListBorrowersView");
 		} else if (source == buttons.get("Done")) {
@@ -76,19 +77,22 @@ public class RentBooksView extends ListView {
 
 	@Override
 	protected void processListSelection() {
-		//TODO maybe do something when selected?
-		//buttons.get("Submit").setEnabled(table.getSelectedRow() >= 0);
+		buttons.get("Remove").setEnabled(table.getSelectedRow() >= 0);
+	}
+
+	/**
+	 * Removes the selected book from the list of books to be rented
+	 */
+	private void removeSelectedBook() {
+		int selectedRow = table.getSelectedRow();
+		if(selectedRow > -1) {
+			controller.stateChangeRequest(Key.REMOVE_BOOK_FROM_LIST, books.get(selectedRow));
+		}
 	}
 
 	@Override
 	protected void select() {
-		//TODO maybe add select action
-		/*int rowIndex = table.getSelectedRow();
-		if (rowIndex > -1) {
-			controller.stateChangeRequest(Key.SELECT_RENTAL, rentals.get(rowIndex));
-		} else {
-			messagePanel.displayMessage(MessageType.WARNING, "Warning! Must select a rental from the list!");
-		}*/
+		removeSelectedBook();
 	}
 
 	@SuppressWarnings("unchecked")
