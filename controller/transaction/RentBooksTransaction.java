@@ -36,22 +36,28 @@ public class RentBooksTransaction extends Transaction {
 		super(parentController);
 	}
 
-	private void addBook(Properties bookData) {
+	private boolean addBook(Properties bookData) {
 		try {
 			Book book = new Book(bookData.getProperty(Book.PRIMARY_KEY, ""));
-			if(book.isAvailable()){
-				if(!books.contains(book)){
-					books.add(book);
-					stateChangeRequest(Key.REFRESH_LIST, null);
-				}else{
-					stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Heads up! The book was not added since it is already in the list to be rented."));
-				}
-			} else {
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The barcode you provided refers to a book that is already rented."));
+			if(!book.isActive()){
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The barcode you provided refers to a book that is no longer active."));
+				return false;
 			}
+			if(!book.isAvailable()){
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The barcode you provided refers to a book that is already rented."));
+				return false;
+			}
+			if(books.contains(book)){
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Heads up! The book was not added since it is already in the list to be rented."));
+				return false;
+			}
+			books.add(book);
+			stateChangeRequest(Key.REFRESH_LIST, null);
 		} catch (InvalidPrimaryKeyException e) {
 			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The barcode you provided is invalid. Please try again."));
+			return false;
 		}
+		return true;
 	}
 
 	private void rentBooks() {
