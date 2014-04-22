@@ -2,6 +2,7 @@ package utilities;
 
 public class Key {
 	public static final String ADD_BOOK_TO_LIST = "AddBookToList";
+	public static final String REMOVE_BOOK_FROM_LIST = "RemoveBookFromList";
 	public static final String BACK = "Back";
 	public static final String BOOK = "Book";
 	public static final String BOOK_COLLECTION = "BookCollection";

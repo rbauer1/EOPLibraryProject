@@ -1,10 +1,8 @@
 package controller.transaction;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import model.Book;
 import model.BookDueDate;
@@ -20,7 +18,7 @@ import exception.InvalidPrimaryKeyException;
 
 public class RentBooksTransaction extends Transaction {
 
-	private Set<Book> books;
+	private List<Book> books;
 
 	/** Borrower that is checking out the books */
 	private Borrower borrower;
@@ -83,7 +81,7 @@ public class RentBooksTransaction extends Transaction {
 	@Override
 	public void execute() {
 		worker = (Worker)parentController.getState(Key.WORKER);
-		books = new HashSet<Book>();
+		books = new ArrayList<Book>();
 		stateChangeRequest(Key.REFRESH_LIST, null);
 		dueDate = new BookDueDate();
 		listBorrowersTransaction  = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
