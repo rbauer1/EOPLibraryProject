@@ -67,6 +67,7 @@ public class LostBookView extends View {
 			controller.stateChangeRequest(Key.BACK, "ListRentalsView");
 		}else if (source == buttons.get("Confirm") || source == form) {
 			controller.stateChangeRequest(Key.SAVE_BOOK, form.getValues());
+			controller.stateChangeRequest(Key.DISPLAY_PDF_EXEMPLE, null);
 		}
 	}
 
