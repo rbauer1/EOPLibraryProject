@@ -12,7 +12,6 @@ package userinterface.view.form;
 import javax.swing.BoxLayout;
 
 import userinterface.ViewHelper;
-import userinterface.component.CurrencyTextField;
 import userinterface.component.NumericTextField;
 import userinterface.component.Panel;
 import userinterface.component.PhoneField;
@@ -24,7 +23,7 @@ import userinterface.view.View;
  * Form that takes the input for a Book model.
  * Can be used for adding of modifying a Book.
  */
-public class BorrowerForm extends Form {
+public class AddBorrowerForm extends Form {
 
 	private static final long serialVersionUID = -2103617588036549056L;
 
@@ -32,7 +31,7 @@ public class BorrowerForm extends Form {
 	 * Constructs new Book Form
 	 * @param view
 	 */
-	public BorrowerForm(View view) {
+	public AddBorrowerForm(View view) {
 		super(view);
 	}
 
@@ -74,10 +73,7 @@ public class BorrowerForm extends Form {
 		addField("Email", emailField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Email", emailField));
 
-		CurrencyTextField monetaryPenaltyField = new CurrencyTextField(16, 16);
-		monetaryPenaltyField.addActionListener(this);
-		addField("MonetaryPenalty", monetaryPenaltyField);
-		rightColumn.add(ViewHelper.formatCurrencyFieldLeft("Balance", monetaryPenaltyField));
+		rightColumn.add(ViewHelper.createPlaceHolder());
 
 		TextArea notesField = new TextArea();
 		addField("Notes", notesField);

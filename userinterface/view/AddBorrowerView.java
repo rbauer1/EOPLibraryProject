@@ -10,7 +10,7 @@
 package userinterface.view;
 
 import userinterface.message.MessageEvent;
-import userinterface.view.form.BorrowerForm;
+import userinterface.view.form.AddBorrowerForm;
 import userinterface.view.form.Form;
 import utilities.Key;
 import controller.Controller;
@@ -44,7 +44,7 @@ public class AddBorrowerView extends View {
 
 	@Override
 	protected void build() {
-		form = new BorrowerForm(this);
+		form = new AddBorrowerForm(this);
 		add(form);
 	}
 
