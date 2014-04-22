@@ -110,6 +110,10 @@ public class Book extends Model {
 		return TABLE_NAME;
 	}
 
+	public boolean isActive() {
+		return persistentState.getProperty("Status", "").equals("Active");
+	}
+	
 	public boolean isAvailable() {
 		RentalCollection rentals = new RentalCollection();
 		rentals.findOutstandingByBook(this);

@@ -73,6 +73,7 @@ public class ReturnBooksView extends View {
 		messagePanel.clear();
 		barcodeForm.reset();
 		barcodeForm.requestFocusForDefaultField();
+		buttons.get("Remove").setEnabled(returnRentalsTable.getSelectedRow() >= 0);;
 	}
 
 	@Override
