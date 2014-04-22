@@ -44,7 +44,7 @@ public class ReturnBooksTransaction extends Transaction {
 	private List<Rental> returnRentals;
 
 	/** ListBorrower Transaction */
-	private Transaction listBorrowers;
+	private Transaction listBorrowersTransaction;
 
 	/**
 	 * Constructs Return Book Transaction
@@ -90,7 +90,8 @@ public class ReturnBooksTransaction extends Transaction {
 	@Override
 	public void execute(){
 		worker = (Worker)parentController.getState(Key.WORKER);
-		listBorrowers = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
+		listBorrowersTransaction = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
+		listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select the borrower who is returning books from the list below."));
 	}
 
 	@Override
@@ -166,7 +167,8 @@ public class ReturnBooksTransaction extends Transaction {
 		} else if(key.equals(Key.BACK)){
 			String view = (String)value;
 			if(view.equals("ListBorrowersView")){
-				listBorrowers.execute();
+				listBorrowersTransaction.execute();
+				listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select the borrower who is returning books from the list below."));
 			}else{
 				showView(view);
 			}

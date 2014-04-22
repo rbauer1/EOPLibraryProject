@@ -85,8 +85,6 @@ public class RentBooksTransaction extends Transaction {
 	@Override
 	public void execute() {
 		worker = (Worker)parentController.getState(Key.WORKER);
-		books = new ArrayList<Book>();
-		stateChangeRequest(Key.REFRESH_LIST, null);
 		dueDate = new BookDueDate();
 		listBorrowersTransaction  = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
 		listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select the borrower who is renting books from the list below."));
@@ -128,7 +126,12 @@ public class RentBooksTransaction extends Transaction {
 		List<Rental> rentals = new ArrayList<Rental>(books.size());
 		boolean saveSuccess = true;
 		for(Book book : books){
-			//TODO may need to revalidate the status of the books here since it is possible this could of changed.
+			book.reload();
+			if(!book.isActive() || !book.isAvailable()){
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The books have been altered since added. Please try again."));
+				JDBCBroker.getInstance().rollbackTransaction();
+				return;
+			}
 			Rental rental = new Rental(borrower, book, worker, dueDate);
 			saveSuccess &= rental.save();
 			rentals.add(rental);
@@ -151,6 +154,8 @@ public class RentBooksTransaction extends Transaction {
 	private void selectBorrower(Borrower borrower) {
 		if(!borrower.isDelinquent()){
 			this.borrower = borrower;
+			books = new ArrayList<Book>();
+			stateChangeRequest(Key.REFRESH_LIST, null);
 			showView("RentBooksView");
 		}else{
 			listBorrowersTransaction.execute();
