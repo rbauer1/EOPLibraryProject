@@ -67,7 +67,7 @@ public class RentBooksTransaction extends Transaction {
 			JDBCBroker.getInstance().commitTransaction();
 			//TODO print receipt
 			stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);
-			parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were succesfully checked out."));
+			parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were succesfully rented."));
 		}else{
 			JDBCBroker.getInstance().rollbackTransaction();
 			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving the rentals."));
@@ -81,6 +81,7 @@ public class RentBooksTransaction extends Transaction {
 		stateChangeRequest(Key.REFRESH_LIST, null);
 		dueDate = new BookDueDate();
 		listBorrowersTransaction  = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
+		listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select the borrower whom is renting books from the list below."));
 	}
 
 	@Override
@@ -125,6 +126,7 @@ public class RentBooksTransaction extends Transaction {
 			String view = (String)value;
 			if(view.equals("ListBorrowersView")){
 				listBorrowersTransaction.execute();
+				listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select the borrower whom is renting books from the list below."));
 			}else{
 				showView(view);
 			}
