@@ -93,9 +93,10 @@ public class LibrarianController extends Controller {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
 		} else if (key.equals(Key.EXECUTE_PROCESS_LOST_BOOK)){
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
-		} else if (key.equals(Key.EXECUTE_CHECKOUT_BOOK)){
+		} else if (key.equals(Key.EXECUTE_RENT_BOOK)){
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU, Key.MESSAGE);
-
+		} else if (key.equals(Key.EXECUTE_RETURN_BOOK)){
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU, Key.MESSAGE);
 
 		} else if (key.equals(Key.EXECUTE_ADD_BORROWER)) {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
@@ -123,7 +124,7 @@ public class LibrarianController extends Controller {
 			 * This is needed to update the menus between logins in case the next worker has different credentials
 			 */
 			views.clear();
-			
+
 		}
 		super.stateChangeRequest(key, value);
 	}

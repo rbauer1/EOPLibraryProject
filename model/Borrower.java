@@ -83,9 +83,9 @@ public class Borrower extends Model {
 		return true;
 	}
 
-	public RentalCollection getOutstandingRentals(Borrower borrower){
+	public RentalCollection getOutstandingRentals(){
 		RentalCollection rentals = new RentalCollection();
-		rentals.findOutstandingByBorrower(borrower);
+		rentals.findOutstandingByBorrower(this);
 		return rentals;
 	}
 
