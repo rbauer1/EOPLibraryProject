@@ -98,6 +98,10 @@ public class LibrarianController extends Controller {
 		} else if (key.equals(Key.EXECUTE_RETURN_BOOK)){
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU, Key.MESSAGE);
 
+		} else if (key.equals(Key.EXECUTE_LIST_RENTED_BOOKS)){
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
+                } else if (key.equals(Key.EXECUTE_LIST_AVAILABLE_BOOKS)){
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
 		} else if (key.equals(Key.EXECUTE_ADD_BORROWER)) {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
 		} else if (key.equals(Key.EXECUTE_MODIFY_BORROWER)) {
