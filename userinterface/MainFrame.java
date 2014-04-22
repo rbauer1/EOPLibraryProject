@@ -146,8 +146,6 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 
 	public void fix(){
 		pack();
-		//revalidate();
-		//repaint();
 
 		Dimension windowSize = getSize();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -158,9 +156,10 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		Dimension newSize = new Dimension();
 		newSize.setSize(width, height);
 		setSize(newSize);
-		
+
 		invalidate();
 		validate();
+		repaint();
 
 		WindowPosition.placeCenter(this);
 	}
