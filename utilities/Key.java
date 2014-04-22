@@ -80,6 +80,7 @@ public class Key {
 
 	public static final String WORKER = "Worker";
 	public static final String WORKER_COLLECTION = "WorkerCollection";
+	public static final String DISPLAY_PDF_EXEMPLE = "GeneratePDF";
 
 	public static final String RETURN_BOOKS = "ReturnBooks";
 	public static final String OUTSTANDING_RENTALS = "OutstandingRentals";
