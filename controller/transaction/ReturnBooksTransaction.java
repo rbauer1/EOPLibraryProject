@@ -80,8 +80,11 @@ public class ReturnBooksTransaction extends Transaction {
 		}
 		outstandingRentals.remove(rental);
 		if(returnRentals.contains(rental)) {
-			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Heads up! The book was not added since it is already in the list of returns"));
+			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Heads up! The book was not added since it is already in the list of returns."));
 			return;
+		}
+		if(rental.isLate()) {
+			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Late! This book is past the due date! It was due on " + rental.getState("DueDate")));
 		}
 		returnRentals.add(rental);
 		stateChangeRequest(Key.REFRESH_LIST, null);

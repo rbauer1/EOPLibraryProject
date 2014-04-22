@@ -122,6 +122,13 @@ public class Rental extends Model {
 		return TABLE_NAME;
 	}
 
+	/**
+	 * @return true if the rental is over due
+	 */
+	public boolean isLate(){
+		return persistentState.getProperty("DueDate").compareTo(DateUtil.getDate()) < 0;
+	}
+
 	@Override
 	public boolean isPrimaryKeyAutoIncrement() {
 		return true;

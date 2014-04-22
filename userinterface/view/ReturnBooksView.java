@@ -64,6 +64,7 @@ public class ReturnBooksView extends View {
 	private void addSelectedRental() {
 		int selectedRow = outstandingRentalsTable.getSelectedRow();
 		if(selectedRow > -1) {
+			messagePanel.clear();
 			controller.stateChangeRequest(Key.ADD_RENTAL_TO_LIST, outstandingRentals.get(selectedRow));
 		}
 	}
@@ -169,6 +170,7 @@ public class ReturnBooksView extends View {
 	private void removeSelectedRental() {
 		int selectedRow = returnRentalsTable.getSelectedRow();
 		if(selectedRow > -1) {
+			messagePanel.clear();
 			controller.stateChangeRequest(Key.REMOVE_RENTAL_FROM_LIST, returnRentals.get(selectedRow));
 		}
 	}

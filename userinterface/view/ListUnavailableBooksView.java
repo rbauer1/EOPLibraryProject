@@ -7,7 +7,6 @@ import javax.swing.JTable;
 
 import model.Book;
 import userinterface.message.MessageEvent;
-import userinterface.message.MessageType;
 import utilities.Key;
 import controller.Controller;
 

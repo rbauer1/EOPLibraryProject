@@ -10,7 +10,6 @@
 package controller.transaction;
 
 import java.util.List;
-import java.util.Properties;
 
 import model.Book;
 import model.BookCollection;
@@ -26,7 +25,7 @@ public class ListRentalsTransaction extends Transaction {
 	private List<Book> books;
 
 	/** type of operation, can be Delete or Modify */
-	private String operationType;
+	private final String operationType;
 
 	/**
 	 * Constructs List Books Transaction t
@@ -35,7 +34,7 @@ public class ListRentalsTransaction extends Transaction {
 	public ListRentalsTransaction(Controller parentController) {
 		super(parentController);
 		operationType = "Back";
-        }
+	}
 
 	@Override
 	public void execute() {
@@ -47,8 +46,8 @@ public class ListRentalsTransaction extends Transaction {
 	 * @param searchCriteria
 	 */
 	private void getBooks(){
-	String RentedQuery = "where (Status = 'Active') and Barcode IN (Select BookId from rental where CheckinDate IS NULL);";
-            BookCollection bookCollection = new BookCollection();
+		String RentedQuery = "where (Status = 'Active') and Barcode IN (Select BookId from rental where CheckinDate IS NULL);";
+		BookCollection bookCollection = new BookCollection();
 		bookCollection.find(RentedQuery);
 		books = bookCollection.getEntities();
 	}
