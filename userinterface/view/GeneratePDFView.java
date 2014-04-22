@@ -1,6 +1,11 @@
 package userinterface.view;
 
+import common.PDFGenerator;
+import common.PropertyFile;
 import controller.Controller;
+import model.Book;
+import model.Borrower;
+import model.Worker;
 import org.icepdf.ri.common.PrintHelper;
 import org.icepdf.ri.common.SwingController;
 import org.icepdf.ri.common.views.DocumentViewController;
@@ -13,6 +18,7 @@ import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.PrintQuality;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Properties;
 
 /**
  * Created by chaber_e on 14/04/2014.
@@ -42,7 +48,7 @@ public class GeneratePDFView extends View {
 		else if (source == buttons.get("Save"))
 			saveAction();
 		else if (source == buttons.get("Back"))
-			controller.stateChangeRequest(Key.DISPLAY_MAIN_MENU,null);
+			controller.stateChangeRequest(Key.BACK,null);
 	}
 
 	protected void   initPrintService()
@@ -84,7 +90,7 @@ public class GeneratePDFView extends View {
 	protected void build() {
 		swingController = new SwingController();
 		swingController.setIsEmbeddedComponent(true);
-		swingController.openDocument("c:/assign3.pdf");
+		swingController.openDocument("C:\\Users\\chaber_e\\tmp_pdf.pdf");
 
 		DocumentViewController viewController = swingController.getDocumentViewController();
 
