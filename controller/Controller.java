@@ -22,7 +22,7 @@ import userinterface.view.View;
 import userinterface.view.ViewFactory;
 import utilities.Key;
 
-public abstract class Controller implements IView, IModel {
+public abstract class Controller implements IModel, IView {
 
 	/** Registry of views that observe this controller */
 	protected ModelRegistry registry;

@@ -45,7 +45,7 @@ public class HeaderPanel extends JPanel {
 	private static final String TITLE = "EOP Library System";
 	
 	/** Icon Path */
-	private static final String ICON_LOCATION = "EOP.png";
+	private static final String ICON_LOCATION = "assets/EOP.png";
 	
 	private static final int ICON_WIDTH_PADDING = 40;
 	private static final int ICON_HEIGHT_PADDING = 9;
