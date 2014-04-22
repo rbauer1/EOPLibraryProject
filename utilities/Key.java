@@ -22,6 +22,8 @@ public class Key {
 
 	/* Book Transactions */
 	public static final String EXECUTE_ADD_BOOK 	= "AddBookTransaction";
+	public static final String EXECUTE_LIST_RENTED_BOOKS 	= "ListRentalsTransaction";
+	public static final String EXECUTE_LIST_AVAILABLE_BOOKS	= "ListAvailableTransaction";
 	/* Borrower Transactions */
 	public static final String EXECUTE_ADD_BORROWER 	= "AddBorrowerTransaction";
 	/* Worker Transactions */
