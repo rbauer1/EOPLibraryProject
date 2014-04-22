@@ -13,6 +13,7 @@ package controller.transaction;
 import java.util.List;
 import java.util.Properties;
 
+import common.PDFGenerator;
 import model.Book;
 import model.Borrower;
 import model.Rental;
@@ -95,6 +96,7 @@ public class ProcessLostBookTransaction extends Transaction {
 			selectedRental.checkIn((Worker)parentController.getState(Key.WORKER));
 			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The book was marked as lost successfully, and this student's monetary penalty has been updated appropriately"));
 			stateChangeRequest(Key.RENTAL_COLLECTION, null);
+			PDFGenerator.generate(PDFGenerator.LOST_BOOK_ACTION,book, borrower, (Worker)parentController.getState(Key.WORKER));
 		}else{
 			List<String> inputErrors = book.getErrors();
 			if(inputErrors.size() > 0){
@@ -128,6 +130,8 @@ public class ProcessLostBookTransaction extends Transaction {
 			rentals = borrower.getOutstandingRentals().getEntities();
 		} else if(key.equals(Key.DISPLAY_BORROWER_MENU)){
 			key = Key.DISPLAY_BOOK_MENU;
+		} else if(key.equals(Key.DISPLAY_PDF_EXEMPLE)){
+			showView("GeneratePDFView");
 		}
 		super.stateChangeRequest(key, value);
 	}
