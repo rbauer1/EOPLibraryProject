@@ -18,7 +18,7 @@ import controller.Controller;
 import database.JDBCBroker;
 import exception.InvalidPrimaryKeyException;
 
-public class CheckoutBookTransaction extends Transaction {
+public class RentBooksTransaction extends Transaction {
 
 	private Set<Book> books;
 
@@ -32,7 +32,7 @@ public class CheckoutBookTransaction extends Transaction {
 
 	private BookDueDate dueDate;
 
-	public CheckoutBookTransaction(Controller parentController) {
+	public RentBooksTransaction(Controller parentController) {
 		super(parentController);
 	}
 
@@ -44,17 +44,17 @@ public class CheckoutBookTransaction extends Transaction {
 					books.add(book);
 					stateChangeRequest(Key.REFRESH_LIST, null);
 				}else{
-					stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Heads up! The book was not added since it is already in the list to be checked out."));
+					stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Heads up! The book was not added since it is already in the list to be rented."));
 				}
 			} else {
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The barcode you provided refers to a book that is already checked out."));
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The barcode you provided refers to a book that is already rented."));
 			}
 		} catch (InvalidPrimaryKeyException e) {
 			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The barcode you provided is invalid. Please try again."));
 		}
 	}
 
-	private void checkoutBooks() {
+	private void rentBooks() {
 		JDBCBroker.getInstance().startTransaction();
 		List<Rental> rentals = new ArrayList<Rental>(books.size());
 		boolean saveSuccess = true;
@@ -105,7 +105,7 @@ public class CheckoutBookTransaction extends Transaction {
 	private void selectBorrower(Borrower borrower) {
 		if(!borrower.isDelinquent()){
 			this.borrower = borrower;
-			showView("CheckoutBookView");
+			showView("RentBooksView");
 		}else{
 			listBorrowersTransaction.execute();
 			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Error! The selected borrower is marked as deliquent and is not allowed to rent books at this time."));
@@ -119,8 +119,8 @@ public class CheckoutBookTransaction extends Transaction {
 			selectBorrower((Borrower)value);
 		}else if(key.equals(Key.ADD_BOOK_TO_LIST)){
 			addBook((Properties)value);
-		}else if(key.equals(Key.CHECKOUT_BOOKS)){
-			checkoutBooks();
+		}else if(key.equals(Key.RENT_BOOKS)){
+			rentBooks();
 		}else if(key.equals(Key.BACK)){
 			String view = (String)value;
 			if(view.equals("ListBorrowersView")){

@@ -159,7 +159,8 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		newSize.setSize(width, height);
 		setSize(newSize);
 		
-		revalidate();
+		invalidate();
+		validate();
 
 		WindowPosition.placeCenter(this);
 	}

@@ -17,7 +17,7 @@ import controller.Controller;
 /**
  * View that provides interface to search and list books
  */
-public class CheckoutBookView extends ListView {
+public class RentBooksView extends ListView {
 
 	/** Names of buttons on bottom, Must be in order which you want them to appear */
 	private static final String[] BUTTON_NAMES = {"Done", "Back"};
@@ -37,7 +37,7 @@ public class CheckoutBookView extends ListView {
 	 * Constructs list of rentals
 	 * @param controller
 	 */
-	public CheckoutBookView(Controller controller) {
+	public RentBooksView(Controller controller) {
 		super(controller, "Rent Books", BUTTON_NAMES);
 		subscribeToController(Key.BOOK_COLLECTION, Key.MESSAGE);
 	}
@@ -70,7 +70,7 @@ public class CheckoutBookView extends ListView {
 		} else if (source == buttons.get("Back")) {
 			controller.stateChangeRequest(Key.BACK, "ListBorrowersView");
 		} else if (source == buttons.get("Done")) {
-			controller.stateChangeRequest(Key.CHECKOUT_BOOKS, null);
+			controller.stateChangeRequest(Key.RENT_BOOKS, null);
 		}
 	}
 

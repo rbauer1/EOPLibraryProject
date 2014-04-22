@@ -8,7 +8,7 @@ public class Key {
 
 	public static final String BORROWER = "Borrower";
 	public static final String BORROWER_COLLECTION = "BorrowerCollection";
-	public static final String CHECKOUT_BOOKS = "CheckoutBooks";
+	public static final String RENT_BOOKS = "RentBooks";
 
 	public static final String DISPLAY_BOOK_MENU = "DisplayBookMenu";
 
@@ -25,7 +25,7 @@ public class Key {
 	public static final String EXECUTE_ADD_BORROWER 	= "AddBorrowerTransaction";
 	/* Worker Transactions */
 	public static final String EXECUTE_ADD_WORKER 		= "AddWorkerTransaction";
-	public static final String EXECUTE_RENT_BOOK = "CheckoutBookTransaction";
+	public static final String EXECUTE_RENT_BOOK = "RentBooksTransaction";
 	public static final String EXECUTE_RETURN_BOOK = "ReturnBooksTransaction";
 	public static final String EXECUTE_DELETE_BOOK 	= "DeleteBooksTransaction";
 
