@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.Properties;
 
 import model.Book;
+import model.Borrower;
 import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
 import controller.Controller;
+import database.JDBCBroker;
 
 /**
  * Transaction that handles modifying a new book.
@@ -59,11 +61,25 @@ public class ModifyBooksTransaction extends Transaction {
 		return super.getState(key);
 	}
 
+	/**
+	 * Sets the book to be modified. Displays message if lost or inactive.
+	 * @param book
+	 */
+	private void selectBook(Book book){
+		this.book = book;
+		showView("ModifyBookView");
+		if(book.isInactive()){
+			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Heads Up! This book is archived. It must be recovered before it can be modified."));
+		}else if(book.isLost()){
+			//TODO message
+			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Heads Up! This book is lost. It must be recovered before it can be modified."));
+		}
+	}
+
 	@Override
 	public void stateChangeRequest(String key, Object value) {
 		if(key.equals(Key.SELECT_BOOK)){
-			book = (Book)value;
-			showView("ModifyBookView");
+			selectBook((Book)value);
 		}else if(key.equals(Key.SAVE_BOOK)){
 			updateBook((Properties)value);
 		}else if(key.equals(Key.RELOAD_ENTITY)){
@@ -79,12 +95,23 @@ public class ModifyBooksTransaction extends Transaction {
 	 * @param bookData
 	 */
 	private void updateBook(Properties bookData){
+		JDBCBroker.getInstance().startTransaction();
+		if(book.isLost()){
+			Borrower borrower = book.getBorrowerThatLost();
+			if(borrower == null || !borrower.subtractMonetaryPenaltyForLostBook(book)){
+				JDBCBroker.getInstance().rollbackTransaction();
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving."));
+				return;
+			}
+		}
 		bookData.setProperty("Status", "Active");
 		book.stateChangeRequest(bookData);
 		if(book.save()){
+			JDBCBroker.getInstance().commitTransaction();
 			stateChangeRequest(Key.BACK, "ListBooksView");
-			listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Well done! The book was sucessfully added."));
+			listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Well done! The book was sucessfully saved."));
 		}else{
+			JDBCBroker.getInstance().rollbackTransaction();
 			List<String> inputErrors = book.getErrors();
 			if(inputErrors.size() > 0){
 				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));

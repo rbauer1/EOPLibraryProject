@@ -28,7 +28,7 @@ public class NumberUtil {
 	 * @param number
 	 * @return
 	 */
-	public static String getAsCurrencyString(Object number){
+	public static String formatCurrencyString(Object number){
 		DecimalFormat formatter = new DecimalFormat("#.00");
 		return formatter.format(number);
 	}

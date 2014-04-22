@@ -65,7 +65,7 @@ public class Borrower extends Model {
 	public boolean addMonetaryPenaltyForLostBook(Book book){
 		double monetaryPenalty = Double.parseDouble((String)persistentState.get("MonetaryPenalty"));
 		monetaryPenalty += Double.parseDouble((String)book.getState("SuggestedPrice"));
-		persistentState.setProperty("MonetaryPenalty", NumberUtil.getAsCurrencyString(monetaryPenalty));
+		persistentState.setProperty("MonetaryPenalty", NumberUtil.formatCurrencyString(monetaryPenalty));
 		return save();
 	}
 
@@ -162,5 +162,12 @@ public class Borrower extends Model {
 
 		validator.addValidation(new PresenceValidation("DateOfLastUpdate", "Date Updated"));
 		validator.addValidation(new DateValidation("DateOfLastUpdate", "Date Updated"));
+	}
+
+	public boolean subtractMonetaryPenaltyForLostBook(Book book){
+		double monetaryPenalty = Double.parseDouble((String)persistentState.get("MonetaryPenalty"));
+		monetaryPenalty -= Double.parseDouble((String)book.getState("SuggestedPrice"));
+		persistentState.setProperty("MonetaryPenalty", NumberUtil.formatCurrencyString(monetaryPenalty));
+		return save();
 	}
 }

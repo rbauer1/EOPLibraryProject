@@ -15,6 +15,10 @@ public class RentalCollection extends ModelCollection<Rental> {
 		return new Rental(persistentState, true);
 	}
 
+	public void findByBook(Book book) {
+		findByKey("BookID",	book.getPrimaryKeyValue());
+	}
+
 	public void findByBorrower(Borrower borrower) {
 		findByKey("BorrowerID",	(String) borrower.getState(borrower.getPrimaryKey()));
 	}

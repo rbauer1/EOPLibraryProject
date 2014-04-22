@@ -9,6 +9,7 @@
  */
 package model;
 
+import java.util.List;
 import java.util.Properties;
 
 import model.validation.DateValidation;
@@ -84,6 +85,37 @@ public class Book extends Model {
 		return true;
 	}
 
+	/**
+	 * Get the borrower that lost this book.
+	 * Returns null if book is not lost or if book has never been rented.
+	 * @return borrower
+	 */
+	public Borrower getBorrowerThatLost() {
+		if(!isLost()){
+			return null;
+		}
+		Rental rental = getLastRental();
+		if(rental == null){
+			return null;
+		}
+		return rental.getBorrower();
+	}
+
+	/**
+	 * Returns the last rental that occurred on this book.
+	 * Value returned is null if this book has never been rented.
+	 * @return lastRental
+	 */
+	public Rental getLastRental() {
+		RentalCollection rentalCollection = new RentalCollection();
+		rentalCollection.findByBook(this);
+		List<Rental> rentals = rentalCollection.getEntities();
+		if(rentals.size() == 0){
+			return null;
+		}
+		return rentals.get(rentals.size() - 1);
+	}
+
 	@Override
 	public String getPrimaryKey() {
 		return PRIMARY_KEY;
@@ -113,11 +145,19 @@ public class Book extends Model {
 	public boolean isActive() {
 		return persistentState.getProperty("Status", "").equals("Active");
 	}
-	
+
 	public boolean isAvailable() {
 		RentalCollection rentals = new RentalCollection();
 		rentals.findOutstandingByBook(this);
 		return rentals.getEntities().size() == 0;
+	}
+
+	public boolean isInactive() {
+		return persistentState.getProperty("Status", "").equals("Inactive");
+	}
+
+	public boolean isLost() {
+		return persistentState.getProperty("Status", "").equals("Lost");
 	}
 
 	@Override

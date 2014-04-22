@@ -10,9 +10,7 @@
 package userinterface.view;
 
 import model.Book;
-import model.Model;
 import userinterface.message.MessageEvent;
-import userinterface.message.MessageType;
 import userinterface.view.form.BookForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -69,17 +67,14 @@ public class ModifyBookView extends View {
 		form.setFieldEnabled(Book.PRIMARY_KEY, false);
 		buttons.get("Recover").getParent().setVisible(!active);
 		buttons.get("Save").getParent().setVisible(active);
-		if(!active){
-			messagePanel.displayMessage(MessageType.INFO, "Heads Up! This book is archived. It must be recovered before it can be modified.");
-		}
 	}
 
 	@Override
 	public void updateState(String key, Object value) {
 		if(key.equals(Key.BOOK)){
-			Model book = (Model) value;
+			Book book = (Book) value;
 			form.setValues(book.getPersistentState());
-			setFormActive(!book.getState("Status").equals("Inactive"));
+			setFormActive(book.isActive());
 		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
 		}
