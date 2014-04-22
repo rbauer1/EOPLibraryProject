@@ -80,8 +80,7 @@ public class LibrarianController extends Controller {
 			showView("BookMenuView");
 		} else if (key.equals(Key.DISPLAY_BORROWER_MENU)) {
 			showView("BorrowerMenuView");
-		} else if (key.equals(Key.DISPLAY_WORKER_MENU)) {
-		}	else if (key.equals(Key.DISPLAY_PDF_EXEMPLE)) {
+		} else if (key.equals(Key.DISPLAY_PDF_EXEMPLE)) {
 			showView("GeneratePDFView");
 		} else if (key.equals(Key.DISPLAY_WORKER_MENU)) {		
 			showView("WorkerMenuView");
