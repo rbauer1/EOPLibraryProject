@@ -20,6 +20,9 @@ import model.Worker;
 import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
+
+import common.PDFGenerator;
+
 import controller.Controller;
 
 /**
@@ -45,6 +48,9 @@ public class ProcessLostBookTransaction extends Transaction {
 	/** ListBorrower Transaction */
 	private Transaction listBorrowersTransaction;
 
+	/** The worker that is processing the lost book */
+	private Worker worker;
+
 	/**
 	 * Constructs Process Lost Book Transaction
 	 * @param parentController
@@ -55,6 +61,7 @@ public class ProcessLostBookTransaction extends Transaction {
 
 	@Override
 	public void execute(){
+		worker = (Worker)parentController.getState(Key.WORKER);
 		listBorrowersTransaction = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
 		listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select the borrower who lost a book from the list below."));
 	}
@@ -84,6 +91,9 @@ public class ProcessLostBookTransaction extends Transaction {
 		if(key.equals(Key.INPUT_ERROR)){
 			return inputErrors;
 		}
+		if(key.equals(Key.PRINT_DOCUMENT)){
+			return "test.pdf";
+		}
 		return super.getState(key);
 	}
 
@@ -93,9 +103,11 @@ public class ProcessLostBookTransaction extends Transaction {
 		if(book.setLost(notes)){
 			showView("ListRentalsView");
 			borrower.addMonetaryPenaltyForLostBook(book);
-			selectedRental.checkIn((Worker)parentController.getState(Key.WORKER));
+			selectedRental.checkIn(worker);
 			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The book was marked as lost successfully, and this student's monetary penalty has been updated appropriately"));
 			stateChangeRequest(Key.RENTAL_COLLECTION, null);
+			PDFGenerator.generate(PDFGenerator.LOST_BOOK_ACTION, "test.pdf", book, borrower, worker);
+			TransactionFactory.executeTransaction(this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
 		}else{
 			List<String> inputErrors = book.getErrors();
 			if(inputErrors.size() > 0){

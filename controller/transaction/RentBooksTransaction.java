@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import common.PDFGenerator;
+
 import model.Book;
 import model.BookDueDate;
 import model.Borrower;
@@ -106,6 +108,9 @@ public class RentBooksTransaction extends Transaction {
 		if(key.equals(Key.BOOK_COLLECTION)){
 			return books;
 		}
+		if(key.equals(Key.PRINT_DOCUMENT)){
+			return "test.pdf";
+		}
 		return super.getState(key);
 	}
 
@@ -138,9 +143,11 @@ public class RentBooksTransaction extends Transaction {
 		}
 		if(saveSuccess){
 			JDBCBroker.getInstance().commitTransaction();
-			//TODO print receipt
-			stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);
-			parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were succesfully rented."));
+			PDFGenerator.generateRentBookPDF("test.pdf", books, borrower, worker, dueDate);
+			TransactionFactory.executeTransaction(this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
+
+			//stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);
+			//parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were succesfully rented."));
 		}else{
 			JDBCBroker.getInstance().rollbackTransaction();
 			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving the rentals."));
