@@ -2,12 +2,14 @@ package common;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
-import utilities.DateUtil;
 import model.Book;
+import model.BookDueDate;
 import model.Borrower;
 import model.Worker;
+import utilities.DateUtil;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -257,6 +259,15 @@ public class PDFGenerator {
 		addEmptyLine(title,1);
 		pdf.add(title);
 	}
+	
+	private static void addTitleRentBook(Document pdf) throws DocumentException
+	{
+		Paragraph title = new Paragraph();
+		title.add(new Paragraph("Rent Book(s)", TITLE_FONT));
+		title.setAlignment(Element.ALIGN_CENTER);
+		addEmptyLine(title,1);
+		pdf.add(title);
+	}
 
 	private static Image createBarCode39(String myText, PdfContentByte directContent) {
 		/**
@@ -308,6 +319,65 @@ public class PDFGenerator {
 			return false;
 		}
 		return true;
+	}
+	
+	public static boolean generateRentBookPDF(String location, List<Book> books, Borrower borrower, Worker worker, BookDueDate dueDate)
+	{
+		Document    pdf = new Document();
+
+		try {
+			PdfWriter writer = PdfWriter.getInstance(pdf, new FileOutputStream(location));
+			pdf.open();
+			generateRentPDFContent(writer, pdf, books, borrower, worker, dueDate);
+			pdf.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	public static void generateRentPDFContent(PdfWriter writer, Document pdf, List<Book> books, Borrower borrower, Worker worker, BookDueDate dueDate)
+	{
+		try {
+			addMetaData("Rent Book(s)", "Receipt for transaction",worker,pdf);
+			addTitleRentBook(pdf);
+			addContentActors(pdf, borrower, worker);
+			addContentRent(writer, pdf, books, dueDate );
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void addContentRent(PdfWriter writer, Document pdf, List<Book> books, BookDueDate dueDate) throws DocumentException
+	{
+		Paragraph   subTitle = new Paragraph();
+		
+
+		subTitle.add(new Paragraph("Rented Book Details", SUB_TITLE_FONT));
+		subTitle.setAlignment(Element.ALIGN_LEFT);
+		addEmptyLine(subTitle,1);
+		pdf.add(subTitle);
+
+		
+		for(Book book : books){
+			Paragraph bookParagraph = makeBookTable(writer, book);
+			addEmptyLine(bookParagraph,1);
+			pdf.add(bookParagraph);
+		}
+		
+		Paragraph terms = new Paragraph();
+		terms.add("By signing below, I acknowledge that I have recieved these items and I agree to return the books by " + 
+					dueDate.getState("DueDate") + ". I acknowledge that I am responsible for the replacement of those " + 
+					"books that are not returned by this date.");
+		addEmptyLine(terms,1);
+		pdf.add(terms);
+		
+		Paragraph signature = new Paragraph();
+		signature.add("Signature: ___________________________________________");
+		pdf.add(signature);
 	}
 
 	public static void generateLostBookPDFContent(PdfWriter writer, Document pdf, Book book, Borrower borrower, Worker worker)
