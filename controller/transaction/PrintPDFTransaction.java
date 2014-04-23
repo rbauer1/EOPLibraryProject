@@ -16,10 +16,14 @@ import javax.print.DocFlavor;
 import javax.print.PrintException;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
+import javax.swing.JOptionPane;
 
 import org.icepdf.ri.common.PrintHelper;
 import org.icepdf.ri.common.SwingController;
 
+import userinterface.MainFrame;
+import userinterface.message.MessageEvent;
+import userinterface.message.MessageType;
 import utilities.Key;
 import controller.Controller;
 
@@ -44,7 +48,7 @@ public class PrintPDFTransaction extends Transaction {
 	public void execute() {
 		printerController = new SwingController();
 		printerController.setIsEmbeddedComponent(true);
-		printerController.openDocument("test.pdf");
+		printerController.openDocument((String)parentController.getState(Key.PRINT_DOCUMENT));
 
 		printServices = PrintServiceLookup.lookupPrintServices(DocFlavor.SERVICE_FORMATTED.PAGEABLE, null);
 		printers = new String[printServices.length];
@@ -59,7 +63,6 @@ public class PrintPDFTransaction extends Transaction {
 	@Override
 	public Object getState(String key) {
 		if(key.equals(Key.PRINTERS)) {
-			System.out.println(printers);
 			return printers;
 		}
 		if(key.equals(Key.PRINT_PREVIEW)) {
@@ -69,17 +72,20 @@ public class PrintPDFTransaction extends Transaction {
 	}
 
 	private void print(Properties printSettings) {
-
 		PrintHelper printer = new PrintHelper(printerController);
 
 		PrintService service = printServices[Arrays.asList(printers).indexOf(printSettings.getProperty("Printer"))];
+		int numCopies = Integer.parseInt(printSettings.getProperty("Copies", "0"));
 
-		printer.setupPrintService(service, 0, 0, 1, true);
+		printer.setupPrintService(service, 0, printer.getNumberOfPages(), numCopies, true);
 		try {
 			printer.print();
+			JOptionPane.showMessageDialog(MainFrame.getInstance(), "Good Job! Document successfully sent to the printer.");
+			stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);
 		} catch (PrintException e) {
-			e.printStackTrace();
+			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while printing. Please try again."));
 		}
+
 	}
 
 	@Override

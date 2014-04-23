@@ -13,7 +13,6 @@ package controller.transaction;
 import java.util.List;
 import java.util.Properties;
 
-import common.PDFGenerator;
 import model.Book;
 import model.Borrower;
 import model.Rental;
@@ -21,6 +20,9 @@ import model.Worker;
 import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
+
+import common.PDFGenerator;
+
 import controller.Controller;
 
 /**
@@ -46,6 +48,9 @@ public class ProcessLostBookTransaction extends Transaction {
 	/** ListBorrower Transaction */
 	private Transaction listBorrowers;
 
+	/** The worker that is processing the lost book */
+	private Worker worker;
+
 	/**
 	 * Constructs Process Lost Book Transaction
 	 * @param parentController
@@ -56,6 +61,7 @@ public class ProcessLostBookTransaction extends Transaction {
 
 	@Override
 	public void execute(){
+		worker = (Worker)parentController.getState(Key.WORKER);
 		listBorrowers = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
 	}
 
@@ -84,6 +90,9 @@ public class ProcessLostBookTransaction extends Transaction {
 		if(key.equals(Key.INPUT_ERROR)){
 			return inputErrors;
 		}
+		if(key.equals(Key.PRINT_DOCUMENT)){
+			return "test.pdf";
+		}
 		return super.getState(key);
 	}
 
@@ -93,10 +102,11 @@ public class ProcessLostBookTransaction extends Transaction {
 		if(book.setLost(notes)){
 			showView("ListRentalsView");
 			borrower.addMonetaryPenaltyForLostBook(book);
-			selectedRental.checkIn((Worker)parentController.getState(Key.WORKER));
+			selectedRental.checkIn(worker);
 			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The book was marked as lost successfully, and this student's monetary penalty has been updated appropriately"));
 			stateChangeRequest(Key.RENTAL_COLLECTION, null);
-			PDFGenerator.generate(PDFGenerator.LOST_BOOK_ACTION,book, borrower, (Worker)parentController.getState(Key.WORKER));
+			PDFGenerator.generate(PDFGenerator.LOST_BOOK_ACTION, "test.pdf", book, borrower, worker);
+			TransactionFactory.executeTransaction(this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
 		}else{
 			List<String> inputErrors = book.getErrors();
 			if(inputErrors.size() > 0){
@@ -130,8 +140,6 @@ public class ProcessLostBookTransaction extends Transaction {
 			rentals = borrower.getOutstandingRentals().getEntities();
 		} else if(key.equals(Key.DISPLAY_BORROWER_MENU)){
 			key = Key.DISPLAY_BOOK_MENU;
-		} else if(key.equals(Key.EXECUTE_PRINT_PDF)){
-			showView("PrintPDFView");
 		}
 		super.stateChangeRequest(key, value);
 	}

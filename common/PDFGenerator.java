@@ -1,20 +1,24 @@
 package common;
 
-import com.itextpdf.text.*;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.*;
-import com.sun.org.apache.xalan.internal.utils.XMLSecurityPropertyManager;
+import java.io.FileOutputStream;
+import java.util.Properties;
+
 import model.Book;
 import model.Borrower;
 import model.Worker;
 
-import java.awt.*;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Properties;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.Barcode39;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 /**
  * Created by chaber_e on 21/04/2014.
@@ -22,58 +26,9 @@ import java.util.Properties;
  */
 public class PDFGenerator {
 	public final static String LOST_BOOK_ACTION = "generateLostBookPDFContent";
-	private final static String TMP_FILE_PATH = "C:\\Users\\chaber_e\\tmp_pdf.pdf";
 	private final static Font TITLE_FONT = new Font(Font.FontFamily.TIMES_ROMAN,18,Font.BOLD);
 	private final static Font SUB_TITLE_FONT = new Font(Font.FontFamily.TIMES_ROMAN,14,Font.BOLD);
 
-
-	public static void generate(String action, Book book, Borrower borrower, Worker worker)
-	{
-		Document    pdf = new Document();
-
-		try {
-			PdfWriter writer = PdfWriter.getInstance(pdf, new FileOutputStream(TMP_FILE_PATH));
-			pdf.open();
-			PDFGenerator.class.getMethod(action, writer.getClass(), pdf.getClass(), book.getClass(), borrower.getClass(), worker.getClass())
-					.invoke(null, writer, pdf, book, borrower, worker);
-			pdf.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public static void generateLostBookPDFContent(PdfWriter writer, Document pdf, Book book, Borrower borrower, Worker worker)
-	{
-		try {
-			addMetaData("Lost Book", "Receipe for transaction",worker,pdf);
-			addTitleLostBook(pdf);
-			addContentActors(pdf, borrower,worker);
-			addContentLostBook(writer, pdf, book, borrower, worker);
-		} catch (DocumentException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static void addMetaData(String title, String subtitle, Worker worker, Document document)
-	{
-		Properties  workerDatas = worker.getPersistentState();
-
-		document.addTitle(title);
-		document.addSubject(subtitle);
-		document.addAuthor(workerDatas.getProperty("FirstName") + " " + workerDatas.getProperty("LastName"));
-		document.addCreator("Librerian");
-	}
-
-	private static void addTitleLostBook(Document pdf) throws DocumentException
-	{
-		Paragraph title = new Paragraph();
-		title.add(new Paragraph("Lost Book", TITLE_FONT));
-		title.setAlignment(Element.ALIGN_CENTER);
-		addEmptyLine(title,1);
-		pdf.add(title);
-	}
 
 	private static void addContentActors(Document pdf, Borrower borrower, Worker worker) throws DocumentException
 	{
@@ -174,6 +129,31 @@ public class PDFGenerator {
 		pdf.add(lostBookDiv);
 	}
 
+	private static void addEmptyLine(Paragraph paragraph, int number) {
+		for (int i = 0; i < number; i++) {
+			paragraph.add(new Paragraph(" "));
+		}
+	}
+
+	private static void addMetaData(String title, String subtitle, Worker worker, Document document)
+	{
+		Properties  workerDatas = worker.getPersistentState();
+
+		document.addTitle(title);
+		document.addSubject(subtitle);
+		document.addAuthor(workerDatas.getProperty("FirstName") + " " + workerDatas.getProperty("LastName"));
+		document.addCreator("Librerian");
+	}
+
+	private static void addTitleLostBook(Document pdf) throws DocumentException
+	{
+		Paragraph title = new Paragraph();
+		title.add(new Paragraph("Lost Book", TITLE_FONT));
+		title.setAlignment(Element.ALIGN_CENTER);
+		addEmptyLine(title,1);
+		pdf.add(title);
+	}
+
 	private static Image createBarCode39(String myText, PdfContentByte directContent) {
 		/**
 		 * Code 39 character set consists of barcode symbols representing
@@ -188,9 +168,34 @@ public class PDFGenerator {
 		return myBarCodeImage39;
 	}
 
-	private static void addEmptyLine(Paragraph paragraph, int number) {
-		for (int i = 0; i < number; i++) {
-			paragraph.add(new Paragraph(" "));
+	public static boolean generate(String action, String location, Book book, Borrower borrower, Worker worker)
+	{
+		Document    pdf = new Document();
+
+		try {
+			PdfWriter writer = PdfWriter.getInstance(pdf, new FileOutputStream(location));
+			pdf.open();
+			PDFGenerator.class.getMethod(action, writer.getClass(), pdf.getClass(), book.getClass(), borrower.getClass(), worker.getClass())
+			.invoke(null, writer, pdf, book, borrower, worker);
+			pdf.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	public static void generateLostBookPDFContent(PdfWriter writer, Document pdf, Book book, Borrower borrower, Worker worker)
+	{
+		try {
+			addMetaData("Lost Book", "Receipe for transaction",worker,pdf);
+			addTitleLostBook(pdf);
+			addContentActors(pdf, borrower,worker);
+			addContentLostBook(writer, pdf, book, borrower, worker);
+		} catch (DocumentException e) {
+			e.printStackTrace();
 		}
 	}
 }

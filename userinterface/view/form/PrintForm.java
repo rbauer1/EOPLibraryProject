@@ -1,8 +1,10 @@
 package userinterface.view.form;
 
+import java.awt.Dimension;
+
 import javax.swing.BoxLayout;
 
-import userinterface.ViewHelper;
+import userinterface.component.Label;
 import userinterface.component.NumericTextField;
 import userinterface.component.SelectField;
 import userinterface.view.PrintPDFView;
@@ -27,14 +29,21 @@ public class PrintForm extends Form {
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
 		SelectField printerField = new SelectField(((PrintPDFView)view).getPrinters());
+		printerField.setPreferredSize(new Dimension(200, 25));
 		printerField.addActionListener(this);
 		addField("Printer", printerField);
-		add(ViewHelper.formatFieldLeft("Printer", printerField));
+		Label label = new Label("Printer");
+		label.setPreferredSize(new Dimension(80, 25));
+		add(label);
+		add(printerField);
 
-		NumericTextField copiesField = new NumericTextField(16, 4);
+		NumericTextField copiesField = new NumericTextField(4, 4);
+		copiesField.setMaximumSize(new Dimension(50, 25));
 		copiesField.addActionListener(this);
-		copiesField.setValue("1");
 		addField("Copies", copiesField);
-		add(ViewHelper.formatFieldLeft("Copies", copiesField));
+		label = new Label("   Copies");
+		label.setPreferredSize(new Dimension(80, 25));
+		add(label);
+		add(copiesField);
 	}
 }

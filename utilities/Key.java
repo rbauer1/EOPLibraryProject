@@ -92,6 +92,7 @@ public class Key {
 	public static final String EXECUTE_PRINT_PDF = "PrintPDFTransaction";
 	public static final String PRINTERS = "Printers";
 	public static final String PRINT_PREVIEW = "PrintPreview";
+	public static final String PRINT_DOCUMENT = "PrintDocument";
 	public static final String PRINT = "Print";
 
 

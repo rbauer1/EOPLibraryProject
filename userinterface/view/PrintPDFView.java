@@ -10,7 +10,14 @@
 package userinterface.view;
 
 import java.awt.Container;
+import java.awt.Dimension;
+import java.util.Properties;
 
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+
+import userinterface.ViewHelper;
+import userinterface.message.MessageEvent;
 import userinterface.view.form.Form;
 import userinterface.view.form.PrintForm;
 import utilities.Key;
@@ -32,8 +39,17 @@ public class PrintPDFView extends View {
 	@Override
 	protected void build() {
 		form = new PrintForm(this);
-		add(form);
-		add((Container)controller.getState(Key.PRINT_PREVIEW));
+		Properties formDefaults = new Properties();
+		formDefaults.setProperty("Copies", "1");
+		PrintService defaultPrinterService = PrintServiceLookup.lookupDefaultPrintService();
+		if(defaultPrinterService != null) {
+			formDefaults.setProperty("Printer", defaultPrinterService.getName());
+		}
+		form.setValues(formDefaults);
+		add(ViewHelper.formatCenter(form, 5));
+		Container previewContainer = (Container)controller.getState(Key.PRINT_PREVIEW);
+		previewContainer.setMaximumSize(new Dimension(600, 400));
+		add(previewContainer);
 	}
 
 	public String[] getPrinters() {
@@ -45,12 +61,14 @@ public class PrintPDFView extends View {
 		if (source == buttons.get("Print")) {
 			controller.stateChangeRequest(Key.PRINT, form.getValues());
 		} else if (source == buttons.get("Done")) {
-			controller.stateChangeRequest(Key.BACK, null);
+			controller.stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);
 		}
 	}
 
 	@Override
 	public void updateState(String key, Object value) {
-
+		if (key.equals(Key.MESSAGE)) {
+			messagePanel.displayMessage((MessageEvent)value);
+		}
 	}
 }
