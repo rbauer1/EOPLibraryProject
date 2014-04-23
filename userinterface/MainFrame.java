@@ -199,7 +199,7 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		setSize(newSize);
 
 		revalidate();
-
+		repaint();
 		WindowPosition.placeCenter(this);
 	}
 
