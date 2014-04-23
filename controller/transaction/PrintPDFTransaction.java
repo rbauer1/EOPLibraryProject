@@ -49,7 +49,6 @@ public class PrintPDFTransaction extends Transaction {
 		printerController = new SwingController();
 		printerController.setIsEmbeddedComponent(true);
 		printerController.openDocument((String)parentController.getState(Key.PRINT_DOCUMENT));
-
 		printServices = PrintServiceLookup.lookupPrintServices(DocFlavor.SERVICE_FORMATTED.PAGEABLE, null);
 		printers = new String[printServices.length];
 
@@ -76,8 +75,7 @@ public class PrintPDFTransaction extends Transaction {
 
 		PrintService service = printServices[Arrays.asList(printers).indexOf(printSettings.getProperty("Printer"))];
 		int numCopies = Integer.parseInt(printSettings.getProperty("Copies", "0"));
-
-		printer.setupPrintService(service, 0, printer.getNumberOfPages(), numCopies, true);
+		printer.setupPrintService(service, 0, printerController.getDocument().getNumberOfPages(), numCopies, true);
 		try {
 			printer.print();
 			JOptionPane.showMessageDialog(MainFrame.getInstance(), "Good Job! Document successfully sent to the printer.");

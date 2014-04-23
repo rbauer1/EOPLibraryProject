@@ -72,9 +72,9 @@ public class MainMenuView extends View {
 		returnBookButton.addActionListener(this);
 		add(ViewHelper.formatCenter(returnBookButton));
 
-		exemplePdfButton = new Button("Generate a fucking PDF");
-		exemplePdfButton.addActionListener(this);
-		add(ViewHelper.formatCenter(exemplePdfButton));
+//		exemplePdfButton = new Button("Create Receipt");
+//		exemplePdfButton.addActionListener(this);
+//		add(ViewHelper.formatCenter(exemplePdfButton));
 
 		logoutButton = new Button("Logout");
 		logoutButton.addActionListener(this);
@@ -95,9 +95,10 @@ public class MainMenuView extends View {
 			controller.stateChangeRequest(Key.EXECUTE_RENT_BOOK, null);
 		} else if (source == returnBookButton) {
 			controller.stateChangeRequest(Key.EXECUTE_RETURN_BOOK, null);
-		} else if (source == exemplePdfButton){
-			controller.stateChangeRequest(Key.EXECUTE_PRINT_PDF, null);
-		}
+		} 
+//		else if (source == exemplePdfButton){
+//			controller.stateChangeRequest(Key.EXECUTE_PRINT_PDF, null);
+//		}
 	}
 
 	@Override

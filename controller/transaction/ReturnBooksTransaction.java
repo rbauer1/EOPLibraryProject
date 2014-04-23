@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import common.PDFGenerator;
+
 import model.Book;
 import model.Borrower;
 import model.Rental;
@@ -115,6 +117,9 @@ public class ReturnBooksTransaction extends Transaction {
 		if(key.equals(Key.RETURN_RENTALS)){
 			return returnRentals;
 		}
+		if(key.equals(Key.PRINT_DOCUMENT)){
+			return "test.pdf";
+		}
 		return super.getState(key);
 	}
 
@@ -131,13 +136,19 @@ public class ReturnBooksTransaction extends Transaction {
 	private void returnBooks() {
 		JDBCBroker.getInstance().startTransaction();
 		boolean saveSuccess = true;
+		ArrayList<Book> returnedBooks = new ArrayList<Book>(), outstandingBooks = new ArrayList<Book>();
 		for(Rental rental : returnRentals){
 			saveSuccess &= rental.checkIn(worker);
+			returnedBooks.add(rental.getBook());
+		}
+		for(Rental rental : outstandingRentals){
+			outstandingBooks.add(rental.getBook());
 		}
 		if(saveSuccess){
 			JDBCBroker.getInstance().commitTransaction();
-			//TODO print receipt
-			stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);
+			PDFGenerator.generate(PDFGenerator.RETURN_BOOK_ACTION, "test.pdf", returnedBooks, outstandingBooks, borrower, worker);
+			TransactionFactory.executeTransaction(this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
+//			stateChangeRequest(Key.DISPLAY_MAIN_MENU, null); //TODO necessary?
 			parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were succesfully returned."));
 		}else{
 			JDBCBroker.getInstance().rollbackTransaction();

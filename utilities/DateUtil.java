@@ -23,7 +23,10 @@ import java.util.GregorianCalendar;
 public class DateUtil {
 	
 	/** Standard format for which dates are stored */
-	private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	private static final DateFormat DATE = new SimpleDateFormat("yyyy-MM-dd");
+	
+	/** Standard format for which dates and times are stored */
+	private static final DateFormat DATE_TIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	/**
 	 * Private constructor to prevent instantiation
@@ -39,12 +42,20 @@ public class DateUtil {
 	}
 	
 	/**
+	 * Returns current date and time as a string
+	 * @return current date and time string
+	 */
+	public static String getDateTime(){
+		return getDateTime(new Date());
+	}
+	
+	/**
 	 * Returns provided date as default format
 	 * @param date
 	 * @return date string
 	 */
 	public static String getDate(Date date){
-		return FORMAT.format(date);
+		return DATE.format(date);
 	}
 	
 	/**
@@ -54,11 +65,21 @@ public class DateUtil {
 	 */
 	public static Date getDate(String dateStr){
 		try {
-			return FORMAT.parse(dateStr);
+			return DATE.parse(dateStr);
 		} catch (ParseException e) {
 			throw new IllegalArgumentException("Invalid date string provided");
 		}
 	}
+	
+	/**
+	 * Returns provided date as default format
+	 * @param date
+	 * @return date string
+	 */
+	public static String getDateTime(Date date){
+		return DATE_TIME.format(date);
+	}
+	
 	
 	/**
 	 * Returns all months in a string array.
