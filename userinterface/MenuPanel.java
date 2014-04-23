@@ -20,6 +20,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.AbstractButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -56,7 +57,12 @@ public class MenuPanel extends JPanel {
 
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		add(accordion, BorderLayout.PAGE_START);
-		
+	}
+	
+	public void clear() {
+		removeAll();
+		accordion = new Accordion();
+		add(accordion, BorderLayout.PAGE_START);
 	}
 	
 	public void add(JComponent comp) {
@@ -75,6 +81,10 @@ public class MenuPanel extends JPanel {
 	
 	public void add(String but, JComponent container) {
 		accordion.add(new Button(but), container);
+	}
+	
+	public void add(AbstractButton but, JComponent container) {
+		accordion.add(but, container);
 	}
 	
 	public void fit() {

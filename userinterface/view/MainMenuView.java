@@ -14,6 +14,8 @@ import userinterface.MainFrame;
 import model.Worker;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
+import userinterface.menu.Menu;
+import userinterface.menu.MenuFactory;
 import userinterface.message.MessageEvent;
 import utilities.Key;
 import controller.Controller;
@@ -40,15 +42,6 @@ public class MainMenuView extends View {
 	public MainMenuView(Controller controller) {
 		super(controller, "Main Menu");
 		subscribeToController(Key.MESSAGE);
-
-		MenuPanel menu = MainFrame.getInstance().getMenu();
-
-		menu.add("Book Action",
-				ViewFactory.createView("BookMenuView", controller).toMenu());
-		menu.add("Borrower Actions",
-				ViewFactory.createView("BorrowerMenuView", controller).toMenu());
-		menu.add("Workers Actions",
-				ViewFactory.createView("WorkerMenuView", controller).toMenu());
 
 		// menu.add("Check in a book", /* TODO */ );
 		// menu.add("Check out a book", /* TODO */ );
@@ -82,12 +75,28 @@ public class MainMenuView extends View {
 
 		logoutButton = new Button("Logout", this);
 		add(ViewHelper.formatCenter(logoutButton));
+
+		MenuPanel menu = MainFrame.getInstance().getMenu();
+		
+		Menu bookMenu = MenuFactory.createMenu("BookMenu", controller);
+		Menu borrowerMenu = MenuFactory.createMenu("BorrowerMenu", controller);
+		Menu workerMenu = MenuFactory.createMenu("WorkerMenu", controller);
+
+		menu.add(bookMenu.getParent(), bookMenu.getContent());
+		menu.add(borrowerMenu.getParent(), borrowerMenu.getContent());
+		menu.add(workerMenu.getParent(), workerMenu.getContent());
+		menu.add(checkinBookButton);
+		menu.add(checkoutBookButton);
+		menu.add(logoutButton);
 	}
 
 	@Override
 	public void processAction(Object source) {
 		if (source == logoutButton) {
 			controller.stateChangeRequest(Key.LOGOUT, null);
+
+			// Clear the current content the side menu
+			MainFrame.getInstance().getMenu().clear();
 		} else if (source == bookActionsButton) {
 			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
 		} else if (source == borrowerActionsButton) {
