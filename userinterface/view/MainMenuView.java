@@ -80,7 +80,7 @@ public class MainMenuView extends View {
 		checkinBookButton = new Button("Return a Book", this);
 		add(ViewHelper.formatCenter(checkinBookButton));
 
-		logoutButton = new Button("Logout");
+		logoutButton = new Button("Logout", this);
 		add(ViewHelper.formatCenter(logoutButton));
 	}
 
