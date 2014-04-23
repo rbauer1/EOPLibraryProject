@@ -186,6 +186,7 @@ public class ReturnBooksView extends View {
 			returnRentals = (List<Rental>) value;
 			returnRentalsTable.setModel(new RentalTableModel(returnRentals));
 			returnRentalsTable.repaint();
+			buttons.get("Done").setEnabled(returnRentals.size() > 0);
 		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
 		}

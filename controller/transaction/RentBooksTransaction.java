@@ -155,8 +155,8 @@ public class RentBooksTransaction extends Transaction {
 		if(!borrower.isDelinquent()){
 			this.borrower = borrower;
 			books = new ArrayList<Book>();
-			stateChangeRequest(Key.REFRESH_LIST, null);
 			showView("RentBooksView");
+			stateChangeRequest(Key.REFRESH_LIST, null);
 		}else{
 			listBorrowersTransaction.execute();
 			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Error! The selected borrower is marked as deliquent and is not allowed to rent books at this time."));

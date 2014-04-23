@@ -102,6 +102,7 @@ public class RentBooksView extends ListView {
 			books = (List<Book>) value;
 			table.setModel(new BookTableModel(books));
 			table.repaint();
+			buttons.get("Done").setEnabled(books.size() > 0);
 			barcodeForm.reset();
 		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
