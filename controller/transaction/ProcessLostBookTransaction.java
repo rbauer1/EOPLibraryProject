@@ -130,8 +130,8 @@ public class ProcessLostBookTransaction extends Transaction {
 			rentals = borrower.getOutstandingRentals().getEntities();
 		} else if(key.equals(Key.DISPLAY_BORROWER_MENU)){
 			key = Key.DISPLAY_BOOK_MENU;
-		} else if(key.equals(Key.DISPLAY_PDF_EXEMPLE)){
-			showView("GeneratePDFView");
+		} else if(key.equals(Key.EXECUTE_PRINT_PDF)){
+			showView("PrintPDFView");
 		}
 		super.stateChangeRequest(key, value);
 	}

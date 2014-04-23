@@ -96,7 +96,7 @@ public class MainMenuView extends View {
 		} else if (source == returnBookButton) {
 			controller.stateChangeRequest(Key.EXECUTE_RETURN_BOOK, null);
 		} else if (source == exemplePdfButton){
-			controller.stateChangeRequest(Key.DISPLAY_PDF_EXEMPLE, null);
+			controller.stateChangeRequest(Key.EXECUTE_PRINT_PDF, null);
 		}
 	}
 
