@@ -72,8 +72,9 @@ public class TransactionFactory {
 				transaction.execute();
 				return transaction;
 			} catch (Exception e) {
+				e.printStackTrace();
 				new Event("TransactionFactory", "executeTransaction",
-						"Failure executing tranasction: " + e.toString(), Event.ERROR);
+						"Failure executing transaction: " + e.toString(), Event.ERROR);
 			}
 			return null;
 		}

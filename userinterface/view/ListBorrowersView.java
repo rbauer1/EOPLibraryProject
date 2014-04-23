@@ -2,8 +2,11 @@ package userinterface.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
 
 import model.Borrower;
 import userinterface.message.MessageEvent;
@@ -29,6 +32,14 @@ public class ListBorrowersView extends ListView {
 	/** Form to provide search criteria*/
 	private Form form;
 
+	private SwingWorker<Void, Void> swingWorker = new SwingWorker<Void, Void>() {
+		@Override
+		public Void doInBackground() {
+			filter();
+			return null;
+		}
+	};
+	
 	/**
 	 * Constructs list borrowers view
 	 * @param controller
@@ -49,7 +60,7 @@ public class ListBorrowersView extends ListView {
 	public void afterShown() {
 		super.afterShown();
 		// Get Borrowers for initial filter settings
-		filter();
+		swingWorker.execute();
 	}
 
 
@@ -73,6 +84,16 @@ public class ListBorrowersView extends ListView {
 
 	@Override
 	public void processAction(Object source) {
+		/*
+		 * This if-statement will prevent the user from interacting with the
+		 * buttons until the SwingWorker has completed its action, which in this
+		 * case is performing the query to populate the table. Whether or not we
+		 * need it is up for debate
+		 */
+		if (!swingWorker.isDone()) {
+            return;
+        }
+		
 		messagePanel.clear();
 		if (source == form) {
 			filter();
