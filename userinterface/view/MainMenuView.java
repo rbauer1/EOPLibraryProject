@@ -55,38 +55,30 @@ public class MainMenuView extends View {
 
 	@Override
 	protected void build() {
-		bookActionsButton = new Button("Book Menu", this);
-		add(ViewHelper.formatCenter(bookActionsButton));
-
-		if(((Worker)controller.getState(Key.WORKER)).isAdmin()){
-			borrowerActionsButton = new Button("Borrower Menu", this);
-			add(ViewHelper.formatCenter(borrowerActionsButton));
-
-			workerActionsButton = new Button("Workers Menu", this);
-			add(ViewHelper.formatCenter(workerActionsButton));
-		}
-
-
-		checkoutBookButton = new Button("Rent a Book", this);
-		add(ViewHelper.formatCenter(checkoutBookButton));
-
-		checkinBookButton = new Button("Return a Book", this);
-		add(ViewHelper.formatCenter(checkinBookButton));
-
-		logoutButton = new Button("Logout", this);
-		add(ViewHelper.formatCenter(logoutButton));
-
 		MenuPanel menu = MainFrame.getInstance().getMenu();
-		
+
 		Menu bookMenu = MenuFactory.createMenu("BookMenu", controller);
 		Menu borrowerMenu = MenuFactory.createMenu("BorrowerMenu", controller);
 		Menu workerMenu = MenuFactory.createMenu("WorkerMenu", controller);
-
+		
+		bookActionsButton = new Button("Book Menu", this);
 		menu.add(bookMenu.getParent(), bookMenu.getContent());
-		menu.add(borrowerMenu.getParent(), borrowerMenu.getContent());
-		menu.add(workerMenu.getParent(), workerMenu.getContent());
-		menu.add(checkinBookButton);
+
+		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
+			borrowerActionsButton = new Button("Borrower Menu", this);
+			menu.add(borrowerMenu.getParent(), borrowerMenu.getContent());
+
+			workerActionsButton = new Button("Workers Menu", this);
+			menu.add(workerMenu.getParent(), workerMenu.getContent());
+		}
+
+		checkoutBookButton = new Button("Rent a Book", this);
 		menu.add(checkoutBookButton);
+
+		checkinBookButton = new Button("Return a Book", this);
+		menu.add(checkinBookButton);
+
+		logoutButton = new Button("Logout", this);
 		menu.add(logoutButton);
 	}
 
