@@ -43,7 +43,7 @@ public class ProcessLostBookTransaction extends Transaction {
 	private List<String> inputErrors;
 
 	/** ListBorrower Transaction */
-	private Transaction listBorrowers;
+	private Transaction listBorrowersTransaction;
 
 	/**
 	 * Constructs Process Lost Book Transaction
@@ -55,7 +55,8 @@ public class ProcessLostBookTransaction extends Transaction {
 
 	@Override
 	public void execute(){
-		listBorrowers = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
+		listBorrowersTransaction = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
+		listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select the borrower who lost a book from the list below."));
 	}
 
 	@Override
@@ -120,7 +121,8 @@ public class ProcessLostBookTransaction extends Transaction {
 		} else if(key.equals(Key.BACK)){
 			String view = (String)value;
 			if(view.equals("ListBorrowersView")){
-				listBorrowers.execute();
+				listBorrowersTransaction.execute();
+				listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select the borrower who lost a book from the list below."));
 			}else{
 				showView(view);
 			}

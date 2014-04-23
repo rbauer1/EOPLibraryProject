@@ -61,6 +61,7 @@ public class DeleteBooksTransaction extends Transaction {
 	@Override
 	public void execute(){
 		listBooksTransaction = TransactionFactory.executeTransaction(this, "ListBooksTransaction", Key.DISPLAY_BOOK_MENU, Key.SELECT_BOOK);
+		listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a book from the list below to delete."));
 	}
 
 	@Override
@@ -87,6 +88,7 @@ public class DeleteBooksTransaction extends Transaction {
 			deleteBook((Properties)value);
 		}else if(key.equals(Key.BACK)){
 			listBooksTransaction.execute();
+			listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a book from the list below to delete."));
 		}
 		super.stateChangeRequest(key, value);
 	}

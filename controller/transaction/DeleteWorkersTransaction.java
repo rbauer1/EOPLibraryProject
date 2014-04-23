@@ -61,6 +61,7 @@ public class DeleteWorkersTransaction extends Transaction {
 	@Override
 	public void execute(){
 		listWorkersTransaction = TransactionFactory.executeTransaction(this, "ListWorkersTransaction", Key.DISPLAY_WORKER_MENU, Key.SELECT_WORKER);
+		listWorkersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a worker from the list below to delete."));
 	}
 
 	@Override
@@ -87,6 +88,7 @@ public class DeleteWorkersTransaction extends Transaction {
 			deleteWorker((Properties)value);
 		}else if(key.equals(Key.BACK)){
 			listWorkersTransaction.execute();
+			listWorkersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a worker from the list below to delete."));
 		}
 		super.stateChangeRequest(key, value);
 	}

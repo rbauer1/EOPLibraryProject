@@ -43,6 +43,8 @@ public class ModifyBooksTransaction extends Transaction {
 	@Override
 	public void execute(){
 		listBooksTransaction = TransactionFactory.executeTransaction(this, "ListBooksTransaction", Key.DISPLAY_BOOK_MENU, Key.SELECT_BOOK);
+		listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a book from the list below to modify."));
+
 	}
 
 	@Override
@@ -71,7 +73,6 @@ public class ModifyBooksTransaction extends Transaction {
 		if(book.isInactive()){
 			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Heads Up! This book is archived. It must be recovered before it can be modified."));
 		}else if(book.isLost()){
-			//TODO message
 			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Heads Up! This book is lost. It must be recovered before it can be modified."));
 		}
 	}
@@ -86,6 +87,7 @@ public class ModifyBooksTransaction extends Transaction {
 			book.reload();
 		}else if(key.equals(Key.BACK)){
 			listBooksTransaction.execute();
+			listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a book from the list below to modify."));
 		}
 		super.stateChangeRequest(key, value);
 	}
