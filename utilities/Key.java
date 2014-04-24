@@ -87,6 +87,8 @@ public class Key {
 	public static final String ADD_RENTAL_TO_LIST = "AddRental";
 	public static final String REMOVE_RENTAL_FROM_LIST = "RemoveRental";
 
+	public static final String FILTER = "Filter";
+
 
 	private Key(){};
 }

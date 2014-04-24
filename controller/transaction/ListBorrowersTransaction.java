@@ -12,6 +12,8 @@ package controller.transaction;
 import java.util.List;
 import java.util.Properties;
 
+import javax.swing.SwingWorker;
+
 import model.Borrower;
 import model.BorrowerCollection;
 import utilities.Key;
@@ -76,10 +78,20 @@ public class ListBorrowersTransaction extends Transaction {
 	}
 
 	@Override
-	public void stateChangeRequest(String key, Object value) {
-		System.out.println(key);
-		if(key.equals(Key.BORROWER_COLLECTION)){
-			getBorrowers((Properties)value);
+	public void stateChangeRequest(String key, final Object value) {
+		if(key.equals(Key.FILTER)){
+			new SwingWorker<Void, Void>() {
+				@Override
+				protected Void doInBackground() {
+					getBorrowers((Properties)value);
+					return null;
+				}
+
+				@Override
+				public void done() {
+					stateChangeRequest(Key.BORROWER_COLLECTION, value);
+				}
+			}.execute();
 		}else if(key.equals(Key.SELECT_BORROWER)){
 			selectedBorrower = (Borrower)value;
 		}
