@@ -30,6 +30,9 @@ public class WorkerSearchForm extends Form {
 
 	private static final long serialVersionUID = -6075045845780411636L;
 
+	/** button that submits this form */
+	private Button searchButton;
+
 	/**
 	 * Constructs new Worker Search Form
 	 * @param view
@@ -91,7 +94,7 @@ public class WorkerSearchForm extends Form {
 
 		rightColumn.add(ViewHelper.createPlaceHolder());
 
-		Button searchButton = new Button("Search");
+		searchButton = new Button("Search");
 		searchButton.addActionListener(this);
 		add(ViewHelper.formatCenter(searchButton));
 	}
@@ -107,5 +110,9 @@ public class WorkerSearchForm extends Form {
 		return values;
 	}
 
-
+	@Override
+	public void setAllFieldsEnabled(boolean enabled){
+		super.setAllFieldsEnabled(enabled);
+		searchButton.setEnabled(enabled);
+	}
 }

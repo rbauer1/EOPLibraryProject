@@ -15,15 +15,15 @@ import controller.Controller;
  * View that provides interface to search and list books
  */
 public class ListRentalsView extends ListView {
-	
+
 	private static final long serialVersionUID = -7452072411398228893L;
 
 	/** Names of buttons on bottom, Must be in order which you want them to appear */
 	private static final String[] BUTTON_NAMES = {"Submit", "Back"};
-	
+
 	/** Entities in the table */
 	private List<Rental> rentals;
-	
+
 	/**
 	 * Constructs list rentals view
 	 * @param controller
@@ -36,17 +36,25 @@ public class ListRentalsView extends ListView {
 		if(operationType != null){
 			buttons.get("Submit").setText(operationType);
 		}
-		
+
 		subscribeToController(Key.RENTAL_COLLECTION, Key.REFRESH_LIST, Key.MESSAGE);
-		
+
 	}
-	
+
 	@Override
 	public void afterShown() {
 		super.afterShown();
 		controller.stateChangeRequest(Key.RENTAL_COLLECTION, null);
 	}
-	
+
+	@Override
+	protected void buildForm() {}
+
+	@Override
+	protected JTable createTable() {
+		return new JTable(new RentalTableModel(new ArrayList<Rental>()));
+	}
+
 	@Override
 	public void processAction(Object source) {
 		messagePanel.clear();
@@ -56,29 +64,12 @@ public class ListRentalsView extends ListView {
 			select();
 		}
 	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public void updateState(String key, Object value) {
-		if (key.equals(Key.RENTAL_COLLECTION)) {
-			rentals = (List<Rental>) value;
-			table.setModel(new RentalTableModel(rentals));
-			table.repaint();			
-		}else if (key.equals(Key.MESSAGE)) {
-			messagePanel.displayMessage((MessageEvent)value);
-		}
-	}
-	
-	@Override
-	protected JTable createTable() {
-		return new JTable(new RentalTableModel(new ArrayList<Rental>()));
-	}
 
 	@Override
 	protected void processListSelection() {
 		buttons.get("Submit").setEnabled(table.getSelectedRow() >= 0);
 	}
-	
+
 	@Override
 	protected void select() {
 		int rowIndex = table.getSelectedRow();
@@ -88,7 +79,16 @@ public class ListRentalsView extends ListView {
 			messagePanel.displayMessage(MessageType.WARNING, "Warning! Must select a rental from the list!");
 		}
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	@Override
-	protected void buildForm() {} 
+	public void updateState(String key, Object value) {
+		if (key.equals(Key.RENTAL_COLLECTION)) {
+			rentals = (List<Rental>) value;
+			table.setModel(new RentalTableModel(rentals));
+			table.repaint();
+		}else if (key.equals(Key.MESSAGE)) {
+			messagePanel.displayMessage((MessageEvent)value);
+		}
+	}
 }
