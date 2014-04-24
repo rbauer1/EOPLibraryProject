@@ -68,6 +68,7 @@ public class ListBorrowersView extends ListView {
 	 * Filters the table by the criteria specified in the form
 	 */
 	private void filter() {
+		form.setAllFieldsEnabled(false);
 		controller.stateChangeRequest(Key.FILTER, form.getNonEmptyValues());
 	}
 
@@ -105,6 +106,7 @@ public class ListBorrowersView extends ListView {
 			borrowers = (List<Borrower>) value;
 			table.setModel(new BorrowerTableModel(borrowers));
 			table.repaint();
+			form.setAllFieldsEnabled(true);
 		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
 		}
