@@ -30,7 +30,6 @@ public class MainMenuView extends View {
 	private Button rentBookButton;
 	private Button logoutButton;
 	private Button workerActionsButton;
-	private Button exemplePdfButton;
 
 	/**
 	 * Constructs main menu view
@@ -72,10 +71,6 @@ public class MainMenuView extends View {
 		returnBookButton.addActionListener(this);
 		add(ViewHelper.formatCenter(returnBookButton));
 
-//		exemplePdfButton = new Button("Create Receipt");
-//		exemplePdfButton.addActionListener(this);
-//		add(ViewHelper.formatCenter(exemplePdfButton));
-
 		logoutButton = new Button("Logout");
 		logoutButton.addActionListener(this);
 		add(ViewHelper.formatCenter(logoutButton));
@@ -95,10 +90,7 @@ public class MainMenuView extends View {
 			controller.stateChangeRequest(Key.EXECUTE_RENT_BOOK, null);
 		} else if (source == returnBookButton) {
 			controller.stateChangeRequest(Key.EXECUTE_RETURN_BOOK, null);
-		} 
-//		else if (source == exemplePdfButton){
-//			controller.stateChangeRequest(Key.EXECUTE_PRINT_PDF, null);
-//		}
+		}
 	}
 
 	@Override
