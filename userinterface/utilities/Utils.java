@@ -20,6 +20,15 @@ import javax.swing.plaf.ColorUIResource;
 
 public class Utils {
 	
+	public static void setAllSize(JComponent comp, int w, int h) {
+		Dimension d = new Dimension(w, h);
+
+		comp.setSize(d);
+		comp.setMaximumSize(d);
+		comp.setMinimumSize(d);
+		comp.setPreferredSize(d);
+	}
+	
 	public static void addPadding(JComponent comp, int top, int left, int bottom, int right) {
 		comp.setBorder(new EmptyBorder(top, left, bottom, right) );
 	}
