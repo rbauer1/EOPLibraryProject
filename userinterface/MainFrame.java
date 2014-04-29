@@ -43,8 +43,8 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	private static MainFrame instance = null;
 
 	/** The dimension of the frame */
-	public static final int WIDTH = 1024;
-	public static final int HEIGHT = 600;
+	public static final int WIDTH = 1100;
+	public static final int HEIGHT = 800;
 
 	/**
 	 * Returns the instance of the main frame. Creates one with blank title if none exists.
