@@ -240,9 +240,13 @@ public abstract class Model extends EntityBase {
 		persistentState.setProperty(getPrimaryKey(), id + "");
 	}
 
-	private boolean isCreateOperation(){
+	/**
+	 * Determines if a update or insert is needed to save.
+	 * @return true if calling saving will do insert
+	 */
+	public boolean isCreateOperation(){
 		String keyValue = (String) getState(getPrimaryKey());
-		return !persisted || keyValue == null || keyValue.length() == 0;
+		return !isPersisted() || keyValue == null || keyValue.length() == 0;
 	}
 
 	/**

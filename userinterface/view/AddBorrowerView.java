@@ -10,6 +10,7 @@
 package userinterface.view;
 
 import userinterface.message.MessageEvent;
+import userinterface.message.MessageType;
 import userinterface.view.form.AddBorrowerForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -55,7 +56,11 @@ public class AddBorrowerView extends View {
 			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
 		}else if (source == buttons.get("Reset")){
 			form.reset();
+			form.setAllFieldsEnabled(true);
+			buttons.get("Add").setEnabled(true);
 		}else if (source == buttons.get("Add") || source == form) {
+			form.setAllFieldsEnabled(false);
+			buttons.get("Add").setEnabled(false);
 			controller.stateChangeRequest(Key.SAVE_BORROWER, form.getValues());
 		}
 	}
@@ -63,7 +68,12 @@ public class AddBorrowerView extends View {
 	@Override
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.MESSAGE)) {
-			messagePanel.displayMessage((MessageEvent)value);
+			MessageEvent event = (MessageEvent)value;
+			if(event.getType() == MessageType.ERROR){
+				form.setAllFieldsEnabled(true);
+				buttons.get("Add").setEnabled(true);
+			}
+			messagePanel.displayMessage(event);
 		}
 	}
 }
