@@ -170,6 +170,7 @@ public class FButton extends JButton {
 		Utils.addPadding(this, 10, 10, 10, 10);
 		Utils.removeFocusBorder(this);
 		Utils.addIcon(this, iconfile, 40, 40);
+		Utils.enableEnterKey(this);
 		
 		setHorizontalAlignment(SwingConstants.LEFT);
 		setRolloverEnabled(true);
