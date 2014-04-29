@@ -47,7 +47,7 @@ public class PrimaryKeyValidation extends Validation {
 			value = "NULL";
 		}
 		Model model = validator.getModel();
-		if((model.isCreateOperation() ? 0 : 1) != getNumberOfMatches(model.getSchema(), getFieldName(), (String)value)){
+		if((model.isCreateOperation() ? 0 : 1) != getNumberOfMatches(model.getSchema(), getFieldKey(), (String)value)){
 			validator.addError(getFieldKey(), getFieldName() + " " + message);
 			return false;
 		}
