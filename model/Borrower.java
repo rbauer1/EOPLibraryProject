@@ -20,6 +20,7 @@ import model.validation.LengthValidation;
 import model.validation.NumericValidation;
 import model.validation.PhoneValidation;
 import model.validation.PresenceValidation;
+import model.validation.UniqueValidation;
 import utilities.DateUtil;
 import utilities.NumberUtil;
 import exception.InvalidPrimaryKeyException;
@@ -130,6 +131,7 @@ public class Borrower extends Model {
 	protected void setupValidations(){
 		validator.addValidation(new PresenceValidation("BannerID", "Banner Id"));
 		validator.addValidation(new BannerIdValidation("BannerID", "Banner Id"));
+		validator.addValidation(new UniqueValidation("BannerID", "Banner Id"));
 
 		validator.addValidation(new PresenceValidation("FirstName", "First Name"));
 		validator.addValidation(new AlphaNumericValidation("FirstName", "First Name"));

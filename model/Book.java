@@ -17,6 +17,7 @@ import model.validation.InclusionValidation;
 import model.validation.LengthValidation;
 import model.validation.NumericValidation;
 import model.validation.PresenceValidation;
+import model.validation.UniqueValidation;
 import utilities.DateUtil;
 import utilities.Key;
 import exception.InvalidPrimaryKeyException;
@@ -181,6 +182,7 @@ public class Book extends Model {
 	protected void setupValidations(){
 		validator.addValidation(new PresenceValidation("Barcode", "Barcode"));
 		validator.addValidation(new LengthValidation("Barcode", "Barcode", 4, 10));
+		validator.addValidation(new UniqueValidation("Barcode", "Barcode"));
 
 		validator.addValidation(new PresenceValidation("Title", "Title"));
 		validator.addValidation(new LengthValidation("Title", "Title", 1, 50));

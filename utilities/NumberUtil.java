@@ -33,7 +33,10 @@ public class NumberUtil {
 	 * @return currencyString
 	 */
 	public static String formatCurrency(String numberStr){
-		return formatCurrency(Double.parseDouble(numberStr));
+		if(numberStr.matches("\\d+(.\\d+)?")) {
+			return formatCurrency(Double.parseDouble(numberStr));
+		}
+		return "";
 	}
 
 	/**

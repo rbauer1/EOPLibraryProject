@@ -7,18 +7,29 @@ import java.util.regex.Pattern;
  * Model Validation that ensures field follows the provided validation.
  */
 public class FormatValidation extends Validation {
-	
+
 	/** Error message */
 	private String message;
-	
+
 	/** Regular Expression */
-	private Pattern format;
-	
+	private final Pattern format;
+
 	/** Regular Expression matcher */
 	private  Matcher matcher;
-	
+
 	/** Allow field to be empty */
 	private  boolean allowEmpty;
+
+	/**
+	 * Constructs a validation that ensures the field is of the provided format.
+	 * Default message is "fieldName is invalid".
+	 * @param fieldKey
+	 * @param fieldName
+	 * @param format
+	 */
+	public FormatValidation(String entityStateKey, String fieldName, String format) {
+		this(entityStateKey, fieldName, format, "is invalid");
+	}
 
 	/**
 	 * Constructs a validation that ensures the field is of the provided format.
@@ -32,47 +43,33 @@ public class FormatValidation extends Validation {
 		this.format = Pattern.compile(format);
 		this.message = message;
 	}
-	
+
 	/**
-	 * Constructs a validation that ensures the field is of the provided format.
-	 * Default message is "fieldName is invalid".
-	 * @param fieldKey
-	 * @param fieldName
-	 * @param format
+	 * Allow field to be empty
 	 */
-	public FormatValidation(String entityStateKey, String fieldName, String format) {
-		this(entityStateKey, fieldName, format, "is invalid");
+	public void allowEmpty() {
+		allowEmpty = true;
 	}
-	
+
+	@Override
+	public boolean execute(Object value, ModelValidator validator) {
+		if (value == null || value.toString().length() == 0) {
+			return allowEmpty;
+		}
+		matcher = format.matcher((String)value);
+		if(!matcher.matches()){
+			validator.addError(getFieldKey(), getFieldName() + " " + message);
+			return false;
+		}
+		return true;
+	}
+
 	/**
 	 * Set Error message
 	 * @param message
 	 */
 	public void setMessage(String message) {
 		this.message = message;
-	}
-	
-	/**
-	 * Allow field to be empty
-	 */
-	public void allowEmpty() {
-		this.allowEmpty = true;
-	}
-
-	@Override
-	public boolean execute(Object value, ModelValidator validator) {
-		if(value == null){
-			value = "";
-		}
-		if(allowEmpty && value.toString().length() == 0){
-			return true;
-		}
-		this.matcher = this.format.matcher((String)value);
-		if(!this.matcher.matches()){
-			validator.addError(getFieldKey(), getFieldName() + " " + this.message);
-			return false;
-		}
-		return true;
 	}
 
 }
