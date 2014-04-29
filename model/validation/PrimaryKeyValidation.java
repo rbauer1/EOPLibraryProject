@@ -14,7 +14,7 @@ import event.Event;
 /**
  * Model Validation that ensures field is unique within table
  */
-public class UniqueValidation extends Validation {
+public class PrimaryKeyValidation extends Validation {
 
 	/** Error message */
 	private String message;
@@ -25,7 +25,7 @@ public class UniqueValidation extends Validation {
 	 * @param fieldKey
 	 * @param fieldName
 	 */
-	public UniqueValidation(String fieldKey, String fieldName) {
+	public PrimaryKeyValidation(String fieldKey, String fieldName) {
 		this(fieldKey, fieldName, "is already used");
 	}
 
@@ -35,7 +35,7 @@ public class UniqueValidation extends Validation {
 	 * @param fieldName
 	 * @param message
 	 */
-	public UniqueValidation(String fieldKey, String fieldName, String message) {
+	public PrimaryKeyValidation(String fieldKey, String fieldName, String message) {
 		super(fieldKey, fieldName);
 		this.message = message;
 	}
@@ -47,29 +47,32 @@ public class UniqueValidation extends Validation {
 			value = "NULL";
 		}
 		Model model = validator.getModel();
-		if(hasResults(model.getSchema(), getFieldName(), (String)value)){
+		if((model.isCreateOperation() ? 0 : 1) != getNumberOfMatches(model.getSchema(), getFieldName(), (String)value)){
 			validator.addError(getFieldKey(), getFieldName() + " " + message);
 			return false;
 		}
 		return true;
 	}
 
-	protected boolean hasResults(Properties schema, String field, String fieldValue) {
+	protected int getNumberOfMatches(Properties schema, String field, String fieldValue) {
 		try {
 			Properties whereClause = new Properties();
 			whereClause.setProperty(field, fieldValue);
 			SQLStatement sqlStatement = new SQLSelectStatement(schema, whereClause);
 			Statement statement = JDBCBroker.getInstance().getConnection().createStatement();
-			statement.setMaxRows(1);
+			statement.setMaxRows(2);
 			ResultSet queryResults = statement.executeQuery(sqlStatement.toString());
-			boolean hasResults = queryResults.isBeforeFirst();
+			int numResults = 0;
+			while (queryResults.next() && numResults <= 2) {
+				numResults++;
+			}
 			queryResults.close();
 			statement.close();
-			return hasResults;
+			return numResults;
 		} catch (SQLException sqle) {
 			new Event(Event.getLeafLevelClassName(this), "getSelectQueryResult",
 					"SQL Exception: " + sqle.getErrorCode() + ": " + sqle.getMessage(), Event.ERROR);
-			return false;
+			return 0;
 		}
 	}
 
