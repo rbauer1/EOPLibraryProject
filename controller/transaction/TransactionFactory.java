@@ -51,19 +51,10 @@ public class TransactionFactory {
 		}
 		throw new IllegalArgumentException("Invalid transaction name provided");
 	}
-
+	
+	
 	/**
-	 * Begins execution on the transaction with the provided name.
-	 * Listens to "TranscationCompleted" for completion of transaction.
-	 * @param subscriber
-	 * @param name
-	 */
-	public static Transaction executeTransaction(Controller controller, String name) {
-		return executeTransaction(controller, name, Key.TRANSACTION_COMPLETED);
-	}
-
-	/**
-	 * Begins execution on the transaction with the provided name.
+	 * Begins execution on the transaction with the provided name. 
 	 * Listens to the provided returnEvent for completion of transaction.
 	 * @param subscriber
 	 * @param name
@@ -72,16 +63,25 @@ public class TransactionFactory {
 	public static Transaction executeTransaction(Controller controller, String name, String... returnEvent) {
 		try {
 			Transaction transaction = TransactionFactory.createTransaction(name, controller);
-			for(String event : returnEvent) {
-				transaction.subscribe(event, controller);
-			}
+			for(String event : returnEvent) transaction.subscribe(event, controller);
 			transaction.execute();
 			return transaction;
 		} catch (Exception e) {
+			e.printStackTrace();
 			new Event("TransactionFactory", "executeTransaction",
 					"Failure executing transaction: " + e.toString(), Event.ERROR);
 		}
 		return null;
+	}
+
+	/**
+	 * Begins execution on the transaction with the provided name. 
+	 * Listens to "TranscationCompleted" for completion of transaction.
+	 * @param subscriber
+	 * @param name
+	 */
+	public static Transaction executeTransaction(Controller controller, String name) {
+		return executeTransaction(controller, name, Key.TRANSACTION_COMPLETED);
 	}
 
 	/**

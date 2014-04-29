@@ -11,65 +11,60 @@ import utilities.Key;
 import controller.Controller;
 
 /**
- * View that provides interface to search and list books
+ * View that provides interface to list all available books.
  */
 public class ListAvailableBooksView extends ListView {
-	
+
 	private static final long serialVersionUID = -7452072411398228893L;
 
 	/** Names of buttons on bottom, Must be in order which you want them to appear */
 	private static final String[] BUTTON_NAMES = {"Back"};
-	
+
 	/** Entities in the table */
-	private List<Book> rentals;
-	
+	private List<Book> books;
+
 	/**
-	 * Constructs list rentals view
+	 * Constructs list available books view
 	 * @param controller
 	 */
 	public ListAvailableBooksView(Controller controller) {
-		super(controller, "Available Books List", BUTTON_NAMES);
-
-		// Get the operation type and update button
-		
-		
-		subscribeToController(Key.BOOK_COLLECTION, Key.REFRESH_LIST, Key.MESSAGE);
-		controller.stateChangeRequest(Key.BOOK_COLLECTION, null);
-		
+		super(controller, "Available Books", BUTTON_NAMES);
+		subscribeToController(Key.BOOK_COLLECTION, Key.MESSAGE);
+		controller.stateChangeRequest(Key.REFRESH_LIST, null);
 	}
-	
+
+	@Override
+	protected void buildForm() {}
+
+	@Override
+	protected JTable createTable() {
+		books = new ArrayList<Book>();
+		return new JTable(new BookTableModel(books));
+	}
+
 	@Override
 	public void processAction(Object source) {
 		messagePanel.clear();
 		if (source == buttons.get("Back")) {
 			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
-		} 
+		}
 	}
-	
+
+	@Override
+	protected void processListSelection() {}
+
+	@Override
+	protected void select() {}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.BOOK_COLLECTION)) {
-			rentals = (List<Book>) value;
-			table.setModel(new BookTableModel(rentals));
-			table.repaint();			
+			books = (List<Book>) value;
+			table.setModel(new BookTableModel(books));
+			table.repaint();
 		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
 		}
 	}
-	
-	@Override
-	protected JTable createTable() {
-		return new JTable(new BookTableModel(new ArrayList<Book>()));
-	}
-
-	@Override
-	protected void processListSelection() {
-	}
-	
-	@Override
-	protected void select() {}
-	
-	@Override
-	protected void buildForm() {} 
 }

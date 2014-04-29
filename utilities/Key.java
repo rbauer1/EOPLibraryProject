@@ -22,8 +22,8 @@ public class Key {
 
 	/* Book Transactions */
 	public static final String EXECUTE_ADD_BOOK 	= "AddBookTransaction";
-	public static final String EXECUTE_LIST_RENTED_BOOKS 	= "ListRentalsTransaction";
-	public static final String EXECUTE_LIST_AVAILABLE_BOOKS	= "ListAvailableTransaction";
+	public static final String EXECUTE_LIST_RENTED_BOOKS 	= "ListRentedBooksTransaction";
+	public static final String EXECUTE_LIST_AVAILABLE_BOOKS	= "ListAvailableBooksTransaction";
 	/* Borrower Transactions */
 	public static final String EXECUTE_ADD_BORROWER 	= "AddBorrowerTransaction";
 	/* Worker Transactions */
@@ -87,6 +87,8 @@ public class Key {
 	public static final String RETURN_RENTALS = "ReturnRentals";
 	public static final String ADD_RENTAL_TO_LIST = "AddRental";
 	public static final String REMOVE_RENTAL_FROM_LIST = "RemoveRental";
+
+	public static final String FILTER = "Filter";
 
 
 	public static final String EXECUTE_PRINT_PDF = "PrintPDFTransaction";

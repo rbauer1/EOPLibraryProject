@@ -12,6 +12,8 @@ package controller.transaction;
 import java.util.List;
 import java.util.Properties;
 
+import javax.swing.SwingWorker;
+
 import model.Borrower;
 import model.BorrowerCollection;
 import utilities.Key;
@@ -54,6 +56,25 @@ public class ListBorrowersTransaction extends Transaction {
 	}
 
 	/**
+	 * Filters the borrowers by the provided search criteria
+	 * @param searchCriteria
+	 */
+	private void filter(final Properties searchCriteria) {
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() {
+				getBorrowers(searchCriteria);
+				return null;
+			}
+
+			@Override
+			public void done() {
+				stateChangeRequest(Key.BORROWER_COLLECTION, null);
+			}
+		}.execute();
+	}
+
+	/**
 	 * Fetches borrowers that match searchCriteria
 	 * @param searchCriteria
 	 */
@@ -77,9 +98,8 @@ public class ListBorrowersTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		System.out.println(key);
-		if(key.equals(Key.BORROWER_COLLECTION)){
-			getBorrowers((Properties)value);
+		if(key.equals(Key.FILTER)){
+			filter((Properties)value);
 		}else if(key.equals(Key.SELECT_BORROWER)){
 			selectedBorrower = (Borrower)value;
 		}

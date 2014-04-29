@@ -11,61 +11,65 @@ package controller.transaction;
 
 import java.util.List;
 
+import javax.swing.SwingWorker;
+
 import model.Book;
 import model.BookCollection;
 import utilities.Key;
 import controller.Controller;
 
 /**
- * Transaction that handles listing and selecting a borrower
+ * Transaction that handles listing all rented books
  */
-public class ListRentalsTransaction extends Transaction {
+public class ListRentedBooksTransaction extends Transaction {
 
-	/** list of books returned from search */
+	/** list all rented books */
 	private List<Book> books;
 
-	/** type of operation, can be Delete or Modify */
-	private final String operationType;
-
 	/**
-	 * Constructs List Books Transaction t
+	 * Constructs List Books Transaction
 	 * @param parentController
 	 */
-	public ListRentalsTransaction(Controller parentController) {
+	public ListRentedBooksTransaction(Controller parentController) {
 		super(parentController);
-		operationType = "Back";
 	}
 
 	@Override
 	public void execute() {
-		showView("ListUnavailableBooksView");
+		showView("ListRentedBooksView");
 	}
 
 	/**
-	 * Fetches books that match searchCriteria
-	 * @param searchCriteria
+	 * Retrieves Books and Updates list
 	 */
-	private void getBooks(){
-		String RentedQuery = "where (Status = 'Active') and Barcode IN (Select BookId from rental where CheckinDate IS NULL);";
-		BookCollection bookCollection = new BookCollection();
-		bookCollection.find(RentedQuery);
-		books = bookCollection.getEntities();
+	private void getBooks() {
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() {
+				BookCollection bookCollection = new BookCollection();
+				bookCollection.findRented();
+				books = bookCollection.getEntities();
+				return null;
+			}
+
+			@Override
+			public void done() {
+				stateChangeRequest(Key.BOOK_COLLECTION, null);
+			}
+		}.execute();
 	}
 
 	@Override
 	public Object getState(String key) {
 		if (key.equals(Key.BOOK_COLLECTION)) {
 			return books;
-		}else if(key.equals(Key.OPERATION_TYPE)){
-			return operationType;
 		}
 		return super.getState(key);
 	}
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		System.out.println(key);
-		if(key.equals(Key.BOOK_COLLECTION)){
+		if (key.equals(Key.REFRESH_LIST)) {
 			getBooks();
 		}
 		super.stateChangeRequest(key, value);
