@@ -81,7 +81,7 @@ public class LengthValidation extends Validation {
 	@Override
 	public boolean execute(Object value, ModelValidator validator) {
 		if (value == null || value.toString().length() == 0) {
-			return allowEmpty;
+			return allowEmpty || minSize == 0;
 		}
 		String str = (String)value;
 		if(allowEmpty && str.length() == 0){
