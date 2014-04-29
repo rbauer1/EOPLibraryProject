@@ -108,6 +108,10 @@ public class Borrower extends Model {
 		return TABLE_NAME;
 	}
 
+	public boolean isActive() {
+		return getState("Status").equals("Active");
+	}
+
 	/**
 	 * Determines if this borrower is able to rent books or not
 	 * @return true if blocked from borrowing

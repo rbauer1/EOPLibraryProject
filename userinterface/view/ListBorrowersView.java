@@ -27,7 +27,7 @@ public class ListBorrowersView extends ListView {
 	private List<Borrower> borrowers;
 
 	/** Form to provide search criteria*/
-	private Form form;
+	protected Form form;
 
 	/**
 	 * Constructs list borrowers view

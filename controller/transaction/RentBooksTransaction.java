@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import common.PDFGenerator;
-
 import model.Book;
 import model.BookDueDate;
 import model.Borrower;
@@ -23,6 +21,9 @@ import model.Worker;
 import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
+
+import common.PDFGenerator;
+
 import controller.Controller;
 import database.JDBCBroker;
 import exception.InvalidPrimaryKeyException;
@@ -141,6 +142,13 @@ public class RentBooksTransaction extends Transaction {
 			saveSuccess &= rental.save();
 			rentals.add(rental);
 		}
+		borrower.reload();
+		if(borrower.isDelinquent()|| !borrower.isActive()){
+			listBorrowersTransaction.execute();
+			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The borrower has been altered since selected. Please try again."));
+			JDBCBroker.getInstance().rollbackTransaction();
+			return;
+		}
 		if(saveSuccess){
 			JDBCBroker.getInstance().commitTransaction();
 			PDFGenerator.generateRentBookPDF("test.pdf", books, borrower, worker, dueDate);
@@ -159,16 +167,20 @@ public class RentBooksTransaction extends Transaction {
 	 * @param borrower
 	 */
 	private void selectBorrower(Borrower borrower) {
-		if(!borrower.isDelinquent()){
-			this.borrower = borrower;
-			books = new ArrayList<Book>();
-			showView("RentBooksView");
-			stateChangeRequest(Key.REFRESH_LIST, null);
-		}else{
+		if(borrower.isDelinquent()){
 			listBorrowersTransaction.execute();
 			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Error! The selected borrower is marked as deliquent and is not allowed to rent books at this time."));
+			return;
 		}
-
+		if(!borrower.isActive()){
+			listBorrowersTransaction.execute();
+			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Error! The selected borrower is no longer active and is not allowed to rent books at this time."));
+			return;
+		}
+		this.borrower = borrower;
+		books = new ArrayList<Book>();
+		showView("RentBooksView");
+		stateChangeRequest(Key.REFRESH_LIST, null);
 	}
 
 	@Override

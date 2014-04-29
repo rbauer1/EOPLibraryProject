@@ -43,8 +43,6 @@ public class ListBorrowersTransaction extends Transaction {
 			operationType = "Delete";
 		}else if(parentController instanceof ModifyBorrowersTransaction){
 			operationType = "Modify";
-		}else if(parentController instanceof ProcessLostBookTransaction){
-			operationType = "Select";
 		}else{
 			operationType = "Select";
 		}
@@ -52,7 +50,11 @@ public class ListBorrowersTransaction extends Transaction {
 
 	@Override
 	public void execute() {
-		showView("ListBorrowersView");
+		if(parentController instanceof RentBooksTransaction){
+			showView("ListActiveBorrowersView");
+		}else{
+			showView("ListBorrowersView");
+		}
 	}
 
 	/**
@@ -79,6 +81,10 @@ public class ListBorrowersTransaction extends Transaction {
 	 * @param searchCriteria
 	 */
 	private void getBorrowers(Properties searchCriteria){
+		if(parentController instanceof RentBooksTransaction){
+			searchCriteria.setProperty("BorrowerStatus", "Good Standing");
+			searchCriteria.setProperty("Status", "Active");
+		}
 		BorrowerCollection borrowerCollection = new BorrowerCollection();
 		borrowerCollection.findLike(searchCriteria);
 		borrowers = borrowerCollection.getEntities();
