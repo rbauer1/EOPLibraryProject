@@ -28,6 +28,8 @@ import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 
 import userinterface.component.*;
+import userinterface.component.flat.FButton;
+import userinterface.utilities.ButtonSet;
 
 import java.awt.event.*;
 
@@ -45,7 +47,9 @@ public class MenuPanel extends JPanel {
 	/** Font of the title */
 	private static final Font TITLE_FONT = new Font("Garamond", Font.BOLD, 15);
 	
-	private static final int WIDTH = MainFrame.WIDTH / 5;
+	private static final ButtonSet menuSet = new ButtonSet();
+	
+	private static final int WIDTH = (int)((double)MainFrame.WIDTH / 4.5);
 	private static final int HEIGHT = MainFrame.HEIGHT;
 	
 	private Accordion accordion = new Accordion();
@@ -66,6 +70,10 @@ public class MenuPanel extends JPanel {
 	}
 	
 	public void add(JComponent comp) {
+		if (comp instanceof FButton) {
+			FButton button = (FButton)comp;
+			button.attachSet(menuSet);
+		}
 		accordion.add(comp);
 	}
 	

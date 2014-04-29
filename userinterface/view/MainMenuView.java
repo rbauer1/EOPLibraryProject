@@ -9,13 +9,15 @@
  */
 package userinterface.view;
 
+import javax.swing.JButton;
+
+import userinterface.Config;
 import userinterface.MenuPanel;
 import userinterface.MainFrame;
 import model.Worker;
 import userinterface.ViewHelper;
-import userinterface.component.Button;
-import userinterface.menu.Menu;
-import userinterface.menu.MenuFactory;
+import userinterface.component.flat.FButton;
+import userinterface.menu.MButton;
 import userinterface.message.MessageEvent;
 import utilities.Key;
 import controller.Controller;
@@ -28,12 +30,12 @@ public class MainMenuView extends View {
 	private static final long serialVersionUID = -4462137345508528750L;
 
 	/* Buttons */
-	private Button bookActionsButton;
-	private Button borrowerActionsButton;
-	private Button checkinBookButton;
-	private Button checkoutBookButton;
-	private Button logoutButton;
-	private Button workerActionsButton;
+	private JButton bookActionsButton;
+	private JButton borrowerActionsButton;
+	private JButton checkinBookButton;
+	private JButton checkoutBookButton;
+	private JButton logoutButton;
+	private JButton workerActionsButton;
 
 	/**
 	 * Constructs main menu view
@@ -57,28 +59,28 @@ public class MainMenuView extends View {
 	protected void build() {
 		MenuPanel menu = MainFrame.getInstance().getMenu();
 
-		Menu bookMenu = MenuFactory.createMenu("BookMenu", controller);
-		Menu borrowerMenu = MenuFactory.createMenu("BorrowerMenu", controller);
-		Menu workerMenu = MenuFactory.createMenu("WorkerMenu", controller);
+		//Menu bookMenu = MenuFactory.createMenu("BookMenu", controller);
+		//Menu borrowerMenu = MenuFactory.createMenu("BorrowerMenu", controller);
+		//Menu workerMenu = MenuFactory.createMenu("WorkerMenu", controller);
 		
-		bookActionsButton = new Button("Book Menu", this);
-		menu.add(bookMenu.getParent(), bookMenu.getContent());
+		bookActionsButton = new MButton("Book Menu", Config.BOOK_MENU_ICON, this);
+		menu.add(bookActionsButton);
 
 		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
-			borrowerActionsButton = new Button("Borrower Menu", this);
-			menu.add(borrowerMenu.getParent(), borrowerMenu.getContent());
+			borrowerActionsButton = new MButton("Borrower Menu", Config.BOOK_MENU_ICON, this);
+			menu.add(borrowerActionsButton);
 
-			workerActionsButton = new Button("Workers Menu", this);
-			menu.add(workerMenu.getParent(), workerMenu.getContent());
+			workerActionsButton = new MButton("Workers Menu", Config.BOOK_MENU_ICON, this);
+			menu.add(workerActionsButton);
 		}
 
-		checkoutBookButton = new Button("Rent a Book", this);
+		checkoutBookButton = new MButton("Rent a Book", Config.BOOK_MENU_ICON, this);
 		menu.add(checkoutBookButton);
 
-		checkinBookButton = new Button("Return a Book", this);
+		checkinBookButton = new MButton("Return a Book", Config.BOOK_MENU_ICON, this);
 		menu.add(checkinBookButton);
 
-		logoutButton = new Button("Logout", this);
+		logoutButton = new FButton("Logout", Config.BOOK_MENU_ICON, this);
 		menu.add(logoutButton);
 	}
 
