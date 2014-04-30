@@ -10,8 +10,13 @@
 package controller;
 
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+import javax.swing.SwingWorker;
 
 import model.Worker;
+import userinterface.message.MessageEvent;
+import userinterface.message.MessageType;
 import utilities.Key;
 import controller.transaction.Transaction;
 import controller.transaction.TransactionFactory;
@@ -22,25 +27,19 @@ import exception.InvalidPrimaryKeyException;
  */
 public class LibrarianController extends Controller {
 
-	private String loginErrorMessage = "";
-
+	/** currently signed in worker */
 	private Worker worker;
 
+	/**
+	 * Constructs Main Controller and shows login
+	 */
 	public LibrarianController() {
 		super();
 		showView("LoginView");
 	}
 
-	/**
-	 * Provides the value associated with the provided key.
-	 * @param key that references an attribute
-	 * @return value associated with the key
-	 */
 	@Override
 	public Object getState(String key) {
-		if (key.equals(Key.INPUT_ERROR)) {
-			return loginErrorMessage;
-		}
 		if (key.equals(Key.WORKER)){
 			return worker;
 		}
@@ -51,28 +50,44 @@ public class LibrarianController extends Controller {
 	 * Tries to login a worker with the provided username and password.
 	 * @param workerData
 	 */
-	protected void loginWorker(Properties workerData) {
-		try {
-			worker = new Worker(workerData.getProperty("BannerID",""));
-			System.out.println(worker.getPrimaryKeyValue() + "\t" + worker.isAdmin());
-			if(!worker.validPassword(workerData.getProperty("Password",""))){
-				stateChangeRequest(Key.INPUT_ERROR, "Invalid Banner Id or Password.");
-			}else{
-				showView("MainMenuView");
+	private void loginWorker(final Properties workerData) {
+		new SwingWorker<Boolean, Void>() {
+
+			@Override
+			protected Boolean doInBackground() {
+				try {
+					worker = new Worker(workerData.getProperty("BannerID",""));
+					return worker.validPassword(workerData.getProperty("Password",""));
+				} catch (InvalidPrimaryKeyException e) {
+					return false;
+				}
 			}
-		} catch (InvalidPrimaryKeyException e) {
-			stateChangeRequest(Key.INPUT_ERROR, "Invalid Banner Id or Password.");
-		}
+
+			@Override
+			public void done() {
+				boolean success = false;
+				try {
+					success = get();
+				} catch (InterruptedException e) {
+					success = false;
+				} catch (ExecutionException e) {
+					success = false;
+				}
+				if(success){
+					showView("MainMenuView");
+					stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Well done! You have successfully signed in."));
+				}else{
+					stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Invalid Banner Id or Password."));
+				}
+			}
+		}.execute();
 	}
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
 		Transaction transaction;
 		if (key.equals(Key.LOGIN)) {
-			loginErrorMessage = "";
 			loginWorker((Properties) value);
-		} else if (key.equals(Key.INPUT_ERROR)) {
-			loginErrorMessage = (String) value;
 
 		} else if (key.equals(Key.DISPLAY_MAIN_MENU)) {
 			showView("MainMenuView");
