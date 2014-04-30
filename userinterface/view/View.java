@@ -1,11 +1,11 @@
 /**
- * COPYRIGHT 2014 Sandeep Mitra and students 
+ * COPYRIGHT 2014 Sandeep Mitra and students
  * The College at Brockport, State University of New York.
  * ALL RIGHTS RESERVED
  * 
  * This file is the product of The College at Brockport and cannot
  * be reproduced, copied, or used in any shape or form without
- * he express written consent of The College at Brockport. 
+ * he express written consent of The College at Brockport.
  */
 package userinterface.view;
 
@@ -33,15 +33,15 @@ import controller.Controller;
  * Abstract super class for all views
  */
 public abstract class View extends Panel implements IView, ActionListener {
-	
+
 	private static final long serialVersionUID = 2685375555464693343L;
 
 	/** Controller that this view belongs to */
 	protected Controller controller;
-	
+
 	/** Panel for displaying messages */
 	protected MessagePanel messagePanel;
-	
+
 	/** Buttons on the bottom of screen */
 	protected Map<String, Button> buttons;
 
@@ -57,59 +57,59 @@ public abstract class View extends Panel implements IView, ActionListener {
 	protected View(Controller controller, String title) {
 		this(controller, title, null);
 	}
-	
+
 	protected View(Controller controller, String title, String[] buttonNames) {
 		this.controller = controller;
-		this.buttons = new HashMap<String, Button>();
-		
+		buttons = new HashMap<String, Button>();
+
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
+
 		// Add title
 		add(ViewHelper.formatCenter(new Label(title, true), 0));
-		
+
 		// Add Message Panel
-		this.messagePanel = new MessagePanel();
+		messagePanel = new MessagePanel();
 		add(messagePanel);
-		
+
 		// Build Content
 		build();
-		
+
 		// Create Buttons
 		if(buttonNames != null){
 			add(createButtons(buttonNames));
 		}
 	}
-	
+
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		processAction(event.getSource());
+	}
+
 	/**
 	 * Hook method called after view is shown.
 	 * Can be used to request focus on fields.
 	 */
 	public void afterShown() {
-		
-	}	
-	
-	public abstract void processAction(Object source);
 
-	public void actionPerformed(ActionEvent event) {
-		processAction(event.getSource());
 	}
-	
+
 	protected abstract void build();
-	
-	protected void subscribeToController(String...keys){
-		for(String key : keys){
-			controller.subscribe(key, this);
-		}
-	}
-	
+
 	protected JPanel createButtons(String[] names){
 		Panel panel = new Panel(new FlowLayout(FlowLayout.CENTER));
 		for(String name : names){
-			Button button = new Button(name);
-			button.addActionListener(this);
+			Button button = new Button(name, this);
 			buttons.put(name, button);
 			panel.add(ViewHelper.formatButton(button));
 		}
 		return panel;
+	}
+
+	public abstract void processAction(Object source);
+
+	protected void subscribeToController(String...keys){
+		for(String key : keys){
+			controller.subscribe(key, this);
+		}
 	};
 }

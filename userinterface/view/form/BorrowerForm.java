@@ -1,20 +1,24 @@
 /**
- * COPYRIGHT 2014 Sandeep Mitra and students 
+ * COPYRIGHT 2014 Sandeep Mitra and students
  * The College at Brockport, State University of New York.
  * ALL RIGHTS RESERVED
  * 
  * This file is the product of The College at Brockport and cannot
  * be reproduced, copied, or used in any shape or form without
- * he express written consent of The College at Brockport. * 
+ * he express written consent of The College at Brockport. *
  */
 package userinterface.view.form;
+
+import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
 
 import userinterface.ViewHelper;
+import userinterface.component.CurrencyTextField;
 import userinterface.component.NumericTextField;
 import userinterface.component.Panel;
 import userinterface.component.PhoneField;
+import userinterface.component.SelectField;
 import userinterface.component.TextArea;
 import userinterface.component.TextField;
 import userinterface.view.View;
@@ -34,7 +38,7 @@ public class BorrowerForm extends Form {
 	public BorrowerForm(View view) {
 		super(view);
 	}
-	
+
 	@Override
 	protected void build() {
 		Panel fieldColumnsPanel = new Panel();
@@ -59,6 +63,11 @@ public class BorrowerForm extends Form {
 		addField("LastName", lastNameField);
 		leftColumn.add(ViewHelper.formatFieldLeft("Last Name", lastNameField));
 
+		TextField emailField = new TextField(16);
+		emailField.addActionListener(this);
+		addField("Email", emailField);
+		leftColumn.add(ViewHelper.formatFieldLeft("Email", emailField));
+
 		add(fieldColumnsPanel);
 		Panel rightColumn = new Panel();
 		rightColumn.setLayout(new BoxLayout(rightColumn, BoxLayout.Y_AXIS));
@@ -68,10 +77,15 @@ public class BorrowerForm extends Form {
 		addField("ContactPhone", phoneField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Phone", phoneField));
 
-		TextField emailField = new TextField(16);
-		emailField.addActionListener(this);
-		addField("Email", emailField);
-		rightColumn.add(ViewHelper.formatFieldLeft("Email", emailField));
+		CurrencyTextField monetaryPenaltyField = new CurrencyTextField(16, 16);
+		monetaryPenaltyField.addActionListener(this);
+		addField("MonetaryPenalty", monetaryPenaltyField);
+		rightColumn.add(ViewHelper.formatCurrencyFieldLeft("Balance", monetaryPenaltyField));
+
+		SelectField borrowerStatusField = new SelectField(new String[] { "Good Standing", "Delinquent"});
+		borrowerStatusField.setPreferredSize(new Dimension(130,25));
+		addField("BorrowerStatus", borrowerStatusField);
+		rightColumn.add(ViewHelper.formatFieldLeft("Borrowing Status", borrowerStatusField));
 
 		rightColumn.add(ViewHelper.createPlaceHolder());
 

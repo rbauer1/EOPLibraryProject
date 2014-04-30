@@ -54,6 +54,7 @@ public class LibrarianController extends Controller {
 	protected void loginWorker(Properties workerData) {
 		try {
 			worker = new Worker(workerData.getProperty("BannerID",""));
+			System.out.println(worker.getPrimaryKeyValue() + "\t" + worker.isAdmin());
 			if(!worker.validPassword(workerData.getProperty("Password",""))){
 				stateChangeRequest(Key.INPUT_ERROR, "Invalid Banner Id or Password.");
 			}else{
@@ -91,11 +92,16 @@ public class LibrarianController extends Controller {
 		} else if (key.equals(Key.EXECUTE_DELETE_BOOK)) {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
 		} else if (key.equals(Key.EXECUTE_PROCESS_LOST_BOOK)){
-			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
-		} else if (key.equals(Key.EXECUTE_CHECKOUT_BOOK)){
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU, Key.DISPLAY_MAIN_MENU);
+		} else if (key.equals(Key.EXECUTE_RENT_BOOK)){
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU, Key.MESSAGE);
+		} else if (key.equals(Key.EXECUTE_RETURN_BOOK)){
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU, Key.MESSAGE);
 
-
+		} else if (key.equals(Key.EXECUTE_LIST_RENTED_BOOKS)){
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
+		} else if (key.equals(Key.EXECUTE_LIST_AVAILABLE_BOOKS)){
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BOOK_MENU);
 		} else if (key.equals(Key.EXECUTE_ADD_BORROWER)) {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
 		} else if (key.equals(Key.EXECUTE_MODIFY_BORROWER)) {
@@ -114,10 +120,18 @@ public class LibrarianController extends Controller {
 			transaction = TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU, Key.DISPLAY_LOGIN);
 			transaction.stateChangeRequest("BannerID", value);
 
+		} else if (key.equals(Key.EXECUTE_PRINT_PDF)) {
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU);
+
 		} else if (key.endsWith("Transaction")){
 			TransactionFactory.executeTransaction(this, key);
 		} else if (key.equals(Key.LOGOUT)) {
 			showView("LoginView");
+			/*
+			 * This is needed to update the menus between logins in case the next worker has different credentials
+			 */
+			views.clear();
+
 		}
 		super.stateChangeRequest(key, value);
 	}

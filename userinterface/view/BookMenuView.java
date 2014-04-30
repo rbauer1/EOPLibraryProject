@@ -1,14 +1,15 @@
 /**
- * COPYRIGHT 2014 Sandeep Mitra and students 
+ * COPYRIGHT 2014 Sandeep Mitra and students
  * The College at Brockport, State University of New York.
  * ALL RIGHTS RESERVED
  * 
  * This file is the product of The College at Brockport and cannot
  * be reproduced, copied, or used in any shape or form without
- * he express written consent of The College at Brockport. * 
+ * he express written consent of The College at Brockport. *
  */
 package userinterface.view;
 
+import model.Worker;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import utilities.Key;
@@ -18,9 +19,9 @@ import controller.Controller;
  * Book Menu Screen. Serves as the transaction selection screen for book actions.
  */
 public class BookMenuView extends View {
-	
+
 	private static final long serialVersionUID = -4462137345508528750L;
-	
+
 	/* Buttons */
 	private Button addButton;
 	private Button modifyButton;
@@ -40,27 +41,29 @@ public class BookMenuView extends View {
 
 	@Override
 	protected void build() {
-		addButton = new Button("Add Book");
-		addButton.addActionListener(this);
-		add(ViewHelper.formatCenter(addButton));
+		if(((Worker)controller.getState(Key.WORKER)).isAdmin()){
+			addButton = new Button("Add Book");
+			addButton.addActionListener(this);
+			add(ViewHelper.formatCenter(addButton));
 
-		modifyButton = new Button("Modify Book");
-		modifyButton.addActionListener(this);
-		add(ViewHelper.formatCenter(modifyButton));
+			modifyButton = new Button("Modify Book");
+			modifyButton.addActionListener(this);
+			add(ViewHelper.formatCenter(modifyButton));
 
-		deleteButton = new Button("Delete Book");
-		deleteButton.addActionListener(this);
-		add(ViewHelper.formatCenter(deleteButton));
+			deleteButton = new Button("Delete Book");
+			deleteButton.addActionListener(this);
+			add(ViewHelper.formatCenter(deleteButton));
 
-		processLostBookButton = new Button("Process Lost Book");
-		processLostBookButton.addActionListener(this);
-		add(ViewHelper.formatCenter(processLostBookButton));
+			processLostBookButton = new Button("Process Lost Book");
+			processLostBookButton.addActionListener(this);
+			add(ViewHelper.formatCenter(processLostBookButton));
+		}
 
 		listAvailableButton = new Button("List Available Books");
 		listAvailableButton.addActionListener(this);
 		add(ViewHelper.formatCenter(listAvailableButton));
 
-		listUnavailableButton = new Button("List Unavailable Books");
+		listUnavailableButton = new Button("List Rented Books");
 		listUnavailableButton.addActionListener(this);
 		add(ViewHelper.formatCenter(listUnavailableButton));
 
@@ -81,6 +84,10 @@ public class BookMenuView extends View {
 			controller.stateChangeRequest(Key.EXECUTE_DELETE_BOOK, null);
 		} else if (source == processLostBookButton) {
 			controller.stateChangeRequest(Key.EXECUTE_PROCESS_LOST_BOOK, null);
+		} else if (source == listUnavailableButton) {
+			controller.stateChangeRequest(Key.EXECUTE_LIST_RENTED_BOOKS, null);
+		} else if (source == listAvailableButton) {
+			controller.stateChangeRequest(Key.EXECUTE_LIST_AVAILABLE_BOOKS, null);
 		}
 	}
 

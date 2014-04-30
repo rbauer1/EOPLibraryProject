@@ -12,6 +12,8 @@ package controller.transaction;
 import java.util.List;
 import java.util.Properties;
 
+import javax.swing.SwingWorker;
+
 import model.Borrower;
 import model.BorrowerCollection;
 import utilities.Key;
@@ -41,8 +43,6 @@ public class ListBorrowersTransaction extends Transaction {
 			operationType = "Delete";
 		}else if(parentController instanceof ModifyBorrowersTransaction){
 			operationType = "Modify";
-		}else if(parentController instanceof ProcessLostBookTransaction){
-			operationType = "Select";
 		}else{
 			operationType = "Select";
 		}
@@ -50,7 +50,30 @@ public class ListBorrowersTransaction extends Transaction {
 
 	@Override
 	public void execute() {
-		showView("ListBorrowersView");
+		if(parentController instanceof RentBooksTransaction){
+			showView("ListActiveBorrowersView");
+		}else{
+			showView("ListBorrowersView");
+		}
+	}
+
+	/**
+	 * Filters the borrowers by the provided search criteria
+	 * @param searchCriteria
+	 */
+	private void filter(final Properties searchCriteria) {
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() {
+				getBorrowers(searchCriteria);
+				return null;
+			}
+
+			@Override
+			public void done() {
+				stateChangeRequest(Key.BORROWER_COLLECTION, null);
+			}
+		}.execute();
 	}
 
 	/**
@@ -58,6 +81,10 @@ public class ListBorrowersTransaction extends Transaction {
 	 * @param searchCriteria
 	 */
 	private void getBorrowers(Properties searchCriteria){
+		if(parentController instanceof RentBooksTransaction){
+			searchCriteria.setProperty("BorrowerStatus", "Good Standing");
+			searchCriteria.setProperty("Status", "Active");
+		}
 		BorrowerCollection borrowerCollection = new BorrowerCollection();
 		borrowerCollection.findLike(searchCriteria);
 		borrowers = borrowerCollection.getEntities();
@@ -77,9 +104,8 @@ public class ListBorrowersTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		System.out.println(key);
-		if(key.equals(Key.BORROWER_COLLECTION)){
-			getBorrowers((Properties)value);
+		if(key.equals(Key.FILTER)){
+			filter((Properties)value);
 		}else if(key.equals(Key.SELECT_BORROWER)){
 			selectedBorrower = (Borrower)value;
 		}

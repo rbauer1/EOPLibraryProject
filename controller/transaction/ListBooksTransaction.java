@@ -12,6 +12,8 @@ package controller.transaction;
 import java.util.List;
 import java.util.Properties;
 
+import javax.swing.SwingWorker;
+
 import model.Book;
 import model.BookCollection;
 import utilities.Key;
@@ -52,6 +54,25 @@ public class ListBooksTransaction extends Transaction {
 	}
 
 	/**
+	 * Filters the books by the provided search criteria
+	 * @param searchCriteria
+	 */
+	private void filter(final Properties searchCriteria) {
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() {
+				getBooks(searchCriteria);
+				return null;
+			}
+
+			@Override
+			public void done() {
+				stateChangeRequest(Key.BOOK_COLLECTION, null);
+			}
+		}.execute();
+	}
+
+	/**
 	 * Fetches books that match searchCriteria
 	 * @param searchCriteria
 	 */
@@ -75,8 +96,8 @@ public class ListBooksTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.BOOK_COLLECTION)){
-			getBooks((Properties)value);
+		if(key.equals(Key.FILTER)){
+			filter((Properties)value);
 		}else if(key.equals(Key.SELECT_BOOK)){
 			selectedBook = (Book)value;
 		}

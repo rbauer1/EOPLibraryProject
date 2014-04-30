@@ -61,6 +61,7 @@ public class DeleteBorrowersTransaction extends Transaction {
 	@Override
 	public void execute(){
 		listBorrowersTransaction = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
+		listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a borrower from the list below to delete."));
 	}
 
 	@Override
@@ -87,6 +88,7 @@ public class DeleteBorrowersTransaction extends Transaction {
 			deleteBorrower((Properties)value);
 		}else if(key.equals(Key.BACK)){
 			listBorrowersTransaction.execute();
+			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a borrower from the list below to delete."));
 		}
 		super.stateChangeRequest(key, value);
 	}

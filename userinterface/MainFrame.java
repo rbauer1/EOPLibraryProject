@@ -78,7 +78,8 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	 */
 	private MainFrame(String title) {
 		super(title);
-		super.setLayout(new BorderLayout());
+		setLayout(new BorderLayout());
+		setVisible(false);
 
 		/*
 		 * This title is the logo panel that stays same for the duration of
@@ -106,7 +107,6 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		empty.setBackground(Color.pink);
 		super.add(empty, BorderLayout.CENTER);
 
-		super.setVisible(true);
 		super.setResizable(false);
 		sizeSet = true;
 	}
@@ -146,8 +146,6 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 
 	public void fix(){
 		pack();
-		//revalidate();
-		//repaint();
 
 		Dimension windowSize = getSize();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -158,8 +156,10 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		Dimension newSize = new Dimension();
 		newSize.setSize(width, height);
 		setSize(newSize);
-		
-		revalidate();
+
+		invalidate();
+		validate();
+		repaint();
 
 		WindowPosition.placeCenter(this);
 	}

@@ -9,6 +9,7 @@
  */
 package userinterface.view;
 
+import model.Worker;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.message.MessageEvent;
@@ -25,8 +26,8 @@ public class MainMenuView extends View {
 	/* Buttons */
 	private Button bookActionsButton;
 	private Button borrowerActionsButton;
-	private Button checkinBookButton;
-	private Button checkoutBookButton;
+	private Button returnBookButton;
+	private Button rentBookButton;
 	private Button logoutButton;
 	private Button workerActionsButton;
 
@@ -51,21 +52,24 @@ public class MainMenuView extends View {
 		bookActionsButton.addActionListener(this);
 		add(ViewHelper.formatCenter(bookActionsButton));
 
-		borrowerActionsButton = new Button("Borrower Menu");
-		borrowerActionsButton.addActionListener(this);
-		add(ViewHelper.formatCenter(borrowerActionsButton));
+		if(((Worker)controller.getState(Key.WORKER)).isAdmin()){
+			borrowerActionsButton = new Button("Borrower Menu");
+			borrowerActionsButton.addActionListener(this);
+			add(ViewHelper.formatCenter(borrowerActionsButton));
 
-		workerActionsButton = new Button("Workers Menu");
-		workerActionsButton.addActionListener(this);
-		add(ViewHelper.formatCenter(workerActionsButton));
+			workerActionsButton = new Button("Workers Menu");
+			workerActionsButton.addActionListener(this);
+			add(ViewHelper.formatCenter(workerActionsButton));
+		}
 
-		checkoutBookButton = new Button("Rent a Book");
-		checkoutBookButton.addActionListener(this);
-		add(ViewHelper.formatCenter(checkoutBookButton));
 
-		checkinBookButton = new Button("Return a Book");
-		checkinBookButton.addActionListener(this);
-		add(ViewHelper.formatCenter(checkinBookButton));
+		rentBookButton = new Button("Rent a Book");
+		rentBookButton.addActionListener(this);
+		add(ViewHelper.formatCenter(rentBookButton));
+
+		returnBookButton = new Button("Return a Book");
+		returnBookButton.addActionListener(this);
+		add(ViewHelper.formatCenter(returnBookButton));
 
 		logoutButton = new Button("Logout");
 		logoutButton.addActionListener(this);
@@ -82,8 +86,10 @@ public class MainMenuView extends View {
 			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
 		} else if (source == workerActionsButton) {
 			controller.stateChangeRequest(Key.DISPLAY_WORKER_MENU, null);
-		} else if (source == checkoutBookButton) {
-			controller.stateChangeRequest(Key.EXECUTE_CHECKOUT_BOOK, null);
+		} else if (source == rentBookButton) {
+			controller.stateChangeRequest(Key.EXECUTE_RENT_BOOK, null);
+		} else if (source == returnBookButton) {
+			controller.stateChangeRequest(Key.EXECUTE_RETURN_BOOK, null);
 		}
 	}
 

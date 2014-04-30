@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * Tries numerous formats and then updates the model with the default format.
  */
 public class DateValidation extends Validation {
-	
+
 	private static final Pattern[] DATE_PATTERNS = {
 		Pattern.compile("(\\d){4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"), // yyyy-MM-dd
 		Pattern.compile("(\\d){4}/(0?[1-9]|1[012])/(0?[1-9]|[12][0-9]|3[01])"), // yyyy/MM/dd
@@ -19,7 +19,7 @@ public class DateValidation extends Validation {
 		Pattern.compile("(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[012])-(\\d){2}"), // MM-dd-yy
 		Pattern.compile("(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/(\\d){2}")  // MM/dd/yy
 	};
-	
+
 	private static final SimpleDateFormat[] DATE_FORMATS = {
 		new SimpleDateFormat("yyyy-MM-dd"),
 		new SimpleDateFormat("yyyy/MM/dd"),
@@ -28,24 +28,13 @@ public class DateValidation extends Validation {
 		new SimpleDateFormat("MM-dd-yy"),
 		new SimpleDateFormat("MM/dd/yy")
 	};
-	
+
 	/** Error message displayed when invalid format */
 	private String message;
 
 	/** allows field to be empty */
 	private boolean allowEmpty = false;
-	
-	/**
-	 * Constructs date validation for fieldKey.
-	 * @param fieldKey
-	 * @param fieldName
-	 * @param message
-	 */
-	public DateValidation(String fieldKey, String fieldName, String message) {
-		super(fieldKey, fieldName);
-		this.message = message;
-	}
-	
+
 	/**
 	 * Constructs date validation for fieldKey.
 	 * Default message is "fieldName must be a valid date (yyyy-mm-dd)"
@@ -55,7 +44,7 @@ public class DateValidation extends Validation {
 	public DateValidation(String fieldKey, String fieldName) {
 		this(fieldKey, fieldName, "must be a valid date (yyyy-mm-dd)");
 	}
-	
+
 	/**
 	 * Constructs date validation for fieldKey.
 	 * Default message is "fieldName must be a valid date (yyyy-mm-dd)"
@@ -69,17 +58,20 @@ public class DateValidation extends Validation {
 	}
 
 	/**
-	 * Sets error message
+	 * Constructs date validation for fieldKey.
+	 * @param fieldKey
+	 * @param fieldName
 	 * @param message
 	 */
-	public void setMessage(String message) {
+	public DateValidation(String fieldKey, String fieldName, String message) {
+		super(fieldKey, fieldName);
 		this.message = message;
 	}
 
 	@Override
 	public boolean execute(Object val, ModelValidator validator) {
-		if(allowEmpty && (val == null || val.toString().length() == 0)){
-			return true;
+		if (val == null || val.toString().length() == 0) {
+			return allowEmpty;
 		}
 		String value = ((String)val).replace(" ", "");
 		Date date = null;
@@ -90,15 +82,23 @@ public class DateValidation extends Validation {
 				}
 			}
 		} catch (ParseException e) {
-			validator.addError(getFieldKey(), getFieldName() + " " + this.message);
+			validator.addError(getFieldKey(), getFieldName() + " " + message);
 			return false;
 		}
 		if(date == null){
-			validator.addError(getFieldKey(), getFieldName() + " " + this.message);
+			validator.addError(getFieldKey(), getFieldName() + " " + message);
 			return false;
 		}
 		validator.getModel().stateChangeRequest(getFieldKey(), DATE_FORMATS[0].format(date));
 		return true;
+	}
+
+	/**
+	 * Sets error message
+	 * @param message
+	 */
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 }

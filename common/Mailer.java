@@ -23,7 +23,7 @@ public class Mailer {
 	private Session session;
 
 	private Mailer() {
-		emailProperties = new PropertyFile("emailConfig.ini");
+		emailProperties = new PropertyFile("assets/emailConfig.ini");
 		session = Session.getDefaultInstance(emailProperties);
 	}
 

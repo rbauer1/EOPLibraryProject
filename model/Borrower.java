@@ -20,6 +20,7 @@ import model.validation.LengthValidation;
 import model.validation.NumericValidation;
 import model.validation.PhoneValidation;
 import model.validation.PresenceValidation;
+import model.validation.PrimaryKeyValidation;
 import utilities.DateUtil;
 import utilities.NumberUtil;
 import exception.InvalidPrimaryKeyException;
@@ -62,30 +63,23 @@ public class Borrower extends Model {
 		super(PRIMARY_KEY, id);
 	}
 
-	public boolean addMonetaryPenaltyForLostBook(Book book){
-		double monetaryPenalty = Double.parseDouble((String)persistentState.get("MonetaryPenalty"));
-		monetaryPenalty += Double.parseDouble((String)book.getState("SuggestedPrice"));
-		persistentState.setProperty("MonetaryPenalty", NumberUtil.getAsCurrencyString(monetaryPenalty));
-		return save();
-	}
-
 	@Override
 	public boolean beforeValidate(boolean isCreate){
 		String currentDate =  DateUtil.getDate();
 		if(isCreate){
 			persistentState.setProperty("BorrowerStatus", "Good Standing");
+			persistentState.setProperty("DateOfLatestBorrowerStatus", currentDate);
 			persistentState.setProperty("Status", "Active");
 			persistentState.setProperty("MonetaryPenalty", "0.00");
 			persistentState.setProperty("DateOfFirstRegistration", currentDate);
 		}
-		persistentState.setProperty("DateOfLatestBorrowerStatus", currentDate);
 		persistentState.setProperty("DateOfLastUpdate", currentDate);
 		return true;
 	}
 
-	public RentalCollection getOutstandingRentals(Borrower borrower){
+	public RentalCollection getOutstandingRentals(){
 		RentalCollection rentals = new RentalCollection();
-		rentals.findOutstandingByBorrower(borrower);
+		rentals.findOutstandingByBorrower(this);
 		return rentals;
 	}
 
@@ -107,6 +101,10 @@ public class Borrower extends Model {
 		return TABLE_NAME;
 	}
 
+	public boolean isActive() {
+		return getState("Status").equals("Active");
+	}
+
 	/**
 	 * Determines if this borrower is able to rent books or not
 	 * @return true if blocked from borrowing
@@ -121,8 +119,16 @@ public class Borrower extends Model {
 	}
 
 	public boolean setInactive(String notes){
-		persistentState.setProperty("Notes", notes);
-		persistentState.setProperty("Status", "Inactive");
+		stateChangeRequest("Notes", notes);
+		stateChangeRequest("Status", "Inactive");
+		return save();
+	}
+
+	public boolean setLostBook(Book book){
+		double monetaryPenalty = Double.parseDouble((String)persistentState.get("MonetaryPenalty"));
+		monetaryPenalty += Double.parseDouble((String)book.getState("SuggestedPrice"));
+		stateChangeRequest("MonetaryPenalty", NumberUtil.formatCurrency(monetaryPenalty));
+		stateChangeRequest("BorrowerStatus", "Delinquent");
 		return save();
 	}
 
@@ -130,6 +136,7 @@ public class Borrower extends Model {
 	protected void setupValidations(){
 		validator.addValidation(new PresenceValidation("BannerID", "Banner Id"));
 		validator.addValidation(new BannerIdValidation("BannerID", "Banner Id"));
+		validator.addValidation(new PrimaryKeyValidation("BannerID", "Banner Id"));
 
 		validator.addValidation(new PresenceValidation("FirstName", "First Name"));
 		validator.addValidation(new AlphaNumericValidation("FirstName", "First Name"));
@@ -162,5 +169,20 @@ public class Borrower extends Model {
 
 		validator.addValidation(new PresenceValidation("DateOfLastUpdate", "Date Updated"));
 		validator.addValidation(new DateValidation("DateOfLastUpdate", "Date Updated"));
+	}
+
+	@Override
+	public void stateChangeRequest(String key, Object value){
+		if(key.equals("BorrowerStatus")){
+			stateChangeRequest("DateOfLatestBorrowerStatus", DateUtil.getDate());
+		}
+		super.stateChangeRequest(key, value);
+	}
+
+	public boolean subtractMonetaryPenaltyForLostBook(Book book){
+		double monetaryPenalty = Double.parseDouble((String)persistentState.get("MonetaryPenalty"));
+		monetaryPenalty -= Double.parseDouble((String)book.getState("SuggestedPrice"));
+		stateChangeRequest("MonetaryPenalty", NumberUtil.formatCurrency(monetaryPenalty));
+		return save();
 	}
 }

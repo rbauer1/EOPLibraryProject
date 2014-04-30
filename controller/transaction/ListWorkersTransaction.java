@@ -12,6 +12,8 @@ package controller.transaction;
 import java.util.List;
 import java.util.Properties;
 
+import javax.swing.SwingWorker;
+
 import model.Worker;
 import model.WorkerCollection;
 import utilities.Key;
@@ -51,6 +53,25 @@ public class ListWorkersTransaction extends Transaction {
 		showView("ListWorkersView");
 	}
 
+	/**
+	 * Filters the workers by the provided search criteria
+	 * @param searchCriteria
+	 */
+	private void filter(final Properties searchCriteria) {
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() {
+				getWorkers(searchCriteria);
+				return null;
+			}
+
+			@Override
+			public void done() {
+				stateChangeRequest(Key.WORKER_COLLECTION, null);
+			}
+		}.execute();
+	}
+
 	@Override
 	public Object getState(String key) {
 		if (key.equals(Key.WORKER_COLLECTION)) {
@@ -75,8 +96,8 @@ public class ListWorkersTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		if(key.equals(Key.WORKER_COLLECTION)){
-			getWorkers((Properties)value);
+		if(key.equals(Key.FILTER)){
+			filter((Properties)value);
 		}else if(key.equals(Key.SELECT_WORKER)){
 			selectedWorker = (Worker)value;
 		}

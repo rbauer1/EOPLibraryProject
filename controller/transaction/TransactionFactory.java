@@ -1,11 +1,11 @@
 /**
- * COPYRIGHT 2014 Sandeep Mitra and students 
+ * COPYRIGHT 2014 Sandeep Mitra and students
  * The College at Brockport, State University of New York.
  * ALL RIGHTS RESERVED
  * 
  * This file is the product of The College at Brockport and cannot
  * be reproduced, copied, or used in any shape or form without
- * he express written consent of The College at Brockport. * 
+ * he express written consent of The College at Brockport. *
  */
 package controller.transaction;
 
@@ -20,14 +20,9 @@ import event.Event;
  * Factory Class for creating transactions.
  */
 public class TransactionFactory {
-	
+
 	private static final String TRANSACTION_PACKAGE = "controller.transaction";
-	
-	/**
-	 * Private Constructor so that this class can't be instantiated.
-	 */
-	private TransactionFactory(){}
-	
+
 	/**
 	 * Create a transaction
 	 * @param transactionName - class name
@@ -58,36 +53,40 @@ public class TransactionFactory {
 	}
 	
 	
-		/**
-		 * Begins execution on the transaction with the provided name. 
-		 * Listens to the provided returnEvent for completion of transaction.
-		 * @param subscriber
-		 * @param name
-		 * @param returnEvent
-		 */
-		public static Transaction executeTransaction(Controller controller, String name, String... returnEvent) {
-			try {
-				Transaction transaction = TransactionFactory.createTransaction(name, controller);
-				for(String event : returnEvent) transaction.subscribe(event, controller);
-				transaction.execute();
-				return transaction;
-			} catch (Exception e) {
-				new Event("TransactionFactory", "executeTransaction",
-						"Failure executing tranasction: " + e.toString(), Event.ERROR);
-			}
-			return null;
+	/**
+	 * Begins execution on the transaction with the provided name. 
+	 * Listens to the provided returnEvent for completion of transaction.
+	 * @param subscriber
+	 * @param name
+	 * @param returnEvent
+	 */
+	public static Transaction executeTransaction(Controller controller, String name, String... returnEvent) {
+		try {
+			Transaction transaction = TransactionFactory.createTransaction(name, controller);
+			for(String event : returnEvent) transaction.subscribe(event, controller);
+			transaction.execute();
+			return transaction;
+		} catch (Exception e) {
+			e.printStackTrace();
+			new Event("TransactionFactory", "executeTransaction",
+					"Failure executing transaction: " + e.toString(), Event.ERROR);
 		}
-		
-		
-		
-		/**
-		 * Begins execution on the transaction with the provided name. 
-		 * Listens to "TranscationCompleted" for completion of transaction.
-		 * @param subscriber
-		 * @param name
-		 */
-		public static Transaction executeTransaction(Controller controller, String name) {
-			return executeTransaction(controller, name, Key.TRANSACTION_COMPLETED);
-		}
-	
+		return null;
+	}
+
+	/**
+	 * Begins execution on the transaction with the provided name. 
+	 * Listens to "TranscationCompleted" for completion of transaction.
+	 * @param subscriber
+	 * @param name
+	 */
+	public static Transaction executeTransaction(Controller controller, String name) {
+		return executeTransaction(controller, name, Key.TRANSACTION_COMPLETED);
+	}
+
+	/**
+	 * Private Constructor so that this class can't be instantiated.
+	 */
+	private TransactionFactory(){}
+
 }

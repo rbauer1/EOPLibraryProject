@@ -41,6 +41,7 @@ public class ModifyWorkersTransaction extends Transaction {
 	@Override
 	public void execute(){
 		listWorkersTransaction = TransactionFactory.executeTransaction(this, "ListWorkersTransaction", Key.DISPLAY_WORKER_MENU, Key.SELECT_WORKER);
+		listWorkersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a worker from the list below to modify."));
 	}
 
 	@Override
@@ -70,6 +71,7 @@ public class ModifyWorkersTransaction extends Transaction {
 			worker.reload();
 		}else if(key.equals(Key.BACK)){
 			listWorkersTransaction.execute();
+			listWorkersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a worker from the list below to modify."));
 		}
 		super.stateChangeRequest(key, value);
 	}
