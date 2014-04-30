@@ -54,7 +54,7 @@ public class PDFGenerator {
 
 		borrowerTable.addCell(new Paragraph("Borrower", SUB_TITLE_FONT));
 		borrowerTable.addCell(new Paragraph(borrowerProperties.getProperty("FirstName")+" "+borrowerProperties.getProperty("LastName")));
-		borrowerTable.addCell(new Paragraph(borrowerProperties.getProperty("BannerId")));
+		borrowerTable.addCell(new Paragraph(borrowerProperties.getProperty("BannerID")));
 		borrowerTable.addCell(new Paragraph(borrowerProperties.getProperty("Email")));
 		borrowerTable.addCell(new Paragraph(borrowerProperties.getProperty("ContactPhone")));
 		borrowerTable.addCell(new Paragraph(borrowerProperties.getProperty("MonetaryPenalty")+"$"));
@@ -220,11 +220,7 @@ public class PDFGenerator {
 		
 		
 	}
-	
-	
-	
-	
-	
+
 
 	private static void addEmptyLine(Paragraph paragraph, int number) {
 		for (int i = 0; i < number; i++) {
