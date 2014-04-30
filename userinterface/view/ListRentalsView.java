@@ -44,7 +44,6 @@ public class ListRentalsView extends ListView {
 	@Override
 	public void afterShown() {
 		super.afterShown();
-		controller.stateChangeRequest(Key.RENTAL_COLLECTION, null);
 	}
 
 	@Override
