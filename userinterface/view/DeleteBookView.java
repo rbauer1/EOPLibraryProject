@@ -48,9 +48,9 @@ public class DeleteBookView extends View {
 	protected void build() {
 		messagePanel.displayMessage(MessageType.WARNING, "Caution! Please verify you have selected the correct book for deletion.");
 		form = new BookDeleteForm(this);
-		form.setFieldEnabled("Barcode", false);
-		form.setFieldEnabled("Title", false);
-		form.setFieldEnabled("Author1", false);
+		form.setAllFieldsEnabled(false);
+		form.setFieldEnabled("DeletionReason", true);
+		form.setFieldEnabled("Notes", true);
 		add(form);
 	}
 
@@ -60,12 +60,17 @@ public class DeleteBookView extends View {
 		if (source == buttons.get("Back")) {
 			controller.stateChangeRequest(Key.BACK, "ListBooksView");
 		}else if (source == buttons.get("Delete") || source == form) {
+			form.setAllFieldsEnabled(false);
+			buttons.get("Delete").setEnabled(false);
 			controller.stateChangeRequest(Key.SAVE_BOOK, form.getValues());
 		}
 	}
 
 	@Override
 	public void updateState(String key, Object value) {
+		form.setFieldEnabled("DeletionReason", true);
+		form.setFieldEnabled("Notes", true);
+		buttons.get("Delete").setEnabled(true);
 		if(key.equals(Key.BOOK)){
 			form.setValues(((Model) value).getPersistentState());
 			form.get("Notes").reset();
