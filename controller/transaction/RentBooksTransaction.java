@@ -12,6 +12,9 @@ package controller.transaction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+import javax.swing.SwingWorker;
 
 import model.Book;
 import model.BookDueDate;
@@ -61,28 +64,50 @@ public class RentBooksTransaction extends Transaction {
 	 * @param bookData
 	 * @return true if book was added
 	 */
-	private boolean addBook(Properties bookData) {
-		try {
-			Book book = new Book(bookData.getProperty(Book.PRIMARY_KEY, ""));
-			if(!book.isActive()){
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The barcode you provided refers to a book that is no longer active."));
-				return false;
+	private void addBook(final Properties bookData){
+		new SwingWorker<Boolean, Void>() {
+
+			private Book book;
+
+			@Override
+			protected Boolean doInBackground() {
+				try {
+					book = new Book(bookData.getProperty(Book.PRIMARY_KEY, ""));
+					if(!book.isActive()){
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The barcode you provided refers to a book that is no longer active."));
+						return false;
+					}
+					if(!book.isAvailable()){
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The barcode you provided refers to a book that is already rented."));
+						return false;
+					}
+					if(books.contains(book)){
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Heads up! The book was not added since it is already in the list to be rented."));
+						return false;
+					}
+				} catch (InvalidPrimaryKeyException e) {
+					stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The barcode you provided is invalid. Please try again."));
+					return false;
+				}
+				return book.save();
 			}
-			if(!book.isAvailable()){
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The barcode you provided refers to a book that is already rented."));
-				return false;
+
+			@Override
+			public void done() {
+				boolean success = false;
+				try {
+					success = get();
+				} catch (InterruptedException e) {
+					success = false;
+				} catch (ExecutionException e) {
+					success = false;
+				}
+				if(success){
+					books.add(book);
+					stateChangeRequest(Key.REFRESH_LIST, null);
+				}
 			}
-			if(books.contains(book)){
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Heads up! The book was not added since it is already in the list to be rented."));
-				return false;
-			}
-			books.add(book);
-			stateChangeRequest(Key.REFRESH_LIST, null);
-		} catch (InvalidPrimaryKeyException e) {
-			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The barcode you provided is invalid. Please try again."));
-			return false;
-		}
-		return true;
+		}.execute();
 	}
 
 	@Override
@@ -127,39 +152,58 @@ public class RentBooksTransaction extends Transaction {
 	/**
 	 * Saves the rentals to the database and completes the transaction.
 	 */
-	private void rentBooks() {
-		JDBCBroker.getInstance().startTransaction();
-		List<Rental> rentals = new ArrayList<Rental>(books.size());
-		boolean saveSuccess = true;
-		for(Book book : books){
-			book.reload();
-			if(!book.isActive() || !book.isAvailable()){
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The books have been altered since added. Please try again."));
-				JDBCBroker.getInstance().rollbackTransaction();
-				return;
-			}
-			Rental rental = new Rental(borrower, book, worker, dueDate);
-			saveSuccess &= rental.save();
-			rentals.add(rental);
-		}
-		borrower.reload();
-		if(borrower.isDelinquent()|| !borrower.isActive()){
-			listBorrowersTransaction.execute();
-			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The borrower has been altered since selected. Please try again."));
-			JDBCBroker.getInstance().rollbackTransaction();
-			return;
-		}
-		if(saveSuccess){
-			JDBCBroker.getInstance().commitTransaction();
-			PDFGenerator.generateRentBookPDF("test.pdf", books, borrower, worker, dueDate);
-			TransactionFactory.executeTransaction(this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
+	private void rentBooks(){
+		new SwingWorker<Boolean, Void>() {
 
-			//stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);
-			//parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were succesfully rented."));
-		}else{
-			JDBCBroker.getInstance().rollbackTransaction();
-			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving the rentals."));
-		}
+			@Override
+			protected Boolean doInBackground() {
+				JDBCBroker.getInstance().startTransaction();
+				List<Rental> rentals = new ArrayList<Rental>(books.size());
+				boolean saveSuccess = true;
+				for(Book book : books){
+					book.reload();
+					if(!book.isActive() || !book.isAvailable()){
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The books have been altered since added. Please try again."));
+						JDBCBroker.getInstance().rollbackTransaction();
+						return false;
+					}
+					Rental rental = new Rental(borrower, book, worker, dueDate);
+					saveSuccess &= rental.save();
+					rentals.add(rental);
+				}
+				borrower.reload();
+				if(borrower.isDelinquent()|| !borrower.isActive()){
+					listBorrowersTransaction.execute();
+					listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! The borrower has been altered since selected. Please try again."));
+					JDBCBroker.getInstance().rollbackTransaction();
+					return false;
+				}
+				return saveSuccess;
+			}
+
+			@Override
+			public void done() {
+				boolean success = false;
+				try {
+					success = get();
+				} catch (InterruptedException e) {
+					success = false;
+				} catch (ExecutionException e) {
+					success = false;
+				}
+				if(success){
+					JDBCBroker.getInstance().commitTransaction();
+					PDFGenerator.generateRentBookPDF("test.pdf", books, borrower, worker, dueDate);
+					TransactionFactory.executeTransaction(RentBooksTransaction.this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
+
+					//stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);
+					//parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were succesfully rented."));
+				}else{
+					JDBCBroker.getInstance().rollbackTransaction();
+					stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving the rentals."));
+				}
+			}
+		}.execute();
 	}
 
 	/**

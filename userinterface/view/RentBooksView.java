@@ -65,12 +65,18 @@ public class RentBooksView extends ListView {
 	public void processAction(Object source) {
 		messagePanel.clear();
 		if (source == barcodeForm  || source == buttons.get("Add")) {
+			barcodeForm.setAllFieldsEnabled(false);
+			buttons.get("Add").setEnabled(false);
+			buttons.get("Done").setEnabled(false);
 			controller.stateChangeRequest(Key.ADD_BOOK_TO_LIST, barcodeForm.getValues());
 		} else if (source == buttons.get("Remove")) {
 			removeSelectedBook();
 		} else if (source == buttons.get("Back")) {
 			controller.stateChangeRequest(Key.BACK, "ListBorrowersView");
 		} else if (source == buttons.get("Done")) {
+			barcodeForm.setAllFieldsEnabled(false);
+			buttons.get("Add").setEnabled(false);
+			buttons.get("Done").setEnabled(false);
 			controller.stateChangeRequest(Key.RENT_BOOKS, null);
 		}
 	}
@@ -92,18 +98,21 @@ public class RentBooksView extends ListView {
 
 	@Override
 	protected void select() {
-		removeSelectedBook();
+		//removeSelectedBook();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {
+		barcodeForm.reset();
+		barcodeForm.requestFocusForDefaultField();
+		barcodeForm.setAllFieldsEnabled(true);
+		buttons.get("Add").setEnabled(true);
+		buttons.get("Done").setEnabled(books.size() > 0);
 		if (key.equals(Key.BOOK_COLLECTION)) {
 			books = (List<Book>) value;
 			table.setModel(new BookTableModel(books));
 			table.repaint();
-			buttons.get("Done").setEnabled(books.size() > 0);
-			barcodeForm.reset();
 		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
 		}

@@ -48,9 +48,9 @@ public class DeleteBorrowerView extends View {
 	protected void build() {
 		messagePanel.displayMessage(MessageType.WARNING, "Caution! Please verify you have selected the correct borrower for deletion.");
 		form = new BorrowerDeleteForm(this);
-		form.setFieldEnabled("BannerID", false);
-		form.setFieldEnabled("FirstName", false);
-		form.setFieldEnabled("LastName", false);
+		form.setAllFieldsEnabled(false);
+		form.setFieldEnabled("DeletionReason", true);
+		form.setFieldEnabled("Notes", true);
 		add(form);
 	}
 
@@ -60,12 +60,17 @@ public class DeleteBorrowerView extends View {
 		if (source == buttons.get("Back")) {
 			controller.stateChangeRequest(Key.BACK, "ListBorrowersView");
 		}else if (source == buttons.get("Delete") || source == form) {
+			form.setAllFieldsEnabled(false);
+			buttons.get("Delete").setEnabled(false);
 			controller.stateChangeRequest(Key.SAVE_BORROWER, form.getValues());
 		}
 	}
 
 	@Override
 	public void updateState(String key, Object value) {
+		form.setFieldEnabled("DeletionReason", true);
+		form.setFieldEnabled("Notes", true);
+		buttons.get("Delete").setEnabled(true);
 		if(key.equals(Key.BORROWER)){
 			form.setValues(((Model) value).getPersistentState());
 			form.get("Notes").reset();

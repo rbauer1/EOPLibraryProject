@@ -11,6 +11,7 @@ import java.awt.Toolkit;
 import java.io.File;
 
 import javax.swing.JFrame;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
 import userinterface.MainFrame;
@@ -84,9 +85,17 @@ public class EOPLibrary {
 				JDBCBroker.getInstance().rollbackTransaction();
 			}
 		}));
+		
+		new SwingWorker<Void, Void>() {
 
-		//Setup a connection to the db. Opening it here prevents the overhead cause on first login.
-		JDBCBroker.getInstance().getConnection();
+			@Override
+			protected Void doInBackground() {
+				//Setup a connection to the db. Opening it here prevents the overhead cause on first login.
+				JDBCBroker.getInstance().getConnection();
+				return null;
+			}
+			
+		}.execute();
 
 		try{
 			new LibrarianController();

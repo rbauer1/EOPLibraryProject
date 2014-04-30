@@ -9,6 +9,7 @@
  */
 package userinterface.view;
 
+import userinterface.message.MessageEvent;
 import userinterface.view.form.Form;
 import userinterface.view.form.LoginForm;
 import utilities.Key;
@@ -34,7 +35,7 @@ public class LoginView extends View {
 	 */
 	public LoginView(Controller controller) {
 		super(controller, "Login", BUTTON_NAMES);
-		subscribeToController(Key.INPUT_ERROR);
+		subscribeToController(Key.MESSAGE);
 	}	
 	
 	@Override
@@ -49,20 +50,27 @@ public class LoginView extends View {
 		if (source == buttons.get("Forgot Password")) {
 			controller.stateChangeRequest(Key.EXECUTE_RECOVER_PASSWORD, form.get("BannerID").getValue());
 		} else if (source == buttons.get("Login") || source == form) {	
+			form.setAllFieldsEnabled(false);
+			buttons.get("Login").setEnabled(false);
 			controller.stateChangeRequest(Key.LOGIN, form.getValues());
 		}
-		form.reset();
+		form.get("Password").reset();
 	}
 	
 	@Override
 	public void updateState(String key, Object value) {
-		if (key.equals(Key.INPUT_ERROR)) {
-			messagePanel.displayErrorMessage(value.toString());
+		form.requestFocusForDefaultField();
+		form.setAllFieldsEnabled(true);
+		buttons.get("Login").setEnabled(true);
+		if (key.equals(Key.MESSAGE)) {
+			messagePanel.displayMessage((MessageEvent)value);
 		}
 	}
 	
 	@Override
 	public void afterShown(){
 		form.requestFocusForDefaultField();
+		form.reset();
+		messagePanel.clear();
 	}
 }
