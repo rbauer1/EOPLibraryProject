@@ -12,6 +12,9 @@ package controller.transaction;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+import javax.swing.SwingWorker;
 
 import model.Book;
 import model.Borrower;
@@ -51,7 +54,6 @@ public class ModifyBooksTransaction extends Transaction {
 	protected Properties getDependencies(){
 		Properties dependencies = new Properties();
 		dependencies.setProperty(Key.SELECT_BOOK, Key.BOOK);
-		dependencies.setProperty(Key.RELOAD_ENTITY, Key.BOOK);
 		return dependencies;
 	}
 
@@ -61,6 +63,24 @@ public class ModifyBooksTransaction extends Transaction {
 			return book;
 		}
 		return super.getState(key);
+	}
+
+	/**
+	 * Reload the book from the db
+	 */
+	private void reloadBook() {
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() {
+				book.reload();
+				return null;
+			}
+
+			@Override
+			public void done() {
+				stateChangeRequest(Key.BOOK, null);
+			}
+		}.execute();
 	}
 
 	/**
@@ -84,7 +104,7 @@ public class ModifyBooksTransaction extends Transaction {
 		}else if(key.equals(Key.SAVE_BOOK)){
 			updateBook((Properties)value);
 		}else if(key.equals(Key.RELOAD_ENTITY)){
-			book.reload();
+			reloadBook();
 		}else if(key.equals(Key.BACK)){
 			listBooksTransaction.execute();
 			listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a book from the list below to modify."));
@@ -96,31 +116,50 @@ public class ModifyBooksTransaction extends Transaction {
 	 * Updates selected book with provided data
 	 * @param bookData
 	 */
-	private void updateBook(Properties bookData){
-		JDBCBroker.getInstance().startTransaction();
-		if(book.isLost()){
-			Borrower borrower = book.getBorrowerThatLost();
-			if(borrower == null || !borrower.subtractMonetaryPenaltyForLostBook(book)){
-				JDBCBroker.getInstance().rollbackTransaction();
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving."));
-				return;
+	private void updateBook(final Properties bookData){
+		new SwingWorker<Boolean, Void>() {
+
+			@Override
+			protected Boolean doInBackground() {
+				JDBCBroker.getInstance().startTransaction();
+				if(book.isLost()){
+					Borrower borrower = book.getBorrowerThatLost();
+					if(borrower == null || !borrower.subtractMonetaryPenaltyForLostBook(book)){
+						JDBCBroker.getInstance().rollbackTransaction();
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving."));
+						return false;
+					}
+				}
+				bookData.setProperty("Status", "Active");
+				book.stateChangeRequest(bookData);
+				return book.save();
 			}
-		}
-		bookData.setProperty("Status", "Active");
-		book.stateChangeRequest(bookData);
-		if(book.save()){
-			JDBCBroker.getInstance().commitTransaction();
-			stateChangeRequest(Key.BACK, "ListBooksView");
-			listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Well done! The book was sucessfully saved."));
-		}else{
-			JDBCBroker.getInstance().rollbackTransaction();
-			List<String> inputErrors = book.getErrors();
-			if(inputErrors.size() > 0){
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
-			}else{
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving."));
+
+			@Override
+			public void done() {
+				boolean success = false;
+				try {
+					success = get();
+				} catch (InterruptedException e) {
+					success = false;
+				} catch (ExecutionException e) {
+					success = false;
+				}
+				if(success){
+					JDBCBroker.getInstance().commitTransaction();
+					stateChangeRequest(Key.BACK, "ListBooksView");
+					listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Well done! The book was sucessfully saved."));
+				}else{
+					JDBCBroker.getInstance().rollbackTransaction();
+					List<String> inputErrors = book.getErrors();
+					if(inputErrors.size() > 0){
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+					}else{
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving."));
+					}
+				}
 			}
-		}
+		}.execute();
 	}
 
 }
