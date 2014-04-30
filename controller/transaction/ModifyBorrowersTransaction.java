@@ -85,7 +85,7 @@ public class ModifyBorrowersTransaction extends Transaction {
 		borrower.stateChangeRequest(borrowerData);
 		if(borrower.save()){
 			stateChangeRequest(Key.BACK, "ListBorrowersView");
-			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Well done! The borrower was sucessfully added."));
+			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Well done! The borrower was sucessfully saved."));
 		}else{
 			List<String> inputErrors = borrower.getErrors();
 			if(inputErrors.size() > 0){

@@ -172,9 +172,9 @@ public class Book extends Model {
 		return save();
 	}
 
-	public boolean setLost(String notes){
-		persistentState.setProperty("Notes", notes);
-		persistentState.setProperty("Status", "Lost");
+	public boolean setLost(Properties data){
+		data.setProperty("Status", "Lost");
+		stateChangeRequest(data);
 		return save();
 	}
 

@@ -112,6 +112,10 @@ public abstract class Form extends Panel implements ActionListener{
 
 	public void setValues(Properties values){
 		reset();
+		updateValues(values);
+	}
+
+	public void updateValues(Properties values){
 		for (String key : values.stringPropertyNames()) {
 			if(fields.containsKey(key)){
 				fields.get(key).setValue(values.getProperty(key));
