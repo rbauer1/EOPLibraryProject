@@ -115,7 +115,6 @@ public class LibrarianController extends Controller {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
 		} else if (key.equals(Key.EXECUTE_DELETE_WORKER)) {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
-
 		} else if (key.equals(Key.EXECUTE_RECOVER_PASSWORD)){
 			transaction = TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU, Key.DISPLAY_LOGIN);
 			transaction.stateChangeRequest("BannerID", value);
@@ -132,6 +131,8 @@ public class LibrarianController extends Controller {
 			 */
 			views.clear();
 
+		} else if (key.equals(Key.WORKER)) {
+			worker = (Worker)value;
 		}
 		super.stateChangeRequest(key, value);
 	}
