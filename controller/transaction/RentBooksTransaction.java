@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
+import common.PDFGeneratorRentBook;
 import model.Book;
 import model.BookDueDate;
 import model.Borrower;
@@ -37,7 +38,7 @@ import exception.InvalidPrimaryKeyException;
 public class RentBooksTransaction extends Transaction {
 
 	/** Books that are to be rented */
-	private List<Book> books;
+	private ArrayList<Book> books;
 
 	/** Borrower that is renting the books */
 	private Borrower borrower;
@@ -193,7 +194,8 @@ public class RentBooksTransaction extends Transaction {
 				}
 				if(success){
 					JDBCBroker.getInstance().commitTransaction();
-					PDFGenerator.generateRentBookPDF("test.pdf", books, borrower, worker, dueDate);
+					PDFGeneratorRentBook pdfGenerator = new PDFGeneratorRentBook();
+					pdfGenerator.generate("test.pdf", books, null, borrower, worker, dueDate);
 					TransactionFactory.executeTransaction(RentBooksTransaction.this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
 
 					//stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);

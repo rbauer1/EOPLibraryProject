@@ -19,6 +19,7 @@ import javax.swing.SwingWorker;
 
 import common.PDFGenerator;
 
+import common.PDFGeneratorBackBook;
 import model.Book;
 import model.Borrower;
 import model.Rental;
@@ -186,8 +187,10 @@ public class ReturnBooksTransaction extends Transaction {
 					success = false;
 				}
 				if(success){
+
+					PDFGeneratorBackBook pdfGenerator = new PDFGeneratorBackBook();
 					JDBCBroker.getInstance().commitTransaction();
-					PDFGenerator.generate(PDFGenerator.RETURN_BOOK_ACTION, "test.pdf", returnedBooks, outstandingBooks, borrower, worker);
+					pdfGenerator.generate("test.pdf", returnedBooks, outstandingBooks, borrower, worker, null);
 					TransactionFactory.executeTransaction(ReturnBooksTransaction.this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
 //					stateChangeRequest(Key.DISPLAY_MAIN_MENU, null); //TODO necessary?
 					parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were succesfully returned."));
