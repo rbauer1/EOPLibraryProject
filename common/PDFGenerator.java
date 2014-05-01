@@ -86,7 +86,7 @@ public abstract class PDFGenerator {
 		pdf.add(subTitle);
 	}
 
-	protected static void addMetaData(String title, String subtitle, Worker worker, Document document)
+	protected void addMetaData(String title, String subtitle, Worker worker, Document document)
 	{
 		Properties  workerDatas = worker.getPersistentState();
 
@@ -96,7 +96,7 @@ public abstract class PDFGenerator {
 		document.addCreator("Librerian");
 	}
 
-	protected static void addContentActors(Document pdf, Borrower borrower, Worker worker) throws DocumentException
+	protected void addContentActors(Document pdf, Borrower borrower, Worker worker) throws DocumentException
 	{
 		Paragraph   actorsDiv = new Paragraph();
 		PdfPTable   transactionActors = new PdfPTable(2);
@@ -140,7 +140,7 @@ public abstract class PDFGenerator {
 		pdf.add(actorsDiv);
 	}
 
-	protected static Paragraph addContentDate(String dateType)
+	protected Paragraph addContentDate(String dateType)
 	{
 		Paragraph   dateOfTransactionDiv = new Paragraph();
 		PdfPTable   dateOfTransactionTable = new PdfPTable(2);
@@ -153,7 +153,7 @@ public abstract class PDFGenerator {
 		return dateOfTransactionDiv;
 	}
 
-	protected static Paragraph makeBookTable(PdfWriter writer, Book book)
+	protected Paragraph makeBookTable(PdfWriter writer, Book book)
 	{
 		Paragraph   returnedBooksDiv = new Paragraph();
 		PdfPTable   returnedBooksTable = new PdfPTable(2);
@@ -186,14 +186,14 @@ public abstract class PDFGenerator {
 		
 	}
 
-	protected static void addEmptyLine(Paragraph paragraph, int number)
+	protected void addEmptyLine(Paragraph paragraph, int number)
 	{
 		for (int i = 0; i < number; i++) {
 			paragraph.add(new Paragraph(" "));
 		}
 	}
 
-	protected static Image createBarCode39(String myText, PdfContentByte directContent)
+	protected Image createBarCode39(String myText, PdfContentByte directContent)
 	{
 		/**
 		 * Code 39 character set consists of barcode symbols representing
