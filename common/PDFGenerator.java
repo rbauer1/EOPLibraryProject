@@ -54,17 +54,13 @@ public abstract class PDFGenerator {
 		return true;
 	}
 
-	protected void generateContent(PdfWriter writer, Document pdf, ArrayList<Book> books1, ArrayList<Book> books2, Borrower borrower, Worker worker, BookDueDate dueDate)
+	protected void generateContent(PdfWriter writer, Document pdf, ArrayList<Book> books1, ArrayList<Book> books2, Borrower borrower, Worker worker, BookDueDate dueDate) throws DocumentException
 	{
-		try {
-			addMetaData(getTitle(), getSubleTitle(),worker,pdf);
-			addTitle(pdf);
-			addContentActors(pdf, borrower,worker);
-			addSubTitle(pdf);
-			addContent(writer, pdf, books1, books2, borrower, worker, dueDate);
-		} catch (DocumentException e) {
-			e.printStackTrace();
-		}
+		addMetaData(getTitle(), getSubleTitle(),worker,pdf);
+		addTitle(pdf);
+		addContentActors(pdf, borrower,worker);
+		addSubTitle(pdf);
+		addContent(writer, pdf, books1, books2, borrower, worker, dueDate);
 	}
 
 	protected void addTitle(Document pdf) throws DocumentException
