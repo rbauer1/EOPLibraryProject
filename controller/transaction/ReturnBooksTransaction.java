@@ -25,11 +25,10 @@ import model.Worker;
 import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
-
-import common.PDFGeneratorBackBook;
-
 import controller.Controller;
 import database.JDBCBroker;
+import document.DocumentFactory;
+import document.Receipt;
 import exception.InvalidPrimaryKeyException;
 
 /**
@@ -45,9 +44,11 @@ public class ReturnBooksTransaction extends Transaction {
 
 	/** The rentals owed by the borrower */
 	private List<Rental> outstandingRentals;
+	private List<Book> outstandingBooks;
 
 	/** The rentals being returned */
 	private List<Rental> returnRentals;
+	private List<Book> returnBooks;
 
 	/** ListBorrower Transaction */
 	private Transaction listBorrowersTransaction;
@@ -132,11 +133,20 @@ public class ReturnBooksTransaction extends Transaction {
 		if(key.equals(Key.BORROWER)){
 			return borrower;
 		}
+		if(key.equals(Key.WORKER)){
+			return worker;
+		}
 		if(key.equals(Key.OUTSTANDING_RENTALS)){
 			return outstandingRentals;
 		}
 		if(key.equals(Key.RETURN_RENTALS)){
 			return returnRentals;
+		}
+		if(key.equals(Key.OUTSTANDING_BOOKS)){
+			return outstandingBooks;
+		}
+		if(key.equals(Key.BOOK_COLLECTION)){
+			return returnBooks;
 		}
 		if(key.equals(Key.PRINT_DOCUMENT)){
 			return "test.pdf";
@@ -157,18 +167,15 @@ public class ReturnBooksTransaction extends Transaction {
 	private void returnBooks() {
 		new SwingWorker<Boolean, Void>() {
 
-			private ArrayList<Book> returnedBooks;
-			private ArrayList<Book> outstandingBooks;
-
 			@Override
 			protected Boolean doInBackground() {
 				JDBCBroker.getInstance().startTransaction();
 				boolean saveSuccess = true;
-				returnedBooks = new ArrayList<Book>();
+				returnBooks = new ArrayList<Book>();
 				outstandingBooks = new ArrayList<Book>();
 				for(Rental rental : returnRentals){
 					saveSuccess &= rental.checkIn(worker);
-					returnedBooks.add(rental.getBook());
+					returnBooks.add(rental.getBook());
 				}
 				for(Rental rental : outstandingRentals){
 					outstandingBooks.add(rental.getBook());
@@ -187,13 +194,12 @@ public class ReturnBooksTransaction extends Transaction {
 					success = false;
 				}
 				if(success){
-
-					PDFGeneratorBackBook pdfGenerator = new PDFGeneratorBackBook();
-					JDBCBroker.getInstance().commitTransaction();
-					pdfGenerator.generate("test.pdf", returnedBooks, outstandingBooks, borrower, worker, null);
+					Receipt reciept = DocumentFactory.createReceipt("ReturnBooksReceipt", ReturnBooksTransaction.this);
+					reciept.save("test.pdf");
+					System.out.println("shitt");
 					TransactionFactory.executeTransaction(ReturnBooksTransaction.this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
-//					stateChangeRequest(Key.DISPLAY_MAIN_MENU, null); //TODO necessary?
-					parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were succesfully returned."));
+					//stateChangeRequest(Key.DISPLAY_MAIN_MENU, null); //TODO necessary?
+					//parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were succesfully returned."));
 				}else{
 					JDBCBroker.getInstance().rollbackTransaction();
 					stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving the rentals."));
