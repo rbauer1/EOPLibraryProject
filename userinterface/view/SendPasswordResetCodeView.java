@@ -9,6 +9,7 @@
  */
 package userinterface.view;
 
+import userinterface.message.MessageEvent;
 import userinterface.view.form.BannerIdForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -34,7 +35,7 @@ public class SendPasswordResetCodeView extends View {
 	 */
 	public SendPasswordResetCodeView(Controller controller) {
 		super(controller, "Reset Password", BUTTON_NAMES);
-		subscribeToController(Key.INPUT_ERROR, "BannerID");
+		subscribeToController(Key.MESSAGE, "BannerID");
 	}
 
 	@Override
@@ -49,14 +50,18 @@ public class SendPasswordResetCodeView extends View {
 		if (source == buttons.get("Cancel")) {
 			controller.stateChangeRequest(Key.DISPLAY_LOGIN, null);
 		} else if (source == buttons.get("Submit")) {
+			form.setAllFieldsEnabled(false);
+			buttons.get("Submit").setEnabled(false);
 			controller.stateChangeRequest(Key.SEND_RESET_CODE, form.getValues());
 		}
 	}
 
 	@Override
 	public void updateState(String key, Object value) {
-		if (key.equals(Key.INPUT_ERROR)) {
-			messagePanel.displayErrorMessage(value.toString());
+		form.setAllFieldsEnabled(true);
+		buttons.get("Submit").setEnabled(true);
+		if (key.equals(Key.MESSAGE)) {
+			messagePanel.displayMessage((MessageEvent)value);
 		}else if(key.equals("BannerID")){
 			form.get("BannerID").setValue((String) value);
 		}

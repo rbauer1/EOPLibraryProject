@@ -12,6 +12,9 @@ package controller.transaction;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+import javax.swing.SwingWorker;
 
 import model.Book;
 import userinterface.message.MessageEvent;
@@ -42,20 +45,39 @@ public class DeleteBooksTransaction extends Transaction {
 	 * Deletes the selected book. Uses the provided bookData to generate notes to identify delete reason.
 	 * @param bookData
 	 */
-	private void deleteBook(Properties bookData){
-		String notes = "Reason For Deletion: " + bookData.getProperty("DeletionReason", "None") + "\n";
-		notes += bookData.getProperty("Notes", "");
-		if(book.setInactive(notes)){
-			stateChangeRequest(Key.BACK, "ListBooksView");
-			listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The book was deleted successfully."));
-		}else{
-			List<String> inputErrors = book.getErrors();
-			if(inputErrors.size() > 0){
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
-			}else{
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while deleting."));
+	private void deleteBook(final Properties bookData){
+		new SwingWorker<Boolean, Void>() {
+
+			@Override
+			protected Boolean doInBackground() {
+				String notes = "Reason For Deletion: " + bookData.getProperty("DeletionReason", "None") + "\n";
+				notes += bookData.getProperty("Notes", "");
+				return book.setInactive(notes);
 			}
-		}
+
+			@Override
+			public void done() {
+				boolean success = false;
+				try {
+					success = get();
+				} catch (InterruptedException e) {
+					success = false;
+				} catch (ExecutionException e) {
+					success = false;
+				}
+				if(success){
+					stateChangeRequest(Key.BACK, "ListBooksView");
+					listBooksTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The book was deleted successfully."));
+				}else{
+					List<String> inputErrors = book.getErrors();
+					if(inputErrors.size() > 0){
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+					}else{
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while deleting."));
+					}
+				}
+			}
+		}.execute();
 	}
 
 	@Override

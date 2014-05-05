@@ -12,6 +12,9 @@ package controller.transaction;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+import javax.swing.SwingWorker;
 
 import model.Borrower;
 import userinterface.message.MessageEvent;
@@ -42,20 +45,39 @@ public class DeleteBorrowersTransaction extends Transaction {
 	 * Deletes the selected borrower. Uses the provided borrowerData to generate notes to identify delete reason.
 	 * @param borrowerData
 	 */
-	private void deleteBorrower(Properties borrowerData){
-		String notes = "Reason For Deletion: " + borrowerData.getProperty("DeletionReason", "None") + "\n";
-		notes += borrowerData.getProperty("Notes", "");
-		if(borrower.setInactive(notes)){
-			stateChangeRequest(Key.BACK, "ListBorrowersView");
-			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The borrower was deleted successfully."));
-		}else{
-			List<String> inputErrors = borrower.getErrors();
-			if(inputErrors.size() > 0){
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
-			}else{
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while deleting."));
+	private void deleteBorrower(final Properties borrowerData){
+		new SwingWorker<Boolean, Void>() {
+
+			@Override
+			protected Boolean doInBackground() {
+				String notes = "Reason For Deletion: " + borrowerData.getProperty("DeletionReason", "None") + "\n";
+				notes += borrowerData.getProperty("Notes", "");
+				return borrower.setInactive(notes);
 			}
-		}
+
+			@Override
+			public void done() {
+				boolean success = false;
+				try {
+					success = get();
+				} catch (InterruptedException e) {
+					success = false;
+				} catch (ExecutionException e) {
+					success = false;
+				}
+				if(success){
+					stateChangeRequest(Key.BACK, "ListBorrowersView");
+					listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The borrower was deleted successfully."));
+				}else{
+					List<String> inputErrors = borrower.getErrors();
+					if(inputErrors.size() > 0){
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+					}else{
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while deleting."));
+					}
+				}
+			}
+		}.execute();
 	}
 
 	@Override

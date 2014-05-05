@@ -52,8 +52,14 @@ public class ModifyBorrowerView extends View {
 		if (source == buttons.get("Back")) {
 			controller.stateChangeRequest(Key.BACK, "ListBorrowersView");
 		}else if (source == buttons.get("Reset")){
+			form.setAllFieldsEnabled(false);
+			buttons.get("Save").setEnabled(false);
+			buttons.get("Reset").setEnabled(false);
 			controller.stateChangeRequest(Key.RELOAD_ENTITY, null);
 		}else if (source == buttons.get("Save") || source == form) {
+			form.setAllFieldsEnabled(false);
+			buttons.get("Save").setEnabled(false);
+			buttons.get("Reset").setEnabled(false);
 			controller.stateChangeRequest(Key.SAVE_BORROWER, form.getValues());
 		}else if (source == buttons.get("Recover")) {
 			setFormActive(true);
@@ -69,6 +75,8 @@ public class ModifyBorrowerView extends View {
 		form.setFieldEnabled(Borrower.PRIMARY_KEY, false);
 		buttons.get("Recover").getParent().setVisible(!active);
 		buttons.get("Save").getParent().setVisible(active);
+		buttons.get("Save").setEnabled(true);
+		buttons.get("Reset").setEnabled(true);
 		if(!active){
 			messagePanel.displayMessage(MessageType.INFO, "Heads Up! This borrower is archived. It must be recovered before it can be modified.");
 		}
@@ -76,6 +84,7 @@ public class ModifyBorrowerView extends View {
 
 	@Override
 	public void updateState(String key, Object value) {
+		setFormActive(true);
 		if(key.equals(Key.BORROWER)){
 			Model borrower = (Model) value;
 			form.setValues(borrower.getPersistentState());

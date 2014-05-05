@@ -13,8 +13,9 @@ package controller.transaction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
-import common.PDFGenerator;
+import javax.swing.SwingWorker;
 
 import model.Book;
 import model.Borrower;
@@ -24,6 +25,9 @@ import model.Worker;
 import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
+
+import common.PDFGeneratorBackBook;
+
 import controller.Controller;
 import database.JDBCBroker;
 import exception.InvalidPrimaryKeyException;
@@ -60,36 +64,53 @@ public class ReturnBooksTransaction extends Transaction {
 	 * Adds the rental to the list to be returned
 	 * @param value - rental or barcode
 	 */
-	private void addRentalToReturns(Object value) {
-		Rental rental;
-		if(value instanceof String) {
-			try {
-				Book book = new Book((String)value);
-				RentalCollection rentalCollection = new RentalCollection();
-				rentalCollection.findOutstanding(book, borrower);
-				List<Rental> rentals = rentalCollection.getEntities();
-				if(rentals.size() == 0){
-					stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw Shucks! The barcode you provided cannot be returned by this borrower."));
-					return;
+	private void addRentalToReturns(final Object value) {
+		new SwingWorker<Rental, Void>() {
+			@Override
+			protected Rental doInBackground() {
+				if(value instanceof String) {
+					try {
+						Book book = new Book((String)value);
+						RentalCollection rentalCollection = new RentalCollection();
+						rentalCollection.findOutstanding(book, borrower);
+						List<Rental> rentals = rentalCollection.getEntities();
+						if(rentals.size() == 0){
+							stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw Shucks! The barcode you provided cannot be returned by this borrower."));
+							return null;
+						}
+						return rentals.get(0);
+					} catch (InvalidPrimaryKeyException e) {
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw Shucks! The barcode you provided is invalid. Please try again."));
+						return null;
+					}
 				}
-				rental = rentals.get(0);
-			} catch (InvalidPrimaryKeyException e) {
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw Shucks! The barcode you provided is invalid. Please try again."));
-				return;
+				return (Rental)value;
 			}
-		}else{
-			rental = (Rental)value;
-		}
-		outstandingRentals.remove(rental);
-		if(returnRentals.contains(rental)) {
-			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Heads up! The book was not added since it is already in the list of returns."));
-			return;
-		}
-		if(rental.isLate()) {
-			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Late! This book is past the due date! It was due on " + rental.getState("DueDate")));
-		}
-		returnRentals.add(rental);
-		stateChangeRequest(Key.REFRESH_LIST, null);
+
+			@Override
+			public void done() {
+				Rental rental;
+				try {
+					rental = get();
+				} catch (InterruptedException e) {
+					rental = null;
+				} catch (ExecutionException e) {
+					rental = null;
+				}
+				if(rental != null){
+					outstandingRentals.remove(rental);
+					if(returnRentals.contains(rental)) {
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Heads up! The book was not added since it is already in the list of returns."));
+						return;
+					}
+					if(rental.isLate()) {
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Late! This book is past the due date! It was due on " + rental.getState("DueDate")));
+					}
+					returnRentals.add(rental);
+					stateChangeRequest(Key.REFRESH_LIST, null);
+				}
+			}
+		}.execute();
 	}
 
 	@Override
@@ -134,38 +155,73 @@ public class ReturnBooksTransaction extends Transaction {
 	}
 
 	private void returnBooks() {
-		JDBCBroker.getInstance().startTransaction();
-		boolean saveSuccess = true;
-		ArrayList<Book> returnedBooks = new ArrayList<Book>(), outstandingBooks = new ArrayList<Book>();
-		for(Rental rental : returnRentals){
-			saveSuccess &= rental.checkIn(worker);
-			returnedBooks.add(rental.getBook());
-		}
-		for(Rental rental : outstandingRentals){
-			outstandingBooks.add(rental.getBook());
-		}
-		if(saveSuccess){
-			JDBCBroker.getInstance().commitTransaction();
-			PDFGenerator.generate(PDFGenerator.RETURN_BOOK_ACTION, "test.pdf", returnedBooks, outstandingBooks, borrower, worker);
-			TransactionFactory.executeTransaction(this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
-//			stateChangeRequest(Key.DISPLAY_MAIN_MENU, null); //TODO necessary?
-			parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were succesfully returned."));
-		}else{
-			JDBCBroker.getInstance().rollbackTransaction();
-			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving the rentals."));
-		}
+		new SwingWorker<Boolean, Void>() {
+
+			private ArrayList<Book> returnedBooks;
+			private ArrayList<Book> outstandingBooks;
+
+			@Override
+			protected Boolean doInBackground() {
+				JDBCBroker.getInstance().startTransaction();
+				boolean saveSuccess = true;
+				returnedBooks = new ArrayList<Book>();
+				outstandingBooks = new ArrayList<Book>();
+				for(Rental rental : returnRentals){
+					saveSuccess &= rental.checkIn(worker);
+					returnedBooks.add(rental.getBook());
+				}
+				for(Rental rental : outstandingRentals){
+					outstandingBooks.add(rental.getBook());
+				}
+				return saveSuccess;
+			}
+
+			@Override
+			public void done() {
+				boolean success = false;
+				try {
+					success = get();
+				} catch (InterruptedException e) {
+					success = false;
+				} catch (ExecutionException e) {
+					success = false;
+				}
+				if(success){
+
+					PDFGeneratorBackBook pdfGenerator = new PDFGeneratorBackBook();
+					JDBCBroker.getInstance().commitTransaction();
+					pdfGenerator.generate("test.pdf", returnedBooks, outstandingBooks, borrower, worker, null);
+					TransactionFactory.executeTransaction(ReturnBooksTransaction.this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
+//					stateChangeRequest(Key.DISPLAY_MAIN_MENU, null); //TODO necessary?
+					parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were succesfully returned."));
+				}else{
+					JDBCBroker.getInstance().rollbackTransaction();
+					stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving the rentals."));
+				}
+			}
+		}.execute();
 	}
 
 	/**
 	 * Sets the borrower that is returning books
 	 * @param borrower
 	 */
-	private void selectBorrower(Borrower borrower) {
-		this.borrower = borrower;
-		outstandingRentals = borrower.getOutstandingRentals().getEntities();
-		returnRentals = new ArrayList<Rental>();
-		showView("ReturnBooksView");
-		stateChangeRequest(Key.REFRESH_LIST, null);
+	private void selectBorrower(final Borrower b) {
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() {
+				borrower = b;
+				outstandingRentals = borrower.getOutstandingRentals().getEntities();
+				returnRentals = new ArrayList<Rental>();
+				return null;
+			}
+
+			@Override
+			public void done() {
+				showView("ReturnBooksView");
+				stateChangeRequest(Key.REFRESH_LIST, null);
+			}
+		}.execute();
 	}
 
 	@Override

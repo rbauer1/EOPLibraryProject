@@ -11,8 +11,13 @@ package controller.transaction;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+import javax.swing.SwingWorker;
 
 import model.Worker;
+import userinterface.message.MessageEvent;
+import userinterface.message.MessageType;
 import utilities.Key;
 
 import common.Mailer;
@@ -24,12 +29,6 @@ public class RecoverPasswordTransaction extends Transaction {
 	
 	/** Worker Model this transaction is reseting the password for */
 	private Worker worker;
-	
-	/** List of errors in the input */
-	private List<String> inputErrorMessages;
-	
-	/** Message for input error */
-	private String inputError;
 	
 	private String bannerId;
 	
@@ -49,16 +48,10 @@ public class RecoverPasswordTransaction extends Transaction {
 
 	@Override
 	public Object getState(String key) {
-		if(key.equals(Key.INPUT_ERROR)){
-			return inputError;
-		}
-		if(key.equals(Key.INPUT_ERROR_MESSAGES)){
-			return inputErrorMessages;
-		}
 		if(key.equals("BannerID")){
 			return bannerId;
 		}
-		return null;
+		return super.getState(key);
 	}
 
 	@Override
@@ -67,25 +60,45 @@ public class RecoverPasswordTransaction extends Transaction {
 			sendPasswordResetToken((Properties) value);
 		}else if(key.equals(Key.RESET_PASSWORD)){
 			resetPassword((Properties) value);	
-		}else if(key.equals(Key.INPUT_ERROR)){
-			inputError = (String) value;
 		}else if(key.equals("BannerID")){
 			bannerId = (String) value;
 		}
-		registry.updateSubscribers(key, this);
+		super.stateChangeRequest(key, value);
 	}
 
-	private void sendPasswordResetToken(Properties workerData){
-		try {
-			worker = new Worker(workerData.getProperty("BannerID", ""));
-			String resetCode = worker.createPasswordResetCode();
-			String email = (String)worker.getState("Email");
-			String name = worker.getState("FirstName") + " " + worker.getState("LastName");
-			Mailer.getInstance().send(email, "EOP Library Password Reset", createResetCodeEmail(name, resetCode));
-			showView("ResetPasswordView");
-		} catch (InvalidPrimaryKeyException e) {
-			stateChangeRequest(Key.INPUT_ERROR, "Aww shucks! Looks like you provided an invalid Banner Id.");
-		}
+	private void sendPasswordResetToken(final Properties workerData){
+		new SwingWorker<Boolean, Void>() {
+
+			@Override
+			protected Boolean doInBackground() {
+				try {
+					worker = new Worker(workerData.getProperty("BannerID", ""));
+				} catch (InvalidPrimaryKeyException e) {
+					stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aww shucks! Looks like you provided an invalid Banner Id."));
+					return false;
+				}
+				String resetCode = worker.createPasswordResetCode();
+				String email = (String)worker.getState("Email");
+				String name = worker.getState("FirstName") + " " + worker.getState("LastName");
+				Mailer.getInstance().send(email, "EOP Library Password Reset", createResetCodeEmail(name, resetCode));
+				return true;
+			}
+
+			@Override
+			public void done() {
+				boolean success = false;
+				try {
+					success = get();
+				} catch (InterruptedException e) {
+					success = false;
+				} catch (ExecutionException e) {
+					success = false;
+				}
+				if(success){
+					showView("ResetPasswordView");
+				}
+			}
+		}.execute();
 	}
 	
 	private String createResetCodeEmail(String name, String resetCode){
@@ -98,18 +111,39 @@ public class RecoverPasswordTransaction extends Transaction {
 		return sb.toString();
 	}
 	
-	private void resetPassword(Properties resetPasswordData){
-		resetPasswordData.setProperty("PasswordChangeType", "CodeReset");
-		worker.stateChangeRequest(resetPasswordData);
-		if(worker.save()){
-			stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);
-		}else{
-			inputErrorMessages = worker.getErrors();
-			if(inputErrorMessages.size() > 0){
-				stateChangeRequest(Key.INPUT_ERROR, "Aw shucks! There are errors in the input. Please try again.");
-			}else{
-				stateChangeRequest(Key.SAVE_ERROR, null);
+	private void resetPassword(final Properties resetPasswordData){
+		new SwingWorker<Boolean, Void>() {
+
+			@Override
+			protected Boolean doInBackground() {
+				resetPasswordData.setProperty("PasswordChangeType", "CodeReset");
+				worker.stateChangeRequest(resetPasswordData);
+				return worker.save();
 			}
-		}
+
+			@Override
+			public void done() {
+				boolean success = false;
+				try {
+					success = get();
+				} catch (InterruptedException e) {
+					success = false;
+				} catch (ExecutionException e) {
+					success = false;
+				}
+				if(success){
+					parentController.stateChangeRequest(Key.WORKER, worker);
+					stateChangeRequest(Key.DISPLAY_MAIN_MENU, worker);
+					parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! Your password was successfully changed."));
+				}else{
+					List<String> inputErrors = worker.getErrors();
+					if(inputErrors.size() > 0){
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+					}else{
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving."));
+					}
+				}
+			}
+		}.execute();
 	}
 }

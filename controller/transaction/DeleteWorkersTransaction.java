@@ -12,6 +12,9 @@ package controller.transaction;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+import javax.swing.SwingWorker;
 
 import model.Worker;
 import userinterface.message.MessageEvent;
@@ -42,20 +45,39 @@ public class DeleteWorkersTransaction extends Transaction {
 	 * Deletes the selected worker. Uses the provided workerData to generate notes to identify delete reason.
 	 * @param workerData
 	 */
-	private void deleteWorker(Properties workerData){
-		String notes = "Reason For Deletion: " + workerData.getProperty("DeletionReason", "None") + "\n";
-		notes += workerData.getProperty("Notes", "");
-		if(worker.setInactive(notes)){
-			stateChangeRequest(Key.BACK, "ListWorkersView");
-			listWorkersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The worker was deleted successfully."));
-		}else{
-			List<String> inputErrors = worker.getErrors();
-			if(inputErrors.size() > 0){
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
-			}else{
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while deleting."));
+	private void deleteWorker(final Properties workerData){
+		new SwingWorker<Boolean, Void>() {
+
+			@Override
+			protected Boolean doInBackground() {
+				String notes = "Reason For Deletion: " + workerData.getProperty("DeletionReason", "None") + "\n";
+				notes += workerData.getProperty("Notes", "");
+				return worker.setInactive(notes);
 			}
-		}
+
+			@Override
+			public void done() {
+				boolean success = false;
+				try {
+					success = get();
+				} catch (InterruptedException e) {
+					success = false;
+				} catch (ExecutionException e) {
+					success = false;
+				}
+				if(success){
+					stateChangeRequest(Key.BACK, "ListWorkersView");
+					listWorkersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The worker was deleted successfully."));
+				}else{
+					List<String> inputErrors = worker.getErrors();
+					if(inputErrors.size() > 0){
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+					}else{
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while deleting."));
+					}
+				}
+			}
+		}.execute();
 	}
 
 	@Override

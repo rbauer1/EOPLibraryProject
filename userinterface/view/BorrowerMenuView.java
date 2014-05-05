@@ -9,6 +9,7 @@
  */
 package userinterface.view;
 
+import model.Worker;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import utilities.Key;
@@ -26,6 +27,7 @@ public class BorrowerMenuView extends View {
 	private Button modifyButton;
 	private Button deleteButton;
 	private Button backButton;
+	private Button listBorrowersButton;
 
 	/**
 	 * Constructs Worker menu view
@@ -37,17 +39,23 @@ public class BorrowerMenuView extends View {
 
 	@Override
 	protected void build() {
-		addButton = new Button("Add Borrower");
-		addButton.addActionListener(this);
-		add(ViewHelper.formatCenter(addButton));
-
-		modifyButton = new Button("Modify Borrower");
-		modifyButton.addActionListener(this);
-		add(ViewHelper.formatCenter(modifyButton));
-
-		deleteButton = new Button("Delete Borrower");
-		deleteButton.addActionListener(this);
-		add(ViewHelper.formatCenter(deleteButton));
+		if(((Worker)controller.getState(Key.WORKER)).isAdmin()){
+			addButton = new Button("Add Borrower");
+			addButton.addActionListener(this);
+			add(ViewHelper.formatCenter(addButton));
+	
+			modifyButton = new Button("Modify Borrower");
+			modifyButton.addActionListener(this);
+			add(ViewHelper.formatCenter(modifyButton));
+	
+			deleteButton = new Button("Delete Borrower");
+			deleteButton.addActionListener(this);
+			add(ViewHelper.formatCenter(deleteButton));
+		}
+		
+		listBorrowersButton = new Button("List Borrowers With Rented Books");
+		listBorrowersButton.addActionListener(this);
+		add(ViewHelper.formatCenter(listBorrowersButton));
 
 		backButton = new Button("Back");
 		backButton.addActionListener(this);
@@ -64,6 +72,8 @@ public class BorrowerMenuView extends View {
 			controller.stateChangeRequest(Key.EXECUTE_MODIFY_BORROWER, null);
 		} else if (source == deleteButton) {
 			controller.stateChangeRequest(Key.EXECUTE_DELETE_BORROWER, null);
+		} else if (source == listBorrowersButton) {
+			controller.stateChangeRequest(Key.EXECUTE_LIST_BORROWERS_WITH_RENTED_BOOKS, null);
 		}
 	}
 

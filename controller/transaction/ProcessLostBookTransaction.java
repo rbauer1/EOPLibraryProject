@@ -10,6 +10,7 @@
 package controller.transaction;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -24,7 +25,7 @@ import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
 
-import common.PDFGenerator;
+import common.PDFGeneratorLostBook;
 
 import controller.Controller;
 import database.JDBCBroker;
@@ -141,7 +142,10 @@ public class ProcessLostBookTransaction extends Transaction {
 					//showView("ListRentalsView");
 					//stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The book was marked as lost successfully, and the borrower was set as deliquent and their balance was updated."));
 					getRentals();
-					PDFGenerator.generate(PDFGenerator.LOST_BOOK_ACTION, "test.pdf", book, borrower, worker);
+					PDFGeneratorLostBook pdfGenerator = new PDFGeneratorLostBook();
+					ArrayList<Book> books = new ArrayList<Book>();
+					books.add(book);
+					pdfGenerator.generate("test.pdf", books, null, borrower, worker, null);
 					TransactionFactory.executeTransaction(ProcessLostBookTransaction.this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
 				}else{
 					JDBCBroker.getInstance().rollbackTransaction();

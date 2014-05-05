@@ -149,8 +149,10 @@ public class ReturnBooksView extends View {
 		if (source == buttons.get("Back")) {
 			controller.stateChangeRequest(Key.BACK, "ListBorrowersView");
 		} else if (source == buttons.get("Done")) {
+			buttons.get("Done").setEnabled(false);
 			controller.stateChangeRequest(Key.RETURN_BOOKS, null);
 		} else if (source == barcodeForm || source == buttons.get("Add")) {
+			buttons.get("Done").setEnabled(false);
 			String barcode = barcodeForm.getValues().getProperty("Barcode", "");
 			if(barcode.length() > 0) {
 				controller.stateChangeRequest(Key.ADD_RENTAL_TO_LIST, barcode);
@@ -178,6 +180,7 @@ public class ReturnBooksView extends View {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {
+		buttons.get("Done").setEnabled(returnRentals.size() > 0);
 		if (key.equals(Key.OUTSTANDING_RENTALS)) {
 			outstandingRentals = (List<Rental>) value;
 			outstandingRentalsTable.setModel(new RentalTableModel(outstandingRentals));
@@ -186,7 +189,6 @@ public class ReturnBooksView extends View {
 			returnRentals = (List<Rental>) value;
 			returnRentalsTable.setModel(new RentalTableModel(returnRentals));
 			returnRentalsTable.repaint();
-			buttons.get("Done").setEnabled(returnRentals.size() > 0);
 		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
 		}

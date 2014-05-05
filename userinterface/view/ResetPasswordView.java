@@ -9,8 +9,7 @@
  */
 package userinterface.view;
 
-import java.util.List;
-
+import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import userinterface.view.form.Form;
 import userinterface.view.form.ResetPasswordForm;
@@ -37,7 +36,7 @@ public class ResetPasswordView extends View {
 	 */
 	public ResetPasswordView(Controller controller) {
 		super(controller, "Set Password", BUTTON_NAMES);
-		subscribeToController(Key.INPUT_ERROR, Key.SAVE_ERROR);
+		subscribeToController(Key.MESSAGE);
 	}
 
 	@Override
@@ -52,19 +51,19 @@ public class ResetPasswordView extends View {
 		messagePanel.clear();
 		if (source == buttons.get("Cancel")) {
 			controller.stateChangeRequest(Key.DISPLAY_LOGIN, null);
-		} else if (source == buttons.get("Submit")) {
+		} else if (source == buttons.get("Submit") || source == form) {
+			form.setAllFieldsEnabled(false);
+			buttons.get("Submit").setEnabled(false);
 			controller.stateChangeRequest(Key.RESET_PASSWORD, form.getValues());
 		}
 	}
 
 	@Override
 	public void updateState(String key, Object value) {
-		if (key.equals(Key.INPUT_ERROR)) {
-			@SuppressWarnings("unchecked")
-			List<String> inputErrorMessages = (List<String>) controller.getState(Key.INPUT_ERROR_MESSAGES);
-			messagePanel.displayErrorMessage(value.toString(), inputErrorMessages);
-		}else if (key.equals(Key.SAVE_ERROR)) {
-			messagePanel.displayErrorMessage("Whoops! An error occurred while saving.");
+		form.setAllFieldsEnabled(true);
+		buttons.get("Submit").setEnabled(true);
+		if (key.equals(Key.MESSAGE)) {
+			messagePanel.displayMessage((MessageEvent)value);
 		}
 	}
 	
