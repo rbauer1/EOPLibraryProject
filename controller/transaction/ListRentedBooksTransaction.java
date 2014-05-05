@@ -17,8 +17,8 @@ import model.Book;
 import model.BookCollection;
 import utilities.Key;
 import controller.Controller;
+import document.DocumentFactory;
 import document.ExcelDocument;
-import document.ListRentedBooksDocument;
 
 /**
  * Transaction that handles listing all rented books
@@ -74,7 +74,7 @@ public class ListRentedBooksTransaction extends Transaction {
 		if (key.equals(Key.REFRESH_LIST)) {
 			getBooks();
 		}else if (key.equals(Key.EXPORT_TO_EXCEL)) {
-			ExcelDocument document = new ListRentedBooksDocument(this);
+			ExcelDocument document = DocumentFactory.createExcelDocument("ListRentedBooksDocument", this);
 			document.save();
 		}
 		super.stateChangeRequest(key, value);

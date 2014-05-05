@@ -17,8 +17,8 @@ import model.Book;
 import model.BookCollection;
 import utilities.Key;
 import controller.Controller;
+import document.DocumentFactory;
 import document.ExcelDocument;
-import document.ListAvailableBooksDocument;
 
 /**
  * Transaction that handles listing all available books
@@ -74,7 +74,7 @@ public class ListAvailableBooksTransaction extends Transaction {
 		if (key.equals(Key.REFRESH_LIST)) {
 			getBooks();
 		}else if (key.equals(Key.EXPORT_TO_EXCEL)) {
-			ExcelDocument document = new ListAvailableBooksDocument(this);
+			ExcelDocument document = DocumentFactory.createExcelDocument("ListAvailableBooksDocument", this);
 			document.save();
 		}
 		super.stateChangeRequest(key, value);

@@ -17,8 +17,8 @@ import model.Borrower;
 import model.BorrowerCollection;
 import utilities.Key;
 import controller.Controller;
+import document.DocumentFactory;
 import document.ExcelDocument;
-import document.ListBorrowersWithRentedBooksDocument;
 
 /**
  * Transaction that handles listing all borrowers that currently have books rented
@@ -75,7 +75,7 @@ public class ListBorrowersWithRentedBooksTransaction extends Transaction {
 		if (key.equals(Key.REFRESH_LIST)) {
 			getBorrowers();
 		}else if (key.equals(Key.EXPORT_TO_EXCEL)) {
-			ExcelDocument document = new ListBorrowersWithRentedBooksDocument(this);
+			ExcelDocument document = DocumentFactory.createExcelDocument("ListBorrowersWithRentedBooksDocument", this);
 			document.save();
 		}
 		super.stateChangeRequest(key, value);
