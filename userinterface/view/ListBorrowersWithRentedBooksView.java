@@ -5,15 +5,15 @@ import java.util.List;
 
 import javax.swing.JTable;
 
-import model.Book;
+import model.Borrower;
 import userinterface.message.MessageEvent;
 import utilities.Key;
 import controller.Controller;
 
 /**
- * View that provides interface to list all available books.
+ * View that provides interface to list all rented books
  */
-public class ListAvailableBooksView extends ListView {
+public class ListBorrowersWithRentedBooksView extends ListView {
 
 	private static final long serialVersionUID = -7452072411398228893L;
 
@@ -21,15 +21,15 @@ public class ListAvailableBooksView extends ListView {
 	private static final String[] BUTTON_NAMES = {"Export To Excel", "Back"};
 
 	/** Entities in the table */
-	private List<Book> books;
+	private List<Borrower> borrowers;
 
 	/**
-	 * Constructs list available books view
+	 * Constructs list rented books
 	 * @param controller
 	 */
-	public ListAvailableBooksView(Controller controller) {
-		super(controller, "Available Books", BUTTON_NAMES);
-		subscribeToController(Key.BOOK_COLLECTION, Key.MESSAGE);
+	public ListBorrowersWithRentedBooksView(Controller controller) {
+		super(controller, "Borrowers With Outstanding Books", BUTTON_NAMES);
+		subscribeToController(Key.BORROWER_COLLECTION, Key.MESSAGE);
 		controller.stateChangeRequest(Key.REFRESH_LIST, null);
 	}
 
@@ -38,15 +38,15 @@ public class ListAvailableBooksView extends ListView {
 
 	@Override
 	protected JTable createTable() {
-		books = new ArrayList<Book>();
-		return new JTable(new BookTableModel(books));
+		borrowers = new ArrayList<Borrower>();
+		return new JTable(new BorrowerTableModel(borrowers));
 	}
 
 	@Override
 	public void processAction(Object source) {
 		messagePanel.clear();
 		if (source == buttons.get("Back")) {
-			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
+			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
 		}else if (source == buttons.get("Export To Excel")){
 			controller.stateChangeRequest(Key.EXPORT_TO_EXCEL, null);
 		}
@@ -61,9 +61,9 @@ public class ListAvailableBooksView extends ListView {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {
-		if (key.equals(Key.BOOK_COLLECTION)) {
-			books = (List<Book>) value;
-			table.setModel(new BookTableModel(books));
+		if (key.equals(Key.BORROWER_COLLECTION)) {
+			borrowers = (List<Borrower>) value;
+			table.setModel(new BorrowerTableModel(borrowers));
 			table.repaint();
 		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);

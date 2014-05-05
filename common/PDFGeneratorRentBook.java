@@ -1,15 +1,16 @@
 package common;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfWriter;
+import java.util.ArrayList;
+
 import model.Book;
 import model.BookDueDate;
 import model.Borrower;
 import model.Worker;
 
-import java.util.ArrayList;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 
 /**
  * Created by chaber_e on 23/04/2014.

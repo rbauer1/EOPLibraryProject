@@ -17,9 +17,6 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
-import common.PDFGenerator;
-
-import common.PDFGeneratorBackBook;
 import model.Book;
 import model.Borrower;
 import model.Rental;
@@ -28,6 +25,9 @@ import model.Worker;
 import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
+
+import common.PDFGeneratorBackBook;
+
 import controller.Controller;
 import database.JDBCBroker;
 import exception.InvalidPrimaryKeyException;

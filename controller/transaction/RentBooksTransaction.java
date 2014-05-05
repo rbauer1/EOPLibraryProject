@@ -16,7 +16,6 @@ import java.util.concurrent.ExecutionException;
 
 import javax.swing.SwingWorker;
 
-import common.PDFGeneratorRentBook;
 import model.Book;
 import model.BookDueDate;
 import model.Borrower;
@@ -26,7 +25,7 @@ import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
 
-import common.PDFGenerator;
+import common.PDFGeneratorRentBook;
 
 import controller.Controller;
 import database.JDBCBroker;

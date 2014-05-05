@@ -13,58 +13,59 @@ import java.util.List;
 
 import javax.swing.SwingWorker;
 
-import model.Book;
-import model.BookCollection;
+import model.Borrower;
+import model.BorrowerCollection;
 import utilities.Key;
 import controller.Controller;
 import document.DocumentFactory;
 import document.ExcelDocument;
 
 /**
- * Transaction that handles listing all available books
+ * Transaction that handles listing all borrowers that currently have books rented
  */
-public class ListAvailableBooksTransaction extends Transaction {
+public class ListBorrowersWithRentedBooksTransaction extends Transaction {
 
-	/** list of books returned from search */
-	private List<Book> books;
+	/** list all borrowers with rented books */
+	private List<Borrower> borrowers;
 
 	/**
-	 * Constructs List Books Transaction t
+	 * Constructs List Borrowers With Rented Books Transaction
 	 * @param parentController
 	 */
-	public ListAvailableBooksTransaction(Controller parentController) {
+	public ListBorrowersWithRentedBooksTransaction(Controller parentController) {
 		super(parentController);
 	}
 
 	@Override
 	public void execute() {
-		showView("ListAvailableBooksView");
+		showView("ListBorrowersWithRentedBooksView");
 	}
 
 	/**
-	 * Retrieves Books and Updates list
+	 * Retrieves Borrowers and Updates list
 	 */
-	private void getBooks() {
+	private void getBorrowers() {
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() {
-				BookCollection bookCollection = new BookCollection();
-				bookCollection.findAvailable();
-				books = bookCollection.getEntities();
+				
+				BorrowerCollection borrowerCollection = new BorrowerCollection();
+				borrowerCollection.findWithOutstandingRentals();
+				borrowers = borrowerCollection.getEntities();
 				return null;
 			}
 
 			@Override
 			public void done() {
-				stateChangeRequest(Key.BOOK_COLLECTION, null);
+				stateChangeRequest(Key.BORROWER_COLLECTION, null);
 			}
 		}.execute();
 	}
 
 	@Override
 	public Object getState(String key) {
-		if (key.equals(Key.BOOK_COLLECTION)) {
-			return books;
+		if (key.equals(Key.BORROWER_COLLECTION)) {
+			return borrowers;
 		}
 		return super.getState(key);
 	}
@@ -72,9 +73,9 @@ public class ListAvailableBooksTransaction extends Transaction {
 	@Override
 	public void stateChangeRequest(String key, Object value) {
 		if (key.equals(Key.REFRESH_LIST)) {
-			getBooks();
+			getBorrowers();
 		}else if (key.equals(Key.EXPORT_TO_EXCEL)) {
-			ExcelDocument document = DocumentFactory.createExcelDocument("ListAvailableBooksDocument", this);
+			ExcelDocument document = DocumentFactory.createExcelDocument("ListBorrowersWithRentedBooksDocument", this);
 			document.save();
 		}
 		super.stateChangeRequest(key, value);
