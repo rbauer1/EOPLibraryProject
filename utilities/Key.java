@@ -35,6 +35,7 @@ public class Key {
 	public static final String EXECUTE_DELETE_BORROWER 	= "DeleteBorrowersTransaction";
 	public static final String EXECUTE_DELETE_WORKER 	= "DeleteWorkersTransaction";
 	public static final String EXECUTE_MODIFY_BOOK 	= "ModifyBooksTransaction";
+	public static final String EXECUTE_LIST_BORROWERS_WITH_RENTED_BOOKS = "ListBorrowersWithRentedBooksTransaction";
 
 	public static final String EXECUTE_MODIFY_BORROWER 	= "ModifyBorrowersTransaction";
 	public static final String EXECUTE_MODIFY_WORKER 	= "ModifyWorkersTransaction";
@@ -96,6 +97,9 @@ public class Key {
 	public static final String PRINT_PREVIEW = "PrintPreview";
 	public static final String PRINT_DOCUMENT = "PrintDocument";
 	public static final String PRINT = "Print";
+	
+	
+	public static final String EXPORT_TO_EXCEL = "ExportToExcel";
 
 
 	private Key(){};

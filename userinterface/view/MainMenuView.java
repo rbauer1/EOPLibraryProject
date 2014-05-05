@@ -51,18 +51,17 @@ public class MainMenuView extends View {
 		bookActionsButton = new Button("Book Menu");
 		bookActionsButton.addActionListener(this);
 		add(ViewHelper.formatCenter(bookActionsButton));
+		
+		borrowerActionsButton = new Button("Borrower Menu");
+		borrowerActionsButton.addActionListener(this);
+		add(ViewHelper.formatCenter(borrowerActionsButton));
 
 		if(((Worker)controller.getState(Key.WORKER)).isAdmin()){
-			borrowerActionsButton = new Button("Borrower Menu");
-			borrowerActionsButton.addActionListener(this);
-			add(ViewHelper.formatCenter(borrowerActionsButton));
-
 			workerActionsButton = new Button("Workers Menu");
 			workerActionsButton.addActionListener(this);
 			add(ViewHelper.formatCenter(workerActionsButton));
 		}
-
-
+		
 		rentBookButton = new Button("Rent a Book");
 		rentBookButton.addActionListener(this);
 		add(ViewHelper.formatCenter(rentBookButton));

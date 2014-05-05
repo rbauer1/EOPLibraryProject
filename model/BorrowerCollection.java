@@ -16,7 +16,8 @@ public class BorrowerCollection extends ModelCollection<Borrower> {
 	}
 
 	public void findWithOutstandingRentals() {
-
+		find("WHERE `" + Borrower.PRIMARY_KEY + "` IN (SELECT `BorrowerID` FROM `" 
+				+ Rental.TABLE_NAME + "` WHERE `CheckinDate` IS NULL);");
 	}
 
 	@Override

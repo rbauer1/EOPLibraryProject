@@ -18,7 +18,7 @@ public class ListBorrowersWithRentedBooksView extends ListView {
 	private static final long serialVersionUID = -7452072411398228893L;
 
 	/** Names of buttons on bottom, Must be in order which you want them to appear */
-	private static final String[] BUTTON_NAMES = {"Back"};
+	private static final String[] BUTTON_NAMES = {"Export To Excel", "Back"};
 
 	/** Entities in the table */
 	private List<Borrower> borrowers;
@@ -47,6 +47,8 @@ public class ListBorrowersWithRentedBooksView extends ListView {
 		messagePanel.clear();
 		if (source == buttons.get("Back")) {
 			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
+		}else if (source == buttons.get("Export To Excel")){
+			controller.stateChangeRequest(Key.EXPORT_TO_EXCEL, null);
 		}
 	}
 
@@ -59,7 +61,7 @@ public class ListBorrowersWithRentedBooksView extends ListView {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {
-		if (key.equals(Key.BOOK_COLLECTION)) {
+		if (key.equals(Key.BORROWER_COLLECTION)) {
 			borrowers = (List<Borrower>) value;
 			table.setModel(new BorrowerTableModel(borrowers));
 			table.repaint();

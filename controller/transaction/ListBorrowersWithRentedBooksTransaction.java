@@ -17,6 +17,8 @@ import model.Borrower;
 import model.BorrowerCollection;
 import utilities.Key;
 import controller.Controller;
+import document.ExcelDocument;
+import document.ListBorrowersWithRentedBooksDocument;
 
 /**
  * Transaction that handles listing all borrowers that currently have books rented
@@ -46,6 +48,7 @@ public class ListBorrowersWithRentedBooksTransaction extends Transaction {
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() {
+				
 				BorrowerCollection borrowerCollection = new BorrowerCollection();
 				borrowerCollection.findWithOutstandingRentals();
 				borrowers = borrowerCollection.getEntities();
@@ -71,6 +74,9 @@ public class ListBorrowersWithRentedBooksTransaction extends Transaction {
 	public void stateChangeRequest(String key, Object value) {
 		if (key.equals(Key.REFRESH_LIST)) {
 			getBorrowers();
+		}else if (key.equals(Key.EXPORT_TO_EXCEL)) {
+			ExcelDocument document = new ListBorrowersWithRentedBooksDocument(this);
+			document.save();
 		}
 		super.stateChangeRequest(key, value);
 	}
