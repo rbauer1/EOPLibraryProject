@@ -34,6 +34,7 @@ public class ExcelDocument {
 				document.append(',');
 			}
 		}
+		document.append('\n');
 
 		
 		for(int row = 0; row < numRows; row++){
@@ -43,15 +44,16 @@ public class ExcelDocument {
 					document.append(',');
 				}
 			}
+			document.append('\n');
 		}
 	}
 
 	protected void createTimestamp(){
-		document.append("Created On: " + DateUtil.getDateTime());
+		document.append("Created On: " + DateUtil.getDateTime() + "\n");
 	}
 
 	protected void createTitle(String title){
-		document.append(title);
+		document.append(title + '\n');
 	}
 
 	public boolean save(String filePath){
@@ -60,6 +62,11 @@ public class ExcelDocument {
 	
 	public boolean save(File file){
 		try {
+			
+			if(!file.getName().toLowerCase().endsWith(".csv")){
+				return save(file.getCanonicalPath() + ".csv");
+			}
+			
 			if (!file.exists()) {
 					file.createNewFile();
 			}
