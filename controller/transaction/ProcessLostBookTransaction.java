@@ -10,7 +10,6 @@
 package controller.transaction;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -24,11 +23,10 @@ import model.Worker;
 import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
-
-import common.PDFGeneratorLostBook;
-
 import controller.Controller;
 import database.JDBCBroker;
+import document.DocumentFactory;
+import document.Receipt;
 
 /**
  * Transaction that handles process a lost book.
@@ -95,6 +93,9 @@ public class ProcessLostBookTransaction extends Transaction {
 		if(key.equals(Key.BORROWER)){
 			return borrower;
 		}
+		if(key.equals(Key.WORKER)){
+			return worker;
+		}
 		if(key.equals(Key.RENTAL_COLLECTION)){
 			return rentals;
 		}
@@ -142,10 +143,8 @@ public class ProcessLostBookTransaction extends Transaction {
 					//showView("ListRentalsView");
 					//stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The book was marked as lost successfully, and the borrower was set as deliquent and their balance was updated."));
 					getRentals();
-					PDFGeneratorLostBook pdfGenerator = new PDFGeneratorLostBook();
-					ArrayList<Book> books = new ArrayList<Book>();
-					books.add(book);
-					pdfGenerator.generate("test.pdf", books, null, borrower, worker, null);
+					Receipt reciept = DocumentFactory.createReceipt("LostBookReceipt", ProcessLostBookTransaction.this);
+					reciept.save("test.pdf");
 					TransactionFactory.executeTransaction(ProcessLostBookTransaction.this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
 				}else{
 					JDBCBroker.getInstance().rollbackTransaction();

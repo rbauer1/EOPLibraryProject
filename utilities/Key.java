@@ -6,6 +6,8 @@ public class Key {
 	public static final String BACK = "Back";
 	public static final String BOOK = "Book";
 	public static final String BOOK_COLLECTION = "BookCollection";
+	public static final String OUTSTANDING_BOOKS = "OustandingBooks";
+
 
 	public static final String BORROWER = "Borrower";
 	public static final String BORROWER_COLLECTION = "BorrowerCollection";
@@ -97,10 +99,11 @@ public class Key {
 	public static final String PRINT_PREVIEW = "PrintPreview";
 	public static final String PRINT_DOCUMENT = "PrintDocument";
 	public static final String PRINT = "Print";
-	
-	
+
+
 	public static final String EXPORT_TO_EXCEL = "ExportToExcel";
 
+	public static final String BOOK_DUE_DATE = "BookDueDate";
 
 	private Key(){};
 }

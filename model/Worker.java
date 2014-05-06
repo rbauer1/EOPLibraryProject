@@ -159,6 +159,14 @@ public class Worker extends Model {
 	}
 
 	@Override
+	public Object getState(String key){
+		if(key.equals("Name")){
+			return getState("FirstName") + " " + getState("LastName");
+		}
+		return super.getState(key);
+	}
+
+	@Override
 	public String getTableName() {
 		return TABLE_NAME;
 	}

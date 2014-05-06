@@ -24,11 +24,10 @@ import model.Worker;
 import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
-
-import common.PDFGeneratorRentBook;
-
 import controller.Controller;
 import database.JDBCBroker;
+import document.DocumentFactory;
+import document.Receipt;
 import exception.InvalidPrimaryKeyException;
 
 /**
@@ -131,6 +130,12 @@ public class RentBooksTransaction extends Transaction {
 		if(key.equals(Key.BORROWER)){
 			return borrower;
 		}
+		if(key.equals(Key.BOOK_DUE_DATE)){
+			return dueDate;
+		}
+		if(key.equals(Key.WORKER)){
+			return worker;
+		}
 		if(key.equals(Key.BOOK_COLLECTION)){
 			return books;
 		}
@@ -193,8 +198,8 @@ public class RentBooksTransaction extends Transaction {
 				}
 				if(success){
 					JDBCBroker.getInstance().commitTransaction();
-					PDFGeneratorRentBook pdfGenerator = new PDFGeneratorRentBook();
-					pdfGenerator.generate("test.pdf", books, null, borrower, worker, dueDate);
+					Receipt reciept = DocumentFactory.createReceipt("RentBooksReceipt", RentBooksTransaction.this);
+					reciept.save("test.pdf");
 					TransactionFactory.executeTransaction(RentBooksTransaction.this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
 
 					//stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);
