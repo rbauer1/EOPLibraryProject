@@ -29,8 +29,6 @@ import userinterface.component.flat.FButton;
 import userinterface.component.flat.Icons;
 import userinterface.menu.MButton;
 import userinterface.message.MessageEvent;
-import userinterface.panel.HeaderPanel;
-import userinterface.panel.MenuPanel;
 import userinterface.utilities.Utils;
 import utilities.Key;
 import controller.Controller;

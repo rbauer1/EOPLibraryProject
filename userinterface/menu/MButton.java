@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 
 import userinterface.component.flat.FButton;
 import userinterface.component.flat.IconConfig;
-import userinterface.panel.MenuPanel;
+import userinterface.view.panel.MenuPanel;
 import userinterface.utilities.ButtonSet;
 import userinterface.utilities.Utils;
 

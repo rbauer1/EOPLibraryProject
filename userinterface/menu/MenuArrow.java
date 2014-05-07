@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 import userinterface.Config;
 import userinterface.MainFrame;
-import userinterface.panel.MenuPanel;
+import userinterface.view.panel.MenuPanel;
 import userinterface.utilities.Utils;
 
 public class MenuArrow extends JPanel {

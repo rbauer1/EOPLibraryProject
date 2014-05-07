@@ -25,8 +25,8 @@ import userinterface.component.Panel;
 import userinterface.component.flat.FButton;
 import userinterface.component.flat.Icons;
 import userinterface.menu.MButton;
-import userinterface.panel.HeaderPanel;
-import userinterface.panel.MenuPanel;
+import userinterface.view.panel.HeaderPanel;
+import userinterface.view.panel.MenuPanel;
 import userinterface.utilities.Utils;
 import userinterface.view.View;
 import userinterface.view.ViewFactory;
@@ -85,36 +85,6 @@ public class MainScreen extends Screen implements ActionListener {
 		JPanel empty = new JPanel();
 		empty.setBackground(Color.pink);
 		add(empty, BorderLayout.CENTER);
-	}
-	
-	private MenuPanel createMenu() {
-		MenuPanel menu = new MenuPanel();
-		
-		bookActionsButton = new MButton("Book Menu", Icons.BOOK, this);
-		menu.add(bookActionsButton);
-
-		if (((Worker)getView().getController().getState(Key.WORKER)).isAdmin()){
-			borrowerActionsButton = new MButton("Borrower Menu", Icons.BORROWER, this);
-			menu.add(borrowerActionsButton);
-
-			workerActionsButton = new MButton("Workers Menu", Icons.WORKER, this);
-			menu.add(workerActionsButton);
-		}
-
-		checkoutBookButton = new MButton("Rent a Book", Icons.RENT_BOOK, this);
-		menu.add(checkoutBookButton);
-
-		checkinBookButton = new MButton("Return a Book", Icons.RETURN_BOOK, this);
-		menu.add(checkinBookButton);
-		
-		return menu;
-	}
-
-	private HeaderPanel createHeader() {
-		Controller controller = getView().getController();
-
-		logoutButton = new FButton("", this);
-		return new HeaderPanel((Worker)controller.getState(Key.WORKER), logoutButton);
 	}
 	
 	public void processAction(Object source) {

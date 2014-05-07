@@ -30,8 +30,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import controller.Controller;
-import userinterface.panel.HeaderPanel;
-import userinterface.panel.MenuPanel;
+import userinterface.view.panel.HeaderPanel;
+import userinterface.view.panel.MenuPanel;
 import userinterface.screen.LoginScreen;
 import userinterface.screen.MainScreen;
 import userinterface.screen.Screen;
