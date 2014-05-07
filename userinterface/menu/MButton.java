@@ -3,10 +3,12 @@ package userinterface.menu;
 import java.awt.event.ActionListener;
 
 import userinterface.component.flat.FButton;
+import userinterface.component.flat.IconConfig;
+import userinterface.panel.MenuPanel;
 import userinterface.utilities.ButtonSet;
+import userinterface.utilities.Utils;
 
 public class MButton extends FButton {
-	private static final ButtonSet globalSet = new ButtonSet();
 	private MenuArrow arrow = null;
 	
 	private static final int WIDTH = 80;
@@ -15,13 +17,13 @@ public class MButton extends FButton {
 	// FIXME: could be more intuitive
 	private static final int ARROW_SIZE = 40;
 
-	public MButton(String title, String iconfile, ActionListener listener) {
-		super(title, iconfile, listener, WIDTH, HEIGHT);
-		attachSet(globalSet);
+	public MButton(String title, IconConfig icons, ActionListener listener) {
+		super(title, icons, listener, WIDTH, HEIGHT);
+		Utils.addPadding(this, 10, 10, 10, 10);
 	}
 	
-	public MButton(String title, String iconfile) {
-		this(title, iconfile, null);
+	public MButton(String title, IconConfig icons) {
+		this(title, icons, null);
 	}
 	
 	protected void onPress() {

@@ -89,5 +89,9 @@ public class Utils {
 		}
 		return true;
 	}
+	
+	public static String getImagePath(String filename) {
+		return "src/images/" + filename;
+	}
 
 }

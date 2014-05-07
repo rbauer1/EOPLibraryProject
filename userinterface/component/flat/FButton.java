@@ -38,6 +38,26 @@ import userinterface.utilities.Utils;
 
 public class FButton extends JButton {
 
+	private static final Font FONT = new Font("Arial", Font.TYPE1_FONT, 14);
+	private static final Color FONT_COLOR = new Color(0xF0F0E8);
+
+	private static final Color UNCLICKED_COLOR = new Color(0x1ABC9C);
+	private static final Color PRESSED_COLOR = new Color(0x16A085);
+	private static final Color HOVER_COLOR = PRESSED_COLOR;
+	
+	private static final int DEFAULT_WIDTH = 100;
+	private static final int DEFAULT_HEIGHT = 100;
+
+	private boolean mousePressed = false;
+	private boolean rollover = false;
+	private boolean pressed = false;
+	private boolean focused = false;
+	
+	private ButtonSet set = null;
+
+	private IconConfig iconConf;
+	private ColorConfig colorConf = Colors.BASIC_COLOR;
+
 	private static class AListener implements ActionListener {
 		private FButton ref;
 		
@@ -58,9 +78,11 @@ public class FButton extends JButton {
 		}
 
 	    public void mousePressed(MouseEvent e) {
+	    	ref.mousePressed = true;
 	    }
 
 	    public void mouseReleased(MouseEvent e) {
+	    	ref.mousePressed = false;
 	    }
 
 	    public void mouseEntered(MouseEvent e) {
@@ -75,8 +97,17 @@ public class FButton extends JButton {
 	    }
 	}
 	
+	public void setIconConfig(IconConfig conf) {
+		iconConf = conf;
+		update();
+	}
+	
+	public void setColorConfig(ColorConfig conf) {
+		colorConf = conf;
+		update();
+	}
+	
 	public void toggle() {
-		System.out.println("toggle " + pressed);
 		if (pressed) {
 			unpress();
 		} else {
@@ -84,43 +115,41 @@ public class FButton extends JButton {
 		}
 	}
 	
-	private static final Font FONT = new Font("Arial", Font.TYPE1_FONT, 14);
-	private static final Color FONT_COLOR = new Color(0xF0F0E8);
-
-	private static final Color UNCLICKED_COLOR = new Color(0x1ABC9C);
-	private static final Color PRESSED_COLOR = new Color(0x16A085);
-	private static final Color HOVER_COLOR = PRESSED_COLOR;
-
-	private boolean rollover = false;
-	private boolean pressed = false;
-	//private boolean clicked = false;
-	private boolean focused = false;
-	
-	private ButtonSet set = null;
-	
 	protected void onPress() {
 	}
 	
 	protected void onUnpress() {
 	}
 	
-	@Override
-	protected void paintComponent(Graphics g) {
-		Color c = UNCLICKED_COLOR;
-		if (rollover || focused /* || pressed */) {
-			c = HOVER_COLOR;
+	private void update() {
+		Color c = null;
+		if (colorConf != null) {
+			c = colorConf.getColor();
+			
+			if (mousePressed) {
+				c = colorConf.getProgressColor();
+			} else if (rollover || focused) {
+				c = colorConf.getHoverColor();
+			}
+			if (pressed) {
+				c = colorConf.getPressedColor();
+			}
 		}
-		if (pressed) {
-			c = PRESSED_COLOR;
+		if (iconConf != null) {
+			if (pressed) {
+				setIcon(iconConf.getPressedIcon());
+			} else {
+				setIcon(iconConf.getIcon());
+			}
 		}
 		
-		//System.out.println("___");
-		//System.out.println(pressed);
-		//System.out.println(clicked);
-		//System.out.println(rollover);
-		//System.out.println(focused);
-
-		super.setBackground(c);
+		if (c != null)
+			setBackground(c);
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+		update();
 		super.paintComponent(g);
 	}
 	
@@ -150,27 +179,23 @@ public class FButton extends JButton {
 		return pressed;
 	}
 	
-	private void init(String text, String iconfile, ActionListener listener, int w, int h) {
+	private void init(String text, IconConfig icons, ActionListener listener, int w, int h) {
 		addMouseListener(new MListener(this));
 		addActionListener(new AListener(this));
 
 		if (listener != null)
 			addActionListener(listener);
 
-		Dimension d = new Dimension(w, h);
-
-		setMaximumSize(d);
-		setMinimumSize(d);
-		setPreferredSize(d);
-		setSize(d);
-		
+		Utils.setAllSize(this, w, h);
 		setBorder(null);
-		setBackground(UNCLICKED_COLOR);
+		//setBackground(UNCLICKED_COLOR);
+		update();
 		
-		Utils.addPadding(this, 10, 10, 10, 10);
 		Utils.removeFocusBorder(this);
-		Utils.addIcon(this, iconfile, 40, 40);
 		Utils.enableEnterKey(this);
+
+		if (icons != null)
+			setIconConfig(icons);
 		
 		setHorizontalAlignment(SwingConstants.LEFT);
 		setRolloverEnabled(true);
@@ -189,24 +214,39 @@ public class FButton extends JButton {
 		});
 	}
 	
-	public FButton(String text, String iconfile) {
+	public FButton(String text) {
 		super(text);
-		init(text, iconfile, null, 100, 100);
+		init(text, null, null, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
 
-	public FButton(String text, String iconfile, ActionListener listener) {
+	public FButton(String text, ActionListener listener) {
 		super(text);
-		init(text, iconfile, listener, 100, 100);
+		init(text, null, listener, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
 
-	public FButton(String text, String iconfile, int w, int h) {
+	public FButton(String text, ActionListener listener, int w, int h) {
 		super(text);
-		init(text, iconfile, null, w, h);
+		init(text, null, listener, w, h);
+	}
+
+	public FButton(String text, IconConfig icons) {
+		super(text);
+		init(text, icons, null, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	}
+
+	public FButton(String text, IconConfig icons, ActionListener listener) {
+		super(text);
+		init(text, icons, listener, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	}
+
+	public FButton(String text, IconConfig icons, int w, int h) {
+		super(text);
+		init(text, icons, null, w, h);
 	}
 	
-	public FButton(String text, String iconfile, ActionListener listener, int w, int h) {
+	public FButton(String text, IconConfig icons, ActionListener listener, int w, int h) {
 		super(text);
-		init(text, iconfile, listener, w, h);
+		init(text, icons, listener, w, h);
 	}
 	
 	public void attachSet(ButtonSet set) {
