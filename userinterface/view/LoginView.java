@@ -9,6 +9,8 @@
  */
 package userinterface.view;
 
+import userinterface.MainFrame;
+import userinterface.screen.LoginScreen;
 import userinterface.view.form.Form;
 import userinterface.view.form.LoginForm;
 import utilities.Key;
@@ -36,6 +38,10 @@ public class LoginView extends View {
 		super(controller, "Login", BUTTON_NAMES);
 		subscribeToController(Key.INPUT_ERROR);
 	}	
+	
+	public String getScreenName() {
+		return LoginScreen.class.getSimpleName();
+	}
 	
 	@Override
 	protected void build() {

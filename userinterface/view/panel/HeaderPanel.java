@@ -1,0 +1,203 @@
+/**
+ * COPYRIGHT 2014 Sandeep Mitra and students 
+ * The College at Brockport, State University of New York.
+ * ALL RIGHTS RESERVED
+ * 
+ * This file is the product of The College at Brockport and cannot
+ * be reproduced, copied, or used in any shape or form without
+ * he express written consent of The College at Brockport. * 
+ */
+package userinterface.view.panel;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Image;
+import java.util.Properties;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+import model.Model;
+import model.Worker;
+import controller.Controller;
+import userinterface.MainFrame;
+import userinterface.component.Panel;
+import userinterface.component.flat.FButton;
+import userinterface.component.flat.Icons;
+import userinterface.utilities.Utils;
+import userinterface.view.View;
+import utilities.Key;
+
+/**
+ * Header Panel for the main frame. Holds the eop logo and application title.
+ */
+public class HeaderPanel extends View {
+	
+	private static final long serialVersionUID = 437901299835092005L;
+	
+	/** Background color of the header */
+	private static final Color BACKGROUND_COLOR = new Color(0xE2E2D4);
+	
+	/** Color of the bottom border of the header */
+	private static final Color SEPARATOR_COLOR = new Color(0x668D3C);
+	
+	/** Font Color of the title */
+	private static final Color TITLE_FONT_COLOR = new Color(0x00553D);
+	
+	/** Font of the title */
+	private static final Font TITLE_FONT = new Font("Garamond", Font.BOLD, 22);
+	
+	/** Title */
+	private static final String TITLE = "EOP Library System";
+	
+	/** Icon Path */
+	private static final String ICON_LOCATION = "EOP.png";
+	
+	private static final int ICON_WIDTH_PADDING = 40;
+	private static final int ICON_HEIGHT_PADDING = 9;
+	
+	private static final int WIDTH = MainFrame.WIDTH;
+	private static final int HEIGHT = 90;
+	
+	private FButton logoutButton;
+	private JPanel avatar;
+	private JPanel text;
+	
+	/**
+	 * Constructs a new HeaderPanel.
+	 * Created by the main frame.
+	 */
+	public HeaderPanel(Controller controller) {
+		super(controller);
+
+	}
+	
+	private Worker getWorker() {
+		return (Worker)controller.getState(Key.WORKER);
+	}
+	
+	@Override
+	protected void build() {
+		setLayout(new BorderLayout());
+		setBorder(null);
+		setBackground(BACKGROUND_COLOR);
+
+		Utils.setAllSize(this, WIDTH, HEIGHT);
+		
+		logoutButton = new FButton("", this);
+
+		add(createMainHeader(), BorderLayout.LINE_START);
+		add(createUserBox(), BorderLayout.LINE_END);
+		add(createSeparator(), BorderLayout.PAGE_END);	
+	}
+	
+	private void updateUserBox(Worker w) {
+		Properties wp = w.getPersistentState();
+
+		text.add(new JLabel("Logged in as:"));
+		text.add(new JLabel(wp.getProperty("Firstname") + " " + wp.getProperty("Lastname")));
+		text.add(new JLabel("Privileges: " + (w.isAdmin() ? "Admin" : "User")));
+		Utils.addPadding(text, 2, 2, 2, 2);
+	}
+
+	private JPanel createUserBox() {
+		JPanel panel = new Panel(BACKGROUND_COLOR);
+
+		int width = HeaderPanel.HEIGHT * 4;
+		int height = HeaderPanel.HEIGHT;
+		
+	    panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 0));
+		Utils.setAllSize(panel, width, height);
+
+		text = new JPanel();
+		avatar = new Panel();
+
+		Utils.setAllSize(avatar, width / 4, height);
+		Utils.setAllSize(text, width / 2, height);
+		
+		avatar.add(new JLabel(Utils.scaleIcon("EOP.png", width / 4, height)));
+		
+		text.setLayout(new BoxLayout(text, BoxLayout.Y_AXIS));
+		text.setAlignmentY(Component.CENTER_ALIGNMENT);
+		updateUserBox(getWorker());
+		
+		JPanel logout = new JPanel();
+		Utils.setAllSize(logout, width / 4, width / 4);
+
+		int size = width / 8;
+		Utils.setAllSize(logoutButton, size, size);
+
+		logoutButton.setIconConfig(new Icons.IconConfigHelper("LogOff_Clear.png", "LogOff_Clear.png", size, size));
+		logoutButton.setColorConfig(null);
+		
+		logout.setLayout(new BoxLayout(logout, BoxLayout.X_AXIS));
+		logout.add(Box.createHorizontalGlue());
+		logout.add(logoutButton);
+		logout.add(Box.createHorizontalGlue());
+		
+		panel.add(avatar);
+		panel.add(text);
+		panel.add(logout);
+		
+		return panel;
+	}
+
+	private JPanel createSeparator() {
+		return new Panel(TITLE_FONT_COLOR);
+	}
+	
+	private JPanel createMainHeader() {
+		JPanel panel = new Panel(BACKGROUND_COLOR);
+		panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+		JPanel iconPanel = new Panel(BACKGROUND_COLOR);
+		ImageIcon icon = new ImageIcon (ICON_LOCATION);
+		int iconWidth = icon.getIconWidth();
+		int iconHeight = icon.getIconHeight();
+		Dimension imageAndPad = new Dimension(iconWidth+ICON_WIDTH_PADDING,iconHeight+ICON_HEIGHT_PADDING);
+		
+		iconPanel.add(new JLabel("", icon, SwingConstants.LEFT));
+		
+		iconPanel.setPreferredSize(imageAndPad);
+		iconPanel.setMaximumSize(imageAndPad);
+
+		JPanel counterWeightPanel = new Panel(BACKGROUND_COLOR, SwingConstants.RIGHT);
+		counterWeightPanel.setPreferredSize(imageAndPad);
+		counterWeightPanel.setMaximumSize(imageAndPad);
+		
+		JLabel titleLabel = new JLabel(TITLE, SwingConstants.CENTER);
+		titleLabel.setForeground(TITLE_FONT_COLOR);
+		titleLabel.setFont(TITLE_FONT);
+		
+		panel.add(iconPanel);
+		panel.add(titleLabel);
+		panel.add(counterWeightPanel);
+		
+		return panel;
+	}
+
+	@Override
+	public void updateState(String key, Object value) {
+		if (key.equals(Key.WORKER)) {
+			updateUserBox((Worker)value);
+		}
+	}
+
+	@Override
+	public void processAction(Object source) {
+		if (source == logoutButton) {
+			controller.stateChangeRequest(Key.LOGOUT, null);
+		}
+	}
+}

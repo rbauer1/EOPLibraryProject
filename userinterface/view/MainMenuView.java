@@ -9,16 +9,29 @@
  */
 package userinterface.view;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.util.Properties;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import userinterface.Config;
-import userinterface.MenuPanel;
 import userinterface.MainFrame;
-import model.Worker;
 import userinterface.ViewHelper;
+import model.Worker;
+import userinterface.component.Panel;
 import userinterface.component.flat.FButton;
+import userinterface.component.flat.Icons;
 import userinterface.menu.MButton;
 import userinterface.message.MessageEvent;
+import userinterface.panel.HeaderPanel;
+import userinterface.panel.MenuPanel;
+import userinterface.utilities.Utils;
 import utilities.Key;
 import controller.Controller;
 
@@ -44,9 +57,6 @@ public class MainMenuView extends View {
 	public MainMenuView(Controller controller) {
 		super(controller, "Main Menu");
 		subscribeToController(Key.MESSAGE);
-
-		// menu.add("Check in a book", /* TODO */ );
-		// menu.add("Check out a book", /* TODO */ );
 	}
 
 
@@ -54,52 +64,15 @@ public class MainMenuView extends View {
 	public void afterShown(){
 		messagePanel.clear();
 	}
+	
+	
 
 	@Override
 	protected void build() {
-		MenuPanel menu = MainFrame.getInstance().getMenu();
-
-		//Menu bookMenu = MenuFactory.createMenu("BookMenu", controller);
-		//Menu borrowerMenu = MenuFactory.createMenu("BorrowerMenu", controller);
-		//Menu workerMenu = MenuFactory.createMenu("WorkerMenu", controller);
-		
-		bookActionsButton = new MButton("Book Menu", Config.BOOK_MENU_ICON, this);
-		menu.add(bookActionsButton);
-
-		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
-			borrowerActionsButton = new MButton("Borrower Menu", Config.BOOK_MENU_ICON, this);
-			menu.add(borrowerActionsButton);
-
-			workerActionsButton = new MButton("Workers Menu", Config.BOOK_MENU_ICON, this);
-			menu.add(workerActionsButton);
-		}
-
-		checkoutBookButton = new MButton("Rent a Book", Config.BOOK_MENU_ICON, this);
-		menu.add(checkoutBookButton);
-
-		checkinBookButton = new MButton("Return a Book", Config.BOOK_MENU_ICON, this);
-		menu.add(checkinBookButton);
-
-		logoutButton = new FButton("Logout", Config.BOOK_MENU_ICON, this);
-		menu.add(logoutButton);
 	}
 
 	@Override
 	public void processAction(Object source) {
-		if (source == logoutButton) {
-			controller.stateChangeRequest(Key.LOGOUT, null);
-
-			// Clear the current content the side menu
-			MainFrame.getInstance().getMenu().clear();
-		} else if (source == bookActionsButton) {
-			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
-		} else if (source == borrowerActionsButton) {
-			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
-		} else if (source == workerActionsButton) {
-			controller.stateChangeRequest(Key.DISPLAY_WORKER_MENU, null);
-		} else if (source == checkoutBookButton) {
-			controller.stateChangeRequest(Key.EXECUTE_CHECKOUT_BOOK, null);
-		}
 	}
 
 	@Override

@@ -22,12 +22,14 @@ import java.util.Map;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import userinterface.MainFrame;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.Label;
 import userinterface.component.Panel;
 import userinterface.component.Accordion;
 import userinterface.message.MessagePanel;
+import userinterface.screen.MainScreen;
 import controller.Controller;
 
 /**
@@ -55,6 +57,10 @@ public abstract class View extends Panel implements IView, ActionListener {
 	public static final int TITLE_FONT_SIZE = GENERAL_FONT_SIZE + 2;
 	protected static final Font GENERAL_FONT = new Font(FONT_NAME, Font.TYPE1_FONT, GENERAL_FONT_SIZE);
 
+	protected View(Controller controller) {
+		this(controller, null, null);
+	}
+	
 	protected View(Controller controller, String title) {
 		this(controller, title, null);
 	}
@@ -66,7 +72,9 @@ public abstract class View extends Panel implements IView, ActionListener {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		// Add title
-		add(ViewHelper.formatCenter(new Label(title, true), 0));
+		if (title != null) {
+			add(ViewHelper.formatCenter(new Label(title, true), 0));
+		}
 		
 		// Add Message Panel
 		this.messagePanel = new MessagePanel();
@@ -88,6 +96,14 @@ public abstract class View extends Panel implements IView, ActionListener {
 	public void afterShown() {
 		
 	}	
+	
+	public Controller getController() {
+		return controller;
+	}
+	
+	public String getScreenName() {
+		return MainScreen.class.getSimpleName();
+	}
 	
 	public abstract void processAction(Object source);
 

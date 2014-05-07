@@ -19,14 +19,23 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import controller.Controller;
+import userinterface.panel.HeaderPanel;
+import userinterface.panel.MenuPanel;
+import userinterface.screen.LoginScreen;
+import userinterface.screen.MainScreen;
+import userinterface.screen.Screen;
+import userinterface.utilities.Utils;
 import userinterface.view.View;
 import event.Event;
 
@@ -37,7 +46,6 @@ import event.Event;
 public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 
 	private static final long serialVersionUID = 3974890556338206717L;
-	private static final String COPYRIGHT = "Copyright (c) 2014: Department of Computer Science, The College at Brockport";
 
 	/** Holds the only instance of this class for Singleton Pattern */
 	private static MainFrame instance = null;
@@ -45,6 +53,8 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	/** The dimension of the frame */
 	public static final int WIDTH = 1100;
 	public static final int HEIGHT = 800;
+	
+	private Screen screen = null;
 
 	/**
 	 * Returns the instance of the main frame. Creates one with blank title if none exists.
@@ -78,9 +88,6 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	/** Tells if size has been set yet */
 	private boolean sizeSet;
 
-	/** == */
-	private HeaderPanel header = null;
-	private MenuPanel menu = null;
 
 	/**
 	 * Private constructor for the Singleton Pattern. Can only be called once.
@@ -90,66 +97,10 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	private MainFrame(String title) {
 		super(title);
 		super.setLayout(new BorderLayout());
-		super.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-
-		/*
-		 * This is the left menu of the frame
-		 */
-		header = new HeaderPanel();
-		menu = new MenuPanel();
-
-		/*
-		 * This title is the logo panel that stays same for the duration of
-		 * the entire program. Component at position (0)
-		 */
-		super.add(header, BorderLayout.NORTH);
-		super.add(menu, BorderLayout.WEST);
-
-		/*
-		menu.add("Book Actions", new JComponent[] {
-		});
-		menu.add("Borrower Actions", new JComponent[] {
-		});
-		menu.add("Workers Actions", new JComponent[] {
-		});
-		menu.add("Check in a book", new JComponent[] {
-		});
-		menu.add("Check out a book", new JComponent[] {
-		});
-		menu.add(new Button("Logout"));
-
-		menu.fit();
-		*/
-
-		/*
-		 * This is the Copyright notice, that is the same for all the views,
-		 * hence once it is installed into the main frame it should not be removed.
-		 * This is Frame Component at position (1)
-		 */
-		JPanel copyRightPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		copyRightPanel.setBackground(View.BACKGROUND_COLOR);
-		copyRightPanel.add(new JLabel(COPYRIGHT));
-		super.add(copyRightPanel, BorderLayout.SOUTH);
-
-		/*
-		 * This panel is a "dummy" panel, which will be replaced by
-		 * an actual panel, i.e. by a View that is displayed to the user
-		 * This is Frame Component at position ( 2 ), which will be removed
-		 * in swapToPanelView method and replaced with the view needed.
-		 */
-		JPanel empty = new JPanel();
-		empty.setBackground(Color.pink);
-		super.add(empty, BorderLayout.CENTER);
-
 		super.setVisible(true);
 		super.setResizable(false);
-		sizeSet = true;
 	}
-
-	public MenuPanel getMenu() {
-		return menu;
-	}
-
+	
 	@Override
 	public void componentHidden(ComponentEvent arg0) {
 
@@ -209,17 +160,25 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 			new Event("MainFrame", "swapToView", "Missing view for display ", Event.ERROR);
 			throw new NullPointerException();
 		}
-
-		if (newView instanceof JPanel) {
-			// Component #3 is being accessed here because component #0 is header, 1 is menu, 2 is menu padding.
-			JPanel currentView = (JPanel) getContentPane().getComponent(3); //TODO figure out a way to make this less terrible. (get rid of literal)
-			if (currentView != null) {
-				getContentPane().remove(currentView);
+		
+		String screenName = ((View)newView).getScreenName();
+		if (screen == null || !screenName.equals(screen.getClass().getSimpleName())) {
+			getContentPane().removeAll();
+			
+			if (screenName.equals("LoginScreen")) {
+				screen = new LoginScreen((View)newView);
 			}
+			if (screenName.equals("MainScreen")) {
+				System.out.println(screenName);
+				System.out.println(screen.getClass().getSimpleName());
+				screen = new MainScreen((View)newView);
+			}
+			getContentPane().add(screen);
 
-			// add our view into the CENTER of the MainFrame
-			getContentPane().add((JPanel)newView, BorderLayout.CENTER);
-
+		}
+		
+		if (newView instanceof View) {
+			screen.setView((View)newView);
 			((View) newView).afterShown();
 
 			fix();
