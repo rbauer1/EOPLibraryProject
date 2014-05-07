@@ -105,7 +105,7 @@ public class HeaderPanel extends View {
 		Properties wp = w.getPersistentState();
 
 		text.add(new JLabel("Logged in as:"));
-		text.add(new JLabel(wp.getProperty("Firstname") + " " + wp.getProperty("Lastname")));
+		text.add(new JLabel(wp.getProperty("FirstName") + " " + wp.getProperty("LastName")));
 		text.add(new JLabel("Privileges: " + (w.isAdmin() ? "Admin" : "User")));
 		Utils.addPadding(text, 2, 2, 2, 2);
 	}
