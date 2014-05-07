@@ -1,0 +1,150 @@
+package userinterface.screen;
+
+import impresario.IView;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Properties;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import model.Worker;
+import userinterface.MainFrame;
+import userinterface.component.Panel;
+import userinterface.component.flat.FButton;
+import userinterface.component.flat.Icons;
+import userinterface.menu.MButton;
+import userinterface.panel.HeaderPanel;
+import userinterface.panel.MenuPanel;
+import userinterface.utilities.Utils;
+import userinterface.view.View;
+import userinterface.view.ViewFactory;
+import utilities.Key;
+import controller.Controller;
+
+public class MainScreen extends Screen implements ActionListener {
+	
+	private static final String COPYRIGHT = "Copyright (c) 2014: Department of Computer Science, The College at Brockport";
+	
+	/** The dimension of the frame */
+	public static final int WIDTH = 1100;
+	public static final int HEIGHT = 800;
+	
+	/* Buttons */
+	private FButton bookActionsButton;
+	private FButton borrowerActionsButton;
+	private FButton checkinBookButton;
+	private FButton checkoutBookButton;
+	private FButton logoutButton;
+	private FButton workerActionsButton;
+	
+	/** == */
+	private HeaderPanel header = null;
+	private MenuPanel menu = null;
+	
+	private JPanel current = null;
+	
+	public MainScreen(View view) {
+		super(view);
+		
+		setLayout(new BorderLayout());
+		Utils.setAllSize(this, WIDTH, HEIGHT);
+		
+		add(ViewFactory.createView("panel.HeaderPanel", view.getController()), BorderLayout.NORTH);
+		//add(createHeader(), BorderLayout.NORTH);
+		add(ViewFactory.createView("panel.MenuPanel", view.getController()), BorderLayout.WEST);
+		//add(createMenu(), BorderLayout.WEST);
+
+		/*
+		 * This is the Copyright notice, that is the same for all the views,
+		 * hence once it is installed into the main frame it should not be removed.
+		 * This is Frame Component at position (1)
+		 */
+		JPanel copyRightPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		copyRightPanel.setBackground(View.BACKGROUND_COLOR);
+		copyRightPanel.add(new JLabel(COPYRIGHT));
+		add(copyRightPanel, BorderLayout.SOUTH);
+
+		/*
+		 * This panel is a "dummy" panel, which will be replaced by
+		 * an actual panel, i.e. by a View that is displayed to the user
+		 * This is Frame Component at position ( 2 ), which will be removed
+		 * in swapToPanelView method and replaced with the view needed.
+		 */
+		JPanel empty = new JPanel();
+		empty.setBackground(Color.pink);
+		add(empty, BorderLayout.CENTER);
+	}
+	
+	private MenuPanel createMenu() {
+		MenuPanel menu = new MenuPanel();
+		
+		bookActionsButton = new MButton("Book Menu", Icons.BOOK, this);
+		menu.add(bookActionsButton);
+
+		if (((Worker)getView().getController().getState(Key.WORKER)).isAdmin()){
+			borrowerActionsButton = new MButton("Borrower Menu", Icons.BORROWER, this);
+			menu.add(borrowerActionsButton);
+
+			workerActionsButton = new MButton("Workers Menu", Icons.WORKER, this);
+			menu.add(workerActionsButton);
+		}
+
+		checkoutBookButton = new MButton("Rent a Book", Icons.RENT_BOOK, this);
+		menu.add(checkoutBookButton);
+
+		checkinBookButton = new MButton("Return a Book", Icons.RETURN_BOOK, this);
+		menu.add(checkinBookButton);
+		
+		return menu;
+	}
+
+	private HeaderPanel createHeader() {
+		Controller controller = getView().getController();
+
+		logoutButton = new FButton("", this);
+		return new HeaderPanel((Worker)controller.getState(Key.WORKER), logoutButton);
+	}
+	
+	public void processAction(Object source) {
+		Controller controller = getView().getController();
+		if (source == logoutButton) {
+			controller.stateChangeRequest(Key.LOGOUT, null);
+		} else if (source == bookActionsButton) {
+			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
+		} else if (source == borrowerActionsButton) {
+			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
+		} else if (source == workerActionsButton) {
+			controller.stateChangeRequest(Key.DISPLAY_WORKER_MENU, null);
+		} else if (source == checkoutBookButton) {
+			controller.stateChangeRequest(Key.EXECUTE_CHECKOUT_BOOK, null);
+		}
+	}
+	
+	@Override
+	public void addView(View view) {
+		// add our view into the CENTER of the MainFrame
+		add((JPanel)view, BorderLayout.CENTER);
+	}
+	
+	@Override
+	public void clearView() {
+		// Component #3 is being accessed here because component #0 is header, 1 is menu, 2 is menu padding.
+		JPanel currentView = (JPanel) getComponent(3); //TODO figure out a way to make this less terrible. (get rid of literal)
+		if (currentView != null) {
+			remove(currentView);
+		}
+	}
+
+}
