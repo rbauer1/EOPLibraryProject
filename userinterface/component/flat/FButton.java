@@ -115,6 +115,12 @@ public class FButton extends JButton {
 		}
 	}
 	
+	protected void onPrePress() {
+	}
+	
+	protected void onPreUnpress() {
+	}
+	
 	protected void onPress() {
 	}
 	
@@ -154,6 +160,7 @@ public class FButton extends JButton {
 	}
 	
 	public void unpress() {
+		onPreUnpress();
 		if (set != null) {
 			set.unregister(this);
 		}
@@ -163,6 +170,7 @@ public class FButton extends JButton {
 	}
 	
 	public void press() {
+		onPrePress();
 		if (set != null) {
 			set.register(this);
 		}
