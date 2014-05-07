@@ -67,17 +67,29 @@ public class Utils {
 		});
 	}
 	
-	public static boolean addIcon(JButton b, String iconfile, int w, int h) {
+	public static void setTransparent(JButton comp) {
+		comp.setOpaque(false);
+		comp.setContentAreaFilled(false);
+		comp.setBorderPainted(false);
+	}
+	
+	public static ImageIcon scaleIcon(ImageIcon icon, int w, int h) {
 		try {
-		    Image img = (new ImageIcon(iconfile)).getImage();  
+		    Image img = icon.getImage();  
 		    Image temp = img.getScaledInstance(w, h,  java.awt.Image.SCALE_SMOOTH);  
-		    ImageIcon icon = new ImageIcon(temp);  
 		    
-		    b.setIcon(icon);
+		    return new ImageIcon(temp);
 		} catch (Exception ex) {
-			return false;
+			return null;
 		}
-		return true;
+	}
+	
+	public static ImageIcon scaleIcon(String iconfile, int w, int h) {
+		return scaleIcon(new ImageIcon(iconfile), w, h);
+	}
+	
+	public static void addIcon(JButton b, String iconfile, int w, int h) {
+		b.setIcon(scaleIcon(iconfile, w, h));
 	}
 
 	public static boolean addIcon(JButton b, String iconfile) {
