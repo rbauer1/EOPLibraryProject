@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 
 import userinterface.Config;
 import userinterface.MainFrame;
+import userinterface.panel.MenuPanel;
 import userinterface.utilities.Utils;
 
 public class MenuArrow extends JPanel {
@@ -29,15 +30,15 @@ public class MenuArrow extends JPanel {
 		comp.add(this);
 		
 		comp.setLayout(null);
-		Dimension dimMenu = MainFrame.getInstance().getMenu().getPreferredSize();
+		//Dimension dimMenu = MainFrame.getInstance().getMenu().getPreferredSize();
 		Dimension dimCont = comp.getPreferredSize();
 		Dimension dimArrow = this.getPreferredSize();
-
+		
 		// Insets ins = getInsets();
 
 		setBounds(
 				// FIXME: The insets seems to make the new coordinates wrong
-				/* ins.left + */ dimMenu.width - (dimArrow.width / 2),
+				/* ins.left + */ MenuPanel.WIDTH - (dimArrow.width / 2),
 				/* ins.top + */ (dimCont.height / 2) - (dimArrow.height / 2),
 				w,
 				h);
