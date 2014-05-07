@@ -12,6 +12,9 @@ package controller.transaction;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+import javax.swing.SwingWorker;
 
 import model.Borrower;
 import userinterface.message.MessageEvent;
@@ -41,13 +44,13 @@ public class ModifyBorrowersTransaction extends Transaction {
 	@Override
 	public void execute(){
 		listBorrowersTransaction = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
+		listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a borrower from the list below to modify."));
 	}
 
 	@Override
 	protected Properties getDependencies(){
 		Properties dependencies = new Properties();
 		dependencies.setProperty(Key.SELECT_BORROWER, Key.BORROWER);
-		dependencies.setProperty(Key.RELOAD_ENTITY, Key.BORROWER);
 		return dependencies;
 	}
 
@@ -59,6 +62,24 @@ public class ModifyBorrowersTransaction extends Transaction {
 		return super.getState(key);
 	}
 
+	/**
+	 * Reload the borrower from the db
+	 */
+	private void reloadBorrower() {
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() {
+				borrower.reload();
+				return null;
+			}
+
+			@Override
+			public void done() {
+				stateChangeRequest(Key.BORROWER, null);
+			}
+		}.execute();
+	}
+
 	@Override
 	public void stateChangeRequest(String key, Object value) {
 		if(key.equals(Key.SELECT_BORROWER)){
@@ -67,9 +88,10 @@ public class ModifyBorrowersTransaction extends Transaction {
 		}else if(key.equals(Key.SAVE_BORROWER)){
 			updateBorrower((Properties)value);
 		}else if(key.equals(Key.RELOAD_ENTITY)){
-			borrower.reload();
+			reloadBorrower();
 		}else if(key.equals(Key.BACK)){
 			listBorrowersTransaction.execute();
+			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a borrower from the list below to modify."));
 		}
 		super.stateChangeRequest(key, value);
 	}
@@ -78,20 +100,39 @@ public class ModifyBorrowersTransaction extends Transaction {
 	 * Updates selected borrower with provided data
 	 * @param borrowerData
 	 */
-	private void updateBorrower(Properties borrowerData){
-		borrowerData.setProperty("Status", "Active");
-		borrower.stateChangeRequest(borrowerData);
-		if(borrower.save()){
-			stateChangeRequest(Key.BACK, "ListBorrowersView");
-			listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Well done! The borrower was sucessfully added."));
-		}else{
-			List<String> inputErrors = borrower.getErrors();
-			if(inputErrors.size() > 0){
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
-			}else{
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving."));
+	private void updateBorrower(final Properties borrowerData){
+		new SwingWorker<Boolean, Void>() {
+
+			@Override
+			protected Boolean doInBackground() {
+				borrowerData.setProperty("Status", "Active");
+				borrower.stateChangeRequest(borrowerData);
+				return borrower.save();
 			}
-		}
+
+			@Override
+			public void done() {
+				boolean success = false;
+				try {
+					success = get();
+				} catch (InterruptedException e) {
+					success = false;
+				} catch (ExecutionException e) {
+					success = false;
+				}
+				if(success){
+					stateChangeRequest(Key.BACK, "ListBorrowersView");
+					listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Well done! The borrower was sucessfully saved."));
+				}else{
+					List<String> inputErrors = borrower.getErrors();
+					if(inputErrors.size() > 0){
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+					}else{
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving."));
+					}
+				}
+			}
+		}.execute();
 	}
 
 }

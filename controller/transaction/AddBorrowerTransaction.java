@@ -11,6 +11,9 @@ package controller.transaction;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+import javax.swing.SwingWorker;
 
 import model.Borrower;
 import userinterface.message.MessageEvent;
@@ -36,18 +39,39 @@ public class AddBorrowerTransaction extends Transaction {
 	 * Creates borrower with provided data and saves it in db.
 	 * @param borrowerData
 	 */
-	private void addBorrower(Properties borrowerData){
-		Borrower borrower = new Borrower(borrowerData);
-		if(borrower.save()){
-			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Well done! The borrower was sucessfully added."));
-		}else{
-			List<String> inputErrors = borrower.getErrors();
-			if(inputErrors.size() > 0){
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
-			}else{
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving."));
+	private void addBorrower(final Properties borrowerData){
+		new SwingWorker<Boolean, Void>() {
+
+			private Borrower borrower;
+
+			@Override
+			protected Boolean doInBackground() {
+				borrower = new Borrower(borrowerData);
+				return borrower.save();
 			}
-		}
+
+			@Override
+			public void done() {
+				boolean success = false;
+				try {
+					success = get();
+				} catch (InterruptedException e) {
+					success = false;
+				} catch (ExecutionException e) {
+					success = false;
+				}
+				if(success){
+					stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Well done! The borrower was sucessfully added."));
+				}else{
+					List<String> inputErrors = borrower.getErrors();
+					if(inputErrors.size() > 0){
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+					}else{
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving."));
+					}
+				}
+			}
+		}.execute();
 	}
 
 	@Override

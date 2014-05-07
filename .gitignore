@@ -20,3 +20,4 @@ out*
 *.war
 *.ear
 /bin
+*.pdf

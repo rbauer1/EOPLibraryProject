@@ -1,7 +1,7 @@
 /**
  * COPYRIGHT 2003 ArchSynergy, Ltd. - ALL RIGHTS RESERVED
- * This file is the product of ArchSynergy, Ltd. and cannot be 
- * reproduced, copied, or used in any shape or form without 
+ * This file is the product of ArchSynergy, Ltd. and cannot be
+ * reproduced, copied, or used in any shape or form without
  * the express written consent of ArchSynergy, Ltd.
  */
 package database;
@@ -15,33 +15,42 @@ public abstract class SQLStatement {
 
 	/** Character to escape in provided values */
 	private static final String ESCAPE_TARGET = "'";
-	
+
 	/** String used to escape single quotes */
 	private static final String ESCAPE_REPLACEMENT = "\\'";
 
 	/** Generated SQL statement */
-	protected String statement; 
-	
+	protected String statement;
+
 	/** Schema for the table */
 	protected Properties schema;
-	
+
 	/**
 	 * @param schema
 	 */
 	protected SQLStatement(Properties schema){
 		this.schema = schema;
-		this.statement = "";
+		statement = "";
 	}
 
 	/**
-	 * Escapes value in SQL string to prevent SQL Injection.
-	 * @param value
-	 * @return escaped string
+	 * Builds list of column names from values in schema for use in queries
+	 * @param values
+	 * @return Comma separated list of column names in schema
 	 */
-	protected String insertEscapes(String value) {
-		return value.replace(ESCAPE_TARGET, ESCAPE_REPLACEMENT);
+	protected String getColumnNamesList(Properties values){
+		String columnNames = "";
+		for(String columnName : values.stringPropertyNames()){
+			if(schema.containsKey(columnName) && !columnName.equals("TableName")){
+				if (columnNames.length() > 0) {
+					columnNames += " , ";
+				}
+				columnNames += "`" + columnName + "`";
+			}
+		}
+		return columnNames;
 	}
-	
+
 	/**
 	 * Construct where clause from provided values.
 	 * Only allows column names in the schema.
@@ -51,7 +60,7 @@ public abstract class SQLStatement {
 	protected String getWhereClause(Properties whereValues) {
 		return getWhereClause(whereValues, true);
 	}
-	
+
 	/**
 	 * Construct where clause from provided values.
 	 * Only allows column names in the schema.
@@ -68,7 +77,7 @@ public abstract class SQLStatement {
 					numConditions++;
 					if(!whereClause.equals(" WHERE ")){
 						whereClause += " AND ";
-					}				
+					}
 					whereClause += "`" + columnName + "` ";
 					String columnValue = insertEscapes(whereValues.getProperty(columnName));
 					String columnType = schema.getProperty(columnName).toLowerCase();
@@ -79,30 +88,21 @@ public abstract class SQLStatement {
 					} else if(exactMatch || columnType.equals("enum")) {
 						whereClause += "= '" + columnValue + "'";
 					}else {
-						whereClause += "LIKE '%" + columnValue + "%'";
+						whereClause += "LIKE '" + columnValue + "%'";
 					}
-				}			
+				}
 			}
 		}
 		return numConditions > 0 ? whereClause : "";
 	}
-	
+
 	/**
-	 * Builds list of column names from values in schema for use in queries
-	 * @param values
-	 * @return Comma separated list of column names in schema
+	 * Escapes value in SQL string to prevent SQL Injection.
+	 * @param value
+	 * @return escaped string
 	 */
-	protected String getColumnNamesList(Properties values){
-		String columnNames = "";
-		for(String columnName : values.stringPropertyNames()){
-			if(schema.containsKey(columnName) && !columnName.equals("TableName")){
-				if (columnNames.length() > 0) {
-					columnNames += " , ";
-				}
-				columnNames += "`" + columnName + "`";	
-			}
-		}
-		return columnNames;
+	protected String insertEscapes(String value) {
+		return value.replace(ESCAPE_TARGET, ESCAPE_REPLACEMENT);
 	}
 
 	@Override

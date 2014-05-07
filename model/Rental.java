@@ -90,7 +90,15 @@ public class Rental extends Model {
 		try {
 			return new Book(persistentState.getProperty("BookID"));
 		} catch (InvalidPrimaryKeyException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Borrower getBorrower(){
+		try {
+			return new Borrower(persistentState.getProperty("BorrowerID"));
+		} catch (InvalidPrimaryKeyException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -112,6 +120,13 @@ public class Rental extends Model {
 	@Override
 	public String getTableName() {
 		return TABLE_NAME;
+	}
+
+	/**
+	 * @return true if the rental is over due
+	 */
+	public boolean isLate(){
+		return persistentState.getProperty("DueDate").compareTo(DateUtil.getDate()) < 0;
 	}
 
 	@Override

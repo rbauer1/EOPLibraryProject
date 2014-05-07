@@ -12,6 +12,9 @@ package controller.transaction;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+import javax.swing.SwingWorker;
 
 import model.Worker;
 import userinterface.message.MessageEvent;
@@ -41,13 +44,13 @@ public class ModifyWorkersTransaction extends Transaction {
 	@Override
 	public void execute(){
 		listWorkersTransaction = TransactionFactory.executeTransaction(this, "ListWorkersTransaction", Key.DISPLAY_WORKER_MENU, Key.SELECT_WORKER);
+		listWorkersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a worker from the list below to modify."));
 	}
 
 	@Override
 	protected Properties getDependencies(){
 		Properties dependencies = new Properties();
 		dependencies.setProperty(Key.SELECT_WORKER, Key.WORKER);
-		dependencies.setProperty(Key.RELOAD_ENTITY, Key.WORKER);
 		return dependencies;
 	}
 
@@ -59,6 +62,24 @@ public class ModifyWorkersTransaction extends Transaction {
 		return super.getState(key);
 	}
 
+	/**
+	 * Reload the worker from the db
+	 */
+	private void reloadWorker() {
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() {
+				worker.reload();
+				return null;
+			}
+
+			@Override
+			public void done() {
+				stateChangeRequest(Key.WORKER, null);
+			}
+		}.execute();
+	}
+
 	@Override
 	public void stateChangeRequest(String key, Object value) {
 		if(key.equals(Key.SELECT_WORKER)){
@@ -67,9 +88,10 @@ public class ModifyWorkersTransaction extends Transaction {
 		}else if(key.equals(Key.SAVE_WORKER)){
 			updateWorker((Properties)value);
 		}else if(key.equals(Key.RELOAD_ENTITY)){
-			worker.reload();
+			reloadWorker();
 		}else if(key.equals(Key.BACK)){
 			listWorkersTransaction.execute();
+			listWorkersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select a worker from the list below to modify."));
 		}
 		super.stateChangeRequest(key, value);
 	}
@@ -78,20 +100,39 @@ public class ModifyWorkersTransaction extends Transaction {
 	 * Updates selected worker with provided data
 	 * @param workerData
 	 */
-	private void updateWorker(Properties workerData){
-		workerData.setProperty("Status", "Active");
-		worker.stateChangeRequest(workerData);
-		if(worker.save()){
-			stateChangeRequest(Key.BACK, "ListWorkersView");
-			listWorkersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Well done! The worker was sucessfully added."));
-		}else{
-			List<String> inputErrors = worker.getErrors();
-			if(inputErrors.size() > 0){
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
-			}else{
-				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving."));
+	private void updateWorker(final Properties workerData){
+		new SwingWorker<Boolean, Void>() {
+
+			@Override
+			protected Boolean doInBackground() {
+				workerData.setProperty("Status", "Active");
+				worker.stateChangeRequest(workerData);
+				return worker.save();
 			}
-		}
+
+			@Override
+			public void done() {
+				boolean success = false;
+				try {
+					success = get();
+				} catch (InterruptedException e) {
+					success = false;
+				} catch (ExecutionException e) {
+					success = false;
+				}
+				if(success){
+					stateChangeRequest(Key.BACK, "ListWorkersView");
+					listWorkersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Well done! The worker was sucessfully added."));
+				}else{
+					List<String> inputErrors = worker.getErrors();
+					if(inputErrors.size() > 0){
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! There are errors in the input. Please try again.", inputErrors));
+					}else{
+						stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving."));
+					}
+				}
+			}
+		}.execute();
 	}
 
 }

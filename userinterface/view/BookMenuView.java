@@ -94,6 +94,10 @@ public class BookMenuView extends View {
 			controller.stateChangeRequest(Key.EXECUTE_DELETE_BOOK, null);
 		} else if (source == processLostBookButton) {
 			controller.stateChangeRequest(Key.EXECUTE_PROCESS_LOST_BOOK, null);
+		} else if (source == listUnavailableButton) {
+			controller.stateChangeRequest(Key.EXECUTE_LIST_RENTED_BOOKS, null);
+		} else if (source == listAvailableButton) {
+			controller.stateChangeRequest(Key.EXECUTE_LIST_AVAILABLE_BOOKS, null);
 		}
 	}
 

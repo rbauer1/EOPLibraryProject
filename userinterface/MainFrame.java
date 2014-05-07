@@ -53,7 +53,7 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	/** The dimension of the frame */
 	public static final int WIDTH = 1100;
 	public static final int HEIGHT = 800;
-	
+
 	private Screen screen = null;
 
 	/**
@@ -103,7 +103,7 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		super.setVisible(true);
 		super.setResizable(false);
 	}
-	
+
 	@Override
 	public void componentHidden(ComponentEvent arg0) {
 
@@ -139,8 +139,6 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 
 	public void fix(){
 		pack();
-		//revalidate();
-		//repaint();
 
 		Dimension windowSize = getSize();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -151,6 +149,10 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		Dimension newSize = new Dimension();
 		newSize.setSize(width, height);
 		setSize(newSize);
+
+		invalidate();
+		validate();
+		repaint();
 
 		revalidate();
 		repaint();
@@ -163,11 +165,11 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 			new Event("MainFrame", "swapToView", "Missing view for display ", Event.ERROR);
 			throw new NullPointerException();
 		}
-		
+
 		String screenName = ((View)newView).getScreenName();
 		if (screen == null || !screenName.equals(screen.getClass().getSimpleName())) {
 			getContentPane().removeAll();
-			
+
 			if (screenName.equals("LoginScreen")) {
 				screen = new LoginScreen((View)newView);
 			}
@@ -179,7 +181,7 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 			getContentPane().add(screen);
 
 		}
-		
+
 		if (newView instanceof View) {
 			screen.setView((View)newView);
 			((View) newView).afterShown();

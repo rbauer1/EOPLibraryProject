@@ -61,8 +61,8 @@ public class MenuPanel extends View {
 	/* Buttons */
 	private FButton bookActionsButton;
 	private FButton borrowerActionsButton;
-	private FButton checkinBookButton;
-	private FButton checkoutBookButton;
+	private FButton rentBookButton;
+	private FButton returnBookButton;
 	private FButton workerActionsButton;
 	
 	public MenuPanel(Controller controller) {
@@ -109,8 +109,10 @@ public class MenuPanel extends View {
 			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
 		} else if (source == workerActionsButton) {
 			controller.stateChangeRequest(Key.DISPLAY_WORKER_MENU, null);
-		} else if (source == checkoutBookButton) {
-			controller.stateChangeRequest(Key.EXECUTE_CHECKOUT_BOOK, null);
+		} else if (source == rentBookButton) {
+			controller.stateChangeRequest(Key.EXECUTE_RENT_BOOK, null);
+		} else if (source == returnBookButton) {
+			controller.stateChangeRequest(Key.EXECUTE_RETURN_BOOK, null);
 		}
 	}
 	
@@ -136,11 +138,11 @@ public class MenuPanel extends View {
 			add(workerActionsButton);
 		}
 
-		checkoutBookButton = new MButton("Rent a Book", Icons.RENT_BOOK, this);
-		add(checkoutBookButton);
+		rentBookButton = new MButton("Rent a Book", Icons.RENT_BOOK, this);
+		add(rentBookButton);
 
-		checkinBookButton = new MButton("Return a Book", Icons.RETURN_BOOK, this);
-		add(checkinBookButton);
+		returnBookButton = new MButton("Return a Book", Icons.RETURN_BOOK, this);
+		add(returnBookButton);
 		
 		fit();
 	}

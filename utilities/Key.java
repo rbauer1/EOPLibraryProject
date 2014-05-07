@@ -2,13 +2,17 @@ package utilities;
 
 public class Key {
 	public static final String ADD_BOOK_TO_LIST = "AddBookToList";
+	public static final String REMOVE_BOOK_FROM_LIST = "RemoveBookFromList";
 	public static final String BACK = "Back";
 	public static final String BOOK = "Book";
 	public static final String BOOK_COLLECTION = "BookCollection";
+	public static final String OUTSTANDING_BOOKS = "OustandingBooks";
+
 
 	public static final String BORROWER = "Borrower";
 	public static final String BORROWER_COLLECTION = "BorrowerCollection";
-	public static final String CHECKOUT_BOOKS = "CheckoutBooks";
+	public static final String RENT_BOOKS = "RentBooks";
+
 	public static final String DISPLAY_BOOK_MENU = "DisplayBookMenu";
 
 
@@ -20,17 +24,20 @@ public class Key {
 
 	/* Book Transactions */
 	public static final String EXECUTE_ADD_BOOK 	= "AddBookTransaction";
+	public static final String EXECUTE_LIST_RENTED_BOOKS 	= "ListRentedBooksTransaction";
+	public static final String EXECUTE_LIST_AVAILABLE_BOOKS	= "ListAvailableBooksTransaction";
 	/* Borrower Transactions */
 	public static final String EXECUTE_ADD_BORROWER 	= "AddBorrowerTransaction";
 	/* Worker Transactions */
 	public static final String EXECUTE_ADD_WORKER 		= "AddWorkerTransaction";
-	public static final String EXECUTE_CHECKOUT_BOOK = "CheckoutBookTransaction";
-
+	public static final String EXECUTE_RENT_BOOK = "RentBooksTransaction";
+	public static final String EXECUTE_RETURN_BOOK = "ReturnBooksTransaction";
 	public static final String EXECUTE_DELETE_BOOK 	= "DeleteBooksTransaction";
 
 	public static final String EXECUTE_DELETE_BORROWER 	= "DeleteBorrowersTransaction";
 	public static final String EXECUTE_DELETE_WORKER 	= "DeleteWorkersTransaction";
 	public static final String EXECUTE_MODIFY_BOOK 	= "ModifyBooksTransaction";
+	public static final String EXECUTE_LIST_BORROWERS_WITH_RENTED_BOOKS = "ListBorrowersWithRentedBooksTransaction";
 
 	public static final String EXECUTE_MODIFY_BORROWER 	= "ModifyBorrowersTransaction";
 	public static final String EXECUTE_MODIFY_WORKER 	= "ModifyWorkersTransaction";
@@ -77,6 +84,26 @@ public class Key {
 	public static final String WORKER = "Worker";
 	public static final String WORKER_COLLECTION = "WorkerCollection";
 
+
+	public static final String RETURN_BOOKS = "ReturnBooks";
+	public static final String OUTSTANDING_RENTALS = "OutstandingRentals";
+	public static final String RETURN_RENTALS = "ReturnRentals";
+	public static final String ADD_RENTAL_TO_LIST = "AddRental";
+	public static final String REMOVE_RENTAL_FROM_LIST = "RemoveRental";
+
+	public static final String FILTER = "Filter";
+
+
+	public static final String EXECUTE_PRINT_PDF = "PrintPDFTransaction";
+	public static final String PRINTERS = "Printers";
+	public static final String PRINT_PREVIEW = "PrintPreview";
+	public static final String PRINT_DOCUMENT = "PrintDocument";
+	public static final String PRINT = "Print";
+
+
+	public static final String EXPORT_TO_EXCEL = "ExportToExcel";
+
+	public static final String BOOK_DUE_DATE = "BookDueDate";
 
 	private Key(){};
 }

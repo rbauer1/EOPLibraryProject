@@ -15,8 +15,20 @@ public class RentalCollection extends ModelCollection<Rental> {
 		return new Rental(persistentState, true);
 	}
 
+	public void findByBook(Book book) {
+		findByKey("BookID",	book.getPrimaryKeyValue());
+	}
+
 	public void findByBorrower(Borrower borrower) {
 		findByKey("BorrowerID",	(String) borrower.getState(borrower.getPrimaryKey()));
+	}
+
+	public void findOutstanding(Book book, Borrower borrower) {
+		findByQuery("SELECT * FROM " + Rental.TABLE_NAME + " INNER JOIN "
+				+ Book.TABLE_NAME + " ON " + Rental.TABLE_NAME + ".BookID="
+				+ Book.TABLE_NAME + "." + Book.PRIMARY_KEY
+				+ " WHERE CheckinDate IS NULL AND BookID='"
+				+ book.getPrimaryKeyValue() + "' AND BorrowerID='" + borrower.getPrimaryKeyValue() + "'");
 	}
 
 	public void findOutstandingByBook(Book book) {

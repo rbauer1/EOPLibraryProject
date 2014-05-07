@@ -33,21 +33,13 @@ import userinterface.view.ViewFactory;
 import utilities.Key;
 import controller.Controller;
 
-public class MainScreen extends Screen implements ActionListener {
+public class MainScreen extends Screen {
 	
 	private static final String COPYRIGHT = "Copyright (c) 2014: Department of Computer Science, The College at Brockport";
 	
 	/** The dimension of the frame */
 	public static final int WIDTH = 1100;
 	public static final int HEIGHT = 800;
-	
-	/* Buttons */
-	private FButton bookActionsButton;
-	private FButton borrowerActionsButton;
-	private FButton checkinBookButton;
-	private FButton checkoutBookButton;
-	private FButton logoutButton;
-	private FButton workerActionsButton;
 	
 	/** == */
 	private HeaderPanel header = null;
@@ -87,21 +79,6 @@ public class MainScreen extends Screen implements ActionListener {
 		add(empty, BorderLayout.CENTER);
 	}
 	
-	public void processAction(Object source) {
-		Controller controller = getView().getController();
-		if (source == logoutButton) {
-			controller.stateChangeRequest(Key.LOGOUT, null);
-		} else if (source == bookActionsButton) {
-			controller.stateChangeRequest(Key.DISPLAY_BOOK_MENU, null);
-		} else if (source == borrowerActionsButton) {
-			controller.stateChangeRequest(Key.DISPLAY_BORROWER_MENU, null);
-		} else if (source == workerActionsButton) {
-			controller.stateChangeRequest(Key.DISPLAY_WORKER_MENU, null);
-		} else if (source == checkoutBookButton) {
-			controller.stateChangeRequest(Key.EXECUTE_CHECKOUT_BOOK, null);
-		}
-	}
-	
 	@Override
 	public void addView(View view) {
 		// add our view into the CENTER of the MainFrame
@@ -115,6 +92,12 @@ public class MainScreen extends Screen implements ActionListener {
 		if (currentView != null) {
 			remove(currentView);
 		}
+	}
+
+	@Override
+	public void processAction(Object source) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

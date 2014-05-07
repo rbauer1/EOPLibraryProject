@@ -40,14 +40,6 @@ public class MainMenuView extends View {
 
 	private static final long serialVersionUID = -4462137345508528750L;
 
-	/* Buttons */
-	private JButton bookActionsButton;
-	private JButton borrowerActionsButton;
-	private JButton checkinBookButton;
-	private JButton checkoutBookButton;
-	private JButton logoutButton;
-	private JButton workerActionsButton;
-
 	/**
 	 * Constructs main menu view
 	 * @param controller
@@ -62,8 +54,8 @@ public class MainMenuView extends View {
 	public void afterShown(){
 		messagePanel.clear();
 	}
-	
-	
+
+
 
 	@Override
 	protected void build() {

@@ -64,8 +64,7 @@ public class Button extends JButton{
 	}
 
 	public Button(String text, ActionListener listener) {
-		super(text);
-		initialize();
+		this(text);
 		addActionListener(listener);
 	}
 
@@ -79,7 +78,7 @@ public class Button extends JButton{
 		setPreferredSize(SIZE);
 		setAlignmentX(CENTER_ALIGNMENT);
 		rollover = false;
-		this.addFocusListener(new FocusListener(){
+		addFocusListener(new FocusListener(){
 			@Override
 			public void focusGained(FocusEvent e) {
 				focused = true;
@@ -89,14 +88,14 @@ public class Button extends JButton{
 				focused = false;
 			}
 		});
-		this.getModel().addChangeListener(new ChangeListener() {
-		    @Override
-		    public void stateChanged(ChangeEvent e) {
-		        ButtonModel model = (ButtonModel) e.getSource();
-		        rollover = model.isRollover();
-		        pressed = model.isPressed();
-		        repaint();
-		    }
+		getModel().addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				ButtonModel model = (ButtonModel) e.getSource();
+				rollover = model.isRollover();
+				pressed = model.isPressed();
+				repaint();
+			}
 		});
 
 	}

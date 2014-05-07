@@ -27,7 +27,7 @@ public class ListBorrowersView extends ListView {
 	private List<Borrower> borrowers;
 
 	/** Form to provide search criteria*/
-	private Form form;
+	protected Form form;
 
 	/**
 	 * Constructs list borrowers view
@@ -43,14 +43,12 @@ public class ListBorrowersView extends ListView {
 		}
 
 		subscribeToController(Key.MESSAGE, Key.BORROWER_COLLECTION);
-
-		// Get Borrowers for initial filter settings
-		filter();
 	}
 
 	@Override
 	public void afterShown() {
 		super.afterShown();
+		// Get Borrowers for initial filter settings
 		filter();
 	}
 
@@ -70,7 +68,8 @@ public class ListBorrowersView extends ListView {
 	 * Filters the table by the criteria specified in the form
 	 */
 	private void filter() {
-		controller.stateChangeRequest(Key.BORROWER_COLLECTION, form.getNonEmptyValues());
+		form.setAllFieldsEnabled(false);
+		controller.stateChangeRequest(Key.FILTER, form.getNonEmptyValues());
 	}
 
 	@Override
@@ -107,6 +106,7 @@ public class ListBorrowersView extends ListView {
 			borrowers = (List<Borrower>) value;
 			table.setModel(new BorrowerTableModel(borrowers));
 			table.repaint();
+			form.setAllFieldsEnabled(true);
 		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
 		}

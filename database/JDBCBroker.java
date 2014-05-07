@@ -22,7 +22,7 @@ import event.Event;
 public class JDBCBroker {
 	
 	private static final String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
-	private static final String DATABASE_CONFIG = "dbConfig.ini";
+	private static final String DATABASE_CONFIG = "assets/dbConfig.ini";
 	
 	private static JDBCBroker instance;
 

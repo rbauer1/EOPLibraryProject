@@ -9,6 +9,7 @@
  */
 package model;
 
+import java.util.List;
 import java.util.Properties;
 
 import model.validation.DateValidation;
@@ -16,6 +17,7 @@ import model.validation.InclusionValidation;
 import model.validation.LengthValidation;
 import model.validation.NumericValidation;
 import model.validation.PresenceValidation;
+import model.validation.PrimaryKeyValidation;
 import utilities.DateUtil;
 import utilities.Key;
 import exception.InvalidPrimaryKeyException;
@@ -84,6 +86,37 @@ public class Book extends Model {
 		return true;
 	}
 
+	/**
+	 * Get the borrower that lost this book.
+	 * Returns null if book is not lost or if book has never been rented.
+	 * @return borrower
+	 */
+	public Borrower getBorrowerThatLost() {
+		if(!isLost()){
+			return null;
+		}
+		Rental rental = getLastRental();
+		if(rental == null){
+			return null;
+		}
+		return rental.getBorrower();
+	}
+
+	/**
+	 * Returns the last rental that occurred on this book.
+	 * Value returned is null if this book has never been rented.
+	 * @return lastRental
+	 */
+	public Rental getLastRental() {
+		RentalCollection rentalCollection = new RentalCollection();
+		rentalCollection.findByBook(this);
+		List<Rental> rentals = rentalCollection.getEntities();
+		if(rentals.size() == 0){
+			return null;
+		}
+		return rentals.get(rentals.size() - 1);
+	}
+
 	@Override
 	public String getPrimaryKey() {
 		return PRIMARY_KEY;
@@ -110,10 +143,22 @@ public class Book extends Model {
 		return TABLE_NAME;
 	}
 
+	public boolean isActive() {
+		return persistentState.getProperty("Status", "").equals("Active");
+	}
+
 	public boolean isAvailable() {
 		RentalCollection rentals = new RentalCollection();
 		rentals.findOutstandingByBook(this);
 		return rentals.getEntities().size() == 0;
+	}
+
+	public boolean isInactive() {
+		return persistentState.getProperty("Status", "").equals("Inactive");
+	}
+
+	public boolean isLost() {
+		return persistentState.getProperty("Status", "").equals("Lost");
 	}
 
 	@Override
@@ -127,9 +172,9 @@ public class Book extends Model {
 		return save();
 	}
 
-	public boolean setLost(String notes){
-		persistentState.setProperty("Notes", notes);
-		persistentState.setProperty("Status", "Lost");
+	public boolean setLost(Properties data){
+		data.setProperty("Status", "Lost");
+		stateChangeRequest(data);
 		return save();
 	}
 
@@ -137,6 +182,7 @@ public class Book extends Model {
 	protected void setupValidations(){
 		validator.addValidation(new PresenceValidation("Barcode", "Barcode"));
 		validator.addValidation(new LengthValidation("Barcode", "Barcode", 4, 10));
+		validator.addValidation(new PrimaryKeyValidation("Barcode", "Barcode"));
 
 		validator.addValidation(new PresenceValidation("Title", "Title"));
 		validator.addValidation(new LengthValidation("Title", "Title", 1, 50));
