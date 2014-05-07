@@ -10,7 +10,6 @@
 package controller;
 
 import java.util.Properties;
-import userinterface.MenuPanel;
 
 import model.Worker;
 import utilities.Key;
