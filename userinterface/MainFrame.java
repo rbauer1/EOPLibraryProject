@@ -88,6 +88,9 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	/** Tells if size has been set yet */
 	private boolean sizeSet;
 
+	public Screen getScreen() {
+		return screen;
+	}
 
 	/**
 	 * Private constructor for the Singleton Pattern. Can only be called once.
