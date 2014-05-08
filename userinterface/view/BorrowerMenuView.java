@@ -19,14 +19,11 @@ import controller.Controller;
 /**
  * Worker Menu Screen. Serves as the transaction selection screen for Worker actions.
  */
-public class BorrowerMenuView extends View {
+public class BorrowerMenuView extends MenuView {
 
 	private static final long serialVersionUID = -7493657951613059489L;
 
 	/* Buttons */
-	private Button addButton;
-	private Button modifyButton;
-	private Button deleteButton;
 	private Button backButton;
 	private Button listBorrowersButton;
 
@@ -37,23 +34,16 @@ public class BorrowerMenuView extends View {
 	public BorrowerMenuView(Controller controller) {
 		super(controller, "Borrower Menu");
 	}
+	
+	@Override
+	protected String getMenuName() {
+		return "Borrower";
+	}
 
 	@Override
 	protected void build() {
-		if(((Worker)controller.getState(Key.WORKER)).isAdmin()){
-			addButton = new Button("Add Borrower");
-			addButton.addActionListener(this);
-			add(ViewHelper.formatCenter(addButton));
-
-			modifyButton = new Button("Modify Borrower");
-			modifyButton.addActionListener(this);
-			add(ViewHelper.formatCenter(modifyButton));
-
-			deleteButton = new Button("Delete Borrower");
-			deleteButton.addActionListener(this);
-			add(ViewHelper.formatCenter(deleteButton));
-		}
-
+		super.build();
+	
 		listBorrowersButton = new Button("List Borrowers With Rented Books");
 		listBorrowersButton.addActionListener(this);
 		add(ViewHelper.formatCenter(listBorrowersButton));

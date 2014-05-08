@@ -19,14 +19,11 @@ import controller.Controller;
 /**
  * Book Menu Screen. Serves as the transaction selection screen for book actions.
  */
-public class BookMenuView extends View {
+public class BookMenuView extends MenuView {
 
 	private static final long serialVersionUID = -4462137345508528750L;
 
 	/* Buttons */
-	private Button addButton;
-	private Button modifyButton;
-	private Button deleteButton;
 	private Button processLostBookButton;
 	private Button listAvailableButton;
 	private Button listUnavailableButton;
@@ -42,16 +39,9 @@ public class BookMenuView extends View {
 
 	@Override
 	protected void build() {
+		super.build();
+
 		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
-            addButton = new Button("Add Book", this);
-            add(ViewHelper.formatCenter(addButton));
-
-            modifyButton = new Button("Modify Book", this);
-            add(ViewHelper.formatCenter(modifyButton));
-
-            deleteButton = new Button("Delete Book", this);
-            add(ViewHelper.formatCenter(deleteButton));
-
             processLostBookButton = new Button("Process Lost Book", this);
             add(ViewHelper.formatCenter(processLostBookButton));
 
@@ -80,6 +70,11 @@ public class BookMenuView extends View {
 		menu.add(listAvailableButton);
 
 		return menu;
+	}
+
+	@Override
+	protected String getMenuName() {
+		return "Book";
 	}
 
 	@Override

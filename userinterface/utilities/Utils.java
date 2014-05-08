@@ -19,6 +19,11 @@ import javax.swing.plaf.ColorUIResource;
 public class Utils {
 
 	private static final String IMG_DIR = "assets/images/";
+	
+	public static void addPadding(JComponent comp, int any) {
+		comp.setBorder(new EmptyBorder(any, any, any, any) );
+	}
+
 
 	public static void addCompoundPadding(JComponent comp, int top, int left, int bottom, int right) {
 		Border b = comp.getBorder();

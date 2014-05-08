@@ -18,14 +18,11 @@ import controller.Controller;
 /**
  * Worker Menu Screen. Serves as the transaction selection screen for Worker actions.
  */
-public class WorkerMenuView extends View {
+public class WorkerMenuView extends MenuView {
 	
 	private static final long serialVersionUID = -4462137345508528750L;
 	
 	/* Buttons */
-	private Button addButton;
-	private Button modifyButton;
-	private Button deleteButton;
 	private Button backButton;
 
 	/**
@@ -35,17 +32,15 @@ public class WorkerMenuView extends View {
 	public WorkerMenuView(Controller controller) {
 		super(controller, "Worker Menu");
 	}
+	
+	@Override
+	protected String getMenuName() {
+		return "Worker";
+	}
 
 	@Override
 	protected void build() {
-		addButton = new Button("Add Worker", this);
-		add(ViewHelper.formatCenter(addButton));
-
-		modifyButton = new Button("Modify Worker", this);
-		add(ViewHelper.formatCenter(modifyButton));
-
-		deleteButton = new Button("Delete Worker", this);
-		add(ViewHelper.formatCenter(deleteButton));
+		super.build();
 
 		backButton = new Button("Back", this);
 		add(ViewHelper.formatCenter(backButton));
