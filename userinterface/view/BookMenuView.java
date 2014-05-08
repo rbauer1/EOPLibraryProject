@@ -11,8 +11,8 @@ package userinterface.view;
 
 import model.Worker;
 import userinterface.ViewHelper;
-import userinterface.component.Button;
 import userinterface.component.Accordion;
+import userinterface.component.Button;
 import utilities.Key;
 import controller.Controller;
 

@@ -1,38 +1,18 @@
 package userinterface.component.flat;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-
-import javax.swing.ButtonModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.plaf.ColorUIResource;
-import javax.swing.border.EmptyBorder;
-
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import userinterface.MainFrame;
-import userinterface.component.Panel;
+import javax.swing.JButton;
+import javax.swing.SwingConstants;
+
 import userinterface.utilities.ButtonSet;
 import userinterface.utilities.Utils;
 

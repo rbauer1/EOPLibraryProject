@@ -9,33 +9,20 @@
  */
 package userinterface;
 
-import javax.swing.JComponent;
-import userinterface.component.*;
 import impresario.ISlideShow;
 import impresario.IView;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.lang.reflect.Constructor;
-import java.util.Arrays;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
-import controller.Controller;
-import userinterface.view.panel.HeaderPanel;
-import userinterface.view.panel.MenuPanel;
 import userinterface.screen.LoginScreen;
 import userinterface.screen.MainScreen;
 import userinterface.screen.Screen;
-import userinterface.utilities.Utils;
 import userinterface.view.View;
 import event.Event;
 

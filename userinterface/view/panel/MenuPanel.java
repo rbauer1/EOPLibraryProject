@@ -1,36 +1,14 @@
 package userinterface.view.panel;
 
-import javax.swing.Timer;
-
-import java.awt.Insets;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 import java.awt.BorderLayout;
+import java.awt.Color;
 
-import javax.swing.border.*;
-
-import java.util.List;
-import java.util.LinkedList;
-
-import javax.swing.border.EmptyBorder;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.AbstractButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.SwingConstants;
 
-import controller.Controller;
 import model.Worker;
 import userinterface.MainFrame;
-import userinterface.component.*;
+import userinterface.component.Accordion;
+import userinterface.component.Button;
 import userinterface.component.flat.FButton;
 import userinterface.component.flat.Icons;
 import userinterface.menu.MButton;
@@ -38,8 +16,7 @@ import userinterface.utilities.ButtonSet;
 import userinterface.utilities.Utils;
 import userinterface.view.View;
 import utilities.Key;
-
-import java.awt.event.*;
+import controller.Controller;
 
 public class MenuPanel extends View {
 	

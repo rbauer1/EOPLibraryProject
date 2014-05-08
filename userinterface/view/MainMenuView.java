@@ -9,27 +9,7 @@
  */
 package userinterface.view;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.util.Properties;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import userinterface.Config;
-import userinterface.MainFrame;
-import userinterface.ViewHelper;
-import model.Worker;
-import userinterface.component.Panel;
-import userinterface.component.flat.FButton;
-import userinterface.component.flat.Icons;
-import userinterface.menu.MButton;
 import userinterface.message.MessageEvent;
-import userinterface.utilities.Utils;
 import utilities.Key;
 import controller.Controller;
 

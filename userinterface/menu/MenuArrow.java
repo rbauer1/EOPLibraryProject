@@ -1,19 +1,14 @@
 package userinterface.menu;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.Line2D;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import userinterface.Config;
-import userinterface.MainFrame;
-import userinterface.view.panel.MenuPanel;
 import userinterface.utilities.Utils;
+import userinterface.view.panel.MenuPanel;
 
 public class MenuArrow extends JPanel {
 	

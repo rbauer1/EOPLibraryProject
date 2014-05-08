@@ -9,9 +9,8 @@
  */
 package userinterface.view;
 
-import userinterface.MainFrame;
-import userinterface.screen.LoginScreen;
 import userinterface.message.MessageEvent;
+import userinterface.screen.LoginScreen;
 import userinterface.view.form.Form;
 import userinterface.view.form.LoginForm;
 import utilities.Key;

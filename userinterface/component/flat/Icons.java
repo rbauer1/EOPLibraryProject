@@ -1,8 +1,5 @@
 package userinterface.component.flat;
 
-import java.awt.Dimension;
-import java.awt.Image;
-
 import javax.swing.ImageIcon;
 
 import userinterface.utilities.Utils;

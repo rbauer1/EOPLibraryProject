@@ -22,12 +22,11 @@ import java.util.Map;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import userinterface.MainFrame;
 import userinterface.ViewHelper;
+import userinterface.component.Accordion;
 import userinterface.component.Button;
 import userinterface.component.Label;
 import userinterface.component.Panel;
-import userinterface.component.Accordion;
 import userinterface.message.MessagePanel;
 import userinterface.screen.MainScreen;
 import controller.Controller;
