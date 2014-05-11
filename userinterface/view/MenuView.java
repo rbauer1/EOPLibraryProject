@@ -1,14 +1,9 @@
 package userinterface.view;
 
-import java.awt.BorderLayout;
-
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import model.Worker;
-import userinterface.ViewHelper;
-import userinterface.component.Accordion;
-import userinterface.component.Button;
 import userinterface.component.flat.FButton;
 import userinterface.component.flat.Icons;
 import userinterface.utilities.Utils;
