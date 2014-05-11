@@ -74,6 +74,15 @@ public class FButton extends Button {
 	    }
 	}
 	
+	public void reset() {
+		unpress();
+		rollover = false;
+		pressed = false;
+		focused = false;
+		mousePressed = false;
+		setBackground(colorConf.getColor());
+	}
+	
 	public void setIconConfig(IconConfig conf) {
 		iconConf = conf;
 		update();
