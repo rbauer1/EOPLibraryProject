@@ -105,7 +105,7 @@ public class Utils {
 		comp.setMinimumSize(d);
 		comp.setPreferredSize(d);
 	}
-
+	
 	public static void setTransparent(JButton comp) {
 		comp.setOpaque(false);
 		comp.setContentAreaFilled(false);

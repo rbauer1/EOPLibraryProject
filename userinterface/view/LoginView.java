@@ -9,8 +9,11 @@
  */
 package userinterface.view;
 
+import java.awt.Dimension;
+
 import userinterface.message.MessageEvent;
 import userinterface.screen.LoginScreen;
+import userinterface.utilities.Utils;
 import userinterface.view.form.Form;
 import userinterface.view.form.LoginForm;
 import utilities.Key;
@@ -36,6 +39,9 @@ public class LoginView extends View {
 	 */
 	public LoginView(Controller controller) {
 		super(controller, "Login", BUTTON_NAMES);
+		Utils.setAllSize(messagePanel, LoginScreen.WIDTH, 30);
+		Utils.setAllSize(buttons.get("Login"), 90, 25); 
+		Utils.setAllSize(buttons.get("Forgot Password"), 160, 25); 
 		subscribeToController(Key.MESSAGE);
 	}
 
@@ -45,6 +51,7 @@ public class LoginView extends View {
 
 	@Override
 	protected void build() {
+		setMinimumSize(new Dimension(LoginScreen.WIDTH, LoginScreen.HEIGHT));
 		form = new LoginForm(this);
 		add(form);
 	}
@@ -77,5 +84,6 @@ public class LoginView extends View {
 		form.requestFocusForDefaultField();
 		form.reset();
 		messagePanel.clear();
+		System.out.printf("Width: %d\tHeight: %d%n",form.getWidth(),form.getHeight());
 	}
 }

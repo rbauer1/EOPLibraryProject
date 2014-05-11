@@ -12,6 +12,9 @@ public class Key {
 	public static final String BORROWER = "Borrower";
 	public static final String BORROWER_COLLECTION = "BorrowerCollection";
 	public static final String RENT_BOOKS = "RentBooks";
+    public static final String CHECKOUT_BOOKS = "CheckOutBooks";
+
+    public static final String DELINQUENT_BORROWERS_COLLECTION = "DelinquentBorrowersCollection";
 
 	public static final String DISPLAY_BOOK_MENU = "DisplayBookMenu";
 
@@ -36,6 +39,7 @@ public class Key {
 
 	public static final String EXECUTE_DELETE_BORROWER 	= "DeleteBorrowersTransaction";
 	public static final String EXECUTE_DELETE_WORKER 	= "DeleteWorkersTransaction";
+	public static final String EXECUTE_DELINQUENCY_CHECK 	= "DelinquencyCheckTransaction";
 	public static final String EXECUTE_MODIFY_BOOK 	= "ModifyBooksTransaction";
 	public static final String EXECUTE_LIST_BORROWERS_WITH_RENTED_BOOKS = "ListBorrowersWithRentedBooksTransaction";
 
