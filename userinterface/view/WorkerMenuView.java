@@ -47,18 +47,6 @@ public class WorkerMenuView extends MenuView {
 		body.add(backButton);
 	}
 	
-	public Accordion toMenu() {
-		build(); // FIXME could be avoided ? Should the general view be removed ? Or replaced by that menu ?
-
-		Accordion menu = new Accordion();
-		
-		menu.add(addButton);
-		menu.add(modifyButton);
-		menu.add(deleteButton);
-		
-		return menu;
-	}
-
 	@Override
 	public void processAction(Object source) {
 		if (source == backButton) {

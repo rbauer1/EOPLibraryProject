@@ -117,8 +117,6 @@ public abstract class View extends Panel implements IView, ActionListener {
 
 	protected abstract void build();
 
-	public Accordion toMenu() { return null; }
-
 	protected JPanel createButtons(String[] names){
 		Panel panel = new Panel(new FlowLayout(FlowLayout.CENTER));
 		for(String name : names){
