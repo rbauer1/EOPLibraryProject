@@ -1,5 +1,6 @@
 package userinterface.component;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -9,6 +10,8 @@ import java.awt.event.ActionListener;
 import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+
+import userinterface.utilities.Utils;
 
 public class Accordion extends JPanel {
 
@@ -53,6 +56,18 @@ public class Accordion extends JPanel {
 		cons.anchor = GridBagConstraints.FIRST_LINE_START;
 		cons.weightx = 1;
 	}
+	
+	private void updateSize() {
+		setWidth(getSize().width);
+	}
+	
+	public void setWidth(int w) {
+		int h = 0;
+		for (Component c : getComponents()) {
+			h += c.getHeight();
+		}
+		Utils.setAllSize(this, w, h);
+	}
 
 	public void add(AbstractButton comp, JComponent content) {
 		GridBagConstraints cons_ = (GridBagConstraints)cons.clone();
@@ -62,14 +77,17 @@ public class Accordion extends JPanel {
 		content.setVisible(false);
 		add(comp, cons);
 		add(content, cons_);
+		updateSize();
 	}
 
 	public void add(JComponent comp) {
 		add(comp, cons);
+		updateSize();
 	}
 
 	public void fit() {
 		add(dummy);
+		updateSize();
 	}
 
 	public JComponent getOpened() {
