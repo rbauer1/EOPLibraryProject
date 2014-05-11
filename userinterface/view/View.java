@@ -94,6 +94,13 @@ public abstract class View extends Panel implements IView, ActionListener {
 	}
 
 	/**
+	 * Hook method called before view is shown.
+	 * Can be used to request focus on fields.
+	 */
+	public void beforeShown() {
+	}
+
+	/**
 	 * Hook method called after view is shown.
 	 * Can be used to request focus on fields.
 	 */

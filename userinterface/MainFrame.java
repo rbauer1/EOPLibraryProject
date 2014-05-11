@@ -170,6 +170,7 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		}
 
 		if (newView instanceof View) {
+			((View) newView).beforeShown();
 			screen.setView((View)newView);
 			((View) newView).afterShown();
 
