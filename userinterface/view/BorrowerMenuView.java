@@ -12,6 +12,7 @@ package userinterface.view;
 import userinterface.ViewHelper;
 import userinterface.component.Accordion;
 import userinterface.component.Button;
+import userinterface.component.flat.FButton;
 import utilities.Key;
 import controller.Controller;
 
@@ -23,9 +24,10 @@ public class BorrowerMenuView extends MenuView {
 	private static final long serialVersionUID = -7493657951613059489L;
 
 	/* Buttons */
-	private Button backButton;
-	private Button listBorrowersButton;
-	private Button delinquencyButton;
+	private FButton backButton;
+	private FButton listBorrowersButton;
+	private FButton delinquencyButton;
+
 	/**
 	 * Constructs Worker menu view
 	 * @param controller
@@ -33,7 +35,7 @@ public class BorrowerMenuView extends MenuView {
 	public BorrowerMenuView(Controller controller) {
 		super(controller, "Borrower Menu");
 	}
-	
+
 	@Override
 	protected String getMenuName() {
 		return "Borrower";
@@ -42,17 +44,17 @@ public class BorrowerMenuView extends MenuView {
 	@Override
 	protected void build() {
 		super.build();
-	
-		listBorrowersButton = new Button("List Borrowers With Rented Books");
-		listBorrowersButton.addActionListener(this);
-		add(ViewHelper.formatCenter(listBorrowersButton));
 
-		delinquencyButton = new Button("Delinquency Check");
-		delinquencyButton.addActionListener(this);
-		add(ViewHelper.formatCenter(delinquencyButton));
+		listBorrowersButton = createButton("List Borrowers With Rented Books");
+		body.add(listBorrowersButton);
+		body.add(createButtonSeparator());
 
-		backButton = new Button("Back", this);
-		add(ViewHelper.formatCenter(backButton));
+		delinquencyButton = createButton("Delinquency Check");
+		body.add(delinquencyButton);
+		body.add(createButtonSeparator());
+
+		backButton = createButton("Back");
+		body.add(backButton);
 	}
 
 	public Accordion toMenu() {

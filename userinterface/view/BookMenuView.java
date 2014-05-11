@@ -9,10 +9,14 @@
  */
 package userinterface.view;
 
+import javax.swing.JPanel;
+
 import model.Worker;
 import userinterface.ViewHelper;
 import userinterface.component.Accordion;
 import userinterface.component.Button;
+import userinterface.component.flat.FButton;
+import userinterface.utilities.Utils;
 import utilities.Key;
 import controller.Controller;
 
@@ -24,10 +28,10 @@ public class BookMenuView extends MenuView {
 	private static final long serialVersionUID = -4462137345508528750L;
 
 	/* Buttons */
-	private Button processLostBookButton;
-	private Button listAvailableButton;
-	private Button listUnavailableButton;
-	private Button backButton;
+	private FButton processLostBookButton;
+	private FButton listAvailableButton;
+	private FButton listUnavailableButton;
+	private FButton backButton;
 
 	/**
 	 * Constructs book menu view
@@ -36,25 +40,37 @@ public class BookMenuView extends MenuView {
 	public BookMenuView(Controller controller) {
 		super(controller, "Book Menu");
 	}
-
+	
+	@Override
+	public void beforeShown() {
+		super.beforeShown();
+		
+		processLostBookButton.reset();
+		listAvailableButton.reset();
+		listUnavailableButton.reset();
+		backButton.reset();
+	}
+	
 	@Override
 	protected void build() {
 		super.build();
 
 		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
-            processLostBookButton = new Button("Process Lost Book", this);
-            add(ViewHelper.formatCenter(processLostBookButton));
-
+            processLostBookButton = createButton("Process Lost Book");
+            body.add(processLostBookButton);
+            body.add(createButtonSeparator());
 		}
 
-		listAvailableButton = new Button("List Available Books", this);
-		add(ViewHelper.formatCenter(listAvailableButton));
+		listAvailableButton = createButton("List Available Books");
+		body.add(listAvailableButton);
+		body.add(createButtonSeparator());
+		
+		listUnavailableButton = createButton("List Unavailable Books");
+		body.add(listUnavailableButton);
+		body.add(createButtonSeparator());
 
-		listUnavailableButton = new Button("List Unavailable Books", this);
-		add(ViewHelper.formatCenter(listUnavailableButton));
-
-		backButton = new Button("Back", this);
-		add(ViewHelper.formatCenter(backButton));
+		backButton = createButton("Back");
+		body.add(backButton);
 	}
 
 	public Accordion toMenu() {

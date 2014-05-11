@@ -12,6 +12,7 @@ package userinterface.view;
 import userinterface.ViewHelper;
 import userinterface.component.Accordion;
 import userinterface.component.Button;
+import userinterface.component.flat.FButton;
 import utilities.Key;
 import controller.Controller;
 
@@ -23,7 +24,7 @@ public class WorkerMenuView extends MenuView {
 	private static final long serialVersionUID = -4462137345508528750L;
 	
 	/* Buttons */
-	private Button backButton;
+	private FButton backButton;
 
 	/**
 	 * Constructs Worker menu view
@@ -42,8 +43,8 @@ public class WorkerMenuView extends MenuView {
 	protected void build() {
 		super.build();
 
-		backButton = new Button("Back", this);
-		add(ViewHelper.formatCenter(backButton));
+		backButton = createButton("Back");
+		body.add(backButton);
 	}
 	
 	public Accordion toMenu() {
