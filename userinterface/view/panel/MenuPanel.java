@@ -9,6 +9,7 @@ import model.Worker;
 import userinterface.MainFrame;
 import userinterface.component.Accordion;
 import userinterface.component.Button;
+import userinterface.component.Panel;
 import userinterface.component.flat.FButton;
 import userinterface.component.flat.Icons;
 import userinterface.menu.MButton;
@@ -102,23 +103,41 @@ public class MenuPanel extends View {
 		setLayout(new BorderLayout(0,5));
 		setBackground(BACKGROUND_COLOR);
 		Utils.setAllSize(this, WIDTH, HEIGHT);
-
+		
+		
+		
 		accordion.setBackground(BACKGROUND_COLOR);
 		add(accordion, BorderLayout.PAGE_START);
 
 		bookActionsButton = new MButton("Book Menu", Icons.BOOK, this);
 		add(bookActionsButton);
+		
+		Panel separator = new Panel(View.BACKGROUND_COLOR); 
+		Utils.setAllSize(separator, WIDTH, 2);
+		add(separator);
 
 		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
 			borrowerActionsButton = new MButton("Borrower Menu", Icons.BORROWER, this);
 			add(borrowerActionsButton);
 
+			separator = new Panel(View.BACKGROUND_COLOR); 
+			Utils.setAllSize(separator, WIDTH, 2);
+			add(separator);
+
 			workerActionsButton = new MButton("Workers Menu", Icons.WORKER, this);
 			add(workerActionsButton);
+			
+			separator = new Panel(View.BACKGROUND_COLOR); 
+			Utils.setAllSize(separator, WIDTH, 2);
+			add(separator);
 		}
 
 		rentBookButton = new MButton("Rent a Book", Icons.RENT_BOOK, this);
 		add(rentBookButton);
+		
+		separator = new Panel(View.BACKGROUND_COLOR); 
+		Utils.setAllSize(separator, WIDTH, 2);
+		add(separator);
 
 		returnBookButton = new MButton("Return a Book", Icons.RETURN_BOOK, this);
 		add(returnBookButton);

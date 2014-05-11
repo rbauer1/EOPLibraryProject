@@ -6,7 +6,7 @@ public class ButtonSet {
 	
 	private FButton opened = null;
 	
-	// TODO use interafce for buttons ?
+	// TODO use interface for buttons ?
 	public void register(FButton b) {
 		if (opened != null && b != opened) {
 			opened.unpress();

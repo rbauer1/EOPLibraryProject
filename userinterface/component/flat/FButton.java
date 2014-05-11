@@ -196,9 +196,19 @@ public class FButton extends Button {
 		super(text);
 		init(text, null, null, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
+	
+	public FButton(String text, boolean clear) {
+		super(text, clear);
+		init(text, null, null, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	}
 
 	public FButton(String text, ActionListener listener) {
 		super(text);
+		init(text, null, listener, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	}
+	
+	public FButton(String text, ActionListener listener, boolean clear) {
+		super(text, clear);
 		init(text, null, listener, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
 
@@ -206,9 +216,19 @@ public class FButton extends Button {
 		super(text);
 		init(text, null, listener, w, h);
 	}
+	
+	public FButton(String text, ActionListener listener, int w, int h, boolean clear) {
+		super(text, clear);
+		init(text, null, listener, w, h);
+	}
 
 	public FButton(String text, IconConfig icons) {
 		super(text);
+		init(text, icons, null, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	}
+	
+	public FButton(String text, IconConfig icons, boolean clear) {
+		super(text, clear);
 		init(text, icons, null, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
 
@@ -217,13 +237,29 @@ public class FButton extends Button {
 		init(text, icons, listener, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
 
+	public FButton(String text, IconConfig icons, ActionListener listener, boolean clear) {
+		super(text, clear);
+		init(text, icons, listener, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	}
+
+	
 	public FButton(String text, IconConfig icons, int w, int h) {
 		super(text);
 		init(text, icons, null, w, h);
 	}
 	
+	public FButton(String text, IconConfig icons, int w, int h, boolean clear) {
+		super(text, clear);
+		init(text, icons, null, w, h);
+	}
+	
 	public FButton(String text, IconConfig icons, ActionListener listener, int w, int h) {
 		super(text);
+		init(text, icons, listener, w, h);
+	}
+	
+	public FButton(String text, IconConfig icons, ActionListener listener, int w, int h, boolean clear) {
+		super(text, clear);
 		init(text, icons, listener, w, h);
 	}
 	

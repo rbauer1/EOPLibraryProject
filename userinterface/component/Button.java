@@ -52,6 +52,9 @@ public class Button extends JButton{
 	/** True if the button is disabled **/
 	private boolean disabled;
 	
+	/** True if button is not to be painted colors **/
+	private boolean clear;
+	
 	public Button() {
 		super();
 		initialize();
@@ -62,11 +65,25 @@ public class Button extends JButton{
 	 */
 	public Button(String text) {
 		super(text);
+		clear = false;
+		initialize();
+	}
+	
+	public Button(String text, boolean clearButton) {
+		super(text);
+		clear = clearButton;
 		initialize();
 	}
 
 	public Button(String text, ActionListener listener) {
 		this(text);
+		clear = false;
+		addActionListener(listener);
+	}
+	
+	public Button(String text, ActionListener listener, boolean clearButton) {
+		this(text);
+		clear = clearButton;
 		addActionListener(listener);
 	}
 
@@ -106,6 +123,14 @@ public class Button extends JButton{
 
 	@Override
 	protected void paintComponent(Graphics g) {
+		if(clear){
+			super.paintComponent(g);
+		}else{
+			paintColor(g);
+		}
+	}
+	
+	private void paintColor(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		int height = getHeight();

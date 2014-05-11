@@ -10,6 +10,6 @@ public class Config {
 	public static final String BORROWER_MENU_ICON = "book.png";
 	public static final String WORKER_MENU_ICON = "book.png";
 	
-	public static final Color VIEW_BACKGROUND = new Color(0xFF0000);
+	public static final Color VIEW_BACKGROUND = new Color(0xF0F0E8);
 	
 }

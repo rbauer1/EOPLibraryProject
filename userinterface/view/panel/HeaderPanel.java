@@ -87,7 +87,7 @@ public class HeaderPanel extends View {
 
 		Utils.setAllSize(this, WIDTH, HEIGHT);
 
-		logoutButton = new FButton("", this);
+		logoutButton = new FButton("", Icons.LOGOUT, this, true);
 
 		add(createMainHeader(), BorderLayout.LINE_START);
 		add(createUserBox(), BorderLayout.LINE_END);
@@ -156,8 +156,11 @@ public class HeaderPanel extends View {
 		int size = width / 8;
 		Utils.setAllSize(logoutButton, size, size);
 
+		logoutButton.setOpaque(false);
+		logoutButton.setContentAreaFilled(false);
+		logoutButton.setBorderPainted(false);
 		logoutButton.setIconConfig(new Icons.IconConfigHelper("LogOff_Clear.png", "LogOff_Clear.png", size, size));
-		logoutButton.setColorConfig(null);
+//		logoutButton.setColorConfig(null);
 
 		logout.setLayout(new BoxLayout(logout, BoxLayout.X_AXIS));
 		logout.add(Box.createHorizontalGlue());
