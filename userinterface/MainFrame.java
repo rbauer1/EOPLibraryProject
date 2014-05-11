@@ -152,6 +152,7 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 			new Event("MainFrame", "swapToView", "Missing view for display ", Event.ERROR);
 			throw new NullPointerException();
 		}
+		System.out.println("current screen: " + ((View)newView).getClass().getSimpleName());
 
 		String screenName = ((View)newView).getScreenName();
 		if (screen == null || !screenName.equals(screen.getClass().getSimpleName())) {

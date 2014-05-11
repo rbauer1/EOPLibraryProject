@@ -12,11 +12,15 @@ public class LoginScreen extends Screen {
 
 	public LoginScreen(View view) {
 		super(view);
-		Utils.setAllSize(this, WIDTH, HEIGHT);
+	}
+
+	private void clear() {
+		removeAll();
 	}
 
 	@Override
 	public void addView(View view) {
+		clear();
 		add(view);
 	}
 
