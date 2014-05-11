@@ -125,7 +125,8 @@ public class LibrarianController extends Controller {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
 		} else if (key.equals(Key.EXECUTE_LIST_BORROWERS_WITH_RENTED_BOOKS)) {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
-			
+		} else if (key.equals(Key.EXECUTE_DELINQUENCY_CHECK)) {
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
 		} else if (key.equals(Key.EXECUTE_ADD_WORKER)) {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
 		} else if (key.equals(Key.EXECUTE_MODIFY_WORKER)) {

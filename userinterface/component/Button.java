@@ -3,7 +3,6 @@ package userinterface.component;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -50,6 +49,9 @@ public class Button extends JButton{
 	/** True if the button has focus **/
 	private boolean focused;
 
+	/** True if the button is disabled **/
+	private boolean disabled;
+	
 	public Button() {
 		super();
 		initialize();
@@ -70,6 +72,7 @@ public class Button extends JButton{
 
 	private void initialize(){
 		setRolloverEnabled(true);
+		setFocusPainted(false);
 		setContentAreaFilled(false);
 		setForeground(FONT_COLOR);
 		setFont(FONT);
@@ -92,6 +95,7 @@ public class Button extends JButton{
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				ButtonModel model = (ButtonModel) e.getSource();
+				disabled = ! model.isEnabled();
 				rollover = model.isRollover();
 				pressed = model.isPressed();
 				repaint();
@@ -106,30 +110,31 @@ public class Button extends JButton{
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		int height = getHeight();
 		int width  = getWidth();
-		Color gradientLight = LIGHT_COLOR;
-		Color gradientDark = DARK_COLOR;
-		if(rollover || focused){
-			gradientLight = gradientLight.brighter();
-			gradientDark = gradientDark.brighter();
+		Color color = LIGHT_COLOR;
+		if(disabled){
+			color = Color.GRAY;
+			setForeground(Color.GRAY.brighter());
+		}else{
+			setForeground(FONT_COLOR);
+			if(rollover || focused){
+				color = color.brighter();
+			}
+			if(pressed){
+				color = DARK_COLOR;
+			}
 		}
-		if(pressed){
-			Color temp = gradientLight;
-			gradientLight = gradientDark;
-			gradientDark = temp;
-		}
-		g2.setPaint(new GradientPaint(0, 0, gradientLight, 0,height, gradientDark));
+		g2.setPaint(color);
 		g2.fillRect(0, 0, width, height);
-
 		//outer border
-		g2.setPaint(BORDER_COLOR);
-		g2.drawRoundRect(0, 0, width-1, height-1, 4, 4);
+//		g2.setPaint(BORDER_COLOR);
+//		g2.drawRoundRect(0, 0, width-1, height-1, 4, 4);
 
 		//make corners match background
-		g2.setPaint(Panel.BACKGROUND_COLOR);
-		g2.drawLine(0, 0, 0, 0);
-		g2.drawLine(0, height-1, 0, height-1);
-		g2.drawLine(width-1, 0, width-1, 0);
-		g2.drawLine(width-1, height-1, width-1, height-1);
+//		g2.setPaint(Panel.BACKGROUND_COLOR);
+//		g2.drawLine(0, 0, 0, 0);
+//		g2.drawLine(0, height-1, 0, height-1);
+//		g2.drawLine(width-1, 0, width-1, 0);
+//		g2.drawLine(width-1, height-1, width-1, height-1);
 
 		super.paintComponent(g);
 	}

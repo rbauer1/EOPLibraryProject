@@ -132,6 +132,12 @@ public class Borrower extends Model {
 		return save();
 	}
 
+	public boolean setDelinquent(String notes){
+		stateChangeRequest("Notes", notes);
+		stateChangeRequest("BorrowerStatus", "Delinquent");
+		return save();
+	}
+
 	public boolean setLostBook(Book book){
 		double monetaryPenalty = Double.parseDouble((String)persistentState.get("MonetaryPenalty"));
 		monetaryPenalty += Double.parseDouble((String)book.getState("SuggestedPrice"));

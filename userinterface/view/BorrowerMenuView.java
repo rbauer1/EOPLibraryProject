@@ -9,7 +9,6 @@
  */
 package userinterface.view;
 
-import model.Worker;
 import userinterface.ViewHelper;
 import userinterface.component.Accordion;
 import userinterface.component.Button;
@@ -26,7 +25,7 @@ public class BorrowerMenuView extends MenuView {
 	/* Buttons */
 	private Button backButton;
 	private Button listBorrowersButton;
-
+	private Button delinquencyButton;
 	/**
 	 * Constructs Worker menu view
 	 * @param controller
@@ -47,6 +46,10 @@ public class BorrowerMenuView extends MenuView {
 		listBorrowersButton = new Button("List Borrowers With Rented Books");
 		listBorrowersButton.addActionListener(this);
 		add(ViewHelper.formatCenter(listBorrowersButton));
+
+		delinquencyButton = new Button("Delinquency Check");
+		delinquencyButton.addActionListener(this);
+		add(ViewHelper.formatCenter(delinquencyButton));
 
 		backButton = new Button("Back", this);
 		add(ViewHelper.formatCenter(backButton));
@@ -76,6 +79,8 @@ public class BorrowerMenuView extends MenuView {
 			controller.stateChangeRequest(Key.EXECUTE_DELETE_BORROWER, null);
 		} else if (source == listBorrowersButton) {
 			controller.stateChangeRequest(Key.EXECUTE_LIST_BORROWERS_WITH_RENTED_BOOKS, null);
+		} else if (source == delinquencyButton) {
+			controller.stateChangeRequest(Key.EXECUTE_DELINQUENCY_CHECK, null);
 		}
 	}
 

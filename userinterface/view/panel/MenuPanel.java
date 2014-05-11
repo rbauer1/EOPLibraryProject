@@ -20,6 +20,8 @@ import controller.Controller;
 
 public class MenuPanel extends View {
 	
+	private static final long serialVersionUID = -6319800980044183733L;
+
 	/** Background color of the header */
 	private static final Color BACKGROUND_COLOR = new Color(0xD1DBC6);
 	
@@ -33,7 +35,7 @@ public class MenuPanel extends View {
 	public static final int HEIGHT = MainFrame.HEIGHT;
 	
 	private static final ButtonSet menuSet = new ButtonSet();
-	private Accordion accordion;
+	private Accordion accordion; //TODO is this relevant anymore?
 	
 	/* Buttons */
 	private FButton bookActionsButton;
@@ -97,7 +99,7 @@ public class MenuPanel extends View {
 	protected void build() {
 		accordion = new Accordion();
 
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout(0,5));
 		setBackground(BACKGROUND_COLOR);
 		Utils.setAllSize(this, WIDTH, HEIGHT);
 

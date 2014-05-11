@@ -10,21 +10,18 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
+import userinterface.component.Button;
 import userinterface.utilities.ButtonSet;
 import userinterface.utilities.Utils;
 
-public class FButton extends JButton {
+public class FButton extends Button {
 
+	private static final long serialVersionUID = -3487434463899202779L;
 	private static final Font FONT = new Font("Arial", Font.TYPE1_FONT, 14);
 	private static final Color FONT_COLOR = new Color(0xF0F0E8);
 
-	private static final Color UNCLICKED_COLOR = new Color(0x1ABC9C);
-	private static final Color PRESSED_COLOR = new Color(0x16A085);
-	private static final Color HOVER_COLOR = PRESSED_COLOR;
-	
 	private static final int DEFAULT_WIDTH = 100;
 	private static final int DEFAULT_HEIGHT = 100;
 
@@ -108,19 +105,6 @@ public class FButton extends JButton {
 	}
 	
 	private void update() {
-		Color c = null;
-		if (colorConf != null) {
-			c = colorConf.getColor();
-			
-			if (mousePressed) {
-				c = colorConf.getProgressColor();
-			} else if (rollover || focused) {
-				c = colorConf.getHoverColor();
-			}
-			if (pressed) {
-				c = colorConf.getPressedColor();
-			}
-		}
 		if (iconConf != null) {
 			if (pressed) {
 				setIcon(iconConf.getPressedIcon());
@@ -128,9 +112,6 @@ public class FButton extends JButton {
 				setIcon(iconConf.getIcon());
 			}
 		}
-		
-		if (c != null)
-			setBackground(c);
 	}
 	
 	@Override
@@ -171,9 +152,9 @@ public class FButton extends JButton {
 		addMouseListener(new MListener(this));
 		addActionListener(new AListener(this));
 
-		if (listener != null)
+		if (listener != null){
 			addActionListener(listener);
-
+		}
 		Utils.setAllSize(this, w, h);
 		setBorder(null);
 		//setBackground(UNCLICKED_COLOR);
@@ -182,9 +163,9 @@ public class FButton extends JButton {
 		Utils.removeFocusBorder(this);
 		Utils.enableEnterKey(this);
 
-		if (icons != null)
+		if (icons != null){
 			setIconConfig(icons);
-		
+		}
 		setHorizontalAlignment(SwingConstants.LEFT);
 		setRolloverEnabled(true);
 		setForeground(FONT_COLOR);
