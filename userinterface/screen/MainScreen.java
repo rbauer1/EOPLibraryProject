@@ -35,9 +35,9 @@ public class MainScreen extends Screen {
 		setLayout(new BorderLayout());
 		Utils.setAllSize(this, WIDTH, HEIGHT);
 
-		add(ViewFactory.createView("panel.HeaderPanel", view.getController()), BorderLayout.NORTH);
+		add(ViewFactory.createView("panel", "HeaderPanel", view.getController()), BorderLayout.NORTH);
 		//add(createHeader(), BorderLayout.NORTH);
-		add(ViewFactory.createView("panel.MenuPanel", view.getController()), BorderLayout.WEST);
+		add(ViewFactory.createView("panel", "MenuPanel", view.getController()), BorderLayout.WEST);
 		//add(createMenu(), BorderLayout.WEST);
 
 		/*
