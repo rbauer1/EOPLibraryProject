@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 
 import userinterface.Config;
 import userinterface.utilities.Utils;
+import userinterface.view.View;
 import userinterface.view.panel.MenuPanel;
 
 public class MenuArrow extends JPanel {
@@ -42,7 +43,7 @@ public class MenuArrow extends JPanel {
 	protected void paintComponent(Graphics g) {
 		Dimension d = getPreferredSize();
 
-		g.setColor(Config.VIEW_BACKGROUND);
+		g.setColor(View.BACKGROUND_COLOR);
 		g.fillPolygon(
 				(new int[] {0, d.width, d.width}),
 				(new int[] {d.height / 2, 0, d.height}),
