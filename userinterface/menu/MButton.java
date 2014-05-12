@@ -41,10 +41,17 @@ public class MButton extends FButton {
 	
 	@Override
 	public void onPress() {
-		System.out.println("omg");
 		arrow = new MenuArrow(this, ARROW_SIZE, ARROW_SIZE);
 	}
 	
+	@Override
+	public void onReset() {
+		if (arrow != null)
+			arrow.remove();
+		
+		currentUnpressed = currentPressed = null;
+	}
+
 	@Override
 	public void onUnpress() {
 		if (arrow != null)

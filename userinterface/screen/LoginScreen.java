@@ -27,4 +27,8 @@ public class LoginScreen extends Screen {
 	public void processAction(Object source) {
 	}
 
+	@Override
+	public void updateState(String key, Object value) {
+	}
+
 }

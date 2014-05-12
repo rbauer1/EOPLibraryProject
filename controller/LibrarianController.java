@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
 
 import model.Worker;
+import userinterface.MainFrame;
 import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
@@ -90,6 +91,7 @@ public class LibrarianController extends Controller {
 			loginWorker((Properties) value);
 
 		} else if (key.equals(Key.DISPLAY_MAIN_MENU)) {
+			MainFrame.getInstance().getScreen().updateState(Key.RESET_MENU, null);
 			showView("MainMenuView");
 		} else if (key.equals(Key.DISPLAY_BOOK_MENU)) {
 			showView("BookMenuView");

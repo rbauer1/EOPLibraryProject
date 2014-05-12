@@ -1,5 +1,7 @@
 package userinterface.screen;
 
+import impresario.IView;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -7,7 +9,7 @@ import javax.swing.JPanel;
 
 import userinterface.view.View;
 
-public abstract class Screen extends JPanel implements ActionListener {
+public abstract class Screen extends JPanel implements ActionListener, IView {
 
 	private static final long serialVersionUID = -1353895090405042658L;
 	private View view = null;

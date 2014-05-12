@@ -101,6 +101,14 @@ public class MenuPanel extends View {
 		return sep;
 	}
 	
+	public void reset() {
+		bookActionsButton.reset();
+		borrowerActionsButton.reset();
+		rentBookButton.reset();
+		returnBookButton.reset();
+		workerActionsButton.reset();
+	}
+	
 	@Override
 	protected void build() {
 		accordion = new Accordion();

@@ -15,6 +15,7 @@ import userinterface.view.View;
 import userinterface.view.ViewFactory;
 import userinterface.view.panel.HeaderPanel;
 import userinterface.view.panel.MenuPanel;
+import utilities.Key;
 
 public class MainScreen extends Screen {
 
@@ -27,8 +28,8 @@ public class MainScreen extends Screen {
 	public static final int HEIGHT = 800;
 
 	/** == */
-	private final HeaderPanel header = null;
-	private final MenuPanel menu = null;
+	private HeaderPanel header = null;
+	private MenuPanel menu = null;
 
 	private final JPanel current = null;
 
@@ -38,10 +39,11 @@ public class MainScreen extends Screen {
 		setLayout(new BorderLayout());
 		Utils.setAllSize(this, WIDTH, HEIGHT);
 
-		add(ViewFactory.createView("panel", "HeaderPanel", view.getController()), BorderLayout.NORTH);
-		//add(createHeader(), BorderLayout.NORTH);
-		add(ViewFactory.createView("panel", "MenuPanel", view.getController()), BorderLayout.WEST);
-		//add(createMenu(), BorderLayout.WEST);
+		header = (HeaderPanel)ViewFactory.createView("panel", "HeaderPanel", view.getController());
+		menu = (MenuPanel)ViewFactory.createView("panel", "MenuPanel", view.getController());
+
+		add(header, BorderLayout.NORTH);
+		add(menu, BorderLayout.WEST);
 
 		/*
 		 * This is the Copyright notice, that is the same for all the views,
@@ -84,8 +86,13 @@ public class MainScreen extends Screen {
 
 	@Override
 	public void processAction(Object source) {
-		// TODO Auto-generated method stub
+	}
 
+	@Override
+	public void updateState(String key, Object value) {
+		if (key.equals(Key.RESET_MENU)) {
+			menu.reset();
+		}
 	}
 
 }
