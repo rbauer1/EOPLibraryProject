@@ -55,11 +55,11 @@ public class FButton extends Button {
 		}
 
 	    public void mousePressed(MouseEvent e) {
-	    	ref.pressed = true;
+	    	ref.mousePressed = true;
 	    }
 
 	    public void mouseReleased(MouseEvent e) {
-	    	ref.pressed = false;
+	    	ref.mousePressed = false;
 	    }
 
 	    public void mouseEntered(MouseEvent e) {
