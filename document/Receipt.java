@@ -20,7 +20,7 @@ import controller.Controller;
 
 public abstract class Receipt extends PDF {
 
-	private static final String RECEIPTS_DIR = "C:\\Users\\Name\\Desktop\\";
+	private static final String RECEIPTS_DIR = "C:\\Users\\Riley\\Desktop\\";
 
 	public static String getPath(String type, Borrower borrower){
 		Calendar calendar = Calendar.getInstance();
