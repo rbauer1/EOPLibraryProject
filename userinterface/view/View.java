@@ -23,7 +23,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import userinterface.ViewHelper;
-import userinterface.component.Accordion;
 import userinterface.component.Button;
 import userinterface.component.Label;
 import userinterface.component.Panel;

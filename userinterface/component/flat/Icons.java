@@ -32,6 +32,7 @@ public class Icons {
 			this.basic = Utils.scaleIcon(Utils.getImagePath(icon), w, h);
 			this.hover = Utils.scaleIcon(Utils.getImagePath(icon), w, h);
 			this.pressed = Utils.scaleIcon(Utils.getImagePath(icon), w, h);
+			System.out.println(icon);
 		}
 		
 		public IconConfigHelper(String basic, String pressed, int w, int h) {
@@ -57,10 +58,10 @@ public class Icons {
 
 	}
 
-	public static final IconConfigHelper LOGOUT = new IconConfigHelper("LogOff_Clear.png", "LogOff_Clear_Pressed.png", 30, 30);
+	public static final IconConfigHelper LOGOUT = new IconConfigHelper("LogOff_Clear.png", "LogOff_Clear_Hover.png", "LogOff_Clear_Pressed.png", 30, 30);
 	public static final IconConfigHelper BOOK = new IconConfigHelper("Book_Clear.png", 30, 30);
-	public static final IconConfigHelper WORKER = new IconConfigHelper("Programs/User_Worker.png", 30, 30);
-	public static final IconConfigHelper BORROWER = new IconConfigHelper("Programs/User_Borrower.png", 30, 30);
+	public static final IconConfigHelper WORKER = new IconConfigHelper("Programs/Worker.png", 30, 30);
+	public static final IconConfigHelper BORROWER = new IconConfigHelper("Programs/Borrower.png", 30, 30);
 	public static final IconConfigHelper RENT_BOOK = new IconConfigHelper("Book_Clear.png", 30, 30);
 	public static final IconConfigHelper RETURN_BOOK = new IconConfigHelper("Book_Clear.png", 30, 30);
 }

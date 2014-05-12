@@ -7,8 +7,6 @@ import javax.swing.JTable;
 
 import model.Borrower;
 import userinterface.message.MessageEvent;
-import userinterface.message.MessageType;
-import userinterface.view.form.BorrowerSearchForm;
 import userinterface.view.form.Form;
 import utilities.Key;
 import controller.Controller;

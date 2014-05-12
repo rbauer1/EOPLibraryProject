@@ -1,6 +1,5 @@
 package userinterface.screen;
 
-import userinterface.utilities.Utils;
 import userinterface.view.View;
 
 public class LoginScreen extends Screen {

@@ -1,18 +1,11 @@
 package userinterface.view;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import model.Worker;
 import userinterface.ViewHelper;
 import userinterface.component.Accordion;
-import userinterface.component.Button;
-import userinterface.component.flat.Colors;
 import userinterface.component.flat.FButton;
 import userinterface.component.flat.Icons;
 import userinterface.utilities.Utils;
@@ -48,10 +41,10 @@ public abstract class MenuView extends View {
 
 	protected abstract String getMenuName();
 
-	private void initButton(FButton button) {
+	private void initButton(FButton button, String suffix) {
 		Utils.setAllSize(button, MAIN_BUTTON_WIDTH, MAIN_BUTTON_HEIGHT);
 		Utils.addPadding(button, MAIN_BUTTON_PADDING);
-		button.setIconConfig(new Icons.IconConfigHelper(getMenuName() + "_Clear.png", MAIN_BUTTON_ICON_SIZE, MAIN_BUTTON_ICON_SIZE));
+		button.setIconConfig(new Icons.IconConfigHelper("Programs/" + getMenuName() + "_" + suffix + ".png", MAIN_BUTTON_ICON_SIZE, MAIN_BUTTON_ICON_SIZE));
 	}
 
 	private JPanel createMainButtonSeparator() {
@@ -78,9 +71,11 @@ public abstract class MenuView extends View {
 
 	@Override
 	public void beforeShown() {
-		addButton.reset();
-		modifyButton.reset();
-		deleteButton.reset();
+		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
+			addButton.reset();
+			modifyButton.reset();
+			deleteButton.reset();
+		}
 	}
 
 	@Override
@@ -94,29 +89,29 @@ public abstract class MenuView extends View {
 
 		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
 			addButton = new FButton("Add " + suffix, this);
-			initButton(addButton);
+			initButton(addButton, "Add");
 
             modifyButton = new FButton("Modify " + suffix, this);
-            initButton(modifyButton);
+            initButton(modifyButton, "Modify");
 
             deleteButton = new FButton("Delete " + suffix, this);
-            initButton(deleteButton);
+            initButton(deleteButton, "Delete");
+            JPanel panel = new JPanel();
+            
+            panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+            panel.add(addButton);
+            panel.add(createMainButtonSeparator());
+            panel.add(modifyButton);
+            panel.add(createMainButtonSeparator());
+            panel.add(deleteButton);
+            add(ViewHelper.formatCenter(panel));
 		}
 
-		JPanel panel = new JPanel();
-
-		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		panel.add(addButton);
-		panel.add(createMainButtonSeparator());
-		panel.add(modifyButton);
-		panel.add(createMainButtonSeparator());
-		panel.add(deleteButton);
 
 		body = new Accordion();
 		// The height of the accordion change dynamically
 		Utils.setAllSize(body, BUTTON_WIDTH, 0);
 
-		add(ViewHelper.formatCenter(panel));
 		add(ViewHelper.formatCenter(body));
 	}
 
