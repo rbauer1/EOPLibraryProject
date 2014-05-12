@@ -1,14 +1,10 @@
 package userinterface.screen;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
-import javax.swing.border.MatteBorder;
 
 import userinterface.utilities.Utils;
 import userinterface.view.View;
@@ -31,8 +27,6 @@ public class MainScreen extends Screen {
 	private HeaderPanel header = null;
 	private MenuPanel menu = null;
 
-	private final JPanel current = null;
-
 	public MainScreen(View view) {
 		super(view);
 
@@ -54,38 +48,12 @@ public class MainScreen extends Screen {
 		copyRightPanel.setBackground(View.BACKGROUND_COLOR);
 		copyRightPanel.add(new JLabel(COPYRIGHT));
 		add(copyRightPanel, BorderLayout.SOUTH);
-
-		/*
-		 * This panel is a "dummy" panel, which will be replaced by
-		 * an actual panel, i.e. by a View that is displayed to the user
-		 * This is Frame Component at position ( 2 ), which will be removed
-		 * in swapToPanelView method and replaced with the view needed.
-		 */
-		JPanel empty = new JPanel();
-		empty.setBackground(Color.pink);
-		add(empty, BorderLayout.CENTER);
 	}
 
 	@Override
 	public void addView(View view) {
-		// Could be directly included in the view ?
-		MatteBorder b = BorderFactory.createMatteBorder(0, 4, 0, 0, View.BORDER_COLOR);
-		view.setBorder(b);
-		// Add our view into the CENTER of the MainFrame
+		Utils.addPadding(view, 5, 10, 5, 10);
 		add(view, BorderLayout.CENTER);
-	}
-
-	@Override
-	public void clearView() {
-		// Component #3 is being accessed here because component #0 is header, 1 is menu, 2 is menu padding.
-		JPanel currentView = (JPanel) getComponent(3); //TODO figure out a way to make this less terrible. (get rid of literal)
-		if (currentView != null) {
-			remove(currentView);
-		}
-	}
-
-	@Override
-	public void processAction(Object source) {
 	}
 
 	@Override

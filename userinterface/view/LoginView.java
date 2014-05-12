@@ -39,14 +39,17 @@ public class LoginView extends View {
 	 */
 	public LoginView(Controller controller) {
 		super(controller, "Login", BUTTON_NAMES);
-		Utils.setAllSize(messagePanel, LoginScreen.WIDTH, 30);
-		Utils.setAllSize(buttons.get("Login"), 90, 25); 
-		Utils.setAllSize(buttons.get("Forgot Password"), 160, 25); 
+		Utils.setAllSize(buttons.get("Login"), 90, 25);
+		Utils.setAllSize(buttons.get("Forgot Password"), 160, 25);
 		subscribeToController(Key.MESSAGE);
 	}
 
-	public String getScreenName() {
-		return LoginScreen.class.getSimpleName();
+	@Override
+	public void afterShown(){
+		form.requestFocusForDefaultField();
+		form.reset();
+		messagePanel.clear();
+		System.out.printf("Width: %d\tHeight: %d%n",form.getWidth(),form.getHeight());
 	}
 
 	@Override
@@ -54,6 +57,11 @@ public class LoginView extends View {
 		setMinimumSize(new Dimension(LoginScreen.WIDTH, LoginScreen.HEIGHT));
 		form = new LoginForm(this);
 		add(form);
+	}
+
+	@Override
+	public String getScreenName() {
+		return LoginScreen.class.getSimpleName();
 	}
 
 	@Override
@@ -77,13 +85,5 @@ public class LoginView extends View {
 		if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
 		}
-	}
-
-	@Override
-	public void afterShown(){
-		form.requestFocusForDefaultField();
-		form.reset();
-		messagePanel.clear();
-		System.out.printf("Width: %d\tHeight: %d%n",form.getWidth(),form.getHeight());
 	}
 }

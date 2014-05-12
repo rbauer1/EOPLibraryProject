@@ -42,7 +42,7 @@ public class ViewHelper {
 		panel.add(button);
 		return panel;
 	}
-	
+
 	public static JPanel formatCenter(JComponent component) {
 		return formatCenter(component, 5);
 	}
@@ -77,14 +77,22 @@ public class ViewHelper {
 	public static JPanel formatCurrencyFieldLeft(String labelText, JComponent component) {
 		return formatCurrencyField(labelText, component, new FlowLayout(FlowLayout.LEFT));
 	}
-	
+
 	public static JPanel formatField(String label, JComponent component, LayoutManager layout) {
 		Panel panel = new Panel(layout);
 		panel.add(new Label(label));
 		panel.add(component);
 		return panel;
 	}
-	
+
+	public static JPanel formatFieldCenter(String label, JComponent component) {
+		return formatField(label, component, new FlowLayout(FlowLayout.CENTER));
+	}
+
+	public static JPanel formatFieldLeft(String label, JComponent component) {
+		return formatField(label, component, new FlowLayout(FlowLayout.LEFT));
+	}
+
 	public static JPanel formatFieldStacked(String label, JComponent component){
 		Panel panel = new Panel();
 		Panel labelPanel = new Panel(new FlowLayout(FlowLayout.LEFT, 10, 0));
@@ -95,15 +103,7 @@ public class ViewHelper {
 		componentPanel.add(component);
 		panel.add(labelPanel);
 		panel.add(componentPanel);
-		return panel;
-	}
-
-	public static JPanel formatFieldCenter(String label, JComponent component) {
-		return formatField(label, component, new FlowLayout(FlowLayout.CENTER));
-	}
-
-	public static JPanel formatFieldLeft(String label, JComponent component) {
-		return formatField(label, component, new FlowLayout(FlowLayout.LEFT));
+		return formatCenter(panel, 0);
 	}
 
 	public static JPanel formatLeft(JComponent component, int margin) {

@@ -10,7 +10,6 @@ import model.Worker;
 import userinterface.MainFrame;
 import userinterface.component.Accordion;
 import userinterface.component.Button;
-import userinterface.component.Panel;
 import userinterface.component.flat.FButton;
 import userinterface.component.flat.Icons;
 import userinterface.menu.MButton;

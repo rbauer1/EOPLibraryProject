@@ -1,5 +1,8 @@
 package userinterface.screen;
 
+import java.awt.BorderLayout;
+
+import userinterface.HeaderPanel;
 import userinterface.view.View;
 
 public class LoginScreen extends Screen {
@@ -11,24 +14,17 @@ public class LoginScreen extends Screen {
 
 	public LoginScreen(View view) {
 		super(view);
+		setLayout(new BorderLayout());
+
+		add(new HeaderPanel(), BorderLayout.NORTH);
 	}
 
 	@Override
 	public void addView(View view) {
-		add(view);
-	}
-
-	@Override
-	public void clearView() {
-		removeAll();
-	}
-
-	@Override
-	public void processAction(Object source) {
+		add(view, BorderLayout.CENTER);
 	}
 
 	@Override
 	public void updateState(String key, Object value) {
 	}
-
 }

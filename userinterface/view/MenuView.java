@@ -4,7 +4,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import model.Worker;
-import userinterface.ViewHelper;
 import userinterface.component.Accordion;
 import userinterface.component.flat.Colors;
 import userinterface.component.flat.FButton;
