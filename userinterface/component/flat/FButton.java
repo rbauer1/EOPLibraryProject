@@ -115,11 +115,13 @@ public class FButton extends Button {
 	
 	private void update() {
 		if (iconConf != null) {
-			if (pressed) {
+			if (pressed || mousePressed) {
 				setIcon(iconConf.getPressedIcon());
 			} else if(rollover) {
 				setIcon(iconConf.getHoverIcon());
-			}else{
+			} else if(focused){
+				setIcon(iconConf.getHoverIcon());
+			} else {
 				setIcon(iconConf.getIcon());
 			}
 		}
