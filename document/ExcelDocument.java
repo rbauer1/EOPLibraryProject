@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.table.TableModel;
 
 import userinterface.MainFrame;
@@ -57,19 +56,7 @@ public class ExcelDocument {
 	}
 
 	public boolean save(){
-		final JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
-		fileChooser.setFileFilter(new FileFilter() {
-			@Override
-			public boolean accept(File file) {
-				String fileName = file.getName();
-				return fileName.toLowerCase().endsWith(".csv");
-			}
-
-			@Override
-			public String getDescription() {
-				return "CSV File";
-			}
-		});
+		final JFileChooser fileChooser = new JFileChooser(System.getProperty("user.home"));
 		if(fileChooser.showSaveDialog(MainFrame.getInstance()) == JFileChooser.APPROVE_OPTION){
 			return save(fileChooser.getSelectedFile());
 		}

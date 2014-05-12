@@ -48,8 +48,7 @@ public class ListRentedBooksTransaction extends Transaction {
 		if(document.save()){
 			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The file was successfully saved."));
 		}else{
-			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving the file. Please try again."));
-		}
+			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Heads up! The file was not saved."));		}
 	}
 
 	/**
