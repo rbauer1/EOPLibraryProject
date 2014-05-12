@@ -2,7 +2,7 @@
  * COPYRIGHT 2014 Sandeep Mitra and students
  * The College at Brockport, State University of New York.
  * ALL RIGHTS RESERVED
- * 
+ *
  * This file is the product of The College at Brockport and cannot
  * be reproduced, copied, or used in any shape or form without
  * he express written consent of The College at Brockport.
@@ -27,6 +27,7 @@ import userinterface.component.Button;
 import userinterface.component.Label;
 import userinterface.component.Panel;
 import userinterface.message.MessagePanel;
+import userinterface.screen.MainScreen;
 import controller.Controller;
 
 /**
@@ -45,6 +46,7 @@ public abstract class View extends Panel implements IView, ActionListener {
 	/** Buttons on the bottom of screen */
 	protected Map<String, Button> buttons;
 
+	public static final Color BORDER_COLOR = new Color(0xD4D4C0);
 	public static final Color BACKGROUND_COLOR = new Color(0xF0F0E8);
 	public static final Color BANNER_COLOR = new Color(0xE2E2D4);
 	public static final Color SEPARATOR_COLOR = new Color(0x668D3C);
@@ -53,6 +55,10 @@ public abstract class View extends Panel implements IView, ActionListener {
 	public static final int GENERAL_FONT_SIZE = 16;
 	public static final int TITLE_FONT_SIZE = GENERAL_FONT_SIZE + 2;
 	protected static final Font GENERAL_FONT = new Font(FONT_NAME, Font.TYPE1_FONT, GENERAL_FONT_SIZE);
+
+	protected View(Controller controller) {
+		this(controller, null, null);
+	}
 
 	protected View(Controller controller, String title) {
 		this(controller, title, null);
@@ -65,7 +71,9 @@ public abstract class View extends Panel implements IView, ActionListener {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		// Add title
-		add(ViewHelper.formatCenter(new Label(title, true), 0));
+		if (title != null) {
+			add(new Label(title, true));
+		}
 
 		// Add Message Panel
 		messagePanel = new MessagePanel();
@@ -86,11 +94,25 @@ public abstract class View extends Panel implements IView, ActionListener {
 	}
 
 	/**
+	 * Hook method called before view is shown.
+	 * Can be used to request focus on fields.
+	 */
+	public void beforeShown() {
+	}
+
+	/**
 	 * Hook method called after view is shown.
 	 * Can be used to request focus on fields.
 	 */
 	public void afterShown() {
+	}
 
+	public Controller getController() {
+		return controller;
+	}
+
+	public String getScreenName() {
+		return MainScreen.class.getSimpleName();
 	}
 
 	protected abstract void build();

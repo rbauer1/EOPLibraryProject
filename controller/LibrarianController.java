@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.SwingWorker;
 
 import model.Worker;
+import userinterface.MainFrame;
 import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
@@ -40,7 +41,7 @@ public class LibrarianController extends Controller {
 
 	@Override
 	public Object getState(String key) {
-		if (key.equals(Key.WORKER)){
+		if (key.equals(Key.LOGGED_IN_WORKER)){
 			return worker;
 		}
 		return super.getState(key);
@@ -90,6 +91,7 @@ public class LibrarianController extends Controller {
 			loginWorker((Properties) value);
 
 		} else if (key.equals(Key.DISPLAY_MAIN_MENU)) {
+			MainFrame.getInstance().getScreen().updateState(Key.RESET_MENU, null);
 			showView("MainMenuView");
 		} else if (key.equals(Key.DISPLAY_BOOK_MENU)) {
 			showView("BookMenuView");
@@ -125,7 +127,8 @@ public class LibrarianController extends Controller {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
 		} else if (key.equals(Key.EXECUTE_LIST_BORROWERS_WITH_RENTED_BOOKS)) {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
-			
+		} else if (key.equals(Key.EXECUTE_DELINQUENCY_CHECK)) {
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_BORROWER_MENU);
 		} else if (key.equals(Key.EXECUTE_ADD_WORKER)) {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_WORKER_MENU);
 		} else if (key.equals(Key.EXECUTE_MODIFY_WORKER)) {

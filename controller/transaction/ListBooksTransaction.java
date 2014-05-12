@@ -18,6 +18,9 @@ import model.Book;
 import model.BookCollection;
 import utilities.Key;
 import controller.Controller;
+import controller.LibrarianController;
+import document.DocumentFactory;
+import document.ExcelDocument;
 
 /**
  * Transaction that handles listing and selecting a book
@@ -43,6 +46,8 @@ public class ListBooksTransaction extends Transaction {
 			operationType = "Delete";
 		}else if(parentController instanceof ModifyBooksTransaction){
 			operationType = "Modify";
+		}else if(parentController instanceof LibrarianController){
+		
 		}else{
 			operationType = "Select";
 		}
@@ -100,6 +105,9 @@ public class ListBooksTransaction extends Transaction {
 			filter((Properties)value);
 		}else if(key.equals(Key.SELECT_BOOK)){
 			selectedBook = (Book)value;
+		}else if (key.equals(Key.EXPORT_TO_EXCEL)) {
+			ExcelDocument document = DocumentFactory.createExcelDocument("ListAvailableBooksDocument", this);
+			document.save();
 		}
 		super.stateChangeRequest(key, value);
 	}

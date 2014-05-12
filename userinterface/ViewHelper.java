@@ -14,6 +14,7 @@ import java.awt.FlowLayout;
 import java.awt.LayoutManager;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -47,7 +48,7 @@ public class ViewHelper {
 	}
 
 	public static JPanel formatCenter(JComponent component, int margin) {
-		Panel panel = new Panel(new FlowLayout(FlowLayout.CENTER));
+		Panel panel = new Panel(new FlowLayout(FlowLayout.CENTER,0,0));
 		panel.setBorder(BorderFactory.createEmptyBorder(margin,margin,margin,margin));
 		panel.add(component);
 		return panel;
@@ -90,6 +91,19 @@ public class ViewHelper {
 
 	public static JPanel formatFieldLeft(String label, JComponent component) {
 		return formatField(label, component, new FlowLayout(FlowLayout.LEFT));
+	}
+
+	public static JPanel formatFieldStacked(String label, JComponent component){
+		Panel panel = new Panel();
+		Panel labelPanel = new Panel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+		Panel componentPanel = new Panel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+		BoxLayout boxLayout = new BoxLayout(panel,BoxLayout.Y_AXIS);
+		panel.setLayout(boxLayout);
+		labelPanel.add(new Label(label));
+		componentPanel.add(component);
+		panel.add(labelPanel);
+		panel.add(componentPanel);
+		return formatCenter(panel, 0);
 	}
 
 	public static JPanel formatLeft(JComponent component, int margin) {

@@ -58,6 +58,8 @@ public class ModifyWorkersTransaction extends Transaction {
 	public Object getState(String key) {
 		if(key.equals(Key.WORKER)){
 			return worker;
+		} else if(key.equals(Key.LOGGED_IN_WORKER)){
+			return parentController.getState(key);
 		}
 		return super.getState(key);
 	}

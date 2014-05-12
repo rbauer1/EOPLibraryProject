@@ -25,11 +25,11 @@ public class LoginForm extends Form {
 		TextField bannerIdField = new TextField(16);
 		bannerIdField.addActionListener(this);
 		addField("BannerID", bannerIdField);
-		add(ViewHelper.formatFieldCenter("Banner ID", bannerIdField));
+		add(ViewHelper.formatFieldStacked("Banner ID", bannerIdField));
 		
 		PasswordField passwordField = new PasswordField(16);
 		passwordField.addActionListener(this);
 		addField("Password", passwordField);
-		add(ViewHelper.formatFieldCenter("Password", passwordField));
+		add(ViewHelper.formatFieldStacked("Password", passwordField));
 	}
 }

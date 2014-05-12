@@ -53,5 +53,33 @@ public class Label extends JLabel {
 			setPreferredSize(SIZE_LABEL);
 		}
 	}
+	
+	/**
+	 * @param text
+	 * @param alignmentX - Component Alignment for X-axis
+	 */
+	public Label(String text, float alignmentX) {
+		super(text);
+		setAlignmentX(alignmentX);
+		setFont(NORMAL_FONT);
+	}
+	
+	/**
+	 * @param text
+	 * @param alignmentX - Component Alignment for X-axis
+	 * @param heading - if true uses heading styles
+	 */
+	public Label(String text, float alignmentX, boolean heading) {
+		super(text);
+		setAlignmentX(alignmentX);
+		if(heading){
+			setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+			setFont(HEADING_FONT);
+			setForeground(HEADING_COLOR);
+		}else{
+			setFont(NORMAL_FONT);
+			setPreferredSize(SIZE_LABEL);
+		}
+	}
 
 }

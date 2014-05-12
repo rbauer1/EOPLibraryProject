@@ -111,7 +111,7 @@ public class RentBooksTransaction extends Transaction {
 
 	@Override
 	public void execute() {
-		worker = (Worker)parentController.getState(Key.WORKER);
+		worker = (Worker)parentController.getState(Key.LOGGED_IN_WORKER);
 		dueDate = new BookDueDate();
 		listBorrowersTransaction  = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
 		listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select the borrower who is renting books from the list below."));

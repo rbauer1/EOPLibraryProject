@@ -28,6 +28,8 @@ public class ListBooksView extends ListView {
 
 	/** Form to provide search criteria*/
 	private Form form;
+	
+	private String operationType;
 
 	/**
 	 * Constructs list books view
@@ -37,9 +39,12 @@ public class ListBooksView extends ListView {
 		super(controller, "Book Search", BUTTON_NAMES);
 
 		// Get the operation type and update button
-		String operationType = (String) controller.getState(Key.OPERATION_TYPE);
+		operationType = (String) controller.getState(Key.OPERATION_TYPE);
 		if(operationType != null){
 			buttons.get("Submit").setText(operationType);
+		}else{
+			buttons.get("Submit").setText("Export to Excel");
+			buttons.get("Submit").setEnabled(true);
 		}
 
 		subscribeToController(Key.MESSAGE, Key.BOOK_COLLECTION);
@@ -85,16 +90,22 @@ public class ListBooksView extends ListView {
 
 	@Override
 	protected void processListSelection() {
-		buttons.get("Submit").setEnabled(table.getSelectedRow() >= 0);
+		if(operationType != null){
+			buttons.get("Submit").setEnabled(table.getSelectedRow() >= 0);
+		}
 	}
 
 	@Override
 	protected void select() {
-		int rowIndex = table.getSelectedRow();
-		if (rowIndex > -1) {
-			controller.stateChangeRequest(Key.SELECT_BOOK, books.get(rowIndex));
-		} else {
-			messagePanel.displayMessage(MessageType.WARNING, "Warning! Must select a book from the list!");
+		if(operationType != null){
+			int rowIndex = table.getSelectedRow();
+			if (rowIndex > -1) {
+				controller.stateChangeRequest(Key.SELECT_BOOK, books.get(rowIndex));
+			} else {
+				messagePanel.displayMessage(MessageType.WARNING, "Warning! Must select a book from the list!");
+			}
+		}else{
+			controller.stateChangeRequest(Key.EXPORT_TO_EXCEL, null);
 		}
 	}
 

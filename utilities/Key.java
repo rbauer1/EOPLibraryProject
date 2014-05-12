@@ -1,6 +1,8 @@
 package utilities;
 
 public class Key {
+	public static final String RESET_MENU = "ResetMenu";
+
 	public static final String ADD_BOOK_TO_LIST = "AddBookToList";
 	public static final String REMOVE_BOOK_FROM_LIST = "RemoveBookFromList";
 	public static final String BACK = "Back";
@@ -12,6 +14,9 @@ public class Key {
 	public static final String BORROWER = "Borrower";
 	public static final String BORROWER_COLLECTION = "BorrowerCollection";
 	public static final String RENT_BOOKS = "RentBooks";
+    public static final String CHECKOUT_BOOKS = "CheckOutBooks";
+
+    public static final String DELINQUENT_BORROWERS_COLLECTION = "DelinquentBorrowersCollection";
 
 	public static final String DISPLAY_BOOK_MENU = "DisplayBookMenu";
 
@@ -25,7 +30,7 @@ public class Key {
 	/* Book Transactions */
 	public static final String EXECUTE_ADD_BOOK 	= "AddBookTransaction";
 	public static final String EXECUTE_LIST_RENTED_BOOKS 	= "ListRentedBooksTransaction";
-	public static final String EXECUTE_LIST_AVAILABLE_BOOKS	= "ListAvailableBooksTransaction";
+	public static final String EXECUTE_LIST_AVAILABLE_BOOKS	= "ListBooksTransaction";
 	/* Borrower Transactions */
 	public static final String EXECUTE_ADD_BORROWER 	= "AddBorrowerTransaction";
 	/* Worker Transactions */
@@ -36,6 +41,7 @@ public class Key {
 
 	public static final String EXECUTE_DELETE_BORROWER 	= "DeleteBorrowersTransaction";
 	public static final String EXECUTE_DELETE_WORKER 	= "DeleteWorkersTransaction";
+	public static final String EXECUTE_DELINQUENCY_CHECK 	= "DelinquencyCheckTransaction";
 	public static final String EXECUTE_MODIFY_BOOK 	= "ModifyBooksTransaction";
 	public static final String EXECUTE_LIST_BORROWERS_WITH_RENTED_BOOKS = "ListBorrowersWithRentedBooksTransaction";
 
@@ -83,6 +89,7 @@ public class Key {
 
 	public static final String WORKER = "Worker";
 	public static final String WORKER_COLLECTION = "WorkerCollection";
+	public static final String LOGGED_IN_WORKER = "WorkerCurrentlyLoggedInAs";
 
 
 	public static final String RETURN_BOOKS = "ReturnBooks";

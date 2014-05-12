@@ -3,7 +3,6 @@ package userinterface.component;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -15,6 +14,9 @@ import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import userinterface.component.flat.ColorConfig;
+import userinterface.component.flat.Colors;
 
 /**
  * Button that is styled to match the application
@@ -50,6 +52,14 @@ public class Button extends JButton{
 	/** True if the button has focus **/
 	private boolean focused;
 
+	/** True if the button is disabled **/
+	private boolean disabled;
+	
+	/** True if button is not to be painted colors **/
+	private boolean clear;
+
+	private ColorConfig colorConf = Colors.BASIC_COLOR;
+	
 	public Button() {
 		super();
 		initialize();
@@ -60,19 +70,40 @@ public class Button extends JButton{
 	 */
 	public Button(String text) {
 		super(text);
+		clear = false;
+		initialize();
+	}
+	
+	public Button(String text, boolean clearButton) {
+		super(text);
+		clear = clearButton;
 		initialize();
 	}
 
 	public Button(String text, ActionListener listener) {
 		this(text);
+		clear = false;
 		addActionListener(listener);
+	}
+	
+	public Button(String text, ActionListener listener, boolean clearButton) {
+		this(text);
+		clear = clearButton;
+		addActionListener(listener);
+	}
+	
+	public void setColorConfig(ColorConfig conf) {
+		colorConf = conf;
 	}
 
 	private void initialize(){
 		setRolloverEnabled(true);
+		setFocusPainted(false);
 		setContentAreaFilled(false);
 		setForeground(FONT_COLOR);
 		setFont(FONT);
+		setMaximumSize(SIZE);
+		setMinimumSize(SIZE);
 		setPreferredSize(SIZE);
 		setAlignmentX(CENTER_ALIGNMENT);
 		rollover = false;
@@ -90,6 +121,7 @@ public class Button extends JButton{
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				ButtonModel model = (ButtonModel) e.getSource();
+				disabled = ! model.isEnabled();
 				rollover = model.isRollover();
 				pressed = model.isPressed();
 				repaint();
@@ -100,34 +132,43 @@ public class Button extends JButton{
 
 	@Override
 	protected void paintComponent(Graphics g) {
+		if(clear){
+			super.paintComponent(g);
+		}else{
+			paintColor(g);
+		}
+	}
+	
+	private void paintColor(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		int height = getHeight();
 		int width  = getWidth();
-		Color gradientLight = LIGHT_COLOR;
-		Color gradientDark = DARK_COLOR;
-		if(rollover || focused){
-			gradientLight = gradientLight.brighter();
-			gradientDark = gradientDark.brighter();
+		Color color = colorConf.getColor();
+		if(disabled){
+			color = Color.GRAY;
+			setForeground(Color.GRAY.brighter());
+		}else{
+			setForeground(FONT_COLOR);
+			if(rollover || focused){
+				color = color.brighter();
+			}
+			if(pressed){
+				color = colorConf.getPressedColor();
+			}
 		}
-		if(pressed){
-			Color temp = gradientLight;
-			gradientLight = gradientDark;
-			gradientDark = temp;
-		}
-		g2.setPaint(new GradientPaint(0, 0, gradientLight, 0,height, gradientDark));
+		g2.setPaint(color);
 		g2.fillRect(0, 0, width, height);
-
 		//outer border
-		g2.setPaint(BORDER_COLOR);
-		g2.drawRoundRect(0, 0, width-1, height-1, 4, 4);
+//		g2.setPaint(BORDER_COLOR);
+//		g2.drawRoundRect(0, 0, width-1, height-1, 4, 4);
 
 		//make corners match background
-		g2.setPaint(Panel.BACKGROUND_COLOR);
-		g2.drawLine(0, 0, 0, 0);
-		g2.drawLine(0, height-1, 0, height-1);
-		g2.drawLine(width-1, 0, width-1, 0);
-		g2.drawLine(width-1, height-1, width-1, height-1);
+//		g2.setPaint(Panel.BACKGROUND_COLOR);
+//		g2.drawLine(0, 0, 0, 0);
+//		g2.drawLine(0, height-1, 0, height-1);
+//		g2.drawLine(width-1, 0, width-1, 0);
+//		g2.drawLine(width-1, height-1, width-1, height-1);
 
 		super.paintComponent(g);
 	}

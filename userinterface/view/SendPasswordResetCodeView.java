@@ -10,6 +10,7 @@
 package userinterface.view;
 
 import userinterface.message.MessageEvent;
+import userinterface.screen.LoginScreen;
 import userinterface.view.form.BannerIdForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -36,6 +37,11 @@ public class SendPasswordResetCodeView extends View {
 	public SendPasswordResetCodeView(Controller controller) {
 		super(controller, "Reset Password", BUTTON_NAMES);
 		subscribeToController(Key.MESSAGE, "BannerID");
+	}
+
+	@Override
+	public String getScreenName() {
+		return LoginScreen.class.getSimpleName();
 	}
 
 	@Override

@@ -1,0 +1,180 @@
+<!-- Synth skin that includes an image for buttons -->
+<synth>
+	<color id="background" value="#F0F0E8" type="BACKGROUND"/>
+	<color id="buttonTextColor" value="#F0F0E8" type="FOREGROUND"/>
+	<color id="fieldTextColor" value="#000000" type="TEXT_FOREGROUND"/>
+	<color id="fieldColorBackground" value="#FFFFFF" type="BACKGROUND"/>
+	<color id="banner" value="#E2E2D4" type="BACKGROUND"/>
+	<color id="separatorLighter" value="#8FC754" type="BACKGROUND"/>
+	<color id="separator" value="#668D3C" type="BACKGROUND"/>
+	<color id="separatorDarker" value="#49652B" type="BACKGROUND"/>
+	<defaultsProperty key="background" type="idref" value="background"/>
+	<defaultsProperty key="Button.startIdle" type="idref" value="separator"/>
+	<defaultsProperty key="Button.endIdle" type="idref" value="separatorDarker"/>
+	<defaultsProperty key="Button.startHover" type="idref" value="separatorLighter"/>
+	<defaultsProperty key="Button.endHover" type="idref" value="separator"/>
+	<defaultsProperty key="Button.startPress" type="idref" value="separatorDarker"/>
+	<defaultsProperty key="Button.endPress" type="idref" value="separator"/>
+	<defaultsProperty key="Button.border" type="idref" value="separatorDarker"/>
+	<object id="gradient" class="GradientPainter"/>
+<!-- Style that all regions will use -->
+	<style id="backingStyle">
+			<!-- Make all the regions that use this skin opaque-->
+		<opaque value="TRUE"/>
+		<font id="mainFont" name="Garamond" size="16"/>
+		<state>
+				<!-- Provide default colors -->
+			<color idref="background" type="BACKGROUND"/>
+			<color idref="separator" type="FOREGROUND"/>
+		</state>
+	</style>
+	<bind style="backingStyle" type="region" key=".*"/>
+	
+	<style id="button">
+		<state>
+			<painter method="buttonBackground" idref="gradient"/>
+			<color type="FOREGROUND" idref="buttonTextColor"/>
+		</state>
+	</style>
+	<bind style="button" type="region" key="Button"/>
+
+	<!--<style id="comboBox">
+		<property key="ComboBox.rendererUseListColors" type="boolean" value="false"/>
+		<state>
+			<painter method="comboBoxBackground" idref="gradient"/>
+			<color type="FOREGROUND" idref="buttonTextColor"/>
+		</state>
+	</style>
+	<bind style="comboBox" type="region" key="ComboBox"/>-->
+
+	<style id="comboArrowStyle">
+		<imagePainter method="arrowButtonForeground" path="images/arrowDown.png" sourceInsets="0 0 0 0" stretch="false" direction="south" />
+	</style>
+	<bind style="comboArrowStyle" type="name" key="ComboBox.arrowButton" />
+
+	<style id="comboBoxList">
+		<opaque value="true"/>
+		<state value="ENABLED">
+			<!--<painter method="listBackground" idref="gradient"/>-->
+			<color type="BACKGROUND" idref="banner"/>
+		</state>
+		<state value="SELECTED">
+			<color type="TEXT_BACKGROUND" idref="separatorLighter"/>
+		</state>
+	</style>
+	<bind style="comboBoxList" type="name" key="ComboBox.list" />
+
+	<style id="popupMenuStyle">
+		<painter method="popupMenuBackground" idref="gradient"/>
+	</style>
+	<bind style="popupMenuStyle" type="name" key="ComboBox.popupMenu" />
+
+	<style id="arrowStyle">
+		<painter method="arrowButtonBackground" idref="gradient"/>
+		<imagePainter method="arrowButtonForeground" path="images/arrowUp.png" sourceInsets="0 0 0 0" stretch="false" direction="north" />
+		<imagePainter method="arrowButtonForeground" path="images/arrowDown.png" sourceInsets="0 0 0 0" stretch="false" direction="south" />
+		<imagePainter method="arrowButtonForeground" path="images/arrowLeft.png" sourceInsets="0 0 0 0" stretch="false" direction="west" />
+		<imagePainter method="arrowButtonForeground" path="images/arrowRight.png" sourceInsets="0 0 0 0" stretch="false" direction="east" />
+	</style>
+	<bind style="arrowStyle" type="region" key="Arrowbutton" />
+
+	<style id="scrollThumb">
+		<opaque value="true"/>
+		<state value="MOUSE_OVER">
+			<color type="BACKGROUND" idref="separator"/>
+		</state>
+		<state value="ENABLED">
+			<color type="BACKGROUND" idref="separatorDarker"/>
+		</state>
+	</style>
+	<bind style="scrollThumb" type="region" key=".*thumb.*"/>
+
+	<style id="scrollTrack">
+		<opaque value="true"/>
+		<state>
+			<color type="BACKGROUND" idref="banner"/>
+		</state>
+	</style>
+	<bind style="scrollTrack" type="region" key=".*track.*"/>
+
+	<!--<style id="button">
+		<opaque value="TRUE"/>-->
+	<!-- Shift the text one pixel when pressed -->
+		<!--<property key="Button.textShiftOffset" type="integer" value="1"/>-->
+		<!--<insets top="15" left="20" right="20" bottom="15"/>-->
+		<!--<property key="JButton.contentAreaFilled" type="boolean" value="false"/>
+		
+		<state value="PRESSED">
+			<painter method="buttonPressed" idref="gradient"/>
+			<color type="BACKGROUND" idref="separatorDarker"/>
+		</state>
+		
+		
+	</style>-->
+	<style id="generalLabel">
+		<opaque value="true"/>
+		<state>
+			<color type="BACKGROUND" idref="background"/>
+			<color type="TEXT_FOREGROUND" idref="fieldTextColor"/>
+		</state>
+	</style>
+	<bind style="generalLabel" type="region" key="Label"/>
+
+	<style id="passfield">
+		<opaque value="true"/>
+		<state>
+			<color type="BACKGROUND" idref="fieldColorBackground"/>
+			<color type="TEXT_FOREGROUND" idref="fieldTextColor"/>
+		</state>
+	</style>
+	<bind style="passfield" type="region" key="PasswordField"/>
+
+	<style id="textfield">
+		<opaque value="true"/>
+		<state>
+			<color type="BACKGROUND" idref="fieldColorBackground"/>
+			<color type="TEXT_FOREGROUND" idref="fieldTextColor"/>
+		</state>
+	</style>
+	<bind style="textfield" type="region" key="TextField"/>
+
+	<style id="textArea">
+		<opaque value="true"/>
+		<state>
+			<color type="BACKGROUND" idref="fieldColorBackground"/>
+			<color type="TEXT_FOREGROUND" idref="fieldTextColor"/>
+		</state>
+	</style>
+	<bind style="textArea" type="region" key="TextArea"/>
+
+	<style id="tableHeader">
+		<insets top="1" left="1" bottom="1" right="1"/>
+		<state>
+			<painter method="tableHeaderBackground" idref="gradient"/>
+			<color type="FOREGROUND" idref="buttonTextColor"/>
+		</state>
+		<state value="MOUSE_OVER">
+			<color type="BACKGROUND" idref="buttonTextColor"/>
+		</state>
+	</style>
+	<bind style="tableHeader" type="region" key="TableHeader"/>
+
+	<style id="table">
+		<opaque value="true"/>
+		<state>
+			<color type="BACKGROUND" idref="fieldColorBackground"/>
+			<color type="TEXT_FOREGROUND" idref="fieldTextColor"/>
+		</state>
+	</style>
+	<bind style="table" type="region" key="Table"/>
+
+	<!--<style id="comboTextField">
+		<opaque value="true"/>
+		<state>
+			<color type="BACKGROUND" idref="background"/>
+			<color type="TEXT_FOREGROUND" idref="buttonTextColor"/>
+		</state>
+	</style>
+	<bind style="comboTextField" type="name" key="ComboBox.textField"/>-->
+
+</synth>
