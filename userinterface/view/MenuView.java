@@ -80,7 +80,6 @@ public abstract class MenuView extends View {
 
 	@Override
 	public void afterShown() {
-		body.fit();
 	}
 
 	@Override

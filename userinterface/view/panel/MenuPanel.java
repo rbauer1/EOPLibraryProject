@@ -73,10 +73,6 @@ public class MenuPanel extends View {
 		accordion.add(but, container);
 	}
 	
-	public void fit() {
-		accordion.fit();
-	}
-
 	@Override
 	public void updateState(String key, Object value) {
 		
@@ -136,8 +132,6 @@ public class MenuPanel extends View {
 		
 		returnBookButton = new MButton("Return a Book", Icons.RETURN_BOOK, this);
 		add(returnBookButton);
-		
-		fit();
 	}
 
 }

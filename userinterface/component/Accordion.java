@@ -85,11 +85,6 @@ public class Accordion extends JPanel {
 		updateSize();
 	}
 
-	public void fit() {
-		add(dummy);
-		updateSize();
-	}
-
 	public JComponent getOpened() {
 		return opened;
 	}
