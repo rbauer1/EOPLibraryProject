@@ -73,6 +73,8 @@ public class ModifyWorkerView extends View {
 	private void setFormActive(boolean active){
 		form.setAllFieldsEnabled(active);
 		form.setFieldEnabled(Worker.PRIMARY_KEY, false);
+		form.setFieldEnabled(WorkerForm.PASSORD_FIELD, false);
+		form.setFieldEnabled(WorkerForm.CONFIRM_PASSORD_FIELD, false);
 		buttons.get("Recover").getParent().setVisible(!active);
 		buttons.get("Save").getParent().setVisible(active);
 		buttons.get("Save").setEnabled(true);
@@ -89,6 +91,11 @@ public class ModifyWorkerView extends View {
 			Model worker = (Model) value;
 			form.setValues(worker.getPersistentState());
 			setFormActive(!worker.getState("Status").equals("Inactive"));
+			//If worker being modified is same as worker logged in, password may be changed 
+			if (((Worker)getController().getState(Key.LOGGED_IN_WORKER)).getPrimaryKeyValue().equals(worker.getPrimaryKeyValue())){
+				form.setFieldEnabled(WorkerForm.PASSORD_FIELD, true);
+				form.setFieldEnabled(WorkerForm.CONFIRM_PASSORD_FIELD, true);
+			}
 		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
 		}

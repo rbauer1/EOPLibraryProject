@@ -19,5 +19,4 @@ public class ListAvailableBooksDocument extends ExcelDocument {
 		
 		createTimestamp();
 	}
-
 }

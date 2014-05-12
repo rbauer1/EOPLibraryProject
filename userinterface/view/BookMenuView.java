@@ -2,7 +2,7 @@
  * COPYRIGHT 2014 Sandeep Mitra and students
  * The College at Brockport, State University of New York.
  * ALL RIGHTS RESERVED
- * 
+ *
  * This file is the product of The College at Brockport and cannot
  * be reproduced, copied, or used in any shape or form without
  * he express written consent of The College at Brockport. *
@@ -10,26 +10,22 @@
 package userinterface.view;
 
 import model.Worker;
-import userinterface.ViewHelper;
-import userinterface.component.Button;
+import userinterface.component.flat.FButton;
 import utilities.Key;
 import controller.Controller;
 
 /**
  * Book Menu Screen. Serves as the transaction selection screen for book actions.
  */
-public class BookMenuView extends View {
+public class BookMenuView extends MenuView {
 
 	private static final long serialVersionUID = -4462137345508528750L;
 
 	/* Buttons */
-	private Button addButton;
-	private Button modifyButton;
-	private Button deleteButton;
-	private Button processLostBookButton;
-	private Button listAvailableButton;
-	private Button listUnavailableButton;
-	private Button backButton;
+	private FButton processLostBookButton;
+	private FButton listAvailableButton;
+	private FButton listUnavailableButton;
+	private FButton backButton;
 
 	/**
 	 * Constructs book menu view
@@ -38,38 +34,44 @@ public class BookMenuView extends View {
 	public BookMenuView(Controller controller) {
 		super(controller, "Book Menu");
 	}
+	
+	@Override
+	public void beforeShown() {
+		super.beforeShown();
 
+		if (((Worker)controller.getState(Key.LOGGED_IN_WORKER)).isAdmin()){
+			processLostBookButton.reset();
+		}
+		listAvailableButton.reset();
+		listUnavailableButton.reset();
+		backButton.reset();
+	}
+	
 	@Override
 	protected void build() {
-		if(((Worker)controller.getState(Key.WORKER)).isAdmin()){
-			addButton = new Button("Add Book");
-			addButton.addActionListener(this);
-			add(ViewHelper.formatCenter(addButton));
+		super.build();
 
-			modifyButton = new Button("Modify Book");
-			modifyButton.addActionListener(this);
-			add(ViewHelper.formatCenter(modifyButton));
-
-			deleteButton = new Button("Delete Book");
-			deleteButton.addActionListener(this);
-			add(ViewHelper.formatCenter(deleteButton));
-
-			processLostBookButton = new Button("Process Lost Book");
-			processLostBookButton.addActionListener(this);
-			add(ViewHelper.formatCenter(processLostBookButton));
+		if (((Worker)controller.getState(Key.LOGGED_IN_WORKER)).isAdmin()){
+            processLostBookButton = createButton("Process Lost Book");
+            body.add(processLostBookButton);
+            body.add(createButtonSeparator());
 		}
 
-		listAvailableButton = new Button("List Available Books");
-		listAvailableButton.addActionListener(this);
-		add(ViewHelper.formatCenter(listAvailableButton));
+		listAvailableButton = createButton("List Available Books");
+		body.add(listAvailableButton);
+		body.add(createButtonSeparator());
+		
+		listUnavailableButton = createButton("List Unavailable Books");
+		body.add(listUnavailableButton);
+		body.add(createButtonSeparator());
 
-		listUnavailableButton = new Button("List Rented Books");
-		listUnavailableButton.addActionListener(this);
-		add(ViewHelper.formatCenter(listUnavailableButton));
+		backButton = createBackButton("Back");
+		body.add(backButton);
+	}
 
-		backButton = new Button("Back");
-		backButton.addActionListener(this);
-		add(ViewHelper.formatCenter(backButton));
+	@Override
+	protected String getMenuName() {
+		return "Book";
 	}
 
 	@Override
@@ -78,7 +80,7 @@ public class BookMenuView extends View {
 			controller.stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);
 		} else if (source == addButton) {
 			controller.stateChangeRequest(Key.EXECUTE_ADD_BOOK, null);
-		}else if (source == modifyButton) {
+		} else if (source == modifyButton) {
 			controller.stateChangeRequest(Key.EXECUTE_MODIFY_BOOK, null);
 		} else if (source == deleteButton) {
 			controller.stateChangeRequest(Key.EXECUTE_DELETE_BOOK, null);

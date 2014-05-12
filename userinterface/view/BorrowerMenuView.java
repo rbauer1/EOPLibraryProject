@@ -1,33 +1,29 @@
 /**
- * COPYRIGHT 2014 Sandeep Mitra and students 
+ * COPYRIGHT 2014 Sandeep Mitra and students
  * The College at Brockport, State University of New York.
  * ALL RIGHTS RESERVED
- * 
+ *
  * This file is the product of The College at Brockport and cannot
  * be reproduced, copied, or used in any shape or form without
- * he express written consent of The College at Brockport. * 
+ * he express written consent of The College at Brockport. *
  */
 package userinterface.view;
 
-import model.Worker;
-import userinterface.ViewHelper;
-import userinterface.component.Button;
+import userinterface.component.flat.FButton;
 import utilities.Key;
 import controller.Controller;
 
 /**
  * Worker Menu Screen. Serves as the transaction selection screen for Worker actions.
  */
-public class BorrowerMenuView extends View {
-	
+public class BorrowerMenuView extends MenuView {
+
 	private static final long serialVersionUID = -7493657951613059489L;
-	
+
 	/* Buttons */
-	private Button addButton;
-	private Button modifyButton;
-	private Button deleteButton;
-	private Button backButton;
-	private Button listBorrowersButton;
+	private FButton backButton;
+	private FButton listBorrowersButton;
+	private FButton delinquencyButton;
 
 	/**
 	 * Constructs Worker menu view
@@ -38,28 +34,24 @@ public class BorrowerMenuView extends View {
 	}
 
 	@Override
-	protected void build() {
-		if(((Worker)controller.getState(Key.WORKER)).isAdmin()){
-			addButton = new Button("Add Borrower");
-			addButton.addActionListener(this);
-			add(ViewHelper.formatCenter(addButton));
-	
-			modifyButton = new Button("Modify Borrower");
-			modifyButton.addActionListener(this);
-			add(ViewHelper.formatCenter(modifyButton));
-	
-			deleteButton = new Button("Delete Borrower");
-			deleteButton.addActionListener(this);
-			add(ViewHelper.formatCenter(deleteButton));
-		}
-		
-		listBorrowersButton = new Button("List Borrowers With Rented Books");
-		listBorrowersButton.addActionListener(this);
-		add(ViewHelper.formatCenter(listBorrowersButton));
+	protected String getMenuName() {
+		return "Borrower";
+	}
 
-		backButton = new Button("Back");
-		backButton.addActionListener(this);
-		add(ViewHelper.formatCenter(backButton));
+	@Override
+	protected void build() {
+		super.build();
+
+		listBorrowersButton = createButton("List Borrowers With Rented Books");
+		body.add(listBorrowersButton);
+		body.add(createButtonSeparator());
+
+		delinquencyButton = createButton("Delinquency Check");
+		body.add(delinquencyButton);
+		body.add(createButtonSeparator());
+
+		backButton = createBackButton("Back");
+		body.add(backButton);
 	}
 
 	@Override
@@ -74,6 +66,8 @@ public class BorrowerMenuView extends View {
 			controller.stateChangeRequest(Key.EXECUTE_DELETE_BORROWER, null);
 		} else if (source == listBorrowersButton) {
 			controller.stateChangeRequest(Key.EXECUTE_LIST_BORROWERS_WITH_RENTED_BOOKS, null);
+		} else if (source == delinquencyButton) {
+			controller.stateChangeRequest(Key.EXECUTE_DELINQUENCY_CHECK, null);
 		}
 	}
 

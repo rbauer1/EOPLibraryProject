@@ -29,15 +29,48 @@ public class ViewFactory {
 	 */
 	private ViewFactory(){}
 	
+	private static String joinPackages(String[] packages, String sep) {
+		String acc = "";
+		
+		boolean first = true;
+		for (String s : packages) {
+			if (!first) {
+				acc += sep + s;
+			} else {
+				acc += s;
+				first = true;
+			}
+		}
+		return acc;
+	}
+
+	public static View createView(String name, Controller controller) {
+		// Can't use `null` here because of ambiguity
+		return createView(new String[] {}, name, controller);
+	}
+	
+	public static View createView(String package_, String name, Controller controller) {
+		return createView(new String[] { package_ }, name, controller);
+	}
+	
 	/**
 	 * Creates a view
 	 * @param name - Class name
 	 * @param controller
 	 * @return view
 	 */
-	public static View createView(String name, Controller controller) {
+	public static View createView(String[] packages, String name, Controller controller) {
 		try {
-			Class<?> clazz = Class.forName(VIEW_PACKAGE + "." + name);
+			String prefix = VIEW_PACKAGE;
+			String joinedPackages = joinPackages(packages, ".");
+			
+			if (!joinedPackages.isEmpty()) {
+				prefix += "." + joinedPackages;
+			}
+			
+			System.out.println(prefix);
+			
+			Class<?> clazz = Class.forName(prefix + "." + name);
 			Constructor<?> ctor = clazz.getConstructor(Controller.class);
 			return (View) ctor.newInstance(controller);
 		} catch (ClassNotFoundException e) {

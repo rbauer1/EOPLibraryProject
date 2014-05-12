@@ -9,23 +9,19 @@
  */
 package userinterface.view;
 
-import userinterface.ViewHelper;
-import userinterface.component.Button;
+import userinterface.component.flat.FButton;
 import utilities.Key;
 import controller.Controller;
 
 /**
  * Worker Menu Screen. Serves as the transaction selection screen for Worker actions.
  */
-public class WorkerMenuView extends View {
+public class WorkerMenuView extends MenuView {
 	
 	private static final long serialVersionUID = -4462137345508528750L;
 	
 	/* Buttons */
-	private Button addButton;
-	private Button modifyButton;
-	private Button deleteButton;
-	private Button backButton;
+	private FButton backButton;
 
 	/**
 	 * Constructs Worker menu view
@@ -34,26 +30,20 @@ public class WorkerMenuView extends View {
 	public WorkerMenuView(Controller controller) {
 		super(controller, "Worker Menu");
 	}
+	
+	@Override
+	protected String getMenuName() {
+		return "Worker";
+	}
 
 	@Override
 	protected void build() {
-		addButton = new Button("Add Worker");
-		addButton.addActionListener(this);
-		add(ViewHelper.formatCenter(addButton));
+		super.build();
 
-		modifyButton = new Button("Modify Worker");
-		modifyButton.addActionListener(this);
-		add(ViewHelper.formatCenter(modifyButton));
-
-		deleteButton = new Button("Delete Worker");
-		deleteButton.addActionListener(this);
-		add(ViewHelper.formatCenter(deleteButton));
-
-		backButton = new Button("Back");
-		backButton.addActionListener(this);
-		add(ViewHelper.formatCenter(backButton));
+		backButton = createBackButton("Back");
+		body.add(backButton);
 	}
-
+	
 	@Override
 	public void processAction(Object source) {
 		if (source == backButton) {

@@ -17,7 +17,7 @@ public class LostBookReceipt extends Receipt {
 
 	@Override
 	protected void build() throws DocumentException {
-		document.add(createActorsPanel((Borrower)controller.getState(Key.BORROWER), (Worker)controller.getState(Key.WORKER)));
+		document.add(createActorsPanel((Borrower)controller.getState(Key.BORROWER), (Worker)controller.getState(Key.LOGGED_IN_WORKER)));
 		document.add(createSubTitle("Lost Book Details"));
 		document.add(createBookPanel((Book)controller.getState(Key.BOOK)));
 	}

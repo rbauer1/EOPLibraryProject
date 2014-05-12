@@ -11,6 +11,7 @@ package userinterface.view;
 
 import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
+import userinterface.screen.LoginScreen;
 import userinterface.view.form.Form;
 import userinterface.view.form.ResetPasswordForm;
 import utilities.Key;
@@ -37,6 +38,11 @@ public class ResetPasswordView extends View {
 	public ResetPasswordView(Controller controller) {
 		super(controller, "Set Password", BUTTON_NAMES);
 		subscribeToController(Key.MESSAGE);
+	}
+	
+	@Override
+	public String getScreenName() {
+		return LoginScreen.class.getSimpleName();
 	}
 
 	@Override

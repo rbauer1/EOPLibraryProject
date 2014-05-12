@@ -116,7 +116,7 @@ public class ReturnBooksTransaction extends Transaction {
 
 	@Override
 	public void execute(){
-		worker = (Worker)parentController.getState(Key.WORKER);
+		worker = (Worker)parentController.getState(Key.LOGGED_IN_WORKER);
 		listBorrowersTransaction = TransactionFactory.executeTransaction(this, "ListBorrowersTransaction", Key.DISPLAY_BORROWER_MENU, Key.SELECT_BORROWER);
 		listBorrowersTransaction.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.INFO, "Select the borrower who is returning books from the list below."));
 	}
@@ -199,7 +199,7 @@ public class ReturnBooksTransaction extends Transaction {
 					System.out.println("shitt");
 					TransactionFactory.executeTransaction(ReturnBooksTransaction.this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
 					//stateChangeRequest(Key.DISPLAY_MAIN_MENU, null); //TODO necessary?
-					//parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were succesfully returned."));
+					//parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were successfully returned."));
 				}else{
 					JDBCBroker.getInstance().rollbackTransaction();
 					stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving the rentals."));
