@@ -4,8 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
+import javax.swing.border.MatteBorder;
 
 import userinterface.utilities.Utils;
 import userinterface.view.View;
@@ -35,9 +38,9 @@ public class MainScreen extends Screen {
 		setLayout(new BorderLayout());
 		Utils.setAllSize(this, WIDTH, HEIGHT);
 
-		add(ViewFactory.createView("panel.HeaderPanel", view.getController()), BorderLayout.NORTH);
+		add(ViewFactory.createView("panel", "HeaderPanel", view.getController()), BorderLayout.NORTH);
 		//add(createHeader(), BorderLayout.NORTH);
-		add(ViewFactory.createView("panel.MenuPanel", view.getController()), BorderLayout.WEST);
+		add(ViewFactory.createView("panel", "MenuPanel", view.getController()), BorderLayout.WEST);
 		//add(createMenu(), BorderLayout.WEST);
 
 		/*
@@ -63,7 +66,10 @@ public class MainScreen extends Screen {
 
 	@Override
 	public void addView(View view) {
-		// add our view into the CENTER of the MainFrame
+		// Could be directly included in the view ?
+		MatteBorder b = BorderFactory.createMatteBorder(0, 4, 0, 0, View.BORDER_COLOR);
+		view.setBorder(b);
+		// Add our view into the CENTER of the MainFrame
 		add(view, BorderLayout.CENTER);
 	}
 

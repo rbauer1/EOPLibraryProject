@@ -17,7 +17,8 @@ public class MButton extends FButton {
 	private static final int HEIGHT = 80;
 
 	// FIXME: could be more intuitive
-	private static final int ARROW_SIZE = 40;
+	// Could be in MenuArrow directly ?
+	private static final int ARROW_SIZE = 80;
 
 	public MButton(String title, IconConfig icons, ActionListener listener) {
 		super(title, icons, listener, WIDTH, HEIGHT);

@@ -13,18 +13,14 @@ public class LoginScreen extends Screen {
 		super(view);
 	}
 
-	private void clear() {
-		removeAll();
-	}
-
 	@Override
 	public void addView(View view) {
-		clear();
 		add(view);
 	}
 
 	@Override
 	public void clearView() {
+		removeAll();
 	}
 
 	@Override

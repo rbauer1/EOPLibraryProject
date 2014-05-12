@@ -46,6 +46,7 @@ public abstract class View extends Panel implements IView, ActionListener {
 	/** Buttons on the bottom of screen */
 	protected Map<String, Button> buttons;
 
+	public static final Color BORDER_COLOR = new Color(0xD4D4C0);
 	public static final Color BACKGROUND_COLOR = new Color(0xF0F0E8);
 	public static final Color BANNER_COLOR = new Color(0xE2E2D4);
 	public static final Color SEPARATOR_COLOR = new Color(0x668D3C);
