@@ -86,7 +86,7 @@ public class HeaderPanel extends View {
 
 	@Override
 	protected void build() {
-		AVATAR_ICON_LOCATION = "assets/images/Programs/Worker" + ((((Worker)controller.getState(Key.WORKER)).isAdmin())?"_Admin":"_Avatar")+".png";
+		AVATAR_ICON_LOCATION = "assets/images/Programs/Worker" + ((((Worker)controller.getState(Key.LOGGED_IN_WORKER)).isAdmin())?"_Admin":"_Avatar")+".png";
 		setLayout(new BorderLayout());
 		setBorder(null);
 		setBackground(BACKGROUND_COLOR);
@@ -181,7 +181,7 @@ public class HeaderPanel extends View {
 	}
 
 	private Worker getWorker() {
-		return (Worker)controller.getState(Key.WORKER);
+		return (Worker)controller.getState(Key.LOGGED_IN_WORKER);
 	}
 
 	@Override
@@ -200,8 +200,8 @@ public class HeaderPanel extends View {
 
 	private void updateUserBox(Worker w) {
 		Properties wp = w.getPersistentState();
-
 		text.add(new JLabel("Logged in as:"));
+		text.add(new JLabel(wp.getProperty(Worker.PRIMARY_KEY)));
 		text.add(new JLabel(wp.getProperty("FirstName") + " " + wp.getProperty("LastName")));
 		text.add(new JLabel("Privileges: " + (w.isAdmin() ? "Admin" : "User")));
 		Utils.addPadding(text, 2, 2, 2, 2);

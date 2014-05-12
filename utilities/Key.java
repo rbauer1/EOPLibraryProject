@@ -89,6 +89,7 @@ public class Key {
 
 	public static final String WORKER = "Worker";
 	public static final String WORKER_COLLECTION = "WorkerCollection";
+	public static final String LOGGED_IN_WORKER = "WorkerCurrentlyLoggedInAs";
 
 
 	public static final String RETURN_BOOKS = "ReturnBooks";

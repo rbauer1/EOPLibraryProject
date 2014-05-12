@@ -39,7 +39,7 @@ public class BookMenuView extends MenuView {
 	public void beforeShown() {
 		super.beforeShown();
 
-		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
+		if (((Worker)controller.getState(Key.LOGGED_IN_WORKER)).isAdmin()){
 			processLostBookButton.reset();
 		}
 		listAvailableButton.reset();
@@ -51,7 +51,7 @@ public class BookMenuView extends MenuView {
 	protected void build() {
 		super.build();
 
-		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
+		if (((Worker)controller.getState(Key.LOGGED_IN_WORKER)).isAdmin()){
             processLostBookButton = createButton("Process Lost Book");
             body.add(processLostBookButton);
             body.add(createButtonSeparator());

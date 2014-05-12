@@ -90,7 +90,7 @@ public abstract class MenuView extends View {
 
 	@Override
 	public void beforeShown() {
-		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
+		if (((Worker)controller.getState(Key.LOGGED_IN_WORKER)).isAdmin()){
 			addButton.reset();
 			modifyButton.reset();
 			deleteButton.reset();
@@ -106,7 +106,7 @@ public abstract class MenuView extends View {
 		String suffix = getMenuName();
 
 		add(createBlockSeparator());
-		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
+		if (((Worker)controller.getState(Key.LOGGED_IN_WORKER)).isAdmin()){
 			addButton = new FButton("Add " + suffix, this);
 			initButton(addButton, "Add");
 

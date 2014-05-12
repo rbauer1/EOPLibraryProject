@@ -103,10 +103,12 @@ public class MenuPanel extends View {
 	
 	public void reset() {
 		bookActionsButton.reset();
-		borrowerActionsButton.reset();
+		if (((Worker)controller.getState(Key.LOGGED_IN_WORKER)).isAdmin()){
+			borrowerActionsButton.reset();
+			workerActionsButton.reset();
+		}
 		rentBookButton.reset();
 		returnBookButton.reset();
-		workerActionsButton.reset();
 	}
 	
 	@Override
@@ -124,7 +126,7 @@ public class MenuPanel extends View {
 		add(bookActionsButton);
 		add(createSeparator());
 
-		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
+		if (((Worker)controller.getState(Key.LOGGED_IN_WORKER)).isAdmin()){
 			borrowerActionsButton = new MButton("Borrower Menu", Icons.BORROWER, this);
 			add(borrowerActionsButton);
 			add(createSeparator());

@@ -41,7 +41,7 @@ public class LibrarianController extends Controller {
 
 	@Override
 	public Object getState(String key) {
-		if (key.equals(Key.WORKER)){
+		if (key.equals(Key.LOGGED_IN_WORKER)){
 			return worker;
 		}
 		return super.getState(key);

@@ -28,8 +28,9 @@ import userinterface.view.View;
  * Can be used for adding of modifying a Worker.
  */
 public class WorkerForm extends Form {
-	private static final long serialVersionUID = 6701251230827206294L;
-
+	private static final long serialVersionUID = 6701251230827206294L;	
+	public static final String PASSORD_FIELD = "NewPassword";
+	public static final String CONFIRM_PASSORD_FIELD = "NewPasswordConfirmation";
 	/**
 	 * Constructs new Worker Form
 	 * @param view
@@ -55,12 +56,12 @@ public class WorkerForm extends Form {
 		
 		PasswordField passwordField = new PasswordField(16);
 		passwordField.addActionListener(this);
-		addField("NewPassword", passwordField);
+		addField(PASSORD_FIELD, passwordField);
 		leftColumn.add(ViewHelper.formatFieldLeft("Password", passwordField));
 		
 		PasswordField confirmPasswordField = new PasswordField(16);
 		confirmPasswordField.addActionListener(this);
-		addField("NewPasswordConfirmation", confirmPasswordField);
+		addField(CONFIRM_PASSORD_FIELD, confirmPasswordField);
 		leftColumn.add(ViewHelper.formatFieldLeft("Confirm Password", confirmPasswordField));
 
 		SelectField credentialsField = new SelectField(new String[] { "Ordinary", "Administrator"});
