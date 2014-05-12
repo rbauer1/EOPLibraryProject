@@ -37,6 +37,7 @@ public abstract class MenuView extends View {
 	 */
 	public MenuView(Controller controller, String title) {
 		super(controller, title);
+		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 	}
 
 	protected abstract String getMenuName();
@@ -68,6 +69,14 @@ public abstract class MenuView extends View {
 
 		return button;
 	}
+	
+	private JPanel createBlockSeparator() {
+		JPanel sep = new JPanel();
+		Utils.setTransparent(sep);
+		Utils.setAllSize(sep, WIDTH, 40);
+		
+		return sep;
+	}
 
 	@Override
 	public void beforeShown() {
@@ -86,6 +95,7 @@ public abstract class MenuView extends View {
 	protected void build() {
 		String suffix = getMenuName();
 
+		add(createBlockSeparator());
 		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
 			addButton = new FButton("Add " + suffix, this);
 			initButton(addButton, "Add");
@@ -103,15 +113,16 @@ public abstract class MenuView extends View {
             panel.add(modifyButton);
             panel.add(createMainButtonSeparator());
             panel.add(deleteButton);
-            add(ViewHelper.formatCenter(panel));
+            add(panel);
 		}
 
+		add(createBlockSeparator());
 
 		body = new Accordion();
 		// The height of the accordion change dynamically
 		Utils.setAllSize(body, BUTTON_WIDTH, 0);
 
-		add(ViewHelper.formatCenter(body));
+		add(body);
 	}
 
 }

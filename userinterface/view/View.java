@@ -72,7 +72,7 @@ public abstract class View extends Panel implements IView, ActionListener {
 
 		// Add title
 		if (title != null) {
-			add(ViewHelper.formatCenter(new Label(title, true), 0));
+			add(new Label(title, true));
 		}
 
 		// Add Message Panel
