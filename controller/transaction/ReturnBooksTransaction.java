@@ -53,6 +53,8 @@ public class ReturnBooksTransaction extends Transaction {
 	/** ListBorrower Transaction */
 	private Transaction listBorrowersTransaction;
 
+	private String receiptPath;
+
 	/**
 	 * Constructs Return Book Transaction
 	 * @param parentController
@@ -149,7 +151,7 @@ public class ReturnBooksTransaction extends Transaction {
 			return returnBooks;
 		}
 		if(key.equals(Key.PRINT_DOCUMENT)){
-			return "test.pdf";
+			return receiptPath;
 		}
 		return super.getState(key);
 	}
@@ -194,9 +196,9 @@ public class ReturnBooksTransaction extends Transaction {
 					success = false;
 				}
 				if(success){
-					Receipt reciept = DocumentFactory.createReceipt("ReturnBooksReceipt", ReturnBooksTransaction.this);
-					reciept.save("test.pdf");
-					System.out.println("shitt");
+					Receipt receipt = DocumentFactory.createReceipt("ReturnBooksReceipt", ReturnBooksTransaction.this);
+					receiptPath = Receipt.getPath("Returns", borrower);
+					receipt.save(receiptPath);
 					TransactionFactory.executeTransaction(ReturnBooksTransaction.this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
 					//stateChangeRequest(Key.DISPLAY_MAIN_MENU, null); //TODO necessary?
 					//parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were successfully returned."));

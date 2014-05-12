@@ -1,10 +1,14 @@
 package document;
 
+import java.io.File;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import model.Book;
 import model.Borrower;
 import model.Worker;
+import utilities.DateUtil;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Element;
@@ -15,6 +19,27 @@ import com.itextpdf.text.pdf.PdfPTable;
 import controller.Controller;
 
 public abstract class Receipt extends PDF {
+
+	private static final String RECEIPTS_DIR = "/home/matt/Receipts/";
+
+	public static String getPath(String type, Borrower borrower){
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+		StringBuilder pathBuilder = new StringBuilder(75);
+		pathBuilder.append(RECEIPTS_DIR + type);
+		pathBuilder.append(File.separator);
+		pathBuilder.append(calendar.get(Calendar.YEAR));
+		pathBuilder.append(File.separator);
+		pathBuilder.append(DateUtil.getMonths()[calendar.get(Calendar.MONTH)]);
+		pathBuilder.append(File.separator);
+		String path = pathBuilder.toString();
+		File pathFile = new File(path);
+		if(!pathFile.exists() && !new File(path).mkdirs()){
+			path = System.getProperty("user.home");
+		}
+		String fileName = borrower.getState("Name") + "-" + DateUtil.getDateTime() + ".pdf";
+		return path + fileName;
+	}
 
 	protected final Controller controller;
 
