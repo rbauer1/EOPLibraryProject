@@ -93,6 +93,8 @@ public class LibrarianController extends Controller {
 		} else if (key.equals(Key.DISPLAY_MAIN_MENU)) {
 			MainFrame.getInstance().getScreen().updateState(Key.RESET_MENU, null);
 			showView("MainMenuView");
+		} else if (key.equals(Key.DISPLAY_SETTINGS_MENU)) {
+			showView("SettingsView");
 		} else if (key.equals(Key.DISPLAY_BOOK_MENU)) {
 			showView("BookMenuView");
 		} else if (key.equals(Key.DISPLAY_BORROWER_MENU)) {

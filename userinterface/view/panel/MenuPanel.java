@@ -38,6 +38,7 @@ public class MenuPanel extends View {
 	private FButton rentBookButton;
 	private FButton returnBookButton;
 	private FButton workerActionsButton;
+	private FButton settingsButton;
 
 	public MenuPanel(Controller controller) {
 		super(controller);
@@ -97,6 +98,10 @@ public class MenuPanel extends View {
 
 		returnBookButton = new MButton("Return a Book", Icons.RETURN_BOOK, this);
 		add(returnBookButton);
+		add(createSeparator());
+
+		settingsButton = new MButton("Settings", Icons.GEAR, this);
+		add(settingsButton);
 	}
 
 	private JPanel createSeparator() {
@@ -119,6 +124,8 @@ public class MenuPanel extends View {
 			controller.stateChangeRequest(Key.EXECUTE_RENT_BOOK, null);
 		} else if (source == returnBookButton) {
 			controller.stateChangeRequest(Key.EXECUTE_RETURN_BOOK, null);
+		} else if (source == settingsButton) {
+			controller.stateChangeRequest(Key.DISPLAY_SETTINGS_MENU, null);
 		}
 	}
 

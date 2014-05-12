@@ -20,6 +20,7 @@ public class Key {
 
 	public static final String DISPLAY_BOOK_MENU = "DisplayBookMenu";
 
+	public static final String DISPLAY_SETTINGS_MENU = "DisplaySettingsMenu";
 
 	public static final String DISPLAY_BORROWER_MENU = "DisplayBorrowerMenu";
 	public static final String DISPLAY_LOGIN = "DisplayLogin";

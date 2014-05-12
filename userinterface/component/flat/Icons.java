@@ -59,6 +59,7 @@ public class Icons {
 	}
 
 	public static final IconConfigHelper LOGOUT = new IconConfigHelper("LogOff_Clear.png", "LogOff_Clear_Hover.png", "LogOff_Clear_Pressed.png", 30, 30);
+	public static final IconConfigHelper GEAR = new IconConfigHelper("Gear_Clear.png", 30, 30);
 	public static final IconConfigHelper BOOK = new IconConfigHelper("Book_Clear.png", 30, 30);
 	public static final IconConfigHelper WORKER = new IconConfigHelper("Programs/Worker.png", 30, 30);
 	public static final IconConfigHelper BORROWER = new IconConfigHelper("Programs/Borrower.png", 30, 30);
