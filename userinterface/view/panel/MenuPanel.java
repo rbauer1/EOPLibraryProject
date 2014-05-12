@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 import model.Worker;
 import userinterface.MainFrame;
@@ -72,10 +73,6 @@ public class MenuPanel extends View {
 		accordion.add(but, container);
 	}
 	
-	public void fit() {
-		accordion.fit();
-	}
-
 	@Override
 	public void updateState(String key, Object value) {
 		
@@ -96,6 +93,14 @@ public class MenuPanel extends View {
 		}
 	}
 	
+	private JPanel createSeparator() {
+		JPanel sep = new JPanel();
+		Utils.setAllSize(sep, WIDTH, 2);
+		Utils.setTransparent(sep);
+		
+		return sep;
+	}
+	
 	@Override
 	protected void build() {
 		accordion = new Accordion();
@@ -104,45 +109,29 @@ public class MenuPanel extends View {
 		setBackground(BACKGROUND_COLOR);
 		Utils.setAllSize(this, WIDTH, HEIGHT);
 		
-		
-		
 		accordion.setBackground(BACKGROUND_COLOR);
 		add(accordion, BorderLayout.PAGE_START);
 
 		bookActionsButton = new MButton("Book Menu", Icons.BOOK, this);
 		add(bookActionsButton);
-		
-		Panel separator = new Panel(View.BACKGROUND_COLOR); 
-		Utils.setAllSize(separator, WIDTH, 2);
-		add(separator);
+		add(createSeparator());
 
 		if (((Worker)controller.getState(Key.WORKER)).isAdmin()){
 			borrowerActionsButton = new MButton("Borrower Menu", Icons.BORROWER, this);
 			add(borrowerActionsButton);
-
-			separator = new Panel(View.BACKGROUND_COLOR); 
-			Utils.setAllSize(separator, WIDTH, 2);
-			add(separator);
+			add(createSeparator());
 
 			workerActionsButton = new MButton("Workers Menu", Icons.WORKER, this);
 			add(workerActionsButton);
-			
-			separator = new Panel(View.BACKGROUND_COLOR); 
-			Utils.setAllSize(separator, WIDTH, 2);
-			add(separator);
+			add(createSeparator());
 		}
 
 		rentBookButton = new MButton("Rent a Book", Icons.RENT_BOOK, this);
 		add(rentBookButton);
+		add(createSeparator());
 		
-		separator = new Panel(View.BACKGROUND_COLOR); 
-		Utils.setAllSize(separator, WIDTH, 2);
-		add(separator);
-
 		returnBookButton = new MButton("Return a Book", Icons.RETURN_BOOK, this);
 		add(returnBookButton);
-		
-		fit();
 	}
 
 }
