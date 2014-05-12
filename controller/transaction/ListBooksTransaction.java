@@ -16,6 +16,8 @@ import javax.swing.SwingWorker;
 
 import model.Book;
 import model.BookCollection;
+import userinterface.message.MessageEvent;
+import userinterface.message.MessageType;
 import utilities.Key;
 import controller.Controller;
 import controller.LibrarianController;
@@ -47,7 +49,7 @@ public class ListBooksTransaction extends Transaction {
 		}else if(parentController instanceof ModifyBooksTransaction){
 			operationType = "Modify";
 		}else if(parentController instanceof LibrarianController){
-		
+
 		}else{
 			operationType = "Select";
 		}
@@ -56,6 +58,15 @@ public class ListBooksTransaction extends Transaction {
 	@Override
 	public void execute() {
 		showView("ListBooksView");
+	}
+
+	public void exportToExcel(){
+		ExcelDocument document = DocumentFactory.createExcelDocument("ListAvailableBooksDocument", this);
+		if(document.save()){
+			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The file was successfully saved."));
+		}else{
+			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving the file. Please try again."));
+		}
 	}
 
 	/**
@@ -106,8 +117,7 @@ public class ListBooksTransaction extends Transaction {
 		}else if(key.equals(Key.SELECT_BOOK)){
 			selectedBook = (Book)value;
 		}else if (key.equals(Key.EXPORT_TO_EXCEL)) {
-			ExcelDocument document = DocumentFactory.createExcelDocument("ListAvailableBooksDocument", this);
-			document.save();
+			exportToExcel();
 		}
 		super.stateChangeRequest(key, value);
 	}

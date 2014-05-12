@@ -15,6 +15,8 @@ import javax.swing.SwingWorker;
 
 import model.Borrower;
 import model.BorrowerCollection;
+import userinterface.message.MessageEvent;
+import userinterface.message.MessageType;
 import utilities.Key;
 import controller.Controller;
 import document.DocumentFactory;
@@ -41,6 +43,15 @@ public class ListBorrowersWithRentedBooksTransaction extends Transaction {
 		showView("ListBorrowersWithRentedBooksView");
 	}
 
+	public void exportToExcel(){
+		ExcelDocument document = DocumentFactory.createExcelDocument("ListBorrowersWithRentedBooksDocument", this);
+		if(document.save()){
+			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The file was successfully saved."));
+		}else{
+			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Whoops! An error occurred while saving the file. Please try again."));
+		}
+	}
+
 	/**
 	 * Retrieves Borrowers and Updates list
 	 */
@@ -48,7 +59,7 @@ public class ListBorrowersWithRentedBooksTransaction extends Transaction {
 		new SwingWorker<Void, Void>() {
 			@Override
 			protected Void doInBackground() {
-				
+
 				BorrowerCollection borrowerCollection = new BorrowerCollection();
 				borrowerCollection.findWithOutstandingRentals();
 				borrowers = borrowerCollection.getEntities();
@@ -75,8 +86,7 @@ public class ListBorrowersWithRentedBooksTransaction extends Transaction {
 		if (key.equals(Key.REFRESH_LIST)) {
 			getBorrowers();
 		}else if (key.equals(Key.EXPORT_TO_EXCEL)) {
-			ExcelDocument document = DocumentFactory.createExcelDocument("ListBorrowersWithRentedBooksDocument", this);
-			document.save();
+			exportToExcel();
 		}
 		super.stateChangeRequest(key, value);
 	}
