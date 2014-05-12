@@ -29,17 +29,17 @@ public class ExcelDocument {
 		int numRows = tableModel.getRowCount();
 
 		for(int col = 0; col < numColumns; col++){
-			document.append(tableModel.getColumnName(col));
+			document.append("\"" + tableModel.getColumnName(col) + "\"");
 			if(col != numColumns - 1){
 				document.append(',');
 			}
 		}
 		document.append('\n');
 
-		
+
 		for(int row = 0; row < numRows; row++){
 			for(int col = 0; col < numColumns; col++){
-				document.append(tableModel.getValueAt(row, col));
+				document.append("\"" + tableModel.getValueAt(row, col) + "\"");
 				if(col != numColumns - 1){
 					document.append(',');
 				}
@@ -54,32 +54,6 @@ public class ExcelDocument {
 
 	protected void createTitle(String title){
 		document.append(title + '\n');
-	}
-
-	public boolean save(String filePath){
-		return save(new File(filePath));
-	}
-	
-	public boolean save(File file){
-		try {
-			
-			if(!file.getName().toLowerCase().endsWith(".csv")){
-				return save(file.getCanonicalPath() + ".csv");
-			}
-			
-			if (!file.exists()) {
-					file.createNewFile();
-			}
-	 
-			FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fileWriter);
-			bw.write(document.toString());
-			bw.close();
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
 	}
 
 	public boolean save(){
@@ -100,6 +74,32 @@ public class ExcelDocument {
 			return save(fileChooser.getSelectedFile());
 		}
 		return false;
+	}
+
+	public boolean save(File file){
+		try {
+
+			if(!file.getName().toLowerCase().endsWith(".csv")){
+				return save(file.getCanonicalPath() + ".csv");
+			}
+
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fileWriter);
+			bw.write(document.toString());
+			bw.close();
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public boolean save(String filePath){
+		return save(new File(filePath));
 	}
 
 }
