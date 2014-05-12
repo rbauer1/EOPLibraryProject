@@ -12,6 +12,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import model.Borrower;
 import model.Rental;
 import userinterface.ViewHelper;
 import userinterface.component.Label;
@@ -50,15 +51,17 @@ public class ReturnBooksView extends View {
 	/** Form that takes the barcode as input */
 	private Form barcodeForm;
 
+	private Label outstandingRentalsHeading;
+
 	/**
 	 * Constructs return books view
 	 * @param controller
 	 */
 	public ReturnBooksView(Controller controller) {
 		super(controller, "Return Books", BOTTOM_BUTTON_NAMES);
-		Utils.setAllSize(buttons.get("Set Book to be Returned"), 220, 25); 
-		Utils.setAllSize(buttons.get("Do not return this Book"), 220, 25); 
-		subscribeToController(Key.OUTSTANDING_RENTALS, Key.RETURN_RENTALS, Key.MESSAGE);
+		Utils.setAllSize(buttons.get("Set Book to be Returned"), 220, 25);
+		Utils.setAllSize(buttons.get("Do not return this Book"), 220, 25);
+		subscribeToController(Key.OUTSTANDING_RENTALS, Key.RETURN_RENTALS, Key.BORROWER, Key.MESSAGE);
 	}
 
 	/**
@@ -100,7 +103,8 @@ public class ReturnBooksView extends View {
 	 * Builds outstanding rentals table area
 	 */
 	protected void buildOutstandingRentalsTable() {
-		add(ViewHelper.formatLeft(new Label("Outstanding Rentals for Borrower", true), 0));
+		outstandingRentalsHeading = new Label("Outstanding Rentals for Borrower", true);
+		add(ViewHelper.formatLeft(outstandingRentalsHeading, 0));
 		outstandingRentals = new ArrayList<Rental>();
 		outstandingRentalsTable = new JTable(new RentalTableModel(outstandingRentals));
 		outstandingRentalsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -194,6 +198,10 @@ public class ReturnBooksView extends View {
 			returnRentalsTable.repaint();
 		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
+		}else if (key.equals(Key.BORROWER)) {
+			Borrower borrower = (Borrower)value;
+			String heading = "Outstanding Rentals for " + borrower.getState("Name") + " (" + borrower.getPrimaryKeyValue() + ")";
+			outstandingRentalsHeading.setText(heading);
 		}
 	}
 }
