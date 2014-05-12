@@ -39,8 +39,8 @@ public class LoginView extends View {
 	 */
 	public LoginView(Controller controller) {
 		super(controller, "Login", BUTTON_NAMES);
-		Utils.setAllSize(buttons.get("Login"), 90, 25);
-		Utils.setAllSize(buttons.get("Forgot Password"), 160, 25);
+//		Utils.setAllSize(buttons.get("Login"), 90, 25);
+//		Utils.setAllSize(buttons.get("Forgot Password"), 160, 25);
 		subscribeToController(Key.MESSAGE);
 	}
 

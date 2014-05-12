@@ -196,6 +196,8 @@ public class ReturnBooksTransaction extends Transaction {
 					success = false;
 				}
 				if(success){
+					JDBCBroker.getInstance().commitTransaction();
+
 					Receipt receipt = DocumentFactory.createReceipt("ReturnBooksReceipt", ReturnBooksTransaction.this);
 					receiptPath = Receipt.getPath("Returns", borrower);
 					receipt.save(receiptPath);

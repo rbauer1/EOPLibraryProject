@@ -35,7 +35,7 @@ public abstract class Receipt extends PDF {
 		String path = pathBuilder.toString();
 		File pathFile = new File(path);
 		if(!pathFile.exists() && !new File(path).mkdirs()){
-			path = System.getProperty("user.home");
+			path = System.getProperty("user\\home");
 		}
 		String fileName = borrower.getState("Name") + "-" + DateUtil.getDateTime() + "s.pdf";
 		fileName = fileName.replaceAll(" ", "_");
