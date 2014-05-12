@@ -73,7 +73,7 @@ public abstract class Receipt extends PDF {
 
 		bookTable.addCell(createParagraph("Barcode"));
 		bookTable.addCell(createBarCode((String)book.getState("Barcode")));
-		bookTable.getRow(3).getCells()[1].setFixedHeight(40);
+		bookTable.getRow(0).getCells()[1].setFixedHeight(40);
 
 		bookTable.addCell(createParagraph("Title"));
 		bookTable.addCell(createParagraph((String)book.getState("Title")));
