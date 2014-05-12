@@ -49,6 +49,8 @@ public class RentBooksTransaction extends Transaction {
 
 	/** Date that the rented books are due */
 	private BookDueDate dueDate;
+	
+	private String receiptPath;
 
 	/**
 	 * Constructs Rent Books Transaction
@@ -102,6 +104,7 @@ public class RentBooksTransaction extends Transaction {
 					success = false;
 				}
 				if(success){
+					
 					books.add(book);
 					stateChangeRequest(Key.REFRESH_LIST, null);
 				}
@@ -140,7 +143,7 @@ public class RentBooksTransaction extends Transaction {
 			return books;
 		}
 		if(key.equals(Key.PRINT_DOCUMENT)){
-			return "test.pdf";
+			return receiptPath;
 		}
 		return super.getState(key);
 	}
@@ -198,10 +201,10 @@ public class RentBooksTransaction extends Transaction {
 				}
 				if(success){
 					JDBCBroker.getInstance().commitTransaction();
-					Receipt reciept = DocumentFactory.createReceipt("RentBooksReceipt", RentBooksTransaction.this);
-					reciept.save("test.pdf");
+					Receipt receipt = DocumentFactory.createReceipt("RentBooksReceipt", RentBooksTransaction.this);
+					receiptPath = Receipt.getPath("Rented_Books", borrower);
+					receipt.save(receiptPath);
 					TransactionFactory.executeTransaction(RentBooksTransaction.this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
-
 					//stateChangeRequest(Key.DISPLAY_MAIN_MENU, null);
 					//parentController.stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The books were succesfully rented."));
 				}else{

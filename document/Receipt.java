@@ -20,7 +20,7 @@ import controller.Controller;
 
 public abstract class Receipt extends PDF {
 
-	private static final String RECEIPTS_DIR = "/home/matt/Receipts/";
+	private static final String RECEIPTS_DIR = "C:\\Users\\Name\\Desktop\\";
 
 	public static String getPath(String type, Borrower borrower){
 		Calendar calendar = Calendar.getInstance();
@@ -37,7 +37,10 @@ public abstract class Receipt extends PDF {
 		if(!pathFile.exists() && !new File(path).mkdirs()){
 			path = System.getProperty("user.home");
 		}
-		String fileName = borrower.getState("Name") + "-" + DateUtil.getDateTime() + ".pdf";
+		String fileName = borrower.getState("Name") + "-" + DateUtil.getDateTime() + "s.pdf";
+		fileName = fileName.replaceAll(" ", "_");
+		fileName = fileName.replaceFirst(":", "h");
+		fileName = fileName.replaceFirst(":", "m");
 		return path + fileName;
 	}
 
