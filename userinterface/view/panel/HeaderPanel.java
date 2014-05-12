@@ -57,8 +57,11 @@ public class HeaderPanel extends View {
 	/** Title */
 	private static final String TITLE = "EOP Library System";
 
-	/** Icon Path */
-	private static final String ICON_LOCATION = "assets/images/EOP.png";
+	/** EOP Icon Path */
+	private static String EOP_ICON_LOCATION = "assets/images/EOP.png";
+	
+	/** Avatar Icon Path */
+	private static String AVATAR_ICON_LOCATION;
 	
 	/** Title Path */
 	private static final String TITLE_LOCATION = "assets/images/EOP_Header_Title.png";
@@ -79,15 +82,15 @@ public class HeaderPanel extends View {
 	 */
 	public HeaderPanel(Controller controller) {
 		super(controller);
-
 	}
 
 	@Override
 	protected void build() {
+		AVATAR_ICON_LOCATION = "assets/images/Programs/Worker" + ((((Worker)controller.getState(Key.WORKER)).isAdmin())?"_Admin":"_Avatar")+".png";
 		setLayout(new BorderLayout());
 		setBorder(null);
 		setBackground(BACKGROUND_COLOR);
-
+		
 		Utils.setAllSize(this, WIDTH, HEIGHT);
 
 		logoutButton = new FButton("", Icons.LOGOUT, this, true);
@@ -103,7 +106,7 @@ public class HeaderPanel extends View {
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
 		JPanel iconPanel = new Panel(BACKGROUND_COLOR);
-		ImageIcon icon = new ImageIcon (ICON_LOCATION);
+		ImageIcon icon = new ImageIcon (EOP_ICON_LOCATION);
 		int iconWidth = icon.getIconWidth();
 		int iconHeight = icon.getIconHeight();
 		Dimension imageAndPad = new Dimension(iconWidth+ICON_WIDTH_PADDING,iconHeight+ICON_HEIGHT_PADDING);
@@ -147,7 +150,7 @@ public class HeaderPanel extends View {
 		Utils.setAllSize(avatar, width / 4, height);
 		Utils.setAllSize(text, width / 2, height);
 
-		avatar.add(new JLabel(Utils.scaleIcon(ICON_LOCATION, width / 4, height)));
+		avatar.add(new JLabel(Utils.scaleIcon(AVATAR_ICON_LOCATION, width / 4,  height - 14)));
 
 		text.setLayout(new BoxLayout(text, BoxLayout.Y_AXIS));
 		text.setAlignmentY(Component.CENTER_ALIGNMENT);
