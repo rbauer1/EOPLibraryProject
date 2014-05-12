@@ -3,10 +3,10 @@ package userinterface.component.flat;
 import java.awt.Color;
 
 public class Colors {
-	
+
 	private static class ColorConfigHelper implements ColorConfig {
-		
-		private Color basic, hover, pressed, progress;
+
+		private final Color basic, hover, pressed, progress;
 
 		public ColorConfigHelper(Color basic, Color hover, Color progress, Color pressed) {
 			this.basic = basic;
@@ -15,16 +15,13 @@ public class Colors {
 			this.pressed = pressed;
 		}
 
-		public ColorConfigHelper(int basic, int hover, int progress, int pressed) {
-			this.basic = new Color(basic);
-			this.hover = new Color(hover);
-			this.progress = new Color(progress);
-			this.pressed = new Color(pressed);
-		}
-
+		@Override
 		public Color getColor() { return basic; }
+		@Override
 		public Color getHoverColor() { return hover; }
+		@Override
 		public Color getPressedColor() { return pressed; }
+		@Override
 		public Color getProgressColor() { return progress; }
 	}
 

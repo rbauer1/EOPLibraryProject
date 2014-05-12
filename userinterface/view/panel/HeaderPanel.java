@@ -46,24 +46,18 @@ public class HeaderPanel extends View {
 	/** Background color of the header */
 	private static final Color BACKGROUND_COLOR = new Color(0xE2E2D4);
 
-	/** Color of the bottom border of the header */
-	private static final Color SEPARATOR_COLOR = new Color(0x668D3C);
-
 	/** Font Color of the title */
 	private static final Color TITLE_FONT_COLOR = new Color(0x00553D);
 
 	/** Font of the title */
 	private static final Font TITLE_FONT = new Font("Garamond", Font.BOLD, 22);
 
-	/** Title */
-	private static final String TITLE = "EOP Library System";
-
 	/** EOP Icon Path */
 	private static String EOP_ICON_LOCATION = "assets/images/EOP.png";
-	
+
 	/** Avatar Icon Path */
 	private static String AVATAR_ICON_LOCATION;
-	
+
 	/** Title Path */
 	private static final String TITLE_LOCATION = "assets/images/EOP_Header_Title.png";
 
@@ -87,11 +81,11 @@ public class HeaderPanel extends View {
 
 	@Override
 	protected void build() {
-		AVATAR_ICON_LOCATION = "assets/images/Programs/Worker" + ((((Worker)controller.getState(Key.LOGGED_IN_WORKER)).isAdmin())?"_Admin":"_Avatar")+".png";
+		AVATAR_ICON_LOCATION = "assets/images/Programs/Worker" + (((Worker)controller.getState(Key.LOGGED_IN_WORKER)).isAdmin()?"_Admin":"_Avatar")+".png";
 		setLayout(new BorderLayout());
 		setBorder(null);
 		setBackground(BACKGROUND_COLOR);
-		
+
 		Utils.setAllSize(this, WIDTH, HEIGHT);
 
 		logoutButton = new FButton("", Icons.LOGOUT, this, true);
@@ -167,7 +161,7 @@ public class HeaderPanel extends View {
 		logoutButton.setContentAreaFilled(false);
 		logoutButton.setBorderPainted(false);
 		logoutButton.setIconConfig(new Icons.IconConfigHelper("LogOff_Clear.png", "LogOff_Clear_Hover.png", "LogOff_Clear_Pressed.png", size, size));
-//		logoutButton.setColorConfig(null);
+		//		logoutButton.setColorConfig(null);
 
 		logout.setLayout(new BoxLayout(logout, BoxLayout.X_AXIS));
 		logout.add(Box.createHorizontalGlue());
