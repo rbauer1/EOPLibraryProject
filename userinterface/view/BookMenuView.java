@@ -65,7 +65,7 @@ public class BookMenuView extends MenuView {
 		body.add(listUnavailableButton);
 		body.add(createButtonSeparator());
 
-		backButton = createButton("Back");
+		backButton = createBackButton("Back");
 		body.add(backButton);
 	}
 

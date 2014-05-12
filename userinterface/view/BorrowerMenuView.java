@@ -50,7 +50,7 @@ public class BorrowerMenuView extends MenuView {
 		body.add(delinquencyButton);
 		body.add(createButtonSeparator());
 
-		backButton = createButton("Back");
+		backButton = createBackButton("Back");
 		body.add(backButton);
 	}
 

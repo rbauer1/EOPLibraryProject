@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import model.Worker;
 import userinterface.ViewHelper;
 import userinterface.component.Accordion;
+import userinterface.component.flat.Colors;
 import userinterface.component.flat.FButton;
 import userinterface.component.flat.Icons;
 import userinterface.utilities.Utils;
@@ -66,6 +67,15 @@ public abstract class MenuView extends View {
 		FButton button = new FButton(text, this);
 		Utils.setAllSize(button, BUTTON_WIDTH, BUTTON_HEIGHT);
 		Utils.addPadding(button, BUTTON_PADDING);
+
+		return button;
+	}
+	
+	protected FButton createBackButton(String text) {
+		FButton button = new FButton(text, this);
+		Utils.setAllSize(button, BUTTON_WIDTH, BUTTON_HEIGHT);
+		Utils.addPadding(button, BUTTON_PADDING);
+		button.setColorConfig(Colors.RED);
 
 		return button;
 	}

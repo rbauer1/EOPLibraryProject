@@ -40,7 +40,7 @@ public class WorkerMenuView extends MenuView {
 	protected void build() {
 		super.build();
 
-		backButton = createButton("Back");
+		backButton = createBackButton("Back");
 		body.add(backButton);
 	}
 	
