@@ -30,7 +30,7 @@ public class Key {
 	/* Book Transactions */
 	public static final String EXECUTE_ADD_BOOK 	= "AddBookTransaction";
 	public static final String EXECUTE_LIST_RENTED_BOOKS 	= "ListRentedBooksTransaction";
-	public static final String EXECUTE_LIST_AVAILABLE_BOOKS	= "ListAvailableBooksTransaction";
+	public static final String EXECUTE_LIST_AVAILABLE_BOOKS	= "ListBooksTransaction";
 	/* Borrower Transactions */
 	public static final String EXECUTE_ADD_BORROWER 	= "AddBorrowerTransaction";
 	/* Worker Transactions */

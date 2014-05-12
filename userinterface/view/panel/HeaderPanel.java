@@ -27,6 +27,7 @@ import javax.swing.SwingConstants;
 
 import model.Worker;
 import userinterface.MainFrame;
+import userinterface.component.Label;
 import userinterface.component.Panel;
 import userinterface.component.flat.FButton;
 import userinterface.component.flat.Icons;
@@ -200,10 +201,14 @@ public class HeaderPanel extends View {
 
 	private void updateUserBox(Worker w) {
 		Properties wp = w.getPersistentState();
-		text.add(new JLabel("Logged in as:"));
-		text.add(new JLabel(wp.getProperty(Worker.PRIMARY_KEY)));
-		text.add(new JLabel(wp.getProperty("FirstName") + " " + wp.getProperty("LastName")));
-		text.add(new JLabel("Privileges: " + (w.isAdmin() ? "Admin" : "User")));
+		text.add(new Label("Logged in as:", Label.LEFT_ALIGNMENT));
+		Label infoLabel = new Label(wp.getProperty(Worker.PRIMARY_KEY),Label.LEFT_ALIGNMENT);
+		infoLabel.setForeground(View.TITLE_COLOR);
+		text.add(infoLabel);
+		infoLabel = new Label(wp.getProperty("FirstName") + " " + wp.getProperty("LastName"),Label.LEFT_ALIGNMENT);
+		infoLabel.setForeground(View.TITLE_COLOR);
+		text.add(infoLabel);
+		text.add(new Label("Privileges: " + (w.isAdmin() ? "Admin" : "User"),Label.LEFT_ALIGNMENT));
 		Utils.addPadding(text, 2, 2, 2, 2);
 	}
 }
