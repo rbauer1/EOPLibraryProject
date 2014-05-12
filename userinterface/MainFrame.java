@@ -42,6 +42,7 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	public static final int HEIGHT = 800;
 
 	private Screen screen = null;
+	private boolean isVisible = false;
 
 	/**
 	 * Returns the instance of the main frame. Creates one with blank title if none exists.
@@ -87,7 +88,6 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	private MainFrame(String title) {
 		super(title);
 		super.setLayout(new BorderLayout());
-		super.setVisible(true);
 		super.setResizable(false);
 	}
 
@@ -142,6 +142,12 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		repaint();
 
 		WindowPosition.placeCenter(this);
+		
+		// Only the first time
+		if (!isVisible) {
+			super.setVisible(true);
+			isVisible = true;
+		}
 	}
 
 	@Override
