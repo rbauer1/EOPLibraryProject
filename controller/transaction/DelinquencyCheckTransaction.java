@@ -83,7 +83,6 @@ public class DelinquencyCheckTransaction extends Transaction {
 				}
 			}
 		}
-		System.out.println(borrowersWithErrors);
 		if(borrowersWithErrors.isEmpty()){
 			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Delinquency check succeeded!"));
 		}else{
