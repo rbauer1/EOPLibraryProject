@@ -225,6 +225,7 @@ public class ReturnBooksTransaction extends Transaction {
 			@Override
 			public void done() {
 				showView("ReturnBooksView");
+				stateChangeRequest(Key.BORROWER, null);
 				stateChangeRequest(Key.REFRESH_LIST, null);
 			}
 		}.execute();
