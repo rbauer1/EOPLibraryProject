@@ -29,19 +29,24 @@ public class MButton extends FButton {
 		this(title, icons, null);
 	}
 	
-	protected void onPrePress() {
+	@Override
+	public void onPrePress() {
 		currentPressed = this;
 	}
 	
-	protected void onPreUnpress() {
+	@Override
+	public void onPreUnpress() {
 		currentUnpressed = this;
 	}
 	
-	protected void onPress() {
+	@Override
+	public void onPress() {
+		System.out.println("omg");
 		arrow = new MenuArrow(this, ARROW_SIZE, ARROW_SIZE);
 	}
 	
-	protected void onUnpress() {
+	@Override
+	public void onUnpress() {
 		if (arrow != null)
 			arrow.remove();
 		
