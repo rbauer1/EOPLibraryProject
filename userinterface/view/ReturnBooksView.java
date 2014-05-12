@@ -16,6 +16,7 @@ import model.Rental;
 import userinterface.ViewHelper;
 import userinterface.component.Label;
 import userinterface.message.MessageEvent;
+import userinterface.utilities.Utils;
 import userinterface.view.form.BarcodeForm;
 import userinterface.view.form.Form;
 import utilities.Key;
@@ -32,7 +33,7 @@ public class ReturnBooksView extends View {
 	private static final String[] BOTTOM_BUTTON_NAMES = {"Done", "Back"};
 
 	/** Names of buttons on top under form, Must be in order which you want them to appear */
-	private static final String[] TOP_BUTTON_NAMES = {"Add", "Remove"};
+	private static final String[] TOP_BUTTON_NAMES = {"Set Book to be Returned", "Do not return this Book"};
 
 	/** List of Rentals that are outstanding for the borrower */
 	private List<Rental> outstandingRentals;
@@ -55,6 +56,8 @@ public class ReturnBooksView extends View {
 	 */
 	public ReturnBooksView(Controller controller) {
 		super(controller, "Return Books", BOTTOM_BUTTON_NAMES);
+		Utils.setAllSize(buttons.get("Set Book to be Returned"), 220, 25); 
+		Utils.setAllSize(buttons.get("Do not return this Book"), 220, 25); 
 		subscribeToController(Key.OUTSTANDING_RENTALS, Key.RETURN_RENTALS, Key.MESSAGE);
 	}
 
@@ -74,7 +77,7 @@ public class ReturnBooksView extends View {
 		messagePanel.clear();
 		barcodeForm.reset();
 		barcodeForm.requestFocusForDefaultField();
-		buttons.get("Remove").setEnabled(returnRentalsTable.getSelectedRow() >= 0);;
+		buttons.get("Do not return this Book").setEnabled(returnRentalsTable.getSelectedRow() >= 0);;
 	}
 
 	@Override
@@ -119,7 +122,7 @@ public class ReturnBooksView extends View {
 	 * Builds return rentals table area
 	 */
 	protected void buildReturnRentalsTable() {
-		add(ViewHelper.formatLeft(new Label("Returns", true), 0));
+		add(ViewHelper.formatLeft(new Label("Books that are set to be returned", true), 0));
 		returnRentals = new ArrayList<Rental>();
 		returnRentalsTable = new JTable(new RentalTableModel(returnRentals));
 		returnRentalsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -129,7 +132,7 @@ public class ReturnBooksView extends View {
 		returnRentalsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				buttons.get("Remove").setEnabled(returnRentalsTable.getSelectedRow() >= 0);
+				buttons.get("Do not return this Book").setEnabled(returnRentalsTable.getSelectedRow() >= 0);
 			}
 		});
 		returnRentalsTable.addMouseListener(new MouseAdapter() {
@@ -151,7 +154,7 @@ public class ReturnBooksView extends View {
 		} else if (source == buttons.get("Done")) {
 			buttons.get("Done").setEnabled(false);
 			controller.stateChangeRequest(Key.RETURN_BOOKS, null);
-		} else if (source == barcodeForm || source == buttons.get("Add")) {
+		} else if (source == barcodeForm || source == buttons.get("Set Book to be Returned")) {
 			buttons.get("Done").setEnabled(false);
 			String barcode = barcodeForm.getValues().getProperty("Barcode", "");
 			if(barcode.length() > 0) {
@@ -161,7 +164,7 @@ public class ReturnBooksView extends View {
 			}
 			barcodeForm.reset();
 			barcodeForm.requestFocusForDefaultField();
-		} else if (source == buttons.get("Remove")) {
+		} else if (source == buttons.get("Do not return this Book")) {
 			removeSelectedRental();
 		}
 	}

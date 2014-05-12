@@ -59,6 +59,9 @@ public class HeaderPanel extends View {
 
 	/** Icon Path */
 	private static final String ICON_LOCATION = "assets/images/EOP.png";
+	
+	/** Title Path */
+	private static final String TITLE_LOCATION = "assets/images/EOP_Header_Title.png";
 
 	private static final int ICON_WIDTH_PADDING = 40;
 	private static final int ICON_HEIGHT_PADDING = 9;
@@ -114,7 +117,7 @@ public class HeaderPanel extends View {
 		counterWeightPanel.setPreferredSize(imageAndPad);
 		counterWeightPanel.setMaximumSize(imageAndPad);
 
-		JLabel titleLabel = new JLabel(TITLE, SwingConstants.CENTER);
+		JLabel titleLabel = new JLabel("", new ImageIcon(TITLE_LOCATION), SwingConstants.CENTER);
 		titleLabel.setForeground(TITLE_FONT_COLOR);
 		titleLabel.setFont(TITLE_FONT);
 
