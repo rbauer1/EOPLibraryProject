@@ -6,6 +6,9 @@ import java.util.List;
 import javax.swing.JTable;
 
 import model.Book;
+import model.Borrower;
+import userinterface.ViewHelper;
+import userinterface.component.Label;
 import userinterface.message.MessageEvent;
 import userinterface.view.form.BarcodeForm;
 import userinterface.view.form.Form;
@@ -31,13 +34,15 @@ public class RentBooksView extends ListView {
 	/** Form to enter in book barcode */
 	private Form barcodeForm;
 
+	private Label rentalsHeading;
+
 	/**
 	 * Constructs Rent Books View
 	 * @param controller
 	 */
 	public RentBooksView(Controller controller) {
 		super(controller, "Rent Books", BOTTOM_BUTTON_NAMES);
-		subscribeToController(Key.BOOK_COLLECTION, Key.MESSAGE);
+		subscribeToController(Key.BOOK_COLLECTION, Key.BORROWER, Key.MESSAGE);
 	}
 
 	@Override
@@ -57,6 +62,8 @@ public class RentBooksView extends ListView {
 
 	@Override
 	protected JTable createTable() {
+		rentalsHeading = new Label("Books to be Rented by Borrower", true);
+		add(ViewHelper.formatLeft(rentalsHeading, 0));
 		books = new ArrayList<Book>();
 		return new JTable(new BookTableModel(books));
 	}
@@ -115,6 +122,10 @@ public class RentBooksView extends ListView {
 			table.repaint();
 		}else if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
+		}else if (key.equals(Key.BORROWER)) {
+			Borrower borrower = (Borrower)value;
+			String heading = "Books to be Rented by " + borrower.getState("Name") + " (" + borrower.getPrimaryKeyValue() + ")";
+			rentalsHeading.setText(heading);
 		}
 	}
 }
