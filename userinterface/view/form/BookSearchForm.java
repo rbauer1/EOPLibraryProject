@@ -13,7 +13,11 @@ import java.awt.Dimension;
 import java.util.Properties;
 
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.SwingWorker;
 
+import model.BookBarcodePrefix;
+import model.BookBarcodePrefixCollection;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.Panel;
@@ -64,26 +68,35 @@ public class BookSearchForm extends Form {
 		addField("Author1", author1Field);
 		leftColumn.add(ViewHelper.formatFieldLeft("Author", author1Field));
 
+		TextField isbnField = new TextField(16);
+		isbnField.addActionListener(this);
+		addField("ISBN", isbnField);
+		leftColumn.add(ViewHelper.formatFieldLeft("ISBN", isbnField));
+
 		Panel rightColumn = new Panel();
 		rightColumn.setLayout(new BoxLayout(rightColumn, BoxLayout.Y_AXIS));
 		fieldColumnsPanel.add(rightColumn);
 
-		TextField isbnField = new TextField(16);
-		isbnField.addActionListener(this);
-		addField("ISBN", isbnField);
-		rightColumn.add(ViewHelper.formatFieldLeft("ISBN", isbnField));
+		SelectField disciplineField = new SelectField(new String[] { "Any" });
+		disciplineField.addActionListener(this);
+		disciplineField.setPreferredSize(new Dimension(180,25));
+		addField("Discipline", disciplineField);
+		rightColumn.add(ViewHelper.formatFieldLeft("Discipline", disciplineField));
+		setDisciplineOptions(disciplineField);
 
 		SelectField conditionField = new SelectField(new String[] { "Any", "Good", "Fair", "Damaged" });
 		conditionField.addActionListener(this);
-		conditionField.setPreferredSize(new Dimension(130,25));
+		conditionField.setPreferredSize(new Dimension(180,25));
 		addField("Condition", conditionField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Condition", conditionField));
 
 		SelectField statusField = new SelectField(new String[] { "Active", "Lost", "Inactive", "Any"});
 		statusField.addActionListener(this);
-		statusField.setPreferredSize(new Dimension(130,25));
+		statusField.setPreferredSize(new Dimension(180,25));
 		addField("Status", statusField);
 		rightColumn.add(ViewHelper.formatFieldLeft("Status", statusField));
+
+		rightColumn.add(ViewHelper.createPlaceHolder());
 
 		searchButton = new Button("Search");
 		searchButton.addActionListener(this);
@@ -98,6 +111,9 @@ public class BookSearchForm extends Form {
 		if(values.getProperty("Status", "").equals("Any")){
 			values.remove("Status");
 		}
+		if(values.getProperty("Discipline", "").equals("Any")){
+			values.remove("Discipline");
+		}
 		return values;
 	}
 
@@ -105,6 +121,26 @@ public class BookSearchForm extends Form {
 	public void setAllFieldsEnabled(boolean enabled){
 		super.setAllFieldsEnabled(enabled);
 		searchButton.setEnabled(enabled);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void setDisciplineOptions(final SelectField disciplineField ){
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() {
+				BookBarcodePrefixCollection prefixCollection = new BookBarcodePrefixCollection();
+				prefixCollection.findAll();
+				String[] disciplines = new String[prefixCollection.size() + 1];
+				disciplines[0] = "Any";
+				int index = 1;
+				for(BookBarcodePrefix prefix : prefixCollection.getEntities()){
+					disciplines[index] = (String)prefix.getState("Discipline");
+					index++;
+				}
+				disciplineField.setModel(new DefaultComboBoxModel(disciplines));
+				return null;
+			}
+		}.execute();
 	}
 
 }
