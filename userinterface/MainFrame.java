@@ -141,8 +141,6 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		validate();
 		repaint();
 
-		revalidate();
-		repaint();
 		WindowPosition.placeCenter(this);
 	}
 
