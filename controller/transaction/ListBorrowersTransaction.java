@@ -52,6 +52,8 @@ public class ListBorrowersTransaction extends Transaction {
 	public void execute() {
 		if(parentController instanceof RentBooksTransaction){
 			showView("ListActiveBorrowersView");
+		}else if(parentController instanceof ReturnBooksTransaction){
+			showView("ListActiveBorrowersView");
 		}else{
 			showView("ListBorrowersView");
 		}
@@ -81,13 +83,19 @@ public class ListBorrowersTransaction extends Transaction {
 	 * @param searchCriteria
 	 */
 	private void getBorrowers(Properties searchCriteria){
-		if(parentController instanceof RentBooksTransaction){
-			searchCriteria.setProperty("BorrowerStatus", "Good Standing");
-			searchCriteria.setProperty("Status", "Active");
+		if(parentController instanceof ReturnBooksTransaction){
+			BorrowerCollection borrowerCollection = new BorrowerCollection();
+			borrowerCollection.findWithOutstandingRentals();
+			borrowers = borrowerCollection.getEntities();
+		}else{
+			if(parentController instanceof RentBooksTransaction){
+				searchCriteria.setProperty("BorrowerStatus", "Good Standing");
+				searchCriteria.setProperty("Status", "Active");
+			}
+			BorrowerCollection borrowerCollection = new BorrowerCollection();
+			borrowerCollection.findLike(searchCriteria);
+			borrowers = borrowerCollection.getEntities();
 		}
-		BorrowerCollection borrowerCollection = new BorrowerCollection();
-		borrowerCollection.findLike(searchCriteria);
-		borrowers = borrowerCollection.getEntities();
 	}
 
 	@Override
