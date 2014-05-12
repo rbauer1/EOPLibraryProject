@@ -93,7 +93,7 @@ public class FButton extends Button {
 	}
 	
 	public void setColorConfig(ColorConfig conf) {
-		colorConf = conf;
+		super.setColorConfig(conf);
 		update();
 	}
 	

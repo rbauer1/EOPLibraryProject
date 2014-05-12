@@ -15,6 +15,9 @@ import javax.swing.JButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import userinterface.component.flat.ColorConfig;
+import userinterface.component.flat.Colors;
+
 /**
  * Button that is styled to match the application
  */
@@ -54,6 +57,8 @@ public class Button extends JButton{
 	
 	/** True if button is not to be painted colors **/
 	private boolean clear;
+
+	private ColorConfig colorConf = Colors.BASIC_COLOR;
 	
 	public Button() {
 		super();
@@ -85,6 +90,10 @@ public class Button extends JButton{
 		this(text);
 		clear = clearButton;
 		addActionListener(listener);
+	}
+	
+	public void setColorConfig(ColorConfig conf) {
+		colorConf = conf;
 	}
 
 	private void initialize(){
@@ -135,7 +144,7 @@ public class Button extends JButton{
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		int height = getHeight();
 		int width  = getWidth();
-		Color color = LIGHT_COLOR;
+		Color color = colorConf.getColor();
 		if(disabled){
 			color = Color.GRAY;
 			setForeground(Color.GRAY.brighter());
@@ -145,7 +154,7 @@ public class Button extends JButton{
 				color = color.brighter();
 			}
 			if(pressed){
-				color = DARK_COLOR;
+				color = colorConf.getPressedColor();
 			}
 		}
 		g2.setPaint(color);
