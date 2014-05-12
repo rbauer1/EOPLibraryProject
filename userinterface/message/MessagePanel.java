@@ -9,7 +9,6 @@
  */
 package userinterface.message;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -32,8 +31,7 @@ public class MessagePanel extends Panel {
 	 */
 	public void clear() {
 		removeAll();
-//		setVisible(false);
-		displayBlankMessage();
+		setVisible(false);
 		MainFrame.getInstance().fix();
 	}
 
@@ -65,7 +63,7 @@ public class MessagePanel extends Panel {
 		setVisible(true);
 		MainFrame.getInstance().fix();
 	}
-	
+
 	/**
 	 * Display Message
 	 * @param messageEvent
@@ -92,11 +90,5 @@ public class MessagePanel extends Panel {
 	 */
 	public void displayMessage(MessageType type, String title, List<String> messages) {
 		displayMessage(MessageFactory.createMessage(type, title, messages));
-	}
-	
-	private void displayBlankMessage(){
-		List<String> fillerMessage = new ArrayList<String>();
-		fillerMessage.add(" ");
-		displayMessage(MessageFactory.createMessage(MessageType.BLANK, " ", fillerMessage));
 	}
 }
