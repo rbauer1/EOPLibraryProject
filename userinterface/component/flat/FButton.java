@@ -55,11 +55,11 @@ public class FButton extends Button {
 		}
 
 	    public void mousePressed(MouseEvent e) {
-	    	ref.mousePressed = true;
+	    	ref.pressed = true;
 	    }
 
 	    public void mouseReleased(MouseEvent e) {
-	    	ref.mousePressed = false;
+	    	ref.pressed = false;
 	    }
 
 	    public void mouseEntered(MouseEvent e) {
@@ -117,7 +117,9 @@ public class FButton extends Button {
 		if (iconConf != null) {
 			if (pressed) {
 				setIcon(iconConf.getPressedIcon());
-			} else {
+			} else if(rollover) {
+				setIcon(iconConf.getHoverIcon());
+			}else{
 				setIcon(iconConf.getIcon());
 			}
 		}

@@ -159,7 +159,7 @@ public class HeaderPanel extends View {
 		logoutButton.setOpaque(false);
 		logoutButton.setContentAreaFilled(false);
 		logoutButton.setBorderPainted(false);
-		logoutButton.setIconConfig(new Icons.IconConfigHelper("LogOff_Clear.png", "LogOff_Clear.png", size, size));
+		logoutButton.setIconConfig(new Icons.IconConfigHelper("LogOff_Clear.png", "LogOff_Clear_Pressed.png", size, size));
 //		logoutButton.setColorConfig(null);
 
 		logout.setLayout(new BoxLayout(logout, BoxLayout.X_AXIS));

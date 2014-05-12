@@ -5,4 +5,5 @@ import javax.swing.ImageIcon;
 public interface IconConfig {
 	public ImageIcon getIcon();
 	public ImageIcon getPressedIcon();
+	public ImageIcon getHoverIcon();
 }
