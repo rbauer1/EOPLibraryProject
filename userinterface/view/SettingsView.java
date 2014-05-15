@@ -3,9 +3,7 @@ package userinterface.view;
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.DateField;
-import userinterface.component.flat.FButton;
 import userinterface.message.MessageEvent;
-import userinterface.message.MessageType;
 import utilities.Key;
 import controller.Controller;
 

@@ -3,11 +3,11 @@ package model;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import model.validation.DateValidation;
+import model.validation.PresenceValidation;
 import utilities.Key;
 import event.Event;
 import exception.InvalidPrimaryKeyException;
-import model.validation.DateValidation;
-import model.validation.PresenceValidation;
 
 public class MaxDueDate extends Model{
 	public static final String PRIMARY_KEY = "CurrentMaxDueDate";

@@ -1,7 +1,6 @@
 package controller.transaction;
 
 import java.util.List;
-import java.util.Properties;
 
 import model.MaxDueDate;
 import userinterface.message.MessageEvent;
