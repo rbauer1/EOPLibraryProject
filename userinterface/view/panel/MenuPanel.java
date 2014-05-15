@@ -126,7 +126,7 @@ public class MenuPanel extends View {
 		} else if (source == returnBookButton) {
 			controller.stateChangeRequest(Key.EXECUTE_RETURN_BOOK, null);
 		} else if (source == settingsButton) {
-			controller.stateChangeRequest(Key.DISPLAY_SETTINGS_MENU, null);
+			controller.stateChangeRequest(Key.EXECUTE_CHANGE_MAX_DUE_DATE, null);
 		}
 	}
 

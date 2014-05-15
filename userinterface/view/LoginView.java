@@ -13,7 +13,6 @@ import java.awt.Dimension;
 
 import userinterface.message.MessageEvent;
 import userinterface.screen.LoginScreen;
-import userinterface.utilities.Utils;
 import userinterface.view.form.Form;
 import userinterface.view.form.LoginForm;
 import utilities.Key;

@@ -63,6 +63,6 @@ public class Icons {
 	public static final IconConfigHelper BOOK = new IconConfigHelper("Book_Clear.png", 30, 30);
 	public static final IconConfigHelper WORKER = new IconConfigHelper("Programs/Worker.png", 30, 30);
 	public static final IconConfigHelper BORROWER = new IconConfigHelper("Programs/Borrower.png", 30, 30);
-	public static final IconConfigHelper RENT_BOOK = new IconConfigHelper("Book_Clear.png", 30, 30);
+	public static final IconConfigHelper RENT_BOOK = new IconConfigHelper("Programs/Rent_Book.png", 30, 30);
 	public static final IconConfigHelper RETURN_BOOK = new IconConfigHelper("Book_Clear.png", 30, 30);
 }

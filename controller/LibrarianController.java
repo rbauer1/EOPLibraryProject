@@ -141,6 +141,8 @@ public class LibrarianController extends Controller {
 			transaction = TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU, Key.DISPLAY_LOGIN);
 			transaction.stateChangeRequest("BannerID", value);
 
+		} else if (key.equals(Key.EXECUTE_CHANGE_MAX_DUE_DATE)){
+			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU);
 		} else if (key.equals(Key.EXECUTE_PRINT_PDF)) {
 			TransactionFactory.executeTransaction(this, key, Key.DISPLAY_MAIN_MENU);
 

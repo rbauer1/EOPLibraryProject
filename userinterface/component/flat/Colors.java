@@ -32,7 +32,7 @@ public class Colors {
 	public static ColorConfig RED =
 			new ColorConfigHelper(RED_COLOR, RED_COLOR.brighter(), RED_COLOR.brighter(), RED_COLOR.darker());
 	
-	private static final Color GREEN_SEA_COLOR = new Color(0x16A085);
+	private static final Color GREEN_SEA_COLOR = new Color(0x00553D);//0x16A085
 	public static ColorConfig GREEN_SEA =
 			new ColorConfigHelper(GREEN_SEA_COLOR, GREEN_SEA_COLOR.brighter(), GREEN_SEA_COLOR.brighter(), GREEN_SEA_COLOR.darker());
 }

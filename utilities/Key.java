@@ -50,7 +50,10 @@ public class Key {
 	public static final String EXECUTE_MODIFY_WORKER 	= "ModifyWorkersTransaction";
 	public static final String EXECUTE_PROCESS_LOST_BOOK = "ProcessLostBookTransaction";
 	public static final String EXECUTE_RECOVER_PASSWORD 		= "RecoverPasswordTransaction";
-
+	
+	public static final String EXECUTE_CHANGE_MAX_DUE_DATE = "ChangeMaxDueDateTransaction";
+	public static final String GET_CURRENT_MAX_DUE_DATE = "GetTheCurrentMaxDueDate";
+	
 	public static final String EXIT_SYSTEM = "ExitSystem";
 	public static final String GET_PERSISTENT_STATE = "GetPersistentState";
 
@@ -110,7 +113,8 @@ public class Key {
 
 
 	public static final String EXPORT_TO_EXCEL = "ExportToExcel";
-
+	
+	public static final String SET_DUE_DATE = "SetTheMaxDueDate";
 	public static final String BOOK_DUE_DATE = "BookDueDate";
 
 	private Key(){};
