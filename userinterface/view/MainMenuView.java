@@ -9,7 +9,15 @@
  */
 package userinterface.view;
 
+import java.awt.FlowLayout;
+
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
+import userinterface.component.Panel;
 import userinterface.message.MessageEvent;
+import userinterface.message.MessagePanel;
 import utilities.Key;
 import controller.Controller;
 
@@ -17,7 +25,6 @@ import controller.Controller;
  * Main Menu Screen. Serves as the main transaction selection screen.
  */
 public class MainMenuView extends View {
-
 	private static final long serialVersionUID = -4462137345508528750L;
 
 	/**
@@ -39,6 +46,14 @@ public class MainMenuView extends View {
 
 	@Override
 	protected void build() {
+		setLayout(new FlowLayout(FlowLayout.CENTER));
+		remove(messagePanel);
+		Panel mainPanel = new Panel();
+		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		mainPanel.add(new JLabel(new ImageIcon("assets/images/MainScreenLogo.png")));
+		messagePanel = new MessagePanel();
+		mainPanel.add(messagePanel);
+		add(mainPanel);
 	}
 
 	@Override
