@@ -59,7 +59,7 @@ public class ListRentalsView extends ListView {
 	public void processAction(Object source) {
 		messagePanel.clear();
 		if (source == buttons.get("Back")) {
-			System.out.println(controller.getClass().getName());
+			// System.out.println(controller.getClass().getName());
 			if(controller instanceof ListBorrowersWithRentedBooksTransaction){
 				controller.stateChangeRequest(Key.BACK, "ListBorrowersWithRentedBooksView");
 			}else{

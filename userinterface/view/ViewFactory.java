@@ -68,7 +68,7 @@ public class ViewFactory {
 				prefix += "." + joinedPackages;
 			}
 			
-			System.out.println(prefix);
+			// System.out.println(prefix);
 			
 			Class<?> clazz = Class.forName(prefix + "." + name);
 			Constructor<?> ctor = clazz.getConstructor(Controller.class);

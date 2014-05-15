@@ -107,7 +107,7 @@ public abstract class SQLStatement {
 
 	@Override
 	public String toString() {
-		System.out.println(statement);
+		// System.out.println(statement);
 		return statement;
 	}
 }

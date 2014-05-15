@@ -156,7 +156,7 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 			new Event("MainFrame", "swapToView", "Missing view for display ", Event.ERROR);
 			throw new NullPointerException();
 		}
-		System.out.println("current screen: " + ((View)newView).getClass().getSimpleName());
+		// System.out.println("current screen: " + ((View)newView).getClass().getSimpleName());
 
 		String screenName = ((View)newView).getScreenName();
 		if (screen == null || !screenName.equals(screen.getClass().getSimpleName())) {
@@ -166,8 +166,8 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 				screen = new LoginScreen((View)newView);
 			}
 			if (screenName.equals("MainScreen")) {
-				System.out.println(screenName);
-				System.out.println(screen.getClass().getSimpleName());
+				// System.out.println(screenName);
+				// System.out.println(screen.getClass().getSimpleName());
 				screen = new MainScreen((View)newView);
 			}
 			getContentPane().add(screen);

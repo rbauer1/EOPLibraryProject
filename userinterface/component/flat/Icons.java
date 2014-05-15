@@ -32,7 +32,7 @@ public class Icons {
 			this.basic = Utils.scaleIcon(Utils.getImagePath(icon), w, h);
 			this.hover = Utils.scaleIcon(Utils.getImagePath(icon), w, h);
 			this.pressed = Utils.scaleIcon(Utils.getImagePath(icon), w, h);
-			System.out.println(icon);
+			// System.out.println(icon);
 		}
 		
 		public IconConfigHelper(String basic, String pressed, int w, int h) {

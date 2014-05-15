@@ -105,7 +105,7 @@ public class DelinquencyCheckTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		System.out.println(key);
+		// System.out.println(key);
 		if (key.equals(Key.REFRESH_LIST)) {
 			getDelinquentBorrowers();
 		}

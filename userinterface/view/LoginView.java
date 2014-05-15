@@ -48,7 +48,7 @@ public class LoginView extends View {
 		form.requestFocusForDefaultField();
 		form.reset();
 		messagePanel.clear();
-		System.out.printf("Width: %d\tHeight: %d%n",form.getWidth(),form.getHeight());
+//		System.out.printf("Width: %d\tHeight: %d%n",form.getWidth(),form.getHeight());
 	}
 
 	@Override

@@ -61,7 +61,7 @@ public abstract class ModelCollection<T extends Model> extends EntityBase {
 	 * @param whereClause
 	 */
 	public void find(String whereClause) {
-		System.out.println("SELECT * FROM " + getTableName() + " " + whereClause);
+		// System.out.println("SELECT * FROM " + getTableName() + " " + whereClause);
 		findByQuery("SELECT * FROM " + getTableName() + " " + whereClause);
 	}
 

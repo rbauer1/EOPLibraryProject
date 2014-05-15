@@ -41,7 +41,7 @@ public class ModelValidator {
 		for(String key : this.validations.keySet()){
 			valid &= validate(key);
 		}
-		System.out.println(getErrors());
+		// System.out.println(getErrors());
 		return valid;
 	}
 	

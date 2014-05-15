@@ -62,7 +62,7 @@ public class TransactionFactory {
 	 */
 	public static Transaction executeTransaction(Controller controller, String name, String... returnEvent) {
 		try {
-			System.out.println(name);
+			// System.out.println(name);
 			Transaction transaction = TransactionFactory.createTransaction(name, controller);
 			for(String event : returnEvent) transaction.subscribe(event, controller);
 			transaction.execute();

@@ -49,7 +49,7 @@ public class MenuPanel extends View {
 			FButton button = (FButton)comp;
 			button.attachSet(menuSet);
 		}
-		System.out.println(accordion.toString());
+		// System.out.println(accordion.toString());
 		accordion.add(comp);
 	}
 
