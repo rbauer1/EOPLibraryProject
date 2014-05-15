@@ -31,7 +31,7 @@ public class ReturnBooksView extends View {
 	private static final long serialVersionUID = -7452072411398228893L;
 
 	/** Names of buttons on bottom, Must be in order which you want them to appear */
-	private static final String[] BOTTOM_BUTTON_NAMES = {"Done", "Back"};
+	private static final String[] BOTTOM_BUTTON_NAMES = {"Proceed with Return", "Back"};
 
 	/** Names of buttons on top under form, Must be in order which you want them to appear */
 	private static final String[] TOP_BUTTON_NAMES = {"Set Book to be Returned", "Do not return this Book"};
@@ -155,11 +155,11 @@ public class ReturnBooksView extends View {
 		messagePanel.clear();
 		if (source == buttons.get("Back")) {
 			controller.stateChangeRequest(Key.BACK, "ListBorrowersView");
-		} else if (source == buttons.get("Done")) {
-			buttons.get("Done").setEnabled(false);
+		} else if (source == buttons.get("Proceed with Return")) {
+			buttons.get("Proceed with Return").setEnabled(false);
 			controller.stateChangeRequest(Key.RETURN_BOOKS, null);
 		} else if (source == barcodeForm || source == buttons.get("Set Book to be Returned")) {
-			buttons.get("Done").setEnabled(false);
+			buttons.get("Proceed with Return").setEnabled(false);
 			String barcode = barcodeForm.getValues().getProperty("Barcode", "");
 			if(barcode.length() > 0) {
 				controller.stateChangeRequest(Key.ADD_RENTAL_TO_LIST, barcode);
@@ -187,7 +187,7 @@ public class ReturnBooksView extends View {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void updateState(String key, Object value) {
-		buttons.get("Done").setEnabled(returnRentals.size() > 0);
+		buttons.get("Proceed with Return").setEnabled(returnRentals.size() > 0);
 		if (key.equals(Key.OUTSTANDING_RENTALS)) {
 			outstandingRentals = (List<Rental>) value;
 			outstandingRentalsTable.setModel(new RentalTableModel(outstandingRentals));

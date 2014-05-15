@@ -78,16 +78,16 @@ public class MenuPanel extends View {
 		accordion.setBackground(BACKGROUND_COLOR);
 		add(accordion, BorderLayout.PAGE_START);
 
-		bookActionsButton = new MButton("Book Menu", Icons.BOOK, this);
+		bookActionsButton = new MButton("Book Actions", Icons.BOOK, this);
 		add(bookActionsButton);
 		add(createSeparator());
 
 		if (((Worker)controller.getState(Key.LOGGED_IN_WORKER)).isAdmin()){
-			borrowerActionsButton = new MButton("Borrower Menu", Icons.BORROWER, this);
+			borrowerActionsButton = new MButton("Borrower Actions", Icons.BORROWER, this);
 			add(borrowerActionsButton);
 			add(createSeparator());
 
-			workerActionsButton = new MButton("Workers Menu", Icons.WORKER, this);
+			workerActionsButton = new MButton("Workers Actions", Icons.WORKER, this);
 			add(workerActionsButton);
 			add(createSeparator());
 		}

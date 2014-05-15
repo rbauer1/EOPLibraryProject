@@ -15,6 +15,7 @@ import javax.swing.SwingWorker;
 
 import model.Borrower;
 import model.BorrowerCollection;
+import model.Rental;
 import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
@@ -27,8 +28,14 @@ import document.ExcelDocument;
  */
 public class ListBorrowersWithRentedBooksTransaction extends Transaction {
 
+	/** Borrower that rented the books that is being examined */
+	private Borrower borrower;
+	
 	/** list all borrowers with rented books */
 	private List<Borrower> borrowers;
+	
+	/** Rentals for this borrower */
+	private List<Rental> rentals;
 
 	/**
 	 * Constructs List Borrowers With Rented Books Transaction
@@ -50,6 +57,31 @@ public class ListBorrowersWithRentedBooksTransaction extends Transaction {
 		}else{
 			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.WARNING, "Heads up! The file was not saved."));
 		}
+	}
+	
+	private void getRentals(){
+		new SwingWorker<Void, Void>() {
+			@Override
+			protected Void doInBackground() {
+				rentals = borrower.getOutstandingRentals().getEntities();
+				return null;
+			}
+
+			@Override
+			public void done() {
+				stateChangeRequest(Key.RENTAL_COLLECTION, null);
+			}
+		}.execute();
+	}
+	
+	/**
+	 * Sets the borrower
+	 * @param borrrower
+	 */
+	private void selectBorrower(Borrower borrrower){
+		borrower = borrrower;
+		showView("ListRentalsView");
+		getRentals();
 	}
 
 	/**
@@ -77,6 +109,8 @@ public class ListBorrowersWithRentedBooksTransaction extends Transaction {
 	public Object getState(String key) {
 		if (key.equals(Key.BORROWER_COLLECTION)) {
 			return borrowers;
+		}else if(key.equals(Key.RENTAL_COLLECTION)){
+			return rentals;
 		}
 		return super.getState(key);
 	}
@@ -85,8 +119,12 @@ public class ListBorrowersWithRentedBooksTransaction extends Transaction {
 	public void stateChangeRequest(String key, Object value) {
 		if (key.equals(Key.REFRESH_LIST)) {
 			getBorrowers();
+		}else if(key.equals(Key.SELECT_BORROWER)){
+			selectBorrower((Borrower)value);
 		}else if (key.equals(Key.EXPORT_TO_EXCEL)) {
 			exportToExcel();
+		}else if(key.equals(Key.BACK)){
+			showView("ListBorrowersWithRentedBooksView");
 		}
 		super.stateChangeRequest(key, value);
 	}

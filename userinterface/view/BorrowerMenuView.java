@@ -30,7 +30,7 @@ public class BorrowerMenuView extends MenuView {
 	 * @param controller
 	 */
 	public BorrowerMenuView(Controller controller) {
-		super(controller, "Borrower Menu");
+		super(controller, "Borrower Actions");
 	}
 
 	@Override
