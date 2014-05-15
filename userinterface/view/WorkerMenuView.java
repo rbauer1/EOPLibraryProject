@@ -28,7 +28,7 @@ public class WorkerMenuView extends MenuView {
 	 * @param controller
 	 */
 	public WorkerMenuView(Controller controller) {
-		super(controller, "Worker Menu");
+		super(controller, "Worker Actions");
 	}
 	
 	@Override

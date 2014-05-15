@@ -22,7 +22,7 @@ public class RentBooksReceipt extends Receipt {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void build() throws DocumentException {
-		document.add(createActorsPanel((Borrower)controller.getState(Key.BORROWER), (Worker)controller.getState(Key.LOGGED_IN_WORKER)));
+		document.add(createActorsPanel((Borrower)controller.getState(Key.BORROWER), (Worker)controller.getState(Key.WORKER)));
 		document.add(createSubTitle("Rented Book Details"));
 		document.add(createBooksTable((List<Book>)controller.getState(Key.BOOK_COLLECTION)));
 

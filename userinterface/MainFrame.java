@@ -42,6 +42,7 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	public static final int HEIGHT = 800;
 
 	private Screen screen = null;
+	private boolean isVisible = false;
 
 	/**
 	 * Returns the instance of the main frame. Creates one with blank title if none exists.
@@ -87,7 +88,6 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 	private MainFrame(String title) {
 		super(title);
 		super.setLayout(new BorderLayout());
-		super.setVisible(true);
 		super.setResizable(false);
 	}
 
@@ -141,9 +141,13 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 		validate();
 		repaint();
 
-		revalidate();
-		repaint();
 		WindowPosition.placeCenter(this);
+		
+		// Only the first time
+		if (!isVisible) {
+			super.setVisible(true);
+			isVisible = true;
+		}
 	}
 
 	@Override
@@ -152,7 +156,7 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 			new Event("MainFrame", "swapToView", "Missing view for display ", Event.ERROR);
 			throw new NullPointerException();
 		}
-		System.out.println("current screen: " + ((View)newView).getClass().getSimpleName());
+		// System.out.println("current screen: " + ((View)newView).getClass().getSimpleName());
 
 		String screenName = ((View)newView).getScreenName();
 		if (screen == null || !screenName.equals(screen.getClass().getSimpleName())) {
@@ -162,8 +166,8 @@ public class MainFrame extends JFrame implements ComponentListener, ISlideShow {
 				screen = new LoginScreen((View)newView);
 			}
 			if (screenName.equals("MainScreen")) {
-				System.out.println(screenName);
-				System.out.println(screen.getClass().getSimpleName());
+				// System.out.println(screenName);
+				// System.out.println(screen.getClass().getSimpleName());
 				screen = new MainScreen((View)newView);
 			}
 			getContentPane().add(screen);

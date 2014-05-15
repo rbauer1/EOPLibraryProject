@@ -10,6 +10,7 @@ import userinterface.message.MessageEvent;
 import userinterface.message.MessageType;
 import utilities.Key;
 import controller.Controller;
+import controller.transaction.ListBorrowersWithRentedBooksTransaction;
 
 /**
  * View that provides interface to search and list books
@@ -58,7 +59,12 @@ public class ListRentalsView extends ListView {
 	public void processAction(Object source) {
 		messagePanel.clear();
 		if (source == buttons.get("Back")) {
-			controller.stateChangeRequest(Key.BACK, "ListBorrowersView");
+			// System.out.println(controller.getClass().getName());
+			if(controller instanceof ListBorrowersWithRentedBooksTransaction){
+				controller.stateChangeRequest(Key.BACK, "ListBorrowersWithRentedBooksView");
+			}else{
+				controller.stateChangeRequest(Key.BACK, "ListBorrowersView");
+			}
 		} else if (source == buttons.get("Submit")) {
 			select();
 		}
@@ -66,7 +72,11 @@ public class ListRentalsView extends ListView {
 
 	@Override
 	protected void processListSelection() {
-		buttons.get("Submit").setEnabled(table.getSelectedRow() >= 0);
+		if(controller instanceof ListBorrowersWithRentedBooksTransaction){
+			buttons.get("Submit").setVisible(false);
+		}else{
+			buttons.get("Submit").setEnabled(table.getSelectedRow() >= 0);
+		}
 	}
 
 	@Override

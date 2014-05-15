@@ -236,7 +236,7 @@ public class EventLog {
 					outstream.close();
 					filestream.close();
 				} catch (Exception e) {
-					System.out.println(e);
+					// System.out.println(e);
 					e.printStackTrace();
 				}
 			}

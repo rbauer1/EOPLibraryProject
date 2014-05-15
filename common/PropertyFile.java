@@ -162,7 +162,7 @@ public class PropertyFile extends Properties
 
 	/*public static void main(String args[])
 	{
-	  System.out.println("I'm gonna kill somebody.");	}*/
+	  // System.out.println("I'm gonna kill somebody.");	}*/
 }
 
 

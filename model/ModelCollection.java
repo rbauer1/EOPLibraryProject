@@ -1,11 +1,11 @@
 /**
- * COPYRIGHT 2014 Sandeep Mitra and students 
+ * COPYRIGHT 2014 Sandeep Mitra and students
  * The College at Brockport, State University of New York.
  * ALL RIGHTS RESERVED
  * 
  * This file is the product of The College at Brockport and cannot
  * be reproduced, copied, or used in any shape or form without
- * he express written consent of The College at Brockport. * 
+ * he express written consent of The College at Brockport. *
  */
 package model;
 
@@ -20,7 +20,7 @@ import java.util.Properties;
  * Provides methods for finding/adding/sorting entities
  */
 public abstract class ModelCollection<T extends Model> extends EntityBase {
-	
+
 	/** Holds all the models entities */
 	private List<T> entities;
 
@@ -31,22 +31,23 @@ public abstract class ModelCollection<T extends Model> extends EntityBase {
 		super();
 		this.entities = new ArrayList<T>();
 	}
-	
+
 	/**
-	 * Fills collection with all entities in table
+	 * Adds model entity to collection. This does not modify or save to the db.
+	 * @param entity
 	 */
-	public void findAll() {
-		findByQuery("SELECT * FROM " + getTableName());
+	public void add(T entity) {
+		if(entity != null){
+			this.entities.add(entity);
+		}
 	}
-	
+
 	/**
-	 * Fills collection with all entities in table that match provided whereClause
-	 * @param whereClause
+	 * Creates entity from state from db. Sets entity as persisted.
+	 * @return entity
 	 */
-	public void find(String whereClause) {
-		findByQuery("SELECT * FROM " + getTableName() + " " + whereClause);
-	}
-	
+	protected abstract T createEntity(Properties persistentState);
+
 	/**
 	 * Fills collection with all entities in table that match provided whereClause
 	 * @param whereClause - properties object where keys are column names
@@ -54,16 +55,23 @@ public abstract class ModelCollection<T extends Model> extends EntityBase {
 	public void find(Properties whereClause) {
 		setEntitiesFromQueryResult(getPersistentState(getSchema(), whereClause));
 	}
-	
+
 	/**
 	 * Fills collection with all entities in table that match provided whereClause
-	 * Uses Like SQL operator.
-	 * @param whereClause - properties object where keys are column names
+	 * @param whereClause
 	 */
-	public void findLike(Properties whereClause) {
-		setEntitiesFromQueryResult(getPersistentStateLike(getSchema(), whereClause));
+	public void find(String whereClause) {
+		// System.out.println("SELECT * FROM " + getTableName() + " " + whereClause);
+		findByQuery("SELECT * FROM " + getTableName() + " " + whereClause);
 	}
-	
+
+	/**
+	 * Fills collection with all entities in table
+	 */
+	public void findAll() {
+		findByQuery("SELECT * FROM " + getTableName());
+	}
+
 	/**
 	 * Fills collection with all entities in table where column of name key == value
 	 * @param key - column name
@@ -77,7 +85,7 @@ public abstract class ModelCollection<T extends Model> extends EntityBase {
 		whereClause.setProperty(key, value);
 		find(whereClause);
 	}
-	
+
 	/**
 	 * Fills collection with results from provided query
 	 * @param query
@@ -85,15 +93,14 @@ public abstract class ModelCollection<T extends Model> extends EntityBase {
 	protected void findByQuery(String query){
 		setEntitiesFromQueryResult(getSelectQueryResult(query));
 	}
-	
+
 	/**
-	 * Adds model entity to collection. This does not modify or save to the db. 
-	 * @param entity
+	 * Fills collection with all entities in table that match provided whereClause
+	 * Uses Like SQL operator.
+	 * @param whereClause - properties object where keys are column names
 	 */
-	public void add(T entity) {
-		if(entity != null){
-			this.entities.add(entity);
-		}
+	public void findLike(Properties whereClause) {
+		setEntitiesFromQueryResult(getPersistentStateLike(getSchema(), whereClause));
 	}
 
 	/**
@@ -112,6 +119,41 @@ public abstract class ModelCollection<T extends Model> extends EntityBase {
 	}
 
 	/**
+	 * @return list of entities in collection
+	 */
+	public List<T> getEntities() {
+		return this.entities;
+	}
+
+	/**
+	 * Returns a property object of schema. Creates it if not exist.
+	 * @return schema
+	 */
+	protected abstract Properties getSchema();
+
+	@Override
+	public Object getState(String key) {
+		return null;
+	}
+
+	/**
+	 * Returns table name.
+	 * @return tableName
+	 */
+	protected abstract String getTableName();
+
+	/**
+	 * @return true if all entities are persisted
+	 */
+	public boolean isPersisted() {
+		boolean persisted = false;
+		for (Model entity : this.entities) {
+			persisted |= entity.isPersisted();
+		}
+		return persisted;
+	}
+
+	/**
 	 * Removes first occurrence from collection where entity attribute referenced by key == value
 	 * @param key
 	 * @param value
@@ -126,21 +168,9 @@ public abstract class ModelCollection<T extends Model> extends EntityBase {
 		}
 		return null;
 	}
-	
-	/**
-	 * Performs validations on all enitities
-	 * @return true if all entities are valid
-	 */
-	public boolean validate() {
-		boolean valid = true;
-		for (Model entity : this.entities) {
-			valid &= entity.validate();
-		}
-		return valid;
-	}
 
 	/**
-	 * Saves all entities 
+	 * Saves all entities
 	 * @return true if all saved successfully
 	 */
 	public boolean save() {
@@ -153,16 +183,27 @@ public abstract class ModelCollection<T extends Model> extends EntityBase {
 		}
 		return success;
 	}
-	
+
 	/**
-	 * @return true if all entities are persisted
+	 * Fills collections with the results from a query.
+	 * Empties any entities that already exist in collections
+	 * @param result - list of Properties from query
 	 */
-	public boolean isPersisted() {
-		boolean persisted = false;
-		for (Model entity : this.entities) {
-			persisted |= entity.isPersisted();
+	protected void setEntitiesFromQueryResult(List<?> result){
+		this.entities = new ArrayList<T>();
+		if (result != null) {
+			for(Object state : result){
+				if(state instanceof Properties){
+					T entity = this.createEntity((Properties)state);
+					entity.setPersisted(true);
+					add(entity);
+				}
+			}
 		}
-		return persisted;	
+	}
+
+	public int size() {
+		return entities.size();
 	}
 
 	/**
@@ -172,7 +213,7 @@ public abstract class ModelCollection<T extends Model> extends EntityBase {
 	public void sort(Comparator<T> comparator) {
 		Collections.sort(this.entities, comparator);
 	}
-	
+
 	/**
 	 * Sorts entities in collection in ascending order by value referenced by provided key.
 	 * @param key - column name
@@ -180,7 +221,7 @@ public abstract class ModelCollection<T extends Model> extends EntityBase {
 	public void sort(final String key) {
 		sort(key, false);
 	}
-	
+
 	/**
 	 * Sorts entities in collection in ascending order by value referenced by provided key.
 	 * Sorted in descending order if reverse is true.
@@ -199,21 +240,9 @@ public abstract class ModelCollection<T extends Model> extends EntityBase {
 				}
 				return (reverse ? -1 : 1) * value1.compareTo(value2);
 			}
-			
+
 		};
 		Collections.sort(this.entities, comparator);
-	}
-
-	/**
-	 * @return list of entities in collection
-	 */
-	public List<T> getEntities() {
-		return this.entities;
-	}
-	
-	@Override
-	public Object getState(String key) {
-		return null;
 	}
 
 	@Override
@@ -222,38 +251,14 @@ public abstract class ModelCollection<T extends Model> extends EntityBase {
 	}
 
 	/**
-	 * Returns a property object of schema. Creates it if not exist.
-	 * @return schema
+	 * Performs validations on all enitities
+	 * @return true if all entities are valid
 	 */
-	protected abstract Properties getSchema();
-	
-	/**
-	 * Returns table name.
-	 * @return tableName
-	 */
-	protected abstract String getTableName();
-
-	/**
-	 * Creates entity from state from db. Sets entity as persisted.
-	 * @return entity
-	 */
-	protected abstract T createEntity(Properties persistentState);
-
-	/**
-	 * Fills collections with the results from a query.
-	 * Empties any entities that already exist in collections
-	 * @param result - list of Properties from query
-	 */
-	protected void setEntitiesFromQueryResult(List<?> result){
-		this.entities = new ArrayList<T>();
-		if (result != null) {
-			for(Object state : result){
-				if(state instanceof Properties){
-					T entity = this.createEntity((Properties)state);
-					entity.setPersisted(true);
-					add(entity);
-				}
-			}
+	public boolean validate() {
+		boolean valid = true;
+		for (Model entity : this.entities) {
+			valid &= entity.validate();
 		}
+		return valid;
 	}
 }

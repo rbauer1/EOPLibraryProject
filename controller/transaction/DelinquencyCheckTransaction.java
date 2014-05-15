@@ -10,12 +10,17 @@
 package controller.transaction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import model.Borrower;
 import model.Rental;
 import model.RentalCollection;
+import userinterface.message.MessageEvent;
+import userinterface.message.MessageType;
 import utilities.DateUtil;
 import utilities.Key;
 import controller.Controller;
@@ -60,6 +65,7 @@ public class DelinquencyCheckTransaction extends Transaction {
 		rentalCollection.find(Query);
 		delinquentRentals = rentalCollection.getEntities();
 		delinquentBorrowers.clear();
+		Map<Borrower, List<String>> borrowersWithErrors = new HashMap<Borrower, List<String>>();
 		if (!delinquentRentals.isEmpty()) {
 			Iterator<Rental> iter = delinquentRentals.iterator();
 			while (iter.hasNext()) {
@@ -70,9 +76,18 @@ public class DelinquencyCheckTransaction extends Transaction {
 					String Notes = borrower.getPersistentState().getProperty(
 							"Notes", "");
 					Notes += "Marked Delinquent on " + today;
-					borrower.setDelinquent(Notes);
+					if(! borrower.setDelinquent(Notes)){
+						borrowersWithErrors.put(borrower, borrower.getErrors());
+					}
 					delinquentBorrowers.add(borrower);
 				}
+			}
+		}
+		if(borrowersWithErrors.isEmpty()){
+			stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Delinquency check succeeded!"));
+		}else{
+			for(Entry<Borrower, List<String>> e :borrowersWithErrors.entrySet()){
+				stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.ERROR, "Aw shucks! Something is wrong with the data for one or more borrowers. Please fix the indicated errors and try again.", e.getValue()));
 			}
 		}
 		stateChangeRequest(Key.DELINQUENT_BORROWERS_COLLECTION, null);
@@ -90,7 +105,7 @@ public class DelinquencyCheckTransaction extends Transaction {
 
 	@Override
 	public void stateChangeRequest(String key, Object value) {
-		System.out.println(key);
+		// System.out.println(key);
 		if (key.equals(Key.REFRESH_LIST)) {
 			getDelinquentBorrowers();
 		}

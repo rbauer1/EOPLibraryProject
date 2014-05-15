@@ -83,7 +83,7 @@ public class ListBorrowersTransaction extends Transaction {
 	 * @param searchCriteria
 	 */
 	private void getBorrowers(Properties searchCriteria){
-		if(parentController instanceof ReturnBooksTransaction){
+		if(parentController instanceof ReturnBooksTransaction || parentController instanceof ProcessLostBookTransaction){
 			BorrowerCollection borrowerCollection = new BorrowerCollection();
 			borrowerCollection.findWithOutstandingRentals();
 			borrowers = borrowerCollection.getEntities();

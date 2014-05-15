@@ -50,6 +50,8 @@ public class ProcessLostBookTransaction extends Transaction {
 
 	/** The worker that is processing the lost book */
 	private Worker worker;
+	
+	private String receiptPath;
 
 	/**
 	 * Constructs Process Lost Book Transaction
@@ -106,7 +108,7 @@ public class ProcessLostBookTransaction extends Transaction {
 			return book;
 		}
 		if(key.equals(Key.PRINT_DOCUMENT)){
-			return "test.pdf";
+			return receiptPath;
 		}
 		return super.getState(key);
 	}
@@ -143,8 +145,9 @@ public class ProcessLostBookTransaction extends Transaction {
 					//showView("ListRentalsView");
 					//stateChangeRequest(Key.MESSAGE, new MessageEvent(MessageType.SUCCESS, "Good Job! The book was marked as lost successfully, and the borrower was set as deliquent and their balance was updated."));
 					getRentals();
-					Receipt reciept = DocumentFactory.createReceipt("LostBookReceipt", ProcessLostBookTransaction.this);
-					reciept.save("test.pdf");
+					Receipt receipt = DocumentFactory.createReceipt("LostBookReceipt", ProcessLostBookTransaction.this);
+					receiptPath = Receipt.getPath("Lost_Books", borrower);
+					receipt.save(receiptPath);
 					TransactionFactory.executeTransaction(ProcessLostBookTransaction.this, Key.EXECUTE_PRINT_PDF, Key.DISPLAY_MAIN_MENU);
 				}else{
 					JDBCBroker.getInstance().rollbackTransaction();

@@ -48,7 +48,7 @@ public class EOPLibrary {
 	 * 
 	 */
 	public EOPLibrary(){
-		System.out.println("EOP Library System");
+		// System.out.println("EOP Library System");
 		// See if you can set the look and feel requested, if not indicate error
 		try{
 			UIManager.setLookAndFeel(PREFERRED_UI_STYLE);

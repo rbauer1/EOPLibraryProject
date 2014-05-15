@@ -9,6 +9,9 @@ import userinterface.utilities.Utils;
 import utilities.Key;
 
 public class MButton extends FButton {
+
+	private static final long serialVersionUID = 8449364027251107250L;
+
 	private MenuArrow arrow = null;
 	private static MButton currentUnpressed = null;
 	private static MButton currentPressed = null;

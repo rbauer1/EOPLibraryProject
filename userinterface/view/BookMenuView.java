@@ -32,7 +32,7 @@ public class BookMenuView extends MenuView {
 	 * @param controller
 	 */
 	public BookMenuView(Controller controller) {
-		super(controller, "Book Menu");
+		super(controller, "Book Actions");
 	}
 	
 	@Override

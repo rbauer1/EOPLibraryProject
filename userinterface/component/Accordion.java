@@ -42,7 +42,6 @@ public class Accordion extends JPanel {
 	}
 
 	private static final long serialVersionUID = 6669709465294376732L;
-	private final JPanel dummy = new JPanel();
 	private JComponent opened = null;
 
 	private final GridBagConstraints cons = new GridBagConstraints();
@@ -55,18 +54,6 @@ public class Accordion extends JPanel {
 		cons.fill = GridBagConstraints.HORIZONTAL;
 		cons.anchor = GridBagConstraints.FIRST_LINE_START;
 		cons.weightx = 1;
-	}
-	
-	private void updateSize() {
-		setWidth(getSize().width);
-	}
-	
-	public void setWidth(int w) {
-		int h = 0;
-		for (Component c : getComponents()) {
-			h += c.getHeight();
-		}
-		Utils.setAllSize(this, w, h);
 	}
 
 	public void add(AbstractButton comp, JComponent content) {
@@ -91,6 +78,18 @@ public class Accordion extends JPanel {
 
 	protected void setOpened(JComponent comp) {
 		opened = comp;
+	}
+
+	public void setWidth(int w) {
+		int h = 0;
+		for (Component c : getComponents()) {
+			h += c.getHeight();
+		}
+		Utils.setAllSize(this, w, h);
+	}
+
+	private void updateSize() {
+		setWidth(getSize().width);
 	}
 
 }

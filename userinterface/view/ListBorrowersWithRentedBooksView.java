@@ -7,6 +7,7 @@ import javax.swing.JTable;
 
 import model.Borrower;
 import userinterface.message.MessageEvent;
+import userinterface.message.MessageType;
 import utilities.Key;
 import controller.Controller;
 
@@ -56,7 +57,14 @@ public class ListBorrowersWithRentedBooksView extends ListView {
 	protected void processListSelection() {}
 
 	@Override
-	protected void select() {}
+	protected void select() {
+		int rowIndex = table.getSelectedRow();
+		if (rowIndex > -1) {
+			controller.stateChangeRequest(Key.SELECT_BORROWER, borrowers.get(rowIndex));
+		} else {
+			messagePanel.displayMessage(MessageType.WARNING, "Warning! Must select a borrower from the list!");
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

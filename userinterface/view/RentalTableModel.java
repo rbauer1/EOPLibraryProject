@@ -26,7 +26,7 @@ public class RentalTableModel extends AbstractTableModel implements TableModel {
 		state = new ArrayList<Properties>();
 		for(Rental r : rentalData){
 			state.add(r.getPersistentState());
-			System.out.println(r.getPersistentState());
+			// System.out.println(r.getPersistentState());
 		}
 	}
 

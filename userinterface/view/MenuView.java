@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 
 import model.Worker;
 import userinterface.component.Accordion;
+import userinterface.component.Panel;
 import userinterface.component.flat.Colors;
 import userinterface.component.flat.FButton;
 import userinterface.component.flat.Icons;
@@ -49,14 +50,14 @@ public abstract class MenuView extends View {
 	}
 
 	private JPanel createMainButtonSeparator() {
-		JPanel sep = new JPanel();
+		Panel sep = new Panel();
 
 		Utils.setAllSize(sep, 2, HEIGHT);
 		return sep;
 	}
 
 	protected JPanel createButtonSeparator() {
-		JPanel sep = new JPanel();
+		Panel sep = new Panel();
 		Utils.setAllSize(sep, BUTTON_WIDTH, 5);
 
 		return sep;
@@ -74,7 +75,7 @@ public abstract class MenuView extends View {
 		FButton button = new FButton(text, this);
 		Utils.setAllSize(button, BUTTON_WIDTH, BUTTON_HEIGHT);
 		Utils.addPadding(button, BUTTON_PADDING);
-		button.setColorConfig(Colors.RED);
+		button.setColorConfig(Colors.GREEN_SEA);
 
 		return button;
 	}
@@ -114,7 +115,7 @@ public abstract class MenuView extends View {
 
             deleteButton = new FButton("Delete " + suffix, this);
             initButton(deleteButton, "Delete");
-            JPanel panel = new JPanel();
+            Panel panel = new Panel();
             
             panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
             panel.add(addButton);
