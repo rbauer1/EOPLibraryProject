@@ -1,8 +1,5 @@
 package userinterface.view;
 
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-
 import userinterface.ViewHelper;
 import userinterface.component.Button;
 import userinterface.component.DateField;
@@ -28,7 +25,7 @@ public class SettingsView extends View {
 	@Override
 	protected void build() {
 		dateField = new DateField();
-		add(ViewHelper.formatCenter(dateField));
+		add(ViewHelper.formatFieldCenter("Semester Due Date", dateField));
 
 		submitButton = new Button("Submit", this);
 		add(ViewHelper.formatCenter(submitButton));

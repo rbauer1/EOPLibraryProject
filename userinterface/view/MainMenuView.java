@@ -25,7 +25,7 @@ public class MainMenuView extends View {
 	 * @param controller
 	 */
 	public MainMenuView(Controller controller) {
-		super(controller, "Main Menu");
+		super(controller, "");
 		subscribeToController(Key.MESSAGE);
 	}
 

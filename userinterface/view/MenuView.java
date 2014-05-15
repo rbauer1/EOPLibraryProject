@@ -74,7 +74,7 @@ public abstract class MenuView extends View {
 		FButton button = new FButton(text, this);
 		Utils.setAllSize(button, BUTTON_WIDTH, BUTTON_HEIGHT);
 		Utils.addPadding(button, BUTTON_PADDING);
-		button.setColorConfig(Colors.RED);
+		button.setColorConfig(Colors.GREEN_SEA);
 
 		return button;
 	}

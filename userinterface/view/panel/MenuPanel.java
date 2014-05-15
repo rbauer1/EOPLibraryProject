@@ -99,9 +99,10 @@ public class MenuPanel extends View {
 		returnBookButton = new MButton("Return a Book", Icons.RETURN_BOOK, this);
 		add(returnBookButton);
 		add(createSeparator());
-
-		settingsButton = new MButton("Settings", Icons.GEAR, this);
-		add(settingsButton);
+		if (((Worker)controller.getState(Key.LOGGED_IN_WORKER)).isAdmin()){
+			settingsButton = new MButton("Settings", Icons.GEAR, this);
+			add(settingsButton);
+		}
 	}
 
 	private JPanel createSeparator() {
