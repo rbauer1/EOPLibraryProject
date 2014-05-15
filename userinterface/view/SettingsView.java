@@ -23,6 +23,7 @@ public class SettingsView extends View {
 	public void updateState(String key, Object value) {
 		if (key.equals(Key.MESSAGE)) {
 			messagePanel.displayMessage((MessageEvent)value);
+			submitButton.setSelected(false);
 		}
 	}
 
